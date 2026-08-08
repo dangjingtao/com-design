@@ -8,6 +8,26 @@
     "corePatterns": 2,
     "patternsCountAsComponents": false
   },
+  "repositoryEvidence": {
+    "draftPullRequest": 6,
+    "sourceGateWorkflowRun": 31242968887,
+    "sourceGateConclusion": "success",
+    "sourceGateChecks": [
+      "canonical 33 Component + 2 Pattern contract validation",
+      "native PenPot builder JavaScript syntax check",
+      "PenPot token adapter generation",
+      "generated token adapter JSON validation",
+      "generated motion-reference JSON validation",
+      "generated token adapter artifact upload"
+    ],
+    "generatedTokenAdapterObserved": {
+      "tokenSets": 8,
+      "themeEntries": 7,
+      "uniqueTokenNames": 157,
+      "defaultAxes": ["Theme/Light", "Density/Compact", "Platform/iOS"],
+      "motion": "reference-only"
+    }
+  },
   "implementedRepositoryAssets": [
     "native PenPot plugin manifest",
     "native Component/Variant visual-gate builder",
@@ -40,7 +60,9 @@
   ],
   "gates": {
     "repositoryImplementation": "READY",
-    "canonicalSourceValidation": "AUTOMATED_WORKFLOW_ADDED",
+    "canonicalSourceValidation": "PASS",
+    "builderJavaScriptSyntax": "PASS",
+    "tokenAdapterGeneration": "PASS",
     "penpotActualImport": "NOT_EVIDENCED",
     "penpotVisualInspection": "NOT_EVIDENCED",
     "priorityVisualGate": "NOT_RUN",
