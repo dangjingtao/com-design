@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://com-design.local/schemas/design-system-manifest-v1.schema.json",
+  "title": "Com Design System Manifest V1",
+  "type": "object",
+  "required": ["$metadata", "systemModel", "sources", "componentCatalog", "counts", "governance", "releaseGates"],
+  "properties": {
+    "$metadata": {"type":"object"},
+    "systemModel": {"type":"object"},
+    "sources": {"type":"object"},
+    "componentCatalog": {
+      "type":"object",
+      "additionalProperties": {"type":"array", "items":{"type":"string"}, "uniqueItems":true}
+    },
+    "corePatterns": {"type":"array", "items":{"type":"string"}, "uniqueItems":true},
+    "counts": {
+      "type":"object",
+      "required":["coreComponents","corePatterns"],
+      "properties": {
+        "coreComponents":{"type":"integer","minimum":1},
+        "corePatterns":{"type":"integer","minimum":0}
+      }
+    },
+    "themeResolution": {"type":"object"},
+    "modeResolution": {"type":"object"},
+    "governance": {"type":"object"},
+    "releaseGates": {"type":"object"}
+  },
+  "additionalProperties": false
+}
