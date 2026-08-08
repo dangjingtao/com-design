@@ -2,7 +2,7 @@
   "$schema": "https://com-design.local/schemas/component-contract-v1.json",
   "$metadata": {
     "name": "Com Design Mobile — Feedback, Overlay & Progress",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "phase": 4,
     "status": "candidate",
     "foundation": "../tokens/tokens.json",
@@ -10,7 +10,7 @@
     "tokenNamespace": "semantic.light",
     "modeNamespace": "modes",
     "refRules": {
-      "tokenRef": "Resolve relative to tokenNamespace unless the ref starts with primitive., semantic., or modes.",
+      "tokenRef": "Resolve relative to tokenNamespace unless the ref starts with primitive., semantic., or modes.; shared non-theme semantics use absolute semantic.shared.* refs",
       "modeRef": "Resolve relative to modeNamespace and the active orthogonal mode.",
       "fixedGeometry": "Component-local fixed geometry may remain literal until stable cross-component reuse justifies promotion."
     },
@@ -51,11 +51,12 @@
       ]
     },
     "status": {
-      "info": {"background": "color.status.infoBg", "text": "color.status.infoText", "icon": "color.status.info"},
-      "success": {"background": "color.status.successBg", "text": "color.status.successText", "icon": "color.status.success"},
-      "warning": {"background": "color.status.warningBg", "text": "color.status.warningText", "icon": "color.status.warning"},
-      "danger": {"background": "color.status.dangerBg", "text": "color.status.dangerText", "icon": "color.status.danger"},
-      "neutral": {"background": "color.surface.subtle", "text": "color.text.secondary"}
+      "info": {"background": "color.status.infoBg", "text": "color.status.infoText", "iconOnTint": "color.status.infoText"},
+      "success": {"background": "color.status.successBg", "text": "color.status.successText", "iconOnTint": "color.status.successText"},
+      "warning": {"background": "color.status.warningBg", "text": "color.status.warningText", "iconOnTint": "color.status.warningText"},
+      "danger": {"background": "color.status.dangerBg", "text": "color.status.dangerText", "iconOnTint": "color.status.dangerText"},
+      "neutral": {"background": "color.surface.subtle", "text": "color.text.secondary"},
+      "rule": "Base status chroma is a marker color, not a guaranteed foreground on every status surface. Tinted status surfaces use the corresponding *Text role for text and necessary graphics."
     }
   },
   "components": {
@@ -66,15 +67,16 @@
         "radius": {"tokenRef": "radius.control"},
         "paddingHorizontal": {"modeRef": "density.paddingHorizontal"},
         "paddingVertical": {"modeRef": "density.paddingVertical"},
-        "contentInsetFromViewport": {"modeRef": "density.contentInset"}
+        "contentInsetFromViewport": {"modeRef": "density.contentInset"},
+        "statusIconSize": {"tokenRef": "semantic.shared.icon.size.medium"}
       },
       "typography": {"message": {"tokenRef": "typography.bodySmall"}},
       "states": {
         "default": {"background": {"tokenRef": "color.surface.inverse"}, "text": {"tokenRef": "color.text.inverse"}, "elevation": {"tokenRef": "elevation.floating"}},
-        "info": {"icon": {"tokenRef": "color.status.info"}},
-        "success": {"icon": {"tokenRef": "color.status.success"}},
-        "warning": {"icon": {"tokenRef": "color.status.warning"}},
-        "danger": {"icon": {"tokenRef": "color.status.danger"}}
+        "info": {"icon": {"tokenRef": "color.text.inverse"}, "statusShape": "info"},
+        "success": {"icon": {"tokenRef": "color.text.inverse"}, "statusShape": "success"},
+        "warning": {"icon": {"tokenRef": "color.text.inverse"}, "statusShape": "warning"},
+        "danger": {"icon": {"tokenRef": "color.text.inverse"}, "statusShape": "danger"}
       },
       "accessibility": {
         "announcementRequired": true,
@@ -85,7 +87,8 @@
         "single message hierarchy",
         "do not use for field validation",
         "merge or replace bursts instead of stacking a message wall",
-        "placement must avoid keyboard, safe area, bottom navigation, and bottom CTA"
+        "placement must avoid keyboard, safe area, bottom navigation, and bottom CTA",
+        "on the inverse toast surface, status meaning is carried by icon shape plus message; do not force low-contrast status chroma into the foreground"
       ]
     },
     "snackbar": {
@@ -123,7 +126,8 @@
         "radius": {"tokenRef": "radius.control"},
         "paddingHorizontal": {"modeRef": "density.paddingHorizontal"},
         "paddingVertical": {"modeRef": "density.paddingVertical"},
-        "gap": {"modeRef": "density.internalGap"}
+        "gap": {"modeRef": "density.internalGap"},
+        "statusIconSize": {"tokenRef": "semantic.shared.icon.size.medium"}
       },
       "typography": {
         "title": {"tokenRef": "typography.headingSmall"},
@@ -131,16 +135,17 @@
         "action": {"tokenRef": "typography.label"}
       },
       "states": {
-        "info": {"background": {"tokenRef": "color.status.infoBg"}, "text": {"tokenRef": "color.status.infoText"}, "icon": {"tokenRef": "color.status.info"}},
-        "success": {"background": {"tokenRef": "color.status.successBg"}, "text": {"tokenRef": "color.status.successText"}, "icon": {"tokenRef": "color.status.success"}},
-        "warning": {"background": {"tokenRef": "color.status.warningBg"}, "text": {"tokenRef": "color.status.warningText"}, "icon": {"tokenRef": "color.status.warning"}},
-        "danger": {"background": {"tokenRef": "color.status.dangerBg"}, "text": {"tokenRef": "color.status.dangerText"}, "icon": {"tokenRef": "color.status.danger"}}
+        "info": {"background": {"tokenRef": "color.status.infoBg"}, "text": {"tokenRef": "color.status.infoText"}, "icon": {"tokenRef": "color.status.infoText"}},
+        "success": {"background": {"tokenRef": "color.status.successBg"}, "text": {"tokenRef": "color.status.successText"}, "icon": {"tokenRef": "color.status.successText"}},
+        "warning": {"background": {"tokenRef": "color.status.warningBg"}, "text": {"tokenRef": "color.status.warningText"}, "icon": {"tokenRef": "color.status.warningText"}},
+        "danger": {"background": {"tokenRef": "color.status.dangerBg"}, "text": {"tokenRef": "color.status.dangerText"}, "icon": {"tokenRef": "color.status.dangerText"}}
       },
       "accessibility": {"statusCannotBeColorOnly": true},
       "constraints": [
         "one high-frequency action maximum",
         "dismiss is only allowed for ignorable information",
-        "warning and danger do not automatically imply modal blocking"
+        "warning and danger do not automatically imply modal blocking",
+        "status icons on tinted status surfaces use the corresponding *Text semantic unless a different foreground is separately contrast-audited"
       ]
     },
     "dialog": {
@@ -149,7 +154,8 @@
       "geometry": {
         "radius": {"tokenRef": "radius.overlay"},
         "contentInsetFromViewport": {"modeRef": "density.contentInset"},
-        "padding": {"modeRef": "density.contentInset"}
+        "padding": {"modeRef": "density.contentInset"},
+        "systemIconSizeWhenUsed": {"tokenRef": "semantic.shared.icon.size.large"}
       },
       "typography": {
         "title": {"tokenRef": "typography.heading"},
@@ -199,8 +205,8 @@
       "anatomy": ["indicator", "label?"],
       "variants": ["inline", "section", "page"],
       "geometry": {
-        "inlineSize": {"value": 16, "unit": "px"},
-        "regularSize": {"value": 24, "unit": "px"}
+        "inlineSize": {"tokenRef": "semantic.shared.indicator.size.inline"},
+        "regularSize": {"tokenRef": "semantic.shared.indicator.size.regular"}
       },
       "states": {
         "default": {"color": {"tokenRef": "color.action.primary"}}
@@ -320,7 +326,8 @@
       "constraints": [
         "business-specific state names map into system semantics instead of creating global colors",
         "neutral uses surface.subtle plus text.secondary",
-        "status may compose text, tag, icon, dot, alert, or section presentation without inventing a new status primitive"
+        "status may compose text, tag, icon, dot, alert, or section presentation without inventing a new status primitive",
+        "when a status graphic sits on its tinted status background, use the corresponding *Text foreground semantic unless a different pairing is separately contrast-audited"
       ]
     }
   },
