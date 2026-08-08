@@ -1,7 +1,7 @@
 {
   "$metadata": {
     "name": "Com Design Mobile — Actions & Forms",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "phase": 2,
     "status": "candidate",
     "foundation": "../tokens/tokens.json",
@@ -9,7 +9,7 @@
     "tokenNamespace": "semantic.light",
     "modeNamespace": "modes",
     "refRules": {
-      "tokenRef": "Resolve relative to semantic.light; for example color.action.primary => semantic.light.color.action.primary",
+      "tokenRef": "Resolve relative to semantic.light unless the ref starts with primitive., semantic., or modes.; shared non-theme semantics use absolute semantic.shared.* refs",
       "modeRef": "Resolve against the active mode on the named axis; for example density.controlHeight => modes.density.<active>.controlHeight",
       "fixedValue": "Allowed only for component-local geometry that has no stable cross-component semantic role"
     },
@@ -68,8 +68,8 @@
         "radius": {"tokenRef": "radius.control"},
         "paddingHorizontal": {"modeRef": "density.paddingHorizontal"},
         "gap": {"modeRef": "density.internalGap"},
-        "iconSize": {"value": 20, "unit": "px"},
-        "spinnerSize": {"value": 16, "unit": "px"}
+        "iconSize": {"tokenRef": "semantic.shared.icon.size.medium"},
+        "spinnerSize": {"tokenRef": "semantic.shared.indicator.size.inline"}
       },
       "typography": {"label": {"tokenRef": "typography.label"}},
       "variants": {
@@ -108,8 +108,8 @@
       "role": "icon-action",
       "anatomy": ["container", "icon"],
       "sizes": {
-        "regular": {"container": {"modeRef": "density.controlHeight"}, "icon": {"value": 20, "unit": "px"}},
-        "large": {"container": {"modeRef": "density.controlHeightLarge"}, "icon": {"value": 24, "unit": "px"}}
+        "regular": {"container": {"modeRef": "density.controlHeight"}, "icon": {"tokenRef": "semantic.shared.icon.size.medium"}},
+        "large": {"container": {"modeRef": "density.controlHeightLarge"}, "icon": {"tokenRef": "semantic.shared.icon.size.large"}}
       },
       "geometry": {"radius": {"tokenRef": "radius.control"}},
       "variants": {
@@ -140,6 +140,7 @@
       "family": "fieldFamily",
       "appearance": ["outlined"],
       "anatomy": ["label?", "container", "leading?", "valueOrPlaceholder", "trailingAction?", "helper?"],
+      "geometry": {"systemIconAdornmentSize": {"tokenRef": "semantic.shared.icon.size.medium"}},
       "height": {"modeRef": "density.controlHeight"},
       "states": {
         "empty": {"border": "color.border.default", "background": "color.surface.default", "text": "color.text.placeholder"},
@@ -150,7 +151,7 @@
         "readOnly": {"background": "color.surface.default", "text": "color.text.primary", "border": "color.border.subtle", "editable": false, "copyable": true}
       },
       "accessibility": {"requiresProgrammaticLabel": true, "helperAndErrorCanBeDescribedBy": true},
-      "constraints": ["placeholder is not disabled", "one trailing high-frequency action maximum", "error+focus keeps danger semantics", "readOnly must remain visually distinct from disabled"]
+      "constraints": ["placeholder is not disabled", "one trailing high-frequency action maximum", "error+focus keeps danger semantics", "readOnly must remain visually distinct from disabled", "system icon adornments use the shared medium icon size; non-icon slots keep their own component semantics"]
     },
     "textarea": {
       "role": "multiline-text-input",
@@ -173,7 +174,7 @@
       "family": "fieldFamily",
       "height": {"modeRef": "density.controlHeight"},
       "anatomy": ["label?", "trigger", "valueOrPlaceholder", "disclosure", "helper?"],
-      "disclosureSize": {"value": 20, "unit": "px"},
+      "disclosureSize": {"tokenRef": "semantic.shared.icon.size.medium"},
       "states": {
         "empty": {"background": "color.surface.default", "border": "color.border.default", "text": "color.text.placeholder", "disclosure": "color.text.tertiary"},
         "value": {"background": "color.surface.default", "border": "color.border.default", "text": "color.text.primary", "disclosure": "color.text.tertiary"},
