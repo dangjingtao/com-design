@@ -1,0 +1,110 @@
+    position(kicker, x + 28, y + 24);
+    const title = txt(`${name}-title`, name, 'typography.headingSmall', 'color.text.primary');
+    position(title, x + 28, y + 48);
+    const meta = txt(`${name}-meta`, `${axes.join(' · ')}   ·   ${count} variants`, 'typography.caption', 'color.text.secondary');
+    position(meta, x + 28, y + 76);
+
+    return {contentX:x + 28, contentY:y + 116};
+  }
+
+  const built = [];
+
+  const LAYOUT = {
+    button:            {x:64,   y:224,  w:790, h:660, cols:5, cellW:148, cellH:64},
+    input:             {x:878,  y:224,  w:786, h:452, cols:2, cellW:356, cellH:100},
+    searchField:       {x:878,  y:700,  w:786, h:336, cols:2, cellW:356, cellH:64},
+
+    listItem:          {x:64,   y:1060, w:790, h:882, cols:2, cellW:356, cellH:82},
+    tabs:              {x:878,  y:1060, w:786, h:336, cols:2, cellW:356, cellH:64},
+    bottomNavigation:  {x:878,  y:1420, w:790, h:372, cols:2, cellW:372, cellH:76},
+    tag:               {x:878,  y:1816, w:786, h:192, cols:6, cellW:112, cellH:48},
+
+    alert:             {x:64,   y:2032, w:790, h:560, cols:2, cellW:372, cellH:104},
+    section:           {x:878,  y:2032, w:400, h:624, cols:1, cellW:352, cellH:160},
+    card:              {x:1302, y:2032, w:384, h:744, cols:1, cellW:344, cellH:150},
+
+    dialog:            {x:64,   y:2800, w:760, h:906, cols:2, cellW:356, cellH:254},
+    bottomSheet:       {x:848,  y:2800, w:816, h:724, cols:2, cellW:388, cellH:290},
+
+    menu:              {x:64,   y:3730, w:770, h:960, cols:2, cellW:300, cellH:272},
+    progressIndicator: {x:858,  y:3730, w:806, h:336, cols:3, cellW:220, cellH:96},
+    menuItem:          {x:858,  y:4090, w:548, h:336, cols:2, cellW:252, cellH:64},
+
+    stepper:           {x:64,   y:4714, w:1600,h:774, cols:2, cellW:724, cellH:210}
+  };
+
+  function makeVariantSet({family, name, id, contract, variants, render}) {
+    const layout = LAYOUT[id];
+    if (!layout) throw new Error(`Missing curated layout for ${id}`);
+    const axes = variants.length ? Object.keys(variants[0]) : [];
+    const anchor = panelChrome({...layout, family, name, axes, count:variants.length});
+
+    const components = [];
+    const mains = [];
+    variants.forEach((props, index) => {
+      const board = render(props);
+      board.name = formula(props);
+      board.x = anchor.contentX + (index % layout.cols) * layout.cellW;
+      board.y = anchor.contentY + Math.floor(index / layout.cols) * layout.cellH;
+      stampShape(board, id, contract);
+      const component = library.createComponent([board]);
+      component.name = board.name;
+      component.path = `${family}/${name}`;
+      stamp(component, id, contract);
+      components.push(component);
+      mains.push(board);
+    });
+
+    const container = penpot.createVariantFromComponents(mains);
+    container.name = name;
+    stampShape(container, id, contract);
+
+    for (const component of components) {
+      if (!component.isVariant()) throw new Error(`${family}/${name}: PenPot did not convert component to a real Variant.`);
+      if (component.variantError) throw new Error(`${family}/${name}: invalid variant formula: ${component.variantError}`);
+    }
+
+    built.push({
+      id,
+      path:`${family}/${name}`,
+      variants:variants.length,
+      layout:{x:layout.x,y:layout.y,w:layout.w,h:layout.h,cols:layout.cols}
+    });
+  }
+
+  function swatchCard(x, y, label, tokenName, textColor = 'color.text.primary') {
+    const card = frame(`swatch-${label}`, {width:180,height:96,dir:'column',surface:'color.surface.default',radius:'radius.control',padding:false,gap:false});
+    position(card, x, y);
+    stroke(card, 'color.border.subtle', 'border.control');
+    const swatch = penpot.createRectangle();
+    swatch.name = 'swatch';
+    swatch.resize(180, 56);
+    fill(swatch, tokenName);
+    const labelText = txt('label', label, 'typography.labelSmall', textColor);
+    const tokenText = txt('token', tokenName, 'typography.caption', 'color.text.tertiary');
+    append(card, swatch, labelText, tokenText);
+    return card;
+  }
+
+  function foundationPanel({x,y,w,h,title,subtitle}) {
+    const board = penpot.createBoard();
+    board.name = `Foundation / ${title}`;
+    board.resize(w,h);
+    board.x=x; board.y=y; board.clipContent=false; board.showInViewMode=false;
+    fill(board,'color.surface.default');
+    bindRadius(board,'radius.container');
+    stroke(board,'color.border.subtle','border.control');
+    board.setPluginData(GENERATED_KEY, VERSION);
+    const h2=txt(`${title}-title`,title,'typography.headingSmall','color.text.primary'); position(h2,x+28,y+24);
+    const sub=txt(`${title}-subtitle`,subtitle,'typography.caption','color.text.secondary'); position(sub,x+28,y+52);
+    return board;
+  }
+
+  // ---------------------------------------------------------------------------
+  // 00 Foundations — compact, useful, not a poster.
+  // ---------------------------------------------------------------------------
+  await ensurePage(FOUNDATIONS_PAGE);
+  canvasBackground(1728, 1160);
+  pageHeader({
+    eyebrow:'COM DESIGN MOBILE · FOUNDATION',
+    title:'Foundations',
