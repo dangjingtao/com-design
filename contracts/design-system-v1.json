@@ -23,58 +23,19 @@
     "motion": "../tokens/motion.json",
     "componentSchema": "../schemas/component-contract-v1.schema.json",
     "themeOverlaySchema": "../schemas/theme-overlay-v1.schema.json",
+    "motionSchema": "../schemas/motion-modes-v1.schema.json",
     "actionsForms": "./actions-forms.json",
     "navigationInformation": "./navigation-information.json",
     "feedbackOverlayProgress": "./feedback-overlay-progress.json",
     "searchMenu": "./search-menu.json"
   },
   "componentCatalog": {
-    "actionsForms": [
-      "button",
-      "iconButton",
-      "input",
-      "textarea",
-      "select",
-      "checkbox",
-      "radio",
-      "switch"
-    ],
-    "navigationInformation": [
-      "listItem",
-      "tabs",
-      "segmentedControl",
-      "topAppBar",
-      "bottomNavigation",
-      "section",
-      "divider",
-      "card",
-      "tag",
-      "badge",
-      "avatar"
-    ],
-    "feedbackOverlayProgress": [
-      "toast",
-      "snackbar",
-      "alert",
-      "dialog",
-      "bottomSheet",
-      "loadingIndicator",
-      "skeleton",
-      "emptyState",
-      "progressIndicator",
-      "stepper",
-      "timeline"
-    ],
-    "searchMenu": [
-      "searchField",
-      "menu",
-      "menuItem"
-    ]
+    "actionsForms": ["button","iconButton","input","textarea","select","checkbox","radio","switch"],
+    "navigationInformation": ["listItem","tabs","segmentedControl","topAppBar","bottomNavigation","section","divider","card","tag","badge","avatar"],
+    "feedbackOverlayProgress": ["toast","snackbar","alert","dialog","bottomSheet","loadingIndicator","skeleton","emptyState","progressIndicator","stepper","timeline"],
+    "searchMenu": ["searchField","menu","menuItem"]
   },
-  "corePatterns": [
-    "statusComposition",
-    "searchPattern"
-  ],
+  "corePatterns": ["statusComposition","searchPattern"],
   "counts": {
     "coreComponents": 33,
     "corePatterns": 2
