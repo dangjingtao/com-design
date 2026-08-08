@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://com-design.local/schemas/iconography-contract-v1.schema.json",
+  "title": "Com Design Iconography Contract V1",
+  "type": "object",
+  "required": ["$metadata", "source", "visualLanguage", "tokens", "accessibility", "customIconPolicy"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "$metadata": {
+      "type": "object",
+      "required": ["name", "version", "status", "scope"],
+      "additionalProperties": true
+    },
+    "source": {"type": "object"},
+    "visualLanguage": {"type": "object"},
+    "tokens": {"type": "object"},
+    "contextDefaults": {"type": "object"},
+    "colorPolicy": {"type": "object"},
+    "accessibility": {"type": "object"},
+    "customIconPolicy": {"type": "object"},
+    "exceptions": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}
