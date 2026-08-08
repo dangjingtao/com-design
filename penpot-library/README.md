@@ -15,6 +15,7 @@ It does not replace the machine source package, and it does not reuse the old Fo
 4. Components bind semantic/mode token names. Direct Component → Primitive bindings are rejected by audit.
 5. Canonical catalog is exactly **33 Core Components + 2 Core Patterns**. Patterns are catalogued separately and are never counted as components.
 6. A generated file is not a PASS. `PenPot import → open/visual check → re-export → audit` is mandatory before the PenPot gate can pass.
+7. The library canvas itself is a designed production asset. Mechanical equal-card grids and generic packing algorithms are not acceptable substitutes for composition.
 
 ## Implementation path
 
@@ -30,16 +31,36 @@ tokens/tokens.json + theme-dark.json + motion.json
         │
         ├── catalog/component-catalog.json
         │
-        └── plugin/plugin.js
+        └── plugin/src-v2/*.jsfrag
+               │
+               ├── scripts/build-penpot-plugin-v2.mjs
+               │      └── plugin/plugin-v2.js
                │
                └── PenPot native shapes
                     → native Components
                     → native Variants
                     → semantic/mode token bindings
-                    → reusable Library
+                    → curated reusable Library
 ```
 
-The builder deliberately uses the supported PenPot Plugin API (`library.local.createComponent`, `createVariantFromComponents`, shape token bindings). It never writes `.penpot` ZIP internals or fabricates `positionData`.
+`plugin/plugin.js` is retained as the first implementation snapshot for comparison. The installable production entry is generated `plugin/plugin-v2.js` and is selected by `plugin/manifest.json`.
+
+The builder uses the supported PenPot Plugin API (`library.local.createComponent`, `createVariantFromComponents`, shape token bindings). It never writes `.penpot` ZIP internals or fabricates `positionData`.
+
+## Curated Archive V2
+
+The V2 re-layout replaces the old `cursorY + fixed six-column` warehouse arrangement.
+
+Initial pages:
+
+- `00 Foundations`
+- `01 Core Components · Visual Gate`
+
+The component page uses a 1728 px canvas, 64 px outer margin and deliberately asymmetric component-family modules. Module weight follows component complexity rather than a global tile size.
+
+The design objective is simple: at zoomed-out overview scale the file should read like a maintained mobile design library, not a generated dashboard. At 100% scale the same page must still be practical for selecting, inspecting and reusing real native Components and Variants.
+
+Detailed composition rules live in `docs/PENPOT-REUSABLE-LIBRARY.md`.
 
 ## Token adapter model
 
@@ -58,12 +79,12 @@ The `Platform/iOS|Android` alias is an adapter-only mapping. It does not add a C
 
 ## Motion limitation
 
-As of this implementation, PenPot's native Design Token types do not expose Core `duration` or `cubicBezier` token types. Therefore:
+PenPot's native Design Token types used by this implementation do not expose the Core `duration` or `cubicBezier` axis. Therefore:
 
-- `tokens/motion.json` remains canonical and is included in the library verification page/reference metadata.
-- The builder does **not** pretend that Motion is natively token-bound.
-- Standard/Reduced behavior is verified in implementation/prototype environments as required by `docs/PENPOT-SYNC.md`.
-- This is a Tooling Limitation, not permission to change Core semantics.
+- `tokens/motion.json` remains canonical and is included as reference metadata;
+- the builder does **not** pretend that Motion is natively token-bound;
+- Standard/Reduced behavior is verified in implementation/prototype environments;
+- this is a Tooling Limitation, not permission to change Core semantics.
 
 ## Library organization
 
@@ -95,18 +116,20 @@ The first visual acceptance group is:
 - Status family (Tag / Alert)
 - Progress Indicator / Stepper
 
-If these fail visual review, stop and fix the recipes before approving the rest of the catalog.
+If these fail visual review — including the page-level composition — stop and fix the recipes/layout before approving the rest of the catalog.
 
 ## Running locally
 
-1. Generate the PenPot token adapter:
+1. Prepare the installable plugin and token assets:
 
    ```bash
-   node penpot-library/scripts/build-penpot-token-adapter.mjs
+   cd penpot-library
+   npm run prepare:penpot
+   cd ..
    ```
 
 2. Import `penpot-library/dist/com-design-mobile.tokens.json` into a fresh PenPot file.
-3. Serve `penpot-library/plugin/` with any static server, for example:
+3. Serve `penpot-library/plugin/`:
 
    ```bash
    python3 -m http.server 4173 --directory penpot-library/plugin
@@ -116,24 +139,21 @@ If these fail visual review, stop and fix the recipes before approving the rest 
 
    `http://localhost:4173/manifest.json`
 
-5. Run **Com Design Library Builder** in that file.
-6. Inspect the priority visual gate before accepting the full catalog.
-7. Export the file as `.penpot`.
-8. Run:
+5. Run **Com Design Library Builder**.
+6. Inspect `00 Foundations` and `01 Core Components · Visual Gate` at overview scale and 100%.
+7. Inspect the priority visual gate before accepting the full catalog.
+8. Export the file as `.penpot`.
+9. Run the source audit, then re-import/open/re-export and audit the round-trip file.
 
-   ```bash
-   python3 penpot-library/scripts/audit-penpot-roundtrip.py path/to/export.penpot
-   ```
-
-9. Re-import that exported file, open it, inspect instances/variants/themes/density, export a second time, then audit the round-trip export too.
+See `docs/PENPOT-REUSABLE-LIBRARY.md` for the exact commands and PASS criteria.
 
 ## Gate language
 
 Allowed states:
 
-- `IMPLEMENTATION_READY` — repo-side builder/auditor exists, but PenPot round-trip has not yet passed.
-- `VISUAL_GATE_PASS` — priority assets inspected in PenPot and accepted.
-- `ROUND_TRIP_PASS` — actual re-import/re-export audited with native Component/Variant metadata.
+- `CURATED_LAYOUT_V2_READY` — repo-side curated builder/auditor exists, but actual PenPot visual acceptance has not yet passed.
+- `VISUAL_GATE_PASS` — priority assets and page composition inspected in PenPot and accepted.
+- `ROUND_TRIP_PASS` — actual re-import/re-export audited with native Component/Variant/Instance metadata.
 - `BLOCKED` — tooling/runtime issue recorded with evidence.
 
-Do **not** use `PenPot PASS` unless `ROUND_TRIP_PASS` is evidenced by the exported artifact and audit report.
+Do **not** use `PenPot PASS` unless the full visual and round-trip requirements are evidenced by the actual exported artifact and audit report.
