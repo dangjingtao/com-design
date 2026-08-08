@@ -1,0 +1,59 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$metadata": {
+    "name": "Com Design Mobile — Motion",
+    "version": "1.0.0",
+    "axis": "motion",
+    "status": "release-candidate"
+  },
+  "primitive": {
+    "duration": {
+      "0": {"$type":"duration","$value":"0ms"},
+      "fast": {"$type":"duration","$value":"120ms"},
+      "base": {"$type":"duration","$value":"180ms"},
+      "slow": {"$type":"duration","$value":"260ms"},
+      "emphasis": {"$type":"duration","$value":"320ms"}
+    },
+    "easing": {
+      "standard": {"$type":"cubicBezier","$value":[0.2,0,0,1]},
+      "enter": {"$type":"cubicBezier","$value":[0,0,0,1]},
+      "exit": {"$type":"cubicBezier","$value":[0.4,0,1,1]},
+      "linear": {"$type":"cubicBezier","$value":[0,0,1,1]}
+    }
+  },
+  "modes": {
+    "motion": {
+      "standard": {
+        "pressDuration": {"$type":"duration","$value":"{primitive.duration.fast}"},
+        "stateChangeDuration": {"$type":"duration","$value":"{primitive.duration.base}"},
+        "overlayEnterDuration": {"$type":"duration","$value":"{primitive.duration.slow}"},
+        "overlayExitDuration": {"$type":"duration","$value":"{primitive.duration.base}"},
+        "emphasisDuration": {"$type":"duration","$value":"{primitive.duration.emphasis}"},
+        "standardEasing": {"$type":"cubicBezier","$value":"{primitive.easing.standard}"},
+        "enterEasing": {"$type":"cubicBezier","$value":"{primitive.easing.enter}"},
+        "exitEasing": {"$type":"cubicBezier","$value":"{primitive.easing.exit}"},
+        "skeletonShimmer": true,
+        "parallax": false
+      },
+      "reduced": {
+        "pressDuration": {"$type":"duration","$value":"{primitive.duration.0}"},
+        "stateChangeDuration": {"$type":"duration","$value":"{primitive.duration.0}"},
+        "overlayEnterDuration": {"$type":"duration","$value":"{primitive.duration.0}"},
+        "overlayExitDuration": {"$type":"duration","$value":"{primitive.duration.0}"},
+        "emphasisDuration": {"$type":"duration","$value":"{primitive.duration.0}"},
+        "standardEasing": {"$type":"cubicBezier","$value":"{primitive.easing.linear}"},
+        "enterEasing": {"$type":"cubicBezier","$value":"{primitive.easing.linear}"},
+        "exitEasing": {"$type":"cubicBezier","$value":"{primitive.easing.linear}"},
+        "skeletonShimmer": false,
+        "parallax": false
+      }
+    }
+  },
+  "rules": [
+    "Motion communicates relationship or state; it is not decoration.",
+    "Do not animate layout merely to make a screen feel lively.",
+    "Reduced Motion removes non-essential spatial and looping animation; state changes remain immediate and understandable.",
+    "Loading indicators that encode ongoing activity may remain animated only when platform accessibility policy permits and no static equivalent would be misleading.",
+    "Do not use motion as the only signal for success, error, selection, or progress."
+  ]
+}
