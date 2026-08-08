@@ -1,0 +1,52 @@
+name: PenPot Reusable Library Contract
+
+on:
+  push:
+    branches: [phase5-penpot-library]
+    paths:
+      - 'contracts/**'
+      - 'tokens/**'
+      - 'docs/PENPOT-SYNC.md'
+      - 'penpot-library/**'
+      - '.github/workflows/penpot-library-contract.yml'
+  pull_request:
+    paths:
+      - 'contracts/**'
+      - 'tokens/**'
+      - 'docs/PENPOT-SYNC.md'
+      - 'penpot-library/**'
+      - '.github/workflows/penpot-library-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate canonical catalog and PenPot boundaries
+        run: node penpot-library/scripts/validate-source-contract.mjs
+
+      - name: Build PenPot token adapter
+        run: node penpot-library/scripts/build-penpot-token-adapter.mjs
+
+      - name: Validate generated token adapter JSON
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('penpot-library/dist/com-design-mobile.tokens.json','utf8')); console.log('token adapter JSON: PASS')"
+          node -e "JSON.parse(require('fs').readFileSync('penpot-library/dist/motion-reference.json','utf8')); console.log('motion reference JSON: PASS')"
+
+      - name: Upload generated PenPot token adapter
+        uses: actions/upload-artifact@v4
+        with:
+          name: com-design-penpot-token-adapter
+          path: |
+            penpot-library/dist/com-design-mobile.tokens.json
+            penpot-library/dist/motion-reference.json
+          if-no-files-found: error
