@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://com-design.local/schemas/motion-modes-v1.schema.json",
+  "title": "Com Design Motion Modes V1",
+  "type": "object",
+  "required": ["$metadata", "primitive", "modes", "rules"],
+  "properties": {
+    "$metadata": {"type":"object"},
+    "primitive": {"type":"object"},
+    "modes": {
+      "type":"object",
+      "required":["motion"],
+      "properties": {
+        "motion": {
+          "type":"object",
+          "required":["standard","reduced"],
+          "properties": {
+            "standard":{"$ref":"#/$defs/motionMode"},
+            "reduced":{"$ref":"#/$defs/motionMode"}
+          }
+        }
+      }
+    },
+    "rules": {"type":"array","items":{"type":"string"}}
+  },
+  "$defs": {
+    "token": {
+      "type":"object",
+      "required":["$type","$value"],
+      "properties":{"$type":{"type":"string"},"$value":{}},
+      "additionalProperties":false
+    },
+    "motionMode": {
+      "type":"object",
+      "required":["pressDuration","stateChangeDuration","overlayEnterDuration","overlayExitDuration","emphasisDuration","standardEasing","enterEasing","exitEasing","skeletonShimmer","parallax"],
+      "properties": {
+        "pressDuration":{"$ref":"#/$defs/token"},
+        "stateChangeDuration":{"$ref":"#/$defs/token"},
+        "overlayEnterDuration":{"$ref":"#/$defs/token"},
+        "overlayExitDuration":{"$ref":"#/$defs/token"},
+        "emphasisDuration":{"$ref":"#/$defs/token"},
+        "standardEasing":{"$ref":"#/$defs/token"},
+        "enterEasing":{"$ref":"#/$defs/token"},
+        "exitEasing":{"$ref":"#/$defs/token"},
+        "skeletonShimmer":{"type":"boolean"},
+        "parallax":{"type":"boolean"}
+      },
+      "additionalProperties":false
+    }
+  },
+  "additionalProperties":false
+}
