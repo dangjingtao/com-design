@@ -2,7 +2,7 @@
   "designSystemVersion": "1.0.0-rc.1",
   "branch": "phase5-penpot-library",
   "scope": "reusable-component-library",
-  "status": "IMPLEMENTATION_READY_VISUAL_GATE_NOT_RUN",
+  "status": "CURATED_LAYOUT_V2_READY_VISUAL_GATE_NOT_RUN",
   "canonicalCatalog": {
     "coreComponents": 33,
     "corePatterns": 2,
@@ -10,17 +10,48 @@
   },
   "repositoryEvidence": {
     "draftPullRequest": 6,
-    "sourceGateWorkflowRun": 31243124109,
+    "sourceGateWorkflowRun": 31248730835,
     "sourceGateConclusion": "success",
     "sourceGateChecks": [
       "canonical 33 Component + 2 Pattern contract validation",
-      "native PenPot builder JavaScript syntax check",
+      "six-part curated V2 source assembly",
+      "explicit curated layout slot coverage for every Visual Gate component",
+      "legacy cursorY and fixed-six-column layout forbidden",
+      "generated plugin-v2 JavaScript syntax check",
+      "native PenPot Component / Variant / token API boundary validation",
       "PenPot v3 round-trip auditor Python compile check",
       "PenPot token adapter generation",
       "generated token adapter JSON validation",
       "generated motion-reference JSON validation",
-      "generated token adapter artifact upload"
+      "ready-to-install curated PenPot bundle artifact upload"
     ],
+    "curatedLayout": {
+      "version": "CURATED_ARCHIVE_V2",
+      "pages": [
+        "00 Foundations",
+        "01 Core Components · Visual Gate"
+      ],
+      "componentCanvasWidth": 1728,
+      "outerMargin": 64,
+      "principalGutter": 24,
+      "placementPolicy": "explicit per-component asymmetric modules; weight follows component complexity",
+      "forbiddenLegacyPlacement": [
+        "cursorY vertical accumulation",
+        "fixed six-column global packing",
+        "equal-card dashboard layout"
+      ]
+    },
+    "generatedBundle": {
+      "workflowArtifactName": "com-design-penpot-curated-v2",
+      "workflowArtifactId": 9019311501,
+      "digest": "sha256:10f88aee77f89cf5fd2b192f8635c8de392213a3ffa1bb6601a76cacb70911e6",
+      "contains": [
+        "plugin/manifest.json",
+        "plugin/plugin-v2.js",
+        "dist/com-design-mobile.tokens.json",
+        "dist/motion-reference.json"
+      ]
+    },
     "generatedTokenAdapterObserved": {
       "tokenSets": 8,
       "themeEntries": 7,
@@ -40,14 +71,18 @@
     }
   },
   "implementedRepositoryAssets": [
-    "native PenPot plugin manifest",
+    "native PenPot plugin manifest pointing to generated curated V2 builder",
+    "six-part curated V2 builder source",
+    "curated V2 builder assembly script",
     "native Component/Variant visual-gate builder",
+    "00 Foundations production page composition",
+    "01 Core Components Visual Gate asymmetric production composition",
     "canonical 33+2 catalog",
     "PenPot implementation-property classification",
     "Light/Dark + Compact/Comfortable + Platform token adapter generator",
     "Motion reference-only adapter with tooling limitation recorded",
-    "source-of-truth validation script",
-    "GitHub Actions source validation workflow",
+    "source-of-truth and layout-regression validation script",
+    "GitHub Actions source/build validation workflow",
     "PenPot v3 round-trip structural audit script",
     "production/round-trip runbook",
     "canonical Component catalog cross-check report"
@@ -73,11 +108,15 @@
   "gates": {
     "repositoryImplementation": "READY",
     "canonicalSourceValidation": "PASS",
+    "curatedLayoutV2SourceValidation": "PASS",
+    "legacyMechanicalLayoutRegressionGuard": "PASS",
     "builderJavaScriptSyntax": "PASS",
+    "installableBundleBuild": "PASS",
     "roundTripAuditorCompile": "PASS",
     "tokenAdapterGeneration": "PASS",
     "penpotActualImport": "NOT_EVIDENCED",
     "penpotVisualInspection": "NOT_EVIDENCED",
+    "pageCompositionVisualAcceptance": "NOT_RUN",
     "priorityVisualGate": "NOT_RUN",
     "full33ComponentExpansion": "INTENTIONALLY_BLOCKED_BY_VISUAL_GATE",
     "sourcePenpotExportAudit": "NOT_RUN",
@@ -89,14 +128,14 @@
     {
       "id": "PPL-001",
       "severity": "gate",
-      "issue": "Priority components have not yet been rendered and visually inspected in an actual PenPot file.",
-      "requiredResolution": "Run the builder in PenPot and accept/reject the visual-gate batch before expanding the catalog."
+      "issue": "Curated V2 page composition and priority components have not yet been rendered and visually inspected in an actual PenPot file.",
+      "requiredResolution": "Run the curated V2 builder in PenPot; review both overview-level composition and individual component quality; accept or revise before expanding the catalog."
     },
     {
       "id": "PPL-002",
       "severity": "gate",
       "issue": "The full 33-component reusable catalog is intentionally not generated before PPL-001 is resolved.",
-      "requiredResolution": "After visual acceptance, implement remaining canonical components without changing Core semantics."
+      "requiredResolution": "After visual acceptance, assign deliberate page/module composition to the remaining canonical components and implement them without changing Core semantics."
     },
     {
       "id": "PPL-003",
@@ -115,6 +154,7 @@
     "PenPot PASS",
     "round-trip PASS",
     "33 reusable components complete",
-    "visual acceptance complete"
+    "visual acceptance complete",
+    "page composition accepted"
   ]
 }
