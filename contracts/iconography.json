@@ -1,0 +1,66 @@
+{
+  "$schema": "https://com-design.local/schemas/iconography-contract-v1.schema.json",
+  "$metadata": {
+    "name": "Com Design Mobile — Iconography",
+    "version": "1.0.0-rc.2",
+    "status": "release-candidate",
+    "scope": "company-mobile-core",
+    "foundation": "../tokens/tokens.json"
+  },
+  "source": {
+    "defaultLibrary": "Lucide",
+    "policy": "Lucide is the default system icon source for generic UI actions and navigation. Product or brand symbols are not forced into Lucide.",
+    "reason": ["consistent outline language", "broad generic UI coverage", "straightforward React and React Native consumption", "stable 24x24 source grid"]
+  },
+  "visualLanguage": {
+    "style": "outline",
+    "sourceGrid": "24x24",
+    "strokeWidth": 2,
+    "strokeLinecap": "round",
+    "strokeLinejoin": "round",
+    "fill": "none-by-default",
+    "opticalRule": "Scale the icon silhouette to the assigned visual-size token; do not independently thin or thicken strokes per component.",
+    "alignmentRule": "Align by optical center inside the component slot, not by arbitrary SVG bounding-box nudges."
+  },
+  "tokens": {
+    "sizeSmall": "semantic.shared.icon.size.small",
+    "sizeMedium": "semantic.shared.icon.size.medium",
+    "sizeLarge": "semantic.shared.icon.size.large",
+    "rule": "Only stable visual sizes are tokenized. Source library, stroke style, cap/join, accessible naming and custom-icon admission remain contract rules rather than design tokens."
+  },
+  "contextDefaults": {
+    "compactAdornment": "semantic.shared.icon.size.small",
+    "standardControl": "semantic.shared.icon.size.medium",
+    "navigationOrLargeAction": "semantic.shared.icon.size.large",
+    "loadingInline": "semantic.shared.indicator.size.inline",
+    "loadingRegular": "semantic.shared.indicator.size.regular"
+  },
+  "colorPolicy": {
+    "rule": "Icons consume existing Semantic Color roles. Do not create a parallel icon color palette.",
+    "examples": {
+      "default": "color.text.primary or color.text.secondary by hierarchy",
+      "navigationActive": "color.text.brand",
+      "actionPrimary": "color.action.primary",
+      "statusOnNeutralSurface": "color.status.* when the actual pairing passes contrast",
+      "statusOnTintedStatusSurface": "corresponding color.status.*Text role by default"
+    }
+  },
+  "accessibility": {
+    "iconOnlyActionRequiresAccessibleName": true,
+    "decorativeIconHiddenFromAccessibilityTree": true,
+    "visualSizeIndependentFromHitArea": true,
+    "iosHitArea": "platform.ios.touchTargetMin",
+    "androidHitArea": "platform.android.touchTargetMin",
+    "criticalMeaningCannotRelyOnIconOrColorAlone": true
+  },
+  "customIconPolicy": {
+    "allowedWhen": ["no semantically correct Lucide icon exists", "brand or product identity requires a proprietary symbol", "domain concept cannot be represented without misleading reuse"],
+    "mustMatch": ["24x24 source grid or equivalent optical grid", "2px-equivalent default stroke weight", "round linecap and linejoin where applicable", "system optical weight", "assigned shared icon size token", "Semantic Color only"],
+    "prohibited": ["mixing filled and outline generic UI icons without an explicit exception", "using custom icons only to look more decorative", "shrinking the interactive hit target to the visible icon"]
+  },
+  "exceptions": [
+    "Brand logos and partner marks preserve their identity geometry and may be filled.",
+    "Checkbox, radio, switch and progress marks are component primitives, not general-purpose system icons.",
+    "Illustrations and empty-state artwork are not governed by the system icon source rule."
+  ]
+}

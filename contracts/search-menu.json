@@ -2,7 +2,7 @@
   "$schema": "https://com-design.local/schemas/component-contract-v1.json",
   "$metadata": {
     "name": "Com Design Mobile — Search & Menu",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "phase": 4,
     "status": "candidate",
     "foundation": "../tokens/tokens.json",
@@ -10,7 +10,7 @@
     "tokenNamespace": "semantic.light",
     "modeNamespace": "modes",
     "refRules": {
-      "tokenRef": "Resolve relative to tokenNamespace unless the ref starts with primitive., semantic., or modes.",
+      "tokenRef": "Resolve relative to tokenNamespace unless the ref starts with primitive., semantic., or modes.; shared non-theme semantics use absolute semantic.shared.* refs",
       "modeRef": "Resolve relative to modeNamespace and the active orthogonal mode.",
       "fixedGeometry": "Component-local fixed geometry may remain literal until stable cross-component reuse justifies promotion."
     },
@@ -44,9 +44,9 @@
         "height": {"modeRef": "density.controlHeight"},
         "paddingHorizontal": {"modeRef": "density.paddingHorizontal"},
         "gap": {"modeRef": "density.internalGap"},
-        "leadingIconSize": {"value": 20, "unit": "px"},
-        "loadingIndicatorSize": {"value": 16, "unit": "px"},
-        "trailingIconSize": {"value": 20, "unit": "px"},
+        "leadingIconSize": {"tokenRef": "semantic.shared.icon.size.medium"},
+        "loadingIndicatorSize": {"tokenRef": "semantic.shared.indicator.size.inline"},
+        "trailingIconSize": {"tokenRef": "semantic.shared.icon.size.medium"},
         "radius": {"tokenRef": "radius.control"},
         "optionalBorder": {"tokenRef": "color.border.subtle"}
       },
@@ -101,7 +101,8 @@
         "visualHeightAndInteractiveHitAreaAreIndependent": true,
         "clearActionRequiresAccessibleName": true,
         "trailingActionUsesPlatformHitArea": true,
-        "keyboardFocusIndicatorRequired": true
+        "keyboardFocusIndicatorRequired": true,
+        "placeholderOnSubtleSurfaceMustMeetNormalTextContrast": true
       },
       "constraints": [
         "search is not an alias of generic input",
@@ -171,7 +172,7 @@
         "minHeight": {"modeRef": "density.controlHeightLarge"},
         "paddingHorizontal": {"modeRef": "density.paddingHorizontal"},
         "gap": {"modeRef": "density.internalGap"},
-        "iconSize": {"value": 20, "unit": "px"}
+        "iconSize": {"tokenRef": "semantic.shared.icon.size.medium"}
       },
       "typography": {
         "label": {"tokenRef": "typography.body"}

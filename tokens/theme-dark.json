@@ -2,7 +2,7 @@
   "$schema": "https://com-design.local/schemas/theme-overlay-v1.schema.json",
   "$metadata": {
     "name": "Com Design Mobile — Dark Theme",
-    "version": "1.0.0",
+    "version": "1.0.0-rc.2",
     "axis": "theme",
     "mode": "dark",
     "base": "./tokens.json",
@@ -41,7 +41,7 @@
     "color.text.primary": {"$type":"color","$value":"{primitive.color.neutral.50}"},
     "color.text.secondary": {"$type":"color","$value":"{primitive.color.neutral.300}"},
     "color.text.tertiary": {"$type":"color","$value":"{primitive.color.neutral.400}"},
-    "color.text.placeholder": {"$type":"color","$value":"{primitive.color.neutral.400}"},
+    "color.text.placeholder": {"$type":"color","$value":"{primitive.color.neutral.300}"},
     "color.text.disabled": {"$type":"color","$value":"{primitive.color.neutral.400}"},
     "color.text.inverse": {"$type":"color","$value":"{primitive.color.neutral.0}"},
     "color.text.brand": {"$type":"color","$value":"{primitive.color.brand.200}"},

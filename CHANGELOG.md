@@ -1,5 +1,43 @@
 # Changelog
 
+## 1.0.0-rc.2 — 2026-08-08
+
+### Added
+
+- Iconography Contract with Lucide as the default generic UI icon source
+- Shared theme-independent icon visual sizes: 16 / 20 / 24
+- Shared loading-indicator visual sizes: 16 / 24
+- Iconography schema and human-readable icon foundation spec
+- P0 Foundation Hardening audit report
+
+### Changed
+
+- `tokens/tokens.json` no longer claims to be the whole Design System Source of Truth; the Manifest remains the single canonical machine entrypoint
+- Light placeholder semantic moved from Neutral 500 to Neutral 600 so Search placeholder passes on its real subtle surface
+- Dark placeholder semantic moved from Neutral 400 to Neutral 300 for the same real consumer path
+- Core icon-bearing component contracts now consume shared icon size semantics where stable cross-component meaning exists
+- Button/Search loading geometry and Loading Indicator now consume shared indicator-size semantics rather than repeated literals
+- Tinted Alert status graphics now use corresponding `*Text` foreground semantics
+- Inverse Toast status icons use inverse foreground; status meaning is carried by icon shape plus message instead of forcing potentially low-contrast status chroma
+- Contrast report now audits actual component consumer paths, not only isolated palette pairs
+
+### Explicitly not changed yet
+
+- Destructive-action foreground vs Status Danger semantic separation
+- Layout/contentInset/overlay viewport semantic disentangling
+- Elevation two-level closure review
+- Unused Primitive cleanup
+- Historical `semantic.light` namespace decision
+- Full 33-component state/accessibility reverse audit
+
+These remain P1 Foundation Hardening items and are not silently folded into the P0 pass.
+
+### Release status
+
+Release Candidate only. Stable release remains blocked by P1 hardening, independent review, PenPot release gates and real-device checks.
+
+---
+
 ## 1.0.0-rc.1 — 2026-08-08
 
 ### Added
