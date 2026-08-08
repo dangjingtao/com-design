@@ -70,7 +70,7 @@
       },
       "typography": {"message": {"tokenRef": "typography.bodySmall"}},
       "states": {
-        "default": {"background": {"tokenRef": "color.text.primary"}, "text": {"tokenRef": "color.text.inverse"}, "elevation": {"tokenRef": "elevation.floating"}},
+        "default": {"background": {"tokenRef": "color.surface.inverse"}, "text": {"tokenRef": "color.text.inverse"}, "elevation": {"tokenRef": "elevation.floating"}},
         "info": {"icon": {"tokenRef": "color.status.info"}},
         "success": {"icon": {"tokenRef": "color.status.success"}},
         "warning": {"icon": {"tokenRef": "color.status.warning"}},
@@ -102,7 +102,7 @@
         "action": {"tokenRef": "typography.label"}
       },
       "states": {
-        "default": {"background": {"tokenRef": "color.text.primary"}, "message": {"tokenRef": "color.text.inverse"}, "action": {"tokenRef": "color.accent.default"}, "elevation": {"tokenRef": "elevation.floating"}}
+        "default": {"background": {"tokenRef": "color.surface.inverse"}, "message": {"tokenRef": "color.text.inverse"}, "action": {"tokenRef": "color.accent.default"}, "elevation": {"tokenRef": "elevation.floating"}}
       },
       "accessibility": {
         "announcementRequired": true,
@@ -279,10 +279,10 @@
         "connectorThickness": {"value": 2, "unit": "px"}
       },
       "states": {
-        "completed": {"node": {"tokenRef": "color.action.primary"}, "text": {"tokenRef": "color.text.secondary"}},
-        "current": {"node": {"tokenRef": "color.action.primary"}, "text": {"tokenRef": "color.text.primary"}},
-        "upcoming": {"node": {"tokenRef": "color.border.default"}, "text": {"tokenRef": "color.text.tertiary"}},
-        "error": {"node": {"tokenRef": "color.status.danger"}, "text": {"tokenRef": "color.status.dangerText"}}
+        "completed": {"nodeBackground": {"tokenRef": "color.action.primary"}, "nodeMark": {"tokenRef": "color.text.inverse"}, "markShape": "check", "text": {"tokenRef": "color.text.secondary"}},
+        "current": {"nodeBackground": {"tokenRef": "color.surface.default"}, "nodeBorder": {"tokenRef": "color.action.primary"}, "innerDot": {"tokenRef": "color.action.primary"}, "text": {"tokenRef": "color.text.primary"}},
+        "upcoming": {"nodeBackground": {"tokenRef": "color.surface.default"}, "nodeBorder": {"tokenRef": "color.border.default"}, "text": {"tokenRef": "color.text.tertiary"}},
+        "error": {"nodeBackground": {"tokenRef": "color.surface.default"}, "nodeBorder": {"tokenRef": "color.status.danger"}, "markShape": "error", "text": {"tokenRef": "color.status.dangerText"}}
       },
       "accessibility": {"currentStepStateRequired": true, "stateCannotBeColorOnly": true},
       "constraints": [
