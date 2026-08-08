@@ -2,7 +2,7 @@
   "$schema": "https://com-design.local/schemas/design-system-manifest-v1.schema.json",
   "$metadata": {
     "name": "Com Design Mobile",
-    "version": "1.0.0-rc.1",
+    "version": "1.0.0-rc.2",
     "status": "release-candidate",
     "scope": "company-mobile-core",
     "canonicalEntrypoint": true
@@ -25,6 +25,8 @@
     "themeOverlaySchema": "../schemas/theme-overlay-v1.schema.json",
     "motionSchema": "../schemas/motion-modes-v1.schema.json",
     "patternSchema": "../schemas/pattern-contract-v1.schema.json",
+    "iconographySchema": "../schemas/iconography-contract-v1.schema.json",
+    "iconography": "./iconography.json",
     "actionsForms": "./actions-forms.json",
     "navigationInformation": "./navigation-information.json",
     "feedbackOverlayProgress": "./feedback-overlay-progress.json",
@@ -49,9 +51,11 @@
   },
   "themeResolution": {
     "logicalNamespace": "semantic.light",
+    "sharedNamespace": "semantic.shared",
+    "sharedNamespacePolicy": "theme-independent shared semantics such as icon and loading-indicator visual sizes resolve before the active theme and are not patched by theme overlays",
     "light": "use foundation semantic values unchanged",
     "dark": "merge primitiveExtensions from theme-dark.json, then apply patches to the logical semantic namespace before component tokenRef resolution",
-    "contractShortRefs": "resolve after active theme overlay"
+    "contractShortRefs": "resolve after active theme overlay; absolute semantic.shared.* refs bypass theme patching by design"
   },
   "modeResolution": {
     "density": "resolve modeRef density.* against modes.density.<active>",
@@ -64,13 +68,17 @@
     "colorOnlyCriticalState": false,
     "defaultInformationShadow": false,
     "blockingModalStackDepth": 1,
-    "deprecationRequiredBeforeRemoval": true
+    "deprecationRequiredBeforeRemoval": true,
+    "unusedTokenCreation": "forbidden-by-default",
+    "literalGeometryPolicy": "retain literals only when no stable cross-component semantic role has emerged"
   },
   "releaseGates": {
     "themeLightDarkMapped": true,
     "densityCompactComfortableMapped": true,
     "platformTouchTargetsMapped": true,
     "motionStandardReducedMapped": true,
+    "iconographyContractMapped": true,
+    "sharedIconScaleMapped": true,
     "componentCatalogDeclared": true,
     "patternsSeparatedCanonically": true,
     "humanReadableAssemblyRequired": true,
