@@ -19,11 +19,22 @@ const contracts = {
   searchMenu: read('contracts/search-menu.json')
 };
 const patterns = read('contracts/core-patterns.json');
-const pluginSource = text('penpot-library/plugin/plugin.js');
+
+const v2SourceDir = path.resolve(repo, 'penpot-library/plugin/src-v2');
+const v2Parts = fs.readdirSync(v2SourceDir)
+  .filter((name) => name.endsWith('.jsfrag'))
+  .sort();
+const pluginSource = v2Parts
+  .map((name) => fs.readFileSync(path.resolve(v2SourceDir, name), 'utf8'))
+  .join('');
 
 const errors = [];
 const notes = [];
 const fail = (code, detail) => errors.push({code, detail});
+
+if (v2Parts.length !== 6) {
+  fail('PLUGIN_V2_FRAGMENT_COUNT', {expected: 6, actual: v2Parts.length, parts: v2Parts});
+}
 
 if (manifest.$metadata?.version !== catalog.designSystemVersion) {
   fail('VERSION_MISMATCH', {manifest: manifest.$metadata?.version, catalog: catalog.designSystemVersion});
@@ -77,19 +88,40 @@ for (const [componentId, entry] of Object.entries(propertyMap.components ?? {}))
 }
 
 if (/['\"]primitive\./.test(pluginSource)) {
-  fail('PLUGIN_DIRECT_PRIMITIVE_REFERENCE', 'plugin.js contains a primitive.* token reference');
+  fail('PLUGIN_DIRECT_PRIMITIVE_REFERENCE', 'curated V2 source contains a primitive.* token reference');
 }
 if (/positionData/.test(pluginSource)) {
-  fail('PLUGIN_FORBIDDEN_POSITION_DATA', 'plugin.js must not fabricate text positionData');
+  fail('PLUGIN_FORBIDDEN_POSITION_DATA', 'curated V2 source must not fabricate text positionData');
 }
 if (!/createComponent\(/.test(pluginSource)) fail('PLUGIN_NO_NATIVE_COMPONENT_API', 'createComponent not found');
 if (!/createVariantFromComponents\(/.test(pluginSource)) fail('PLUGIN_NO_NATIVE_VARIANT_API', 'createVariantFromComponents not found');
 if (!/applyToShapes\(|applyToken\(/.test(pluginSource)) fail('PLUGIN_NO_TOKEN_BINDING_API', 'native token application API not found');
 
+if (!pluginSource.includes("CURATED_ARCHIVE_V2")) {
+  fail('PLUGIN_LAYOUT_VERSION', 'CURATED_ARCHIVE_V2 marker missing');
+}
+if (!pluginSource.includes("00 Foundations") || !pluginSource.includes("01 Core Components · Visual Gate")) {
+  fail('PLUGIN_PAGE_ORGANIZATION', 'expected Foundations and Core Components pages are missing');
+}
+if (/let\s+cursorY\b|const\s+cursorY\b|var\s+cursorY\b/.test(pluginSource)) {
+  fail('PLUGIN_MECHANICAL_CURSOR_LAYOUT', 'legacy vertical cursor layout must not return');
+}
+if (/index\s*%\s*6\b/.test(pluginSource)) {
+  fail('PLUGIN_LEGACY_FIXED_SIX_COLUMN', 'legacy fixed six-column placement must not return');
+}
+
+const layoutMatch = pluginSource.match(/const LAYOUT = \{([\s\S]*?)\n  \};/);
+if (!layoutMatch) {
+  fail('PLUGIN_LAYOUT_TABLE_MISSING', 'curated LAYOUT table not found');
+}
+const layoutBlock = layoutMatch?.[1] ?? '';
+
 const visualGateIds = new Set(Object.keys(propertyMap.components ?? {}));
 for (const id of visualGateIds) {
   const marker = `id:'${id}'`;
   if (!pluginSource.includes(marker)) fail('VISUAL_GATE_COMPONENT_NOT_BUILT', id);
+  const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  if (!new RegExp(`\\b${escaped}\\s*:`).test(layoutBlock)) fail('VISUAL_GATE_COMPONENT_NOT_LAID_OUT', id);
 }
 
 const status = errors.length ? 'FAIL' : 'PASS';
@@ -97,7 +129,8 @@ if (!errors.length) {
   notes.push('Canonical catalog matches manifest: 33 Core Components + 2 Core Patterns.');
   notes.push('Patterns remain separated from Component count.');
   notes.push('PenPot-specific implementation properties are explicitly quarantined from Core semantics.');
-  notes.push('Visual-gate builder uses native Component/Variant/token APIs and contains no primitive.* token binding or fabricated positionData.');
+  notes.push('Curated V2 builder uses native Component/Variant/token APIs and contains no primitive.* token binding or fabricated positionData.');
+  notes.push('Visual-gate layout is explicit per component; legacy cursorY/fixed-six-column placement is forbidden.');
   notes.push('This validates repository source only. It does NOT prove PenPot visual or round-trip gates.');
 }
 
@@ -107,6 +140,8 @@ console.log(JSON.stringify({
   coreComponents: manifestIds.length,
   corePatterns: canonicalPatternIds.length,
   visualGateComponents: [...visualGateIds],
+  pluginV2Fragments: v2Parts,
+  layout: 'CURATED_ARCHIVE_V2',
   errors,
   notes
 }, null, 2));
