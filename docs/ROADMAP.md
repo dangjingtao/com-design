@@ -2,9 +2,9 @@
 
 ## 目标
 
-完成一套可长期演进的移动端 Design System。它服务于大学生“三创赛全流程平台”，但本仓库只负责设计系统本身，不设计具体业务页面；“向上汇报”等业务界面由独立线程消费本系统完成。
+完成一套可长期演进、可供公司多个移动产品共同消费的 Design System。当前“三创赛”系列 App 是首批消费者之一，但业务主题不进入 Foundation / Core Component。
 
-视觉方向：**年轻 / 科技 / 潮流 / 活泼 / 高效率**。默认 **Compact-first + Flat-first**，避免教务/政务系统感、厚重企业 SaaS、电竞霓虹与幼稚卡通化。
+系统基线：**现代 / 清晰 / 轻快 / 高效率**，默认 **Compact-first + Flat-first**。产品自己的行业气质、活动主题和业务隐喻放在 Pattern / Extension 层处理。
 
 设计资产采用四层模型：
 
@@ -63,23 +63,25 @@ Theme / Density / Platform 是正交模式，不制造 `Dark-Compact-iOS` 一类
 - Section 是默认分组方式，Card 只在需要独立容器边界时使用
 - List Item 最多三层信息；多行高度由内容自然撑开，不靠固定巨型 Row
 - Tabs 服务并列视图，Segmented Control 服务局部模式，Bottom Navigation 只服务顶层目的地
-- 全局导航 active 使用 Brand；Accent Cyan 继续只承担赛事节奏
+- 全局导航 active 使用 Brand；Accent 只承担局部强调 / 进度 / 数据等辅助角色
 - Bottom Navigation 保持 3–5 项并始终显示 Label
 - Badge 的 Attention 使用 Status Danger，不借用 Destructive Action 语义
-- Avatar 只承担身份，不把认证/在线/获奖等状态全部塞进头像本体
+- Avatar 只承担身份，不把认证 / 在线 / 业务状态全部塞进头像本体
 
 验收：信息层级优先于装饰；导航层级之间角色清晰；常规信息组件默认无 Shadow；Card 不成为通用容器；无新增 Foundation Token。
 
-## Phase 4 — Feedback, Overlay & Competition Patterns ⏭ Next
+## Phase 4 — Feedback, Overlay & Progress 🚧
 
 计划完成：
-- Toast / Banner / Alert
+- Toast / Snackbar
+- Banner / Inline Alert
 - Dialog / Bottom Sheet
-- Loading / Skeleton / Empty State
-- Progress / Step / Timeline
-- Competition Stage / Ranking / Status Pattern
+- Loading Indicator / Skeleton / Empty State
+- Progress / Stepper / Timeline
+- Status Composition Pattern
+- Overlay stacking / dismissal / interruption rules
 
-赛事感来自信息设计、阶段、进度、编号和状态，不依赖奖杯/火箭/灯泡等装饰。
+本期只建立跨产品稳定的反馈、浮层和流程表达能力。具体行业流程、排名、赛事阶段等属于产品 Pattern / Extension，不进入 Core。
 
 ## Phase 5 — Systemization & Release
 
@@ -91,5 +93,6 @@ Theme / Density / Platform 是正交模式，不制造 `Dark-Compact-iOS` 一类
 - Machine-readable Token + Component Contract 总装
 - PenPot 同步包与检查清单
 - Versioning / Deprecated / Migration / Changelog 规则
+- Product / Domain Extension 接入规则
 
-V1 完成标准：研发、设计、AI/Agent 可以消费同一套设计真相；新增组件不需要绕过 Token Contract；人读文档不是 Demo，也不是 Token 数据库。
+V1 完成标准：研发、设计、AI/Agent 可以消费同一套设计真相；新增组件不需要绕过 Token Contract；人读文档不是 Demo，也不是 Token 数据库；具体产品可以扩展 Pattern，而不污染公司级 Core。
