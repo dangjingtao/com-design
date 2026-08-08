@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://com-design.local/schemas/theme-overlay-v1.schema.json",
+  "title": "Com Design Theme Overlay V1",
+  "type": "object",
+  "required": ["$metadata", "patches"],
+  "properties": {
+    "$metadata": {
+      "type": "object",
+      "required": ["name", "version", "axis", "mode", "base", "targetNamespace"],
+      "properties": {
+        "name": {"type":"string"},
+        "version": {"type":"string"},
+        "axis": {"const":"theme"},
+        "mode": {"type":"string"},
+        "base": {"type":"string"},
+        "targetNamespace": {"type":"string"},
+        "status": {"type":"string"},
+        "note": {"type":"string"}
+      },
+      "additionalProperties": true
+    },
+    "primitiveExtensions": {"type":"object"},
+    "patches": {
+      "type":"object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type":"object",
+        "required":["$type","$value"],
+        "properties": {
+          "$type":{"type":"string"},
+          "$value":{}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}
