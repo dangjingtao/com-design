@@ -25,14 +25,17 @@ Search Field 负责输入与搜索状态；Suggestion / Recent / Result / Empty 
 ## Anatomy
 
 1. Container
-2. Leading Search Icon
+2. Leading slot
+   - Search Icon
+   - Loading Indicator
 3. Query / Placeholder
 4. Trailing slot
    - Clear
-   - Loading
    - optional product action
 
 Core 默认只提供 **一个 trailing action 槽位**。如果产品同时需要 Clear + Voice / Scan 等多个操作，应由 Product Pattern 决定优先级，不把 Search Field 右侧做成工具栏。
+
+当 query 非空且正在请求时，Loading 默认占用 leading slot，Clear 仍保留在 trailing slot。用户不应因为请求进行中而失去快速清空 query 的能力。
 
 ## Appearance
 
@@ -53,8 +56,10 @@ Search 不默认复制 Input 的 outlined appearance。只有当页面 Surface �
 - Horizontal padding: `density.paddingHorizontal`
 - Internal gap: `density.internalGap`
 - Search icon: 20px
+- Loading indicator: 16px
 - Clear icon: 20px visual size
 - Query typography: `typography.body`
+- Search Field 的视觉高度与平台 touch target 分离
 - Clear / trailing hit area 独立满足平台 touch target
 
 ## States
@@ -66,7 +71,8 @@ Search 不默认复制 Input 的 outlined appearance。只有当页面 Surface �
 ### Focused
 - 接受键盘输入
 - 不使用 glow
-- 可用轻微 surface / border 变化表达焦点
+- 键盘 / 外接输入环境下使用 `color.border.focused + border.focus` 提供明确 focus indicator
+- 纯触屏进入编辑时不需要额外制造强烈视觉描边
 
 ### Query / Typing
 - query 非空
@@ -75,7 +81,8 @@ Search 不默认复制 Input 的 outlined appearance。只有当页面 Surface �
 
 ### Loading
 - query 保留
-- trailing slot 显示 16px loading indicator
+- leading Search icon 可切换为 16px loading indicator
+- Clear 继续可用
 - 已有结果仍可使用时，不应清空页面再显示整页 spinner
 
 ### Disabled
