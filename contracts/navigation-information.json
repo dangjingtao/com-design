@@ -1,0 +1,293 @@
+{
+  "$schema": "https://com-design.local/schemas/component-contract-v1.json",
+  "$metadata": {
+    "name": "Com Design Mobile — Navigation & Information",
+    "version": "0.3.0",
+    "phase": 3,
+    "status": "candidate",
+    "foundation": "../tokens/tokens.json",
+    "contractSchema": "../schemas/component-contract-v1.schema.json",
+    "tokenNamespace": "semantic.light",
+    "modeNamespace": "modes",
+    "refRules": {
+      "tokenRef": "Resolve relative to tokenNamespace unless the ref starts with primitive., semantic., or modes.",
+      "modeRef": "Resolve relative to modeNamespace and the active orthogonal mode.",
+      "fixedGeometry": "Component-local fixed geometry may remain literal until stable cross-component reuse justifies promotion."
+    },
+    "principles": [
+      "mobile-first",
+      "compact-first",
+      "flat-first",
+      "hierarchy-before-decoration",
+      "section-before-card",
+      "brand-for-navigation",
+      "accent-for-competition-rhythm",
+      "lazy-component-tokens"
+    ]
+  },
+  "shared": {
+    "density": {
+      "default": "compact",
+      "rowMinHeight": {"modeRef": "density.controlHeightLarge"},
+      "contentInset": {"modeRef": "density.contentInset"},
+      "sectionGap": {"modeRef": "density.sectionGap"},
+      "internalGap": {"modeRef": "density.internalGap"}
+    },
+    "touchTarget": {
+      "ios": {"modeRef": "platform.ios.touchTargetMin"},
+      "android": {"modeRef": "platform.android.touchTargetMin"},
+      "rule": "visual size and interactive hit area are independent"
+    },
+    "navigationColorPolicy": {
+      "active": {"tokenRef": "color.text.brand"},
+      "inactive": {"tokenRef": "color.text.tertiary"},
+      "rule": "Accent Cyan is not the default active color for global navigation."
+    },
+    "surfacePolicy": {
+      "default": {"tokenRef": "color.surface.default"},
+      "pressed": {"tokenRef": "color.surface.pressed"},
+      "selected": {"tokenRef": "color.surface.selected"},
+      "divider": {"tokenRef": "color.border.subtle"},
+      "shadowDefault": false
+    },
+    "textOverflowPolicy": {
+      "navigationLabel": "single-line; do not shrink typography to force fit",
+      "listTitle": "single-line ellipsis by default; explicit multiline only when information priority requires it",
+      "listDescription": "up to two lines before restructuring",
+      "metadata": "single-line where possible"
+    }
+  },
+  "components": {
+    "listItem": {
+      "role": "information-row",
+      "anatomy": ["container", "leading?", "content", "title", "description?", "metadata?", "trailing?"],
+      "variants": ["static", "actionable", "selectable", "status-bearing"],
+      "geometry": {
+        "singleLineMinHeight": {"modeRef": "density.controlHeightLarge"},
+        "paddingHorizontal": {"modeRef": "density.paddingHorizontal"},
+        "paddingVertical": {"modeRef": "density.paddingVertical"},
+        "gap": {"modeRef": "density.internalGap"},
+        "disclosureIconSize": {"value": 20, "unit": "px"}
+      },
+      "typography": {
+        "titleDefault": {"tokenRef": "typography.body"},
+        "titleEmphasis": {"tokenRef": "typography.headingSmall"},
+        "description": {"tokenRef": "typography.bodySmall"},
+        "metadata": {"tokenRef": "typography.caption"}
+      },
+      "states": {
+        "default": {"background": {"tokenRef": "color.surface.default"}, "text": {"tokenRef": "color.text.primary"}},
+        "pressed": {"background": {"tokenRef": "color.surface.pressed"}},
+        "selected": {"background": {"tokenRef": "color.surface.selected"}, "text": {"tokenRef": "color.text.primary"}},
+        "disabled": {"text": {"tokenRef": "color.text.disabled"}}
+      },
+      "accessibility": {
+        "actionableRole": "link-or-button-by-action",
+        "selectableState": "selected-or-checked",
+        "nestedActionRule": "Whole-row action and trailing action must not form ambiguous overlapping hit targets."
+      },
+      "constraints": [
+        "maximum three information levels before restructuring",
+        "title is single-line ellipsis by default; description is limited to two lines",
+        "one high-frequency trailing action maximum",
+        "default has no shadow",
+        "do not create business-state-specific list item variants"
+      ]
+    },
+    "tabs": {
+      "role": "peer-view-navigation",
+      "anatomy": ["tabList", "tabItem", "label", "icon?", "indicator"],
+      "variants": ["fixed", "scrollable"],
+      "geometry": {
+        "indicatorHeight": {"value": 2, "unit": "px"},
+        "itemGap": {"modeRef": "density.internalGap"}
+      },
+      "typography": {"label": {"tokenRef": "typography.label"}},
+      "states": {
+        "active": {"text": {"tokenRef": "color.text.brand"}, "indicator": {"tokenRef": "color.action.primary"}},
+        "inactive": {"text": {"tokenRef": "color.text.secondary"}},
+        "pressed": {"background": {"tokenRef": "color.surface.pressed"}},
+        "disabled": {"text": {"tokenRef": "color.text.disabled"}}
+      },
+      "accessibility": {
+        "containerRole": "tablist",
+        "itemRole": "tab",
+        "selectedStateRequired": true
+      },
+      "constraints": [
+        "fixed for 2-4 items; scrollable for 5 or more",
+        "labels stay single-line and do not wrap",
+        "do not shrink label typography to fit more tabs",
+        "do not nest tabs inside tabs",
+        "text-only is the V1 default"
+      ]
+    },
+    "segmentedControl": {
+      "role": "local-mode-switch",
+      "anatomy": ["container", "segmentItem", "label", "icon?"],
+      "geometry": {
+        "radius": {"tokenRef": "radius.control"},
+        "padding": {"value": 2, "unit": "px"},
+        "gap": {"value": 2, "unit": "px"}
+      },
+      "typography": {"label": {"tokenRef": "typography.label"}},
+      "states": {
+        "container": {"background": {"tokenRef": "color.surface.subtle"}},
+        "selected": {"background": {"tokenRef": "color.surface.default"}, "text": {"tokenRef": "color.text.brand"}},
+        "unselected": {"text": {"tokenRef": "color.text.secondary"}},
+        "pressed": {"background": {"tokenRef": "color.surface.pressed"}},
+        "disabled": {"text": {"tokenRef": "color.text.disabled"}}
+      },
+      "accessibility": {"role": "single-select-group", "selectedStateRequired": true},
+      "constraints": ["2-4 short options", "labels stay single-line", "use tabs or picker for long labels", "no default elevation"]
+    },
+    "topAppBar": {
+      "role": "page-level-navigation-and-actions",
+      "anatomy": ["container", "leadingAction?", "title", "trailingActions?", "overflow?"],
+      "geometry": {
+        "contentMinHeight": {"modeRef": "density.controlHeightLarge"},
+        "iconSize": {"value": 24, "unit": "px"},
+        "contentInset": {"modeRef": "density.contentInset"}
+      },
+      "typography": {"title": {"tokenRef": "typography.heading"}},
+      "states": {
+        "default": {"background": {"tokenRef": "color.surface.default"}},
+        "scrolled": {"background": {"tokenRef": "color.surface.default"}, "divider": {"tokenRef": "color.border.subtle"}}
+      },
+      "accessibility": {"iconActionsRequireAccessibleName": true},
+      "constraints": [
+        "title is single-line with ellipsis by default",
+        "maximum two visible trailing icon actions before overflow",
+        "safe area belongs to platform layer",
+        "no default shadow",
+        "large page titles belong to content, not an ever-growing app bar"
+      ]
+    },
+    "bottomNavigation": {
+      "role": "top-level-destination-navigation",
+      "anatomy": ["container", "destinationItem", "icon", "label", "badge?"],
+      "geometry": {
+        "contentMinHeight": {"value": 56, "unit": "px"},
+        "iconSize": {"value": 24, "unit": "px"},
+        "safeArea": "platform-owned"
+      },
+      "typography": {"label": {"tokenRef": "typography.labelSmall"}},
+      "states": {
+        "active": {"icon": {"tokenRef": "color.text.brand"}, "label": {"tokenRef": "color.text.brand"}},
+        "inactive": {"icon": {"tokenRef": "color.text.tertiary"}, "label": {"tokenRef": "color.text.tertiary"}},
+        "pressed": {"background": {"tokenRef": "color.surface.pressed"}}
+      },
+      "accessibility": {"currentDestinationStateRequired": true},
+      "constraints": [
+        "3-5 destinations",
+        "labels stay visible and single-line in V1",
+        "56px is the V1 content band excluding safe area; platform layer may override when required",
+        "Brand is the active identity; Accent Cyan is not",
+        "no floating pill navigation as the V1 default",
+        "badge must not obscure the icon silhouette"
+      ]
+    },
+    "section": {
+      "role": "default-content-grouping",
+      "anatomy": ["header?", "title?", "supportingText?", "trailingAction?", "content", "footer?"],
+      "geometry": {"sectionGap": {"modeRef": "density.sectionGap"}},
+      "typography": {
+        "title": {"tokenRef": "typography.headingSmall"},
+        "supporting": {"tokenRef": "typography.bodySmall"},
+        "trailingAction": {"tokenRef": "typography.label"}
+      },
+      "constraints": ["prefer section grouping before card containment", "do not require a background or border by default"]
+    },
+    "divider": {
+      "role": "structural-separator",
+      "anatomy": ["line"],
+      "variants": ["full", "inset"],
+      "geometry": {"width": {"tokenRef": "border.control"}},
+      "states": {"default": {"color": {"tokenRef": "color.border.subtle"}}},
+      "constraints": ["not a brand decoration", "inset aligns to content start in lists"]
+    },
+    "card": {
+      "role": "independent-content-container",
+      "anatomy": ["container", "content", "header?", "footer?", "action?"],
+      "geometry": {
+        "radius": {"tokenRef": "radius.container"},
+        "padding": {"modeRef": "density.paddingHorizontal"},
+        "optionalBorder": {"tokenRef": "color.border.subtle"}
+      },
+      "states": {
+        "default": {"background": {"tokenRef": "color.surface.default"}},
+        "pressed": {"background": {"tokenRef": "color.surface.pressed"}}
+      },
+      "constraints": [
+        "border is optional and only used when containment needs reinforcement",
+        "no default shadow",
+        "section before card",
+        "card inside card is prohibited by default",
+        "whole-card action must not compete with multiple equal-priority internal actions"
+      ]
+    },
+    "tag": {
+      "role": "classification-or-short-status-label",
+      "anatomy": ["container", "label", "leadingIcon?", "dismissAction?"],
+      "variants": ["neutral", "brand", "success", "warning", "danger", "info"],
+      "geometry": {
+        "paddingHorizontal": {"value": 8, "unit": "px"},
+        "radius": {"tokenRef": "radius.pill"}
+      },
+      "typography": {"label": {"tokenRef": "typography.labelSmall"}},
+      "states": {
+        "neutral": {"background": {"tokenRef": "color.surface.subtle"}, "text": {"tokenRef": "color.text.secondary"}},
+        "brand": {"background": {"tokenRef": "color.surface.selected"}, "text": {"tokenRef": "color.text.brand"}},
+        "success": {"background": {"tokenRef": "color.status.successBg"}, "text": {"tokenRef": "color.status.successText"}},
+        "warning": {"background": {"tokenRef": "color.status.warningBg"}, "text": {"tokenRef": "color.status.warningText"}},
+        "danger": {"background": {"tokenRef": "color.status.dangerBg"}, "text": {"tokenRef": "color.status.dangerText"}},
+        "info": {"background": {"tokenRef": "color.status.infoBg"}, "text": {"tokenRef": "color.status.infoText"}}
+      },
+      "accessibility": {"interactiveTagMustExposeRoleAndState": true, "interactiveTagUsesPlatformHitArea": true},
+      "constraints": ["Accent Cyan is not a fifth status family", "non-interactive tags must not look like primary buttons"]
+    },
+    "badge": {
+      "role": "count-or-attention-indicator",
+      "anatomy": ["container", "count?"],
+      "variants": ["dot", "count"],
+      "geometry": {
+        "dotSize": {"value": 8, "unit": "px"},
+        "countMinHeight": {"value": 18, "unit": "px"},
+        "countMinWidth": {"value": 18, "unit": "px"},
+        "radius": {"tokenRef": "radius.pill"}
+      },
+      "typography": {"count": {"tokenRef": "typography.labelSmall"}},
+      "states": {
+        "brand": {"background": {"tokenRef": "color.action.primary"}, "text": {"tokenRef": "color.text.inverse"}},
+        "attention": {"background": {"tokenRef": "color.status.danger"}, "text": {"tokenRef": "color.text.inverse"}}
+      },
+      "accessibility": {"criticalMeaningRequiresTextEquivalent": true},
+      "constraints": ["count range 1-99; display 99+ beyond that", "do not stack dot, count, and text alert on the same target"]
+    },
+    "avatar": {
+      "role": "identity-representation",
+      "anatomy": ["container", "imageOrFallback", "statusIndicator?"],
+      "sizes": {
+        "small": {"value": 24, "unit": "px"},
+        "regular": {"value": 32, "unit": "px"},
+        "large": {"value": 40, "unit": "px"}
+      },
+      "geometry": {"radius": {"tokenRef": "radius.pill"}},
+      "fallbackPriority": ["image", "initials", "genericIdentityIcon"],
+      "accessibility": {"meaningfulImageRequiresAccessibleNameOrAdjacentText": true},
+      "constraints": [
+        "do not encode all status into the avatar itself",
+        "fallback initials use stable low-saturation backgrounds",
+        "larger profile imagery belongs to patterns, not the base avatar component"
+      ]
+    }
+  },
+  "validation": {
+    "sectionBeforeCard": true,
+    "defaultShadowOnInformationComponents": false,
+    "globalNavigationUsesBrandNotAccent": true,
+    "bottomNavigationDestinationRange": [3, 5],
+    "tabsFixedRecommendedRange": [2, 4],
+    "badgeCountCap": "99+"
+  }
+}
