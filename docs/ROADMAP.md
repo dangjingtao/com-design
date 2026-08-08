@@ -68,22 +68,33 @@ Theme / Density / Platform 是正交模式，不制造 `Dark-Compact-iOS` 一类
 - Badge 的 Attention 使用 Status Danger，不借用 Destructive Action 语义
 - Avatar 只承担身份，不把认证 / 在线 / 业务状态全部塞进头像本体
 
-验收：信息层级优先于装饰；导航层级之间角色清晰；常规信息组件默认无 Shadow；Card 不成为通用容器；无新增 Foundation Token。
+验收：信息层级优先于装饰；导航层级之间角色清晰；常规信息组件默认无 Shadow；Card 不成为通用容器。
 
-## Phase 4 — Feedback, Overlay & Progress 🚧
+## Phase 4 — Feedback, Overlay & Progress ✅
 
-计划完成：
+已完成：
 - Toast / Snackbar
 - Banner / Inline Alert
 - Dialog / Bottom Sheet
 - Loading Indicator / Skeleton / Empty State
-- Progress / Stepper / Timeline
+- Progress Indicator / Stepper / Timeline
 - Status Composition Pattern
 - Overlay stacking / dismissal / interruption rules
+- Human-readable spec: `docs/04-feedback-overlay-progress.md`
+- Machine-readable contract: `contracts/feedback-overlay-progress.json`
+- Author self-review: `reviews/phase4-self-review.md`
 
-本期只建立跨产品稳定的反馈、浮层和流程表达能力。具体行业流程、排名、赛事阶段等属于产品 Pattern / Extension，不进入 Core。
+关键决策：
+- Feedback 按 interruption cost 分层，不把“重要”直接等同于 Dialog
+- 同一时刻只允许一个 Blocking Modal Layer
+- Loading / Skeleton / Empty / Progress / Stepper / Timeline 角色严格分离
+- 新增 `surface.inverse` 与 `elevation.floating / modal`，但普通信息组件继续 Flat-first
+- Status 永远不只靠颜色表达
+- 具体行业阶段、排名、评分、主题化进度属于 Product / Domain Extension，不进入 Core
 
-## Phase 5 — Systemization & Release
+验收：Phase 4 Core 可被不同产品复用；Overlay 层级有真实 Token 支撑；无业务域状态反向污染 Foundation。
+
+## Phase 5 — Systemization & Release ⏭ Next
 
 计划完成：
 - Density 视觉验证与模式规范
