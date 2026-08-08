@@ -38,13 +38,14 @@
   "components": {
     "searchField": {
       "role": "query-input",
-      "anatomy": ["container", "searchIcon", "queryOrPlaceholder", "trailingSlot?"],
+      "anatomy": ["container", "leadingSlot", "queryOrPlaceholder", "trailingSlot?"],
       "appearance": ["flat"],
       "geometry": {
         "height": {"modeRef": "density.controlHeight"},
         "paddingHorizontal": {"modeRef": "density.paddingHorizontal"},
         "gap": {"modeRef": "density.internalGap"},
         "leadingIconSize": {"value": 20, "unit": "px"},
+        "loadingIndicatorSize": {"value": 16, "unit": "px"},
         "trailingIconSize": {"value": 20, "unit": "px"},
         "radius": {"tokenRef": "radius.control"},
         "optionalBorder": {"tokenRef": "color.border.subtle"}
@@ -56,11 +57,15 @@
         "idle": {
           "background": {"tokenRef": "color.surface.subtle"},
           "placeholder": {"tokenRef": "color.text.placeholder"},
-          "icon": {"tokenRef": "color.text.tertiary"}
+          "leading": {"tokenRef": "color.text.tertiary"}
         },
         "focused": {
           "background": {"tokenRef": "color.surface.default"},
-          "query": {"tokenRef": "color.text.primary"}
+          "query": {"tokenRef": "color.text.primary"},
+          "keyboardFocusIndicator": {
+            "border": {"tokenRef": "color.border.focused"},
+            "width": {"tokenRef": "border.focus"}
+          }
         },
         "query": {
           "background": {"tokenRef": "color.surface.subtle"},
@@ -69,7 +74,8 @@
         },
         "loading": {
           "queryPreserved": true,
-          "trailingIndicatorSize": {"value": 16, "unit": "px"}
+          "leadingSlot": "loading-indicator",
+          "clearRemainsAvailableWhenQueryNonEmpty": true
         },
         "disabled": {
           "background": {"tokenRef": "color.surface.subtle"},
@@ -82,21 +88,27 @@
           "keepsFocusByDefault": true,
           "requiresAccessibleName": true
         },
+        "leadingSlot": {
+          "priority": ["loading", "searchIcon"]
+        },
         "trailingSlot": {
           "maxCoreActions": 1,
-          "priority": ["loading", "clear", "productExtensionAction"]
+          "priority": ["clear", "productExtensionAction"]
         }
       },
       "accessibility": {
         "role": "search-input",
+        "visualHeightAndInteractiveHitAreaAreIndependent": true,
         "clearActionRequiresAccessibleName": true,
-        "trailingActionUsesPlatformHitArea": true
+        "trailingActionUsesPlatformHitArea": true,
+        "keyboardFocusIndicatorRequired": true
       },
       "constraints": [
         "search is not an alias of generic input",
         "no default shadow",
         "do not disable search to represent no results",
         "do not turn the trailing slot into a toolbar",
+        "loading must not remove clear access for a non-empty query",
         "request debounce timing is implementation policy, not a visual token"
       ]
     },
@@ -186,6 +198,7 @@
   "validation": {
     "searchDefaultAppearance": "flat",
     "searchTrailingCoreActionLimit": 1,
+    "searchLoadingPreservesClear": true,
     "menuDefaultActionRange": [2, 6],
     "mobileCascadingMenuDefault": false,
     "productSpecificSearchOrMenuBehaviorInCore": false
