@@ -39,6 +39,9 @@ jobs:
       - name: Syntax-check native PenPot builder
         run: node --check penpot-library/plugin/plugin.js
 
+      - name: Compile-check PenPot v3 round-trip auditor
+        run: python3 -m py_compile penpot-library/scripts/audit-penpot-roundtrip.py
+
       - name: Build PenPot token adapter
         run: node penpot-library/scripts/build-penpot-token-adapter.mjs
 
