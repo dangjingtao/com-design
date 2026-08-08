@@ -1,11 +1,18 @@
 {
-  "$schema": "https://com-design.local/schemas/component-contract-v1.json",
   "$metadata": {
     "name": "Com Design Mobile — Actions & Forms",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "phase": 2,
     "status": "candidate",
     "foundation": "../tokens/tokens.json",
+    "contractSchema": "../schemas/component-contract-v1.schema.json",
+    "tokenNamespace": "semantic.light",
+    "modeNamespace": "modes",
+    "refRules": {
+      "tokenRef": "Resolve relative to semantic.light; for example color.action.primary => semantic.light.color.action.primary",
+      "modeRef": "Resolve against the active mode on the named axis; for example density.controlHeight => modes.density.<active>.controlHeight",
+      "fixedValue": "Allowed only for component-local geometry that has no stable cross-component semantic role"
+    },
     "principles": ["mobile-first", "compact-first", "flat-first", "semantic-color-only", "lazy-component-tokens"]
   },
   "shared": {
@@ -15,7 +22,10 @@
       "controlHeightLarge": {"modeRef": "density.controlHeightLarge"},
       "paddingHorizontal": {"modeRef": "density.paddingHorizontal"},
       "paddingVertical": {"modeRef": "density.paddingVertical"},
-      "internalGap": {"modeRef": "density.internalGap"}
+      "internalGap": {"modeRef": "density.internalGap"},
+      "fieldLabelGap": {"modeRef": "density.fieldLabelGap"},
+      "fieldHelperGap": {"modeRef": "density.fieldHelperGap"},
+      "fieldGap": {"modeRef": "density.fieldGap"}
     },
     "touchTarget": {
       "ios": {"modeRef": "platform.ios.touchTargetMin"},
@@ -24,11 +34,13 @@
     },
     "focus": {
       "color": {"tokenRef": "color.border.focused"},
-      "width": {"value": 2, "unit": "px"},
-      "shadow": false
+      "width": {"tokenRef": "border.focus"},
+      "shadow": false,
+      "errorPrecedence": true
     },
     "fieldFamily": {
       "radius": {"tokenRef": "radius.control"},
+      "borderWidth": {"tokenRef": "border.control"},
       "borderDefault": {"tokenRef": "color.border.default"},
       "borderError": {"tokenRef": "color.border.error"},
       "surface": {"tokenRef": "color.surface.default"},
@@ -39,19 +51,14 @@
       "labelTypography": {"tokenRef": "typography.labelSmall"},
       "valueTypography": {"tokenRef": "typography.body"},
       "helperTypography": {"tokenRef": "typography.caption"},
-      "labelGap": {
-        "compact": {"value": 6, "unit": "px"},
-        "comfortable": {"value": 8, "unit": "px"}
-      },
-      "helperGap": {"value": 6, "unit": "px"},
-      "fieldGap": {
-        "compact": {"value": 16, "unit": "px"},
-        "comfortable": {"value": 20, "unit": "px"}
-      }
+      "labelGap": {"modeRef": "density.fieldLabelGap"},
+      "helperGap": {"modeRef": "density.fieldHelperGap"},
+      "fieldGap": {"modeRef": "density.fieldGap"}
     }
   },
   "components": {
     "button": {
+      "role": "action",
       "anatomy": ["container", "leadingIcon?", "label", "trailingIcon?", "spinner?"],
       "sizes": {
         "regular": {"height": {"modeRef": "density.controlHeight"}},
@@ -93,25 +100,43 @@
         }
       },
       "states": ["default", "pressed", "disabled", "loading", "focused?"],
-      "loading": {"locksWidth": true, "repeatAction": false},
-      "constraints": [
-        "do not create a 32px interactive button size",
-        "avoid competing adjacent primary actions",
-        "no default elevation or shadow"
-      ]
+      "loading": {"locksWidth": true, "repeatAction": false, "announcesBusyState": true},
+      "accessibility": {"role": "button", "requiresAccessibleName": true},
+      "constraints": ["do not create a 32px interactive button size", "avoid competing adjacent primary actions", "no default elevation or shadow"]
     },
     "iconButton": {
+      "role": "icon-action",
       "anatomy": ["container", "icon"],
       "sizes": {
         "regular": {"container": {"modeRef": "density.controlHeight"}, "icon": {"value": 20, "unit": "px"}},
         "large": {"container": {"modeRef": "density.controlHeightLarge"}, "icon": {"value": 24, "unit": "px"}}
       },
-      "radius": {"tokenRef": "radius.control"},
-      "variants": ["ghost", "subtle", "destructive"],
+      "geometry": {"radius": {"tokenRef": "radius.control"}},
+      "variants": {
+        "ghost": {
+          "default": {"background": "transparent", "icon": "color.text.primary"},
+          "pressed": {"background": "color.surface.pressed", "icon": "color.text.primary"},
+          "selected": {"background": "color.surface.selected", "icon": "color.text.brand"},
+          "disabled": {"background": "transparent", "icon": "color.text.disabled"}
+        },
+        "subtle": {
+          "default": {"background": "color.surface.subtle", "icon": "color.text.primary"},
+          "pressed": {"background": "color.surface.pressed", "icon": "color.text.primary"},
+          "selected": {"background": "color.surface.selected", "icon": "color.text.brand"},
+          "disabled": {"background": "color.surface.subtle", "icon": "color.text.disabled"}
+        },
+        "destructive": {
+          "default": {"background": "transparent", "icon": "color.status.dangerText"},
+          "pressed": {"background": "color.status.dangerBg", "icon": "color.status.dangerText"},
+          "disabled": {"background": "transparent", "icon": "color.text.disabled"}
+        }
+      },
       "states": ["default", "pressed", "selected?", "disabled", "focused?"],
-      "constraints": ["requires accessibility label", "use text button when icon meaning is ambiguous"]
+      "accessibility": {"role": "button", "requiresAccessibleName": true},
+      "constraints": ["use text button when icon meaning is ambiguous", "visual container may be smaller than platform hit area only when the hit target is expanded externally"]
     },
     "input": {
+      "role": "text-input",
       "family": "fieldFamily",
       "appearance": ["outlined"],
       "anatomy": ["label?", "container", "leading?", "valueOrPlaceholder", "trailingAction?", "helper?"],
@@ -119,14 +144,16 @@
       "states": {
         "empty": {"border": "color.border.default", "background": "color.surface.default", "text": "color.text.placeholder"},
         "value": {"border": "color.border.default", "background": "color.surface.default", "text": "color.text.primary"},
-        "focused": {"border": "color.border.focused", "borderWidth": 2, "text": "color.text.primary"},
+        "focused": {"border": "color.border.focused", "borderWidth": {"tokenRef": "border.focus"}, "text": "color.text.primary"},
         "error": {"border": "color.border.error", "helper": "color.status.dangerText"},
         "disabled": {"background": "color.surface.subtle", "text": "color.text.disabled", "border": "color.border.subtle"},
-        "readOnly": {"background": "color.surface.subtle", "text": "color.text.primary", "editable": false, "copyable": true}
+        "readOnly": {"background": "color.surface.default", "text": "color.text.primary", "border": "color.border.subtle", "editable": false, "copyable": true}
       },
-      "constraints": ["placeholder is not disabled", "one trailing high-frequency action maximum", "error+focus keeps danger semantics"]
+      "accessibility": {"requiresProgrammaticLabel": true, "helperAndErrorCanBeDescribedBy": true},
+      "constraints": ["placeholder is not disabled", "one trailing high-frequency action maximum", "error+focus keeps danger semantics", "readOnly must remain visually distinct from disabled"]
     },
     "textarea": {
+      "role": "multiline-text-input",
       "family": "fieldFamily",
       "appearance": ["outlined"],
       "minHeight": {
@@ -138,52 +165,79 @@
         "comfortable": {"value": 176, "unit": "px"}
       },
       "statesFrom": "input",
-      "counter": {"optional": true, "typography": "typography.caption", "color": "color.text.tertiary"}
+      "counter": {"optional": true, "typography": "typography.caption", "color": "color.text.tertiary"},
+      "accessibility": {"requiresProgrammaticLabel": true, "counterMustNotBeOnlyErrorSignal": true}
     },
     "select": {
-      "family": "fieldFamily",
       "role": "picker-trigger",
+      "family": "fieldFamily",
       "height": {"modeRef": "density.controlHeight"},
       "anatomy": ["label?", "trigger", "valueOrPlaceholder", "disclosure", "helper?"],
       "disclosureSize": {"value": 20, "unit": "px"},
-      "states": ["empty", "value", "pressed", "open", "error", "disabled"],
+      "states": {
+        "empty": {"background": "color.surface.default", "border": "color.border.default", "text": "color.text.placeholder", "disclosure": "color.text.tertiary"},
+        "value": {"background": "color.surface.default", "border": "color.border.default", "text": "color.text.primary", "disclosure": "color.text.tertiary"},
+        "pressed": {"background": "color.surface.pressed", "border": "color.border.default", "text": "color.text.primary"},
+        "open": {"background": "color.surface.default", "border": "color.border.focused", "borderWidth": {"tokenRef": "border.focus"}, "text": "color.text.primary"},
+        "error": {"background": "color.surface.default", "border": "color.border.error", "helper": "color.status.dangerText"},
+        "disabled": {"background": "color.surface.subtle", "border": "color.border.subtle", "text": "color.text.disabled", "disclosure": "color.text.disabled"}
+      },
+      "accessibility": {"role": "button-or-platform-picker-trigger", "requiresAccessibleName": true, "mustExposeExpandedStateWhenOpen": true},
       "constraints": ["must not show a text cursor", "picker presentation is platform/overlay policy, not trigger appearance"]
     },
     "checkbox": {
+      "role": "checkbox",
       "anatomy": ["indicator", "label?", "helper?"],
       "indicator": {"width": 20, "height": 20, "radius": 4, "unit": "px"},
-      "states": ["unchecked", "checked", "indeterminate", "pressed", "disabled"],
-      "selected": {"background": "color.action.primary", "mark": "color.text.inverse"},
-      "unselected": {"background": "color.surface.default", "border": "color.border.default"},
+      "states": {
+        "unchecked": {"background": "color.surface.default", "border": "color.border.default", "label": "color.text.primary"},
+        "checked": {"background": "color.action.primary", "mark": "color.text.inverse", "label": "color.text.primary"},
+        "indeterminate": {"background": "color.action.primary", "mark": "color.text.inverse", "label": "color.text.primary"},
+        "pressed": {"feedback": "color.surface.pressed"},
+        "disabledUnchecked": {"background": "color.surface.subtle", "border": "color.border.subtle", "label": "color.text.disabled"},
+        "disabledChecked": {"background": "color.action.disabled", "mark": "color.text.disabled", "label": "color.text.disabled"}
+      },
+      "accessibility": {"role": "checkbox", "exposesCheckedAndMixedState": true, "labelSharesHitTarget": true},
       "constraints": ["indicator and label share hit area", "validation error belongs to group/helper by default"]
     },
     "radio": {
+      "role": "radio",
       "anatomy": ["outer", "innerDot?", "label?", "helper?"],
       "outer": {"width": 20, "height": 20, "unit": "px"},
       "innerDot": {"width": 8, "height": 8, "unit": "px"},
-      "states": ["unselected", "selected", "pressed", "disabled"],
-      "selected": {"color": "color.action.primary"},
+      "states": {
+        "unselected": {"background": "color.surface.default", "border": "color.border.default", "label": "color.text.primary"},
+        "selected": {"border": "color.action.primary", "dot": "color.action.primary", "label": "color.text.primary"},
+        "pressed": {"feedback": "color.surface.pressed"},
+        "disabledUnselected": {"border": "color.border.subtle", "label": "color.text.disabled"},
+        "disabledSelected": {"border": "color.text.disabled", "dot": "color.text.disabled", "label": "color.text.disabled"}
+      },
+      "accessibility": {"role": "radio", "groupMustExposeSingleSelection": true, "labelSharesHitTarget": true},
       "constraints": ["use only for mutually exclusive groups", "tapping selected radio normally does not clear selection"]
     },
     "switch": {
+      "role": "switch",
       "anatomy": ["track", "thumb", "externalLabel?"],
       "geometry": {
         "compact": {"trackWidth": 44, "trackHeight": 24, "thumb": 20, "unit": "px"},
         "comfortable": {"trackWidth": 48, "trackHeight": 28, "thumb": 24, "unit": "px"}
       },
       "states": {
-        "off": {"track": "color.surface.subtle", "thumb": "color.surface.default"},
-        "on": {"track": "color.action.primary", "thumb": "color.surface.default"},
+        "off": {"track": "color.surface.subtle", "trackBorder": "color.border.default", "thumb": "color.surface.default", "label": "color.text.primary"},
+        "on": {"track": "color.action.primary", "thumb": "color.surface.default", "label": "color.text.primary"},
         "pressed": {"feedback": "subtle-position-or-surface"},
-        "disabled": {"preserveOnOffDistinction": true}
+        "disabledOff": {"track": "color.surface.subtle", "trackBorder": "color.border.subtle", "thumb": "color.surface.default", "label": "color.text.disabled"},
+        "disabledOn": {"track": "color.action.disabled", "thumb": "color.surface.default", "label": "color.text.disabled"}
       },
-      "constraints": ["use for immediately applied binary state", "do not place ON/OFF text inside track"]
+      "accessibility": {"role": "switch", "exposesOnOffState": true, "externalLabelSharesHitTargetWhenPossible": true},
+      "constraints": ["use for immediately applied binary state", "do not place ON/OFF text inside track", "disabled styling must preserve on/off distinction"]
     }
   },
   "validation": {
     "fieldErrorPreferred": true,
     "toastForFieldError": false,
     "messagePattern": "what happened + how to fix",
-    "requiredMarkerMustBeConsistent": true
+    "requiredMarkerMustBeConsistent": true,
+    "requiredMarkerDefault": "asterisk-with-programmatic-required-state"
   }
 }
