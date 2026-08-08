@@ -49,6 +49,12 @@
       "selected": {"tokenRef": "color.surface.selected"},
       "divider": {"tokenRef": "color.border.subtle"},
       "shadowDefault": false
+    },
+    "textOverflowPolicy": {
+      "navigationLabel": "single-line; do not shrink typography to force fit",
+      "listTitle": "single-line ellipsis by default; explicit multiline only when information priority requires it",
+      "listDescription": "up to two lines before restructuring",
+      "metadata": "single-line where possible"
     }
   },
   "components": {
@@ -82,6 +88,7 @@
       },
       "constraints": [
         "maximum three information levels before restructuring",
+        "title is single-line ellipsis by default; description is limited to two lines",
         "one high-frequency trailing action maximum",
         "default has no shadow",
         "do not create business-state-specific list item variants"
@@ -109,6 +116,7 @@
       },
       "constraints": [
         "fixed for 2-4 items; scrollable for 5 or more",
+        "labels stay single-line and do not wrap",
         "do not shrink label typography to fit more tabs",
         "do not nest tabs inside tabs",
         "text-only is the V1 default"
@@ -131,7 +139,7 @@
         "disabled": {"text": {"tokenRef": "color.text.disabled"}}
       },
       "accessibility": {"role": "single-select-group", "selectedStateRequired": true},
-      "constraints": ["2-4 short options", "use tabs or picker for long labels", "no default elevation"]
+      "constraints": ["2-4 short options", "labels stay single-line", "use tabs or picker for long labels", "no default elevation"]
     },
     "topAppBar": {
       "role": "page-level-navigation-and-actions",
@@ -148,6 +156,7 @@
       },
       "accessibility": {"iconActionsRequireAccessibleName": true},
       "constraints": [
+        "title is single-line with ellipsis by default",
         "maximum two visible trailing icon actions before overflow",
         "safe area belongs to platform layer",
         "no default shadow",
@@ -171,7 +180,8 @@
       "accessibility": {"currentDestinationStateRequired": true},
       "constraints": [
         "3-5 destinations",
-        "labels stay visible in V1",
+        "labels stay visible and single-line in V1",
+        "56px is the V1 content band excluding safe area; platform layer may override when required",
         "Brand is the active identity; Accent Cyan is not",
         "no floating pill navigation as the V1 default",
         "badge must not obscure the icon silhouette"
@@ -201,13 +211,15 @@
       "anatomy": ["container", "content", "header?", "footer?", "action?"],
       "geometry": {
         "radius": {"tokenRef": "radius.container"},
-        "padding": {"modeRef": "density.paddingHorizontal"}
+        "padding": {"modeRef": "density.paddingHorizontal"},
+        "optionalBorder": {"tokenRef": "color.border.subtle"}
       },
       "states": {
-        "default": {"background": {"tokenRef": "color.surface.default"}, "border": {"tokenRef": "color.border.subtle"}},
+        "default": {"background": {"tokenRef": "color.surface.default"}},
         "pressed": {"background": {"tokenRef": "color.surface.pressed"}}
       },
       "constraints": [
+        "border is optional and only used when containment needs reinforcement",
         "no default shadow",
         "section before card",
         "card inside card is prohibited by default",
@@ -231,7 +243,7 @@
         "danger": {"background": {"tokenRef": "color.status.dangerBg"}, "text": {"tokenRef": "color.status.dangerText"}},
         "info": {"background": {"tokenRef": "color.status.infoBg"}, "text": {"tokenRef": "color.status.infoText"}}
       },
-      "accessibility": {"interactiveTagMustExposeRoleAndState": true},
+      "accessibility": {"interactiveTagMustExposeRoleAndState": true, "interactiveTagUsesPlatformHitArea": true},
       "constraints": ["Accent Cyan is not a fifth status family", "non-interactive tags must not look like primary buttons"]
     },
     "badge": {
@@ -247,7 +259,7 @@
       "typography": {"count": {"tokenRef": "typography.labelSmall"}},
       "states": {
         "brand": {"background": {"tokenRef": "color.action.primary"}, "text": {"tokenRef": "color.text.inverse"}},
-        "attention": {"background": {"tokenRef": "color.action.destructive"}, "text": {"tokenRef": "color.text.inverse"}}
+        "attention": {"background": {"tokenRef": "color.status.danger"}, "text": {"tokenRef": "color.text.inverse"}}
       },
       "accessibility": {"criticalMeaningRequiresTextEquivalent": true},
       "constraints": ["count range 1-99; display 99+ beyond that", "do not stack dot, count, and text alert on the same target"]
@@ -262,6 +274,7 @@
       },
       "geometry": {"radius": {"tokenRef": "radius.pill"}},
       "fallbackPriority": ["image", "initials", "genericIdentityIcon"],
+      "accessibility": {"meaningfulImageRequiresAccessibleNameOrAdjacentText": true},
       "constraints": [
         "do not encode all status into the avatar itself",
         "fallback initials use stable low-saturation backgrounds",
