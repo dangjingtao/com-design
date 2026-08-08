@@ -33,11 +33,14 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Validate canonical catalog and PenPot boundaries
+      - name: Validate canonical catalog and curated PenPot boundaries
         run: node penpot-library/scripts/validate-source-contract.mjs
 
-      - name: Syntax-check native PenPot builder
-        run: node --check penpot-library/plugin/plugin.js
+      - name: Build curated PenPot V2 plugin
+        run: node penpot-library/scripts/build-penpot-plugin-v2.mjs
+
+      - name: Syntax-check curated native PenPot builder
+        run: node --check penpot-library/plugin/plugin-v2.js
 
       - name: Compile-check PenPot v3 round-trip auditor
         run: python3 -m py_compile penpot-library/scripts/audit-penpot-roundtrip.py
@@ -50,11 +53,13 @@ jobs:
           node -e "JSON.parse(require('fs').readFileSync('penpot-library/dist/com-design-mobile.tokens.json','utf8')); console.log('token adapter JSON: PASS')"
           node -e "JSON.parse(require('fs').readFileSync('penpot-library/dist/motion-reference.json','utf8')); console.log('motion reference JSON: PASS')"
 
-      - name: Upload generated PenPot token adapter
+      - name: Upload ready-to-install curated PenPot bundle
         uses: actions/upload-artifact@v4
         with:
-          name: com-design-penpot-token-adapter
+          name: com-design-penpot-curated-v2
           path: |
+            penpot-library/plugin/manifest.json
+            penpot-library/plugin/plugin-v2.js
             penpot-library/dist/com-design-mobile.tokens.json
             penpot-library/dist/motion-reference.json
           if-no-files-found: error
