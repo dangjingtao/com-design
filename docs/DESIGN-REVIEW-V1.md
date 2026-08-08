@@ -4,66 +4,79 @@ Version: **1.0.0-rc.1**
 Audience: **Design Lead / Project Lead**  
 Purpose: **Design Review, not executive sales presentation**
 
-> Canonical truth remains `contracts/design-system-v1.json` and the files it references. This review document explains the system for human judgement; it does not introduce new design rules.
+> Canonical truth remains `contracts/design-system-v1.json` and referenced Token / Contract files. This document explains and reviews the system; it does not create a second source of truth.
 
-## Review question
+## 0. Current state
 
-This review should make it possible to decide whether Com Design Mobile V1 is coherent enough to move from Release Candidate toward Stable.
-
-The review is organized around six questions:
-
-1. What does the system actually look and feel like?
-2. Why is the language compact, flat and section-led?
-3. Do common interaction patterns remain coherent when components are composed?
-4. Does the system model scale across theme, density, platform and motion without duplicating components?
-5. Do realistic mobile compositions still look like one design language?
-6. What remains unresolved before Stable?
+- **33 Core Components**: specification and machine-readable contracts are defined.
+- **2 Core Patterns**: Status Composition / Search Experience.
+- **PenPot reusable assets**: still require V1 alignment and final validation.
+- **Iconography**: current V1 gap; component contracts define icon sizes in many places but the shared icon language is not yet formally specified.
 
 ---
 
-## 1. Visual language
+# 1. Brand character
 
-### Direction
+The system direction in current Foundation is **Modern / Clear / Light / Efficient**, with restrained youthful character.
 
-The intended tone is **Modern / Clear / Light / Efficient**, with a restrained younger character.
+For review, that translates into four concrete traits:
 
-The system deliberately avoids:
+### Clear
+Information hierarchy comes before decoration. Text, secondary information, action and status keep stable visual roles.
 
-- heavy enterprise SaaS blue-grey;
-- government / education-system visual weight;
-- neon gaming / cyberpunk styling;
-- soft, creamy, childlike rounded-card styling;
-- card-and-shadow as the default information architecture;
-- product-domain metaphors leaking into company Core.
+**Visual consequence:** system sans-serif, explicit typography hierarchy, low-noise surfaces, limited saturated color.
 
-### Color roles
+### Light
+High information density should not make the interface visually heavy.
 
-**Brand — Electric Indigo**
+**Visual consequence:** cool Neutral palette, Flat-first surfaces, light borders and spacing rather than routine shadows.
 
-Brand is the primary identity and action family. The key Light value is Brand 500 `#5B5EF7`; Brand 600 `#494CE0` supports stronger text/link contrast; Brand 700 `#393BBE` handles pressed/deeper brand expression.
+### Efficient
+Compact is the default density for high-frequency mobile business interfaces.
 
-Brand owns:
+**Visual consequence:** 40px regular controls / 48px large controls in Compact, while platform hit targets remain independent.
 
-- primary action;
-- key selection;
-- global navigation active identity;
-- Info semantics where a separate duplicated blue family is unnecessary.
+### Young
+Youthfulness comes from Electric Indigo plus restrained Cyan rhythm, not neon, giant gradients, soft cartoon cards or excessive roundness.
 
-**Accent — Cyan**
+**Visual consequence:** strong Brand color appears selectively; Accent never competes with Brand for primary identity.
 
-Accent 500 `#16BFD3` is deliberately subordinate to Brand. It can support local emphasis, progress, data visualization and constrained product patterns. It is **not** the default CTA, global navigation active color or a fifth status family.
+**Short description:** calm without heaviness; young without playfulness becoming childish; compact without crowding.
 
-**Status**
+---
 
-Success / Warning / Danger each resolve through background, main signal and text semantics. Info reuses the Brand family. Color cannot be the only signal.
+# 2. Global Styles
 
-### Typography
+## 2.1 Color
 
-V1 uses the system sans-serif stack. Brand character is not dependent on a custom font.
+### Brand — Electric Indigo
 
-Core roles:
+- Brand 500 `#5B5EF7`: primary action, key selection, primary brand identity.
+- Brand 600 `#494CE0`: stronger brand text / link expression in Light.
+- Brand 700 `#393BBE`: pressed / deeper expression.
+- Brand 50 / 100 / 200: selected and subtle brand surfaces.
 
-| Role | Size / line-height | Weight |
+Global navigation active identity uses Brand.
+
+### Accent — Cyan
+
+Accent 500 `#16BFD3` is subordinate to Brand.
+
+Use for local emphasis, progress, data visualization and constrained product patterns. Do not use it as the default CTA, global navigation identity or a fifth status family.
+
+### Neutral
+
+Cool Neutral supports dense information without producing heavy enterprise blue-grey. Light page uses `neutral.50`; default content Surface uses white.
+
+### Status
+
+Success / Warning / Danger provide background / signal / text semantics. Info reuses Brand. Color may reinforce status but may never be the only status signal.
+
+## 2.2 Typography
+
+System sans-serif. Brand character does not depend on a custom font.
+
+| Role | Size / Line Height | Weight |
 | --- | --- | --- |
 | Caption | 12 / 18 | Regular |
 | Label Small | 12 / 16 | Medium |
@@ -73,325 +86,210 @@ Core roles:
 | Heading Small | 16 / 22 | Semibold |
 | Heading | 18 / 24 | Semibold |
 | Title | 24 / 30 | Semibold |
-| Display | 28 / 36 | Semibold, used sparingly |
+| Display | 28 / 36 | Semibold |
 
-High information density is not achieved by globally shrinking text. Hierarchy is produced by type role, color, spacing and grouping together.
+High information density is not achieved by globally shrinking text.
 
-### Spacing and density
+## 2.3 Iconography — V1 gap
 
-Primitive spacing is intentionally finite: `0 / 2 / 4 / 6 / 8 / 12 / 16 / 20 / 24 / 32`.
+Current contracts already contain icon visual sizes, but V1 has no formal shared icon style / source specification. This should be closed before Stable.
 
-Compact is the default mode:
+**Proposal: use Lucide as the default system icon source.**
 
-- control: 40;
-- large control / row baseline: 48;
-- horizontal padding: 12;
-- vertical padding: 8;
-- internal gap: 8;
-- page inset: 16;
-- section gap: 20.
+Proposed baseline for review:
 
-Comfortable increases geometry without changing component roles or color semantics:
+- Outline icon style.
+- Default stroke weight: 2px.
+- Visual sizes: 16 / 20 / 24px.
+- Icon color consumes Semantic Color only.
+- Visual size and interactive hit area stay independent; iOS 44pt / Android 48dp remain the interaction baseline.
+- Use a Custom Icon only when the default library has no semantically correct option; custom icons must preserve the same visual weight and geometry discipline.
+- The same system meaning should map to a stable icon rather than arbitrary near-synonyms per page.
 
-- control: 44;
-- large control / row baseline: 56;
-- horizontal padding: 16;
-- vertical padding: 12;
-- section gap: 24.
+This proposal is **not yet canonical V1 truth** until it is added to the Design System contract / documentation / PenPot and implementation consumption path.
 
-### Radius and elevation
+## 2.4 Spacing & Density
 
-Shape follows role:
+Primitive spacing: `0 / 2 / 4 / 6 / 8 / 12 / 16 / 20 / 24 / 32`.
 
-- Control: 8;
-- Container: 12;
-- Overlay / Sheet: 16;
-- Pill: full.
+Compact — default:
+- control 40
+- large control 48
+- horizontal padding 12
+- vertical padding 8
+- content inset 16
+- section gap 20
 
-The system is **Flat-first**. Ordinary information hierarchy should be built in this order:
+Comfortable:
+- control 44
+- large control 56
+- horizontal padding 16
+- vertical padding 12
+- content inset 16
+- section gap 24
 
-1. typography;
-2. spacing / grouping;
+Compact-first increases information efficiency; it does not shrink readable type or platform interaction targets.
+
+## 2.5 Radius & Shape
+
+- Control: 8px
+- Container: 12px
+- Overlay: 16px
+- Pill: full
+
+Not every container needs a radius. Section, List and Divider are allowed to remain fully flat.
+
+## 2.6 Surface & Elevation
+
+Normal information hierarchy prefers:
+
+1. spacing / grouping;
+2. typography hierarchy;
 3. divider / border;
 4. surface difference;
-5. status / brand color.
+5. status / brand emphasis.
 
 Shadow is reserved for real floating relationships such as Menu, Dialog and Sheet. Card has no default shadow.
 
----
+## 2.7 Theme
 
-## 2. Design principles and their consequences
+Light / Dark are mappings of the same Semantic roles, not duplicated component systems. Dark is applied through the current theme overlay contract.
 
-### Compact-first
+## 2.8 Motion
 
-Compact means efficient geometry, not reduced readability or smaller hit targets. Visual size and interactive hit area are independent. iOS uses a 44pt minimum touch target; Android uses 48dp.
-
-**Consequence:** a 40px compact control can still satisfy the platform hit-target contract through an expanded interaction area.
-
-### Flat-first
-
-The system avoids using elevation as decoration.
-
-**Consequence:** lists, sections and ordinary cards stay visually close to the page surface; elevation appears when a layer actually floats.
-
-### Section-before-Card
-
-Section is the default grouping mechanism. Card is used when content needs an independent container boundary.
-
-**Consequence:** information-dense pages do not become a stack of rounded white boxes, and Card-inside-Card is prohibited by default.
-
-### Brand / Accent / Status have different jobs
-
-- Brand = identity, primary action, key selection, global navigation.
-- Accent = local emphasis, progress/data, constrained product pattern use.
-- Status = semantic outcome or risk.
-
-**Consequence:** a cyan active tab, a warning-yellow category label and a red decorative divider are all suspect unless their semantic role justifies them.
-
-### Core stays smaller than the vocabulary of UI
-
-V1 intentionally does not include every familiar UI noun. Carousel, FAB, Data Table, Rich Text Editor and Navigation Rail are not Core simply because they exist elsewhere.
-
-A new Core component must either be a clear foundational interaction or show stable cross-product reuse, and it must have a role / anatomy / states / accessibility / constraints contract.
+Standard motion communicates relationship or state. Reduced Motion removes non-essential spatial animation and Skeleton shimmer. Motion is never the only signal for success, error, selection or progress.
 
 ---
 
-## 3. System model
+# 3. Design Patterns
 
-The canonical model is:
+## 3.1 Information grouping
 
-`Primitive → Semantic → Component → Pattern`
+**Section-before-Card.** Start with typography, spacing and Divider. Use Card only when content needs a real independent container boundary. Card-in-Card is prohibited by default.
 
-### Layer responsibilities
+## 3.2 Forms
 
-**Primitive** stores raw design values.  
-**Semantic** gives stable cross-component roles such as `text.primary`, `surface.default`, `action.primary`, `status.warningText`.  
-**Component** defines role, anatomy, states, geometry and constraints while consuming semantic roles rather than primitive values.  
-**Pattern** composes components into repeatable interaction logic without mutating Core.
+Keep a stable Label → Control → Helper / Error anatomy. Field-level error is preferred. Read-only and Disabled remain semantically and visually distinct.
 
-### Four orthogonal axes
+## 3.3 Navigation
 
-**Theme** — Light / Dark  
-Dark is a semantic overlay, not a second hand-maintained component set.
+- Bottom Navigation: top-level destinations.
+- Tabs: peer views at the same information level.
+- Segmented Control: local mode switch.
 
-**Density** — Compact / Comfortable  
-Changes geometry and rhythm, not semantic hierarchy.
+The three roles must not substitute for each other merely because their visuals can look similar.
 
-**Platform** — iOS / Android  
-Owns actual platform differences such as touch-target minimums, safe area and system dismissal conventions; it does not create two visual systems.
+## 3.4 Search
 
-**Motion** — Standard / Reduced  
-Motion communicates relationship and state. Reduced Motion removes non-essential animation and shimmer without removing state information.
+Search is not generic Input. Query, Clear and usable previous results should be preserved through loading and recoverable failure when possible. No Results is contextual to the current query.
 
-### Resolution order
+## 3.5 Feedback hierarchy
 
-1. Foundation
-2. Theme
-3. Density
-4. Platform
-5. Motion
-6. Component
-7. Pattern
-8. Product / Domain Extension
+`Field / Helper → Inline Alert → Banner → Toast / Snackbar → Dialog`
 
-The system explicitly avoids combinatorial token sets such as `Dark-Compact-iOS-Reduced`.
+Interruption cost increases along the hierarchy. Importance alone is not a reason to use a Dialog.
 
----
+## 3.6 Overlay
 
-## 4. Design patterns
+Only one blocking modal layer at a time. Close Menu before opening Dialog / Sheet. Do not stack Dialog-on-Dialog or Sheet-on-Sheet.
 
-### Form organization
+## 3.7 Loading / Empty / Error
 
-Input / Textarea / Select share a Field Family structure:
+- Known structure: Skeleton.
+- Unknown wait: Loading Indicator.
+- Zero content: Empty State.
+- Failed request: Error / Recovery state.
 
-`Label → Control → Helper / Error`
+Background refresh should preserve usable existing content when possible.
 
-Field-level feedback is preferred. A field error does not become a Toast merely to attract attention. Read-only and Disabled remain distinct semantics.
+## 3.8 Progress / Stepper / Timeline
 
-V1 keeps one primary Input appearance: **Outlined / Flat**. Search deliberately does not inherit that appearance.
+- Progress Indicator: truthful determinate progress.
+- Stepper: finite ordered task progression.
+- Timeline: chronological event history.
 
-### Information hierarchy
+These roles are intentionally separate.
 
-List Item supports up to three information levels before restructuring is preferred. Leading / Content / Trailing establishes a stable reading rhythm. A row has at most one high-frequency trailing action.
+## 3.9 Status Composition
 
-Section is the normal grouping boundary. Divider is structural, not decorative. Card is reserved for independent containment.
-
-### Navigation
-
-- Bottom Navigation = top-level peer destinations, 3–5 items.
-- Tabs = peer views within one information level; fixed 2–4, scrollable when more.
-- Segmented Control = local mutually exclusive mode.
-- Top App Bar = page hierarchy + a small number of high-frequency actions.
-- Menu = contextual actions, not page IA.
-
-Role differences come before visual differences.
-
-### Search
-
-Search Field is a query input, not an alias of generic Input.
-
-It owns query entry, clear access and loading state. Recent queries, suggestions, result lists, no-results and recoverable errors belong to the Search Pattern.
-
-Core keeps one trailing action slot by default, so loading cannot silently remove the user's ability to clear a non-empty query.
-
-### Feedback hierarchy
-
-From least to most interruptive:
-
-`Field / Local Helper → Inline Alert → Banner → Toast / Snackbar → Dialog`
-
-Feedback strength follows attention cost. Warning / Danger do not automatically imply modal blocking.
-
-### Overlay
-
-Only one blocking modal layer is allowed at a time. Dialog-on-Dialog and modal-Sheet-on-modal-Sheet are prohibited. A Menu closes before opening a blocking Dialog or Sheet.
-
-### Loading / Empty / Error
-
-- Loading Indicator = indeterminate work when structure or progress is unknown.
-- Skeleton = known structure waiting for data; it mirrors real content rather than decorative bars.
-- Empty State = zero-content or a recoverable state with an explicit next action.
-- No Results = a Search-context state, not the whole-product empty state.
-
-Existing usable content should normally be preserved during background refresh.
-
-### Progress / Stepper / Timeline
-
-- Progress Indicator = truthful determinate progress.
-- Loading Indicator = indeterminate activity.
-- Stepper = finite ordered task progression.
-- Timeline = chronological event history.
-
-These roles are intentionally not collapsed into one generic progress component.
-
-### Status composition
-
-Status is a pattern, not merely a colored pill.
-
-It can compose text, icon, tag, dot, alert or section-level presentation. Business-specific names map into `neutral / info / success / warning / danger`; ranking, level, stage and category are not automatically status semantics.
+Status is a composition rule, not a universal colored pill. Text / icon / tag / dot / alert may compose a status; color cannot be the only signal.
 
 ---
 
-## 5. Core catalogue
+# 4. Core Component scope
 
-V1 declares **33 Core Components + 2 Core Patterns**.
+**33 Core Components are defined in V1.**
 
 ### Actions & Forms — 8
-
 Button / Icon Button / Input / Textarea / Select / Checkbox / Radio / Switch
 
 ### Navigation & Information — 11
-
 List Item / Tabs / Segmented Control / Top App Bar / Bottom Navigation / Section / Divider / Card / Tag / Badge / Avatar
 
 ### Feedback / Overlay / Progress — 11
-
 Toast / Snackbar / Alert / Dialog / Bottom Sheet / Loading Indicator / Skeleton / Empty State / Progress Indicator / Stepper / Timeline
 
-### Search / Menu — 3
-
+### Search & Menu — 3
 Search Field / Menu / Menu Item
 
-### Core Patterns — 2
-
-Status Composition / Search Experience
+V1 deliberately does not yet promote Carousel, FAB, Data Table, Rich Text Editor, Navigation Rail and similar capabilities into Core without stable cross-product demand.
 
 ---
 
-## 6. Composition review scenarios
+# 5. Composition review
 
-The HTML review artifact uses neutral, non-business mobile compositions to judge whether the language survives assembly.
+The HTML review artifact shows neutral mobile compositions for:
 
-The scenarios are deliberately not product prototypes:
+- Form
+- Search / List
+- Settings / Navigation
+- Feedback
+- Dark Theme
+- Progress / Stepper
 
-1. **Form** — section header, field family, inline error, primary / secondary action hierarchy.
-2. **List / Search** — flat Search Field, result hierarchy, status/tag composition, no Card stack.
-3. **Settings / Navigation** — Top App Bar, Section, List Item, Switch, Bottom Navigation.
-4. **Feedback** — local Alert, Toast/Snackbar hierarchy and modal decision boundary.
-5. **Dialog / Sheet / Menu** — real overlay elevation, restrained radius and single blocking-layer rule.
-6. **Progress** — determinate progress, Stepper and Timeline shown as distinct semantic structures.
-7. **Light / Dark** — same roles, different theme mappings rather than duplicated component logic.
-
-The goal is not pixel-perfect implementation documentation. The goal is to expose whether the rules produce a coherent family under realistic composition.
+These are design-language specimens, not product prototypes.
 
 ---
 
-## 7. Release Candidate: what is still imperfect
+# 6. System model
 
-The current state is **Release Candidate**, not Stable.
+`Primitive → Semantic → Component → Pattern`
 
-### Must be resolved before Stable
+Orthogonal axes:
 
-According to the current release checklist, the remaining release blockers are:
+- Theme: Light / Dark
+- Density: Compact / Comfortable
+- Platform: iOS / Android
+- Motion: Standard / Reduced
 
-- independent reviewer samples rendered iOS / Android typography and controls;
-- independent verification of all manifest-referenced files, references and counts;
-- PenPot Formal Spec updated to the V1 manifest;
-- PenPot Light / Dark specimen verification;
-- PenPot Compact / Comfortable specimen verification;
-- reusable component asset status verified separately from spec visuals;
-- exported `.penpot` audit passing overflow / `hideInViewer` / stale ref / duplicate / reusable metadata checks;
-- independent review itself.
-
-Author self-review cannot mark the release Stable.
-
-### Known compromise / historical debt
-
-The pre-release contracts historically use `semantic.light` as a logical namespace. V1 preserves that name for compatibility, and Dark applies an overlay before component resolution. This is an explicit compatibility contract rather than a statement that the system is Light-only.
-
-This naming debt does not need to be churned immediately before Stable unless independent review finds that it creates real implementation ambiguity. It should remain visible rather than being disguised by the report.
-
-### Not fully validated yet
-
-- exhaustive real-device behavior across iOS / Android implementation environments;
-- all dynamic-text enlargement scenarios beyond the documented baseline;
-- adaptive behavior for tablet / foldable / wide layouts;
-- every potential future product pattern using Accent or product brand overlays.
-
-### Appropriate for later versions
-
-- Carousel, FAB, Data Table, Rich Text Editor, Navigation Rail and other omitted capabilities, only after stable cross-product need is demonstrated;
-- adaptive / pointer-platform expansion;
-- migration away from the historical logical namespace if its benefit outweighs churn;
-- additional Product / Domain Patterns that consume Core without changing it.
+The system resolves axes independently rather than creating combination-token sets such as `Dark-Compact-iOS-Reduced`.
 
 ---
 
-## 8. Review decision
+# 7. RC gaps before Stable
 
-A useful review should not ask whether the HTML looks polished enough. It should ask:
+## Must close before Stable
 
-- Does the visual language remain recognizably one system across the composition scenarios?
-- Are Compact-first and Flat-first helping information efficiency rather than making the UI feel cheap or cramped?
-- Is Section-before-Card strong enough to prevent card inflation in product work?
-- Are Brand / Accent / Status responsibilities clear enough to prevent local interpretation drift?
-- Are navigation, feedback, overlay and progress roles semantically distinct enough for designers and engineers to use consistently?
-- Is the four-axis model understandable enough to implement without duplicating components?
-- Do the listed RC blockers represent verification work rather than unresolved design-language contradictions?
+- Formal Iconography specification and asset/implementation path; Lucide is the current proposal.
+- PenPot Formal Spec aligned to V1 Manifest.
+- PenPot Light / Dark specimen validation.
+- PenPot Compact / Comfortable specimen validation.
+- Reusable Component Asset verification.
+- Exported `.penpot` audit.
+- Independent Manifest / reference / 33 + 2 verification.
+- Independent iOS / Android typography and control sampling.
+- Independent design review.
 
-A Stable recommendation should only follow after the unchecked release gates are closed.
+## Compatibility debt
+
+Current V1 retains historical `semantic.light` as a logical namespace and applies Dark Theme through overlay replacement before component resolution.
+
+## Later versions
+
+Adaptive / tablet / foldable / pointer-platform expansion and additional Core Components should be driven by real product demand rather than 1.0 completeness theatre.
 
 ---
 
-## Canonical sources used by this review
+## Review conclusion
 
-- `contracts/design-system-v1.json`
-- `tokens/tokens.json`
-- `tokens/theme-dark.json`
-- `tokens/motion.json`
-- `contracts/actions-forms.json`
-- `contracts/navigation-information.json`
-- `contracts/feedback-overlay-progress.json`
-- `contracts/search-menu.json`
-- `contracts/core-patterns.json`
-- `docs/01-foundations.md`
-- `docs/02-actions-forms.md`
-- `docs/03-navigation-information.md`
-- `docs/04-feedback-overlay-progress.md`
-- `docs/04b-search-menu.md`
-- `docs/05-systemization-release.md`
-- `docs/DESIGN-SYSTEM.md`
-- `docs/EXTENSIONS.md`
-- `release/v1-checklist.md`
-
-HTML review artifact: `report/design-system-v1/index.html`.
+The V1 design language is substantially formed, but **Iconography, PenPot formal assets and independent review are not yet closed**. The correct status remains **1.0.0-rc.1**.
