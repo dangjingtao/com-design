@@ -10,8 +10,21 @@
 
 - Human-readable：`docs/DESIGN-SYSTEM.md`
 - Machine-readable：`contracts/design-system-v1.json`
+- Design Review HTML：`report/design-system-v1/index.html`
+- Design Review source：`docs/DESIGN-REVIEW-V1.md`
+- Review self-check：`review/phase5-human-report-self-check.md`
 - Release gate：`release/v1-checklist.md`
 - Changelog：`CHANGELOG.md`
+
+### Design Review 使用方式
+
+`report/design-system-v1/index.html` 是面向设计负责人 / 项目负责人的 V1 RC 评审入口，可直接用浏览器打开，不需要构建步骤或外部依赖。
+
+该页面用于判断设计语言、设计模式、系统模型、真实组合与 RC 遗留问题，不是老板汇报版，也不是新的设计真相源。
+
+真相优先级保持：
+
+`Manifest / Token / Contract > Human-readable docs > Review presentation`
 
 ## System model
 
