@@ -2,16 +2,17 @@
 
 ## 设计方向
 
-Com Design Mobile 面向大学生“三创赛全流程平台”。它不是教务系统的年轻皮肤，也不是消费社交 App。
+Com Design Mobile 是公司的移动端 Design System，不绑定某一个具体产品或业务域。当前“三创赛”系列 App 是第一批重要消费者之一，但业务主题、赛事符号和特定流程都不能反向侵入 Foundation。
 
-目标气质：**年轻、科技、潮流、活泼、高效率**。
+系统目标气质：**现代、清晰、轻快、高效率，并保留适度年轻感**。
 
 明确避免：
-- 政务蓝 / 教务系统感
+- 政务 / 教务系统式的沉重蓝灰
 - 厚重企业 SaaS
 - 电竞霓虹与赛博朋克
 - 软萌、奶油化、幼稚卡通
 - 满屏圆角 Card + Shadow
+- 为单一业务域固化专属视觉隐喻
 
 基础策略：**Compact-first、Flat-first、信息层级优先于装饰。**
 
@@ -21,7 +22,7 @@ Com Design Mobile 面向大学生“三创赛全流程平台”。它不是教�
 
 ### Brand — Electric Indigo
 
-主色不使用常见模板蓝，V1 采用更年轻、稍偏电光感的 Indigo：
+V1 使用偏年轻、清晰的 Electric Indigo 作为品牌主色：
 
 - Brand 500 `#5B5EF7`：主操作、关键选中、核心品牌识别
 - Brand 600 `#494CE0`：文字链接、需要更强对比的品牌表达
@@ -32,18 +33,19 @@ Com Design Mobile 面向大学生“三创赛全流程平台”。它不是教�
 
 ### Accent — Cyan
 
-Accent 500 `#16BFD3` 是节奏色，不与 Brand 平权。
+Accent 500 `#16BFD3` 是辅助强调色，不与 Brand 平权。
 
 适用：
-- 比赛阶段节点
 - 进度与活跃指示
 - 数据可视化
-- 小面积赛事事件高亮
+- 局部强调和当前上下文中的次级高亮
+- 产品层 Pattern 中经过约束的主题化节奏
 
 不适用：
 - 白底正文
 - 大面积页面背景
 - 主要 CTA
+- 全局导航 active identity
 - 需要高可读性的细小文字
 
 ### Neutral
@@ -135,9 +137,9 @@ V1 采用“控件稍圆、容器克制、浮层更柔和”的层级：
 3. Spacing / Group
 4. Typography hierarchy
 
-Shadow 只用于真实悬浮关系，例如 Dropdown、Floating Action、Dialog、Sheet。普通 Card 默认不使用 Shadow。
+Shadow 只用于真实悬浮关系，例如 Popover、Dialog、Sheet 等 Overlay。普通 Card 默认不使用 Shadow。
 
-Raised 是层级语义，不等于“换一个白色色值”；它由 Surface + Elevation 共同表达。
+Elevation 是层级语义，不等于“换一个白色色值”；它由 Surface + Scrim + Shadow / Platform Layer 共同表达。
 
 ---
 
@@ -148,7 +150,7 @@ Raised 是层级语义，不等于“换一个白色色值”；它由 Surface +
 基础规则：
 - 页面左右内容 inset：16px
 - Safe Area 交给系统 / 平台适配层
-- 宽屏、平板、折叠屏在后续 Platform / Adaptive 规范中处理
+- 宽屏、平板、折叠屏在 Platform / Adaptive 规范中处理
 - 页面布局优先按内容层级组织，不机械套 12 列栅格
 
 ---
@@ -170,21 +172,18 @@ Disabled、Placeholder、Tertiary 是不同语义，即使当前可能解析到�
 
 ---
 
-## “赛事感”如何出现
+## Product / Domain Extension Boundary
 
-赛事感来自信息结构，而不是宣传装饰。
+Foundation 只定义跨产品稳定的视觉和交互语义。
 
-推荐语言：
-- 阶段 Stage
-- 节点 Node
-- 轨道 Track
-- 排名 Rank
-- 编号 Number
-- 状态 Status
-- 进度 Progress
-- 轻量方向性几何元素
+具体产品可以在 Pattern / Extension 层表达自己的业务性格，例如：
+- 阶段 / 流程 / 时间线
+- 排名 / 评分 / 统计
+- 行业状态与专属标签
+- 特定业务数据可视化
+- 主题化插图或活动视觉
 
-避免把奖杯、火箭、灯泡、霓虹光效当作系统性视觉语言。
+但这些不能反向修改 Foundation 的 Brand、Status、Typography、Spacing 或基础组件语义。产品需要特殊表达时，应优先新增受约束的 Pattern / Extension，而不是把业务隐喻塞进全公司组件。
 
 ---
 
