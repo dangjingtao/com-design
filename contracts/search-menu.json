@@ -1,0 +1,193 @@
+{
+  "$schema": "https://com-design.local/schemas/component-contract-v1.json",
+  "$metadata": {
+    "name": "Com Design Mobile — Search & Menu",
+    "version": "0.4.1",
+    "phase": 4,
+    "status": "candidate",
+    "foundation": "../tokens/tokens.json",
+    "contractSchema": "../schemas/component-contract-v1.schema.json",
+    "tokenNamespace": "semantic.light",
+    "modeNamespace": "modes",
+    "refRules": {
+      "tokenRef": "Resolve relative to tokenNamespace unless the ref starts with primitive., semantic., or modes.",
+      "modeRef": "Resolve relative to modeNamespace and the active orthogonal mode.",
+      "fixedGeometry": "Component-local fixed geometry may remain literal until stable cross-component reuse justifies promotion."
+    },
+    "principles": [
+      "mobile-first",
+      "compact-first",
+      "flat-first",
+      "search-is-not-generic-input",
+      "menu-is-not-page-navigation",
+      "single-trailing-action-slot-by-default",
+      "product-patterns-do-not-mutate-core"
+    ]
+  },
+  "shared": {
+    "touchTarget": {
+      "ios": {"modeRef": "platform.ios.touchTargetMin"},
+      "android": {"modeRef": "platform.android.touchTargetMin"}
+    },
+    "surface": {
+      "default": {"tokenRef": "color.surface.default"},
+      "subtle": {"tokenRef": "color.surface.subtle"},
+      "pressed": {"tokenRef": "color.surface.pressed"}
+    }
+  },
+  "components": {
+    "searchField": {
+      "role": "query-input",
+      "anatomy": ["container", "searchIcon", "queryOrPlaceholder", "trailingSlot?"],
+      "appearance": ["flat"],
+      "geometry": {
+        "height": {"modeRef": "density.controlHeight"},
+        "paddingHorizontal": {"modeRef": "density.paddingHorizontal"},
+        "gap": {"modeRef": "density.internalGap"},
+        "leadingIconSize": {"value": 20, "unit": "px"},
+        "trailingIconSize": {"value": 20, "unit": "px"},
+        "radius": {"tokenRef": "radius.control"},
+        "optionalBorder": {"tokenRef": "color.border.subtle"}
+      },
+      "typography": {
+        "query": {"tokenRef": "typography.body"}
+      },
+      "states": {
+        "idle": {
+          "background": {"tokenRef": "color.surface.subtle"},
+          "placeholder": {"tokenRef": "color.text.placeholder"},
+          "icon": {"tokenRef": "color.text.tertiary"}
+        },
+        "focused": {
+          "background": {"tokenRef": "color.surface.default"},
+          "query": {"tokenRef": "color.text.primary"}
+        },
+        "query": {
+          "background": {"tokenRef": "color.surface.subtle"},
+          "query": {"tokenRef": "color.text.primary"},
+          "clearVisible": true
+        },
+        "loading": {
+          "queryPreserved": true,
+          "trailingIndicatorSize": {"value": 16, "unit": "px"}
+        },
+        "disabled": {
+          "background": {"tokenRef": "color.surface.subtle"},
+          "text": {"tokenRef": "color.text.disabled"}
+        }
+      },
+      "behaviors": {
+        "clear": {
+          "clearsQuery": true,
+          "keepsFocusByDefault": true,
+          "requiresAccessibleName": true
+        },
+        "trailingSlot": {
+          "maxCoreActions": 1,
+          "priority": ["loading", "clear", "productExtensionAction"]
+        }
+      },
+      "accessibility": {
+        "role": "search-input",
+        "clearActionRequiresAccessibleName": true,
+        "trailingActionUsesPlatformHitArea": true
+      },
+      "constraints": [
+        "search is not an alias of generic input",
+        "no default shadow",
+        "do not disable search to represent no results",
+        "do not turn the trailing slot into a toolbar",
+        "request debounce timing is implementation policy, not a visual token"
+      ]
+    },
+    "searchPattern": {
+      "role": "search-experience-composition",
+      "anatomy": ["searchField", "recentQueries?", "suggestions?", "resultList?", "loading?", "noResults?", "recoverableError?"],
+      "states": ["initial", "suggesting", "loading", "results", "no-results", "recoverable-error"],
+      "constraints": [
+        "no-results is contextual to the query and is not the whole-product empty state",
+        "preserve query on recoverable request failure",
+        "preserve usable previous results during background refresh when possible",
+        "query-match emphasis cannot rely on color alone",
+        "avoid major layout jumps on each keystroke"
+      ]
+    },
+    "menu": {
+      "role": "contextual-action-container",
+      "family": "action-menu",
+      "anatomy": ["container", "menuItem", "groupDivider?"],
+      "variants": ["action-menu", "overflow-menu", "context-menu"],
+      "geometry": {
+        "radius": {"tokenRef": "radius.overlay"},
+        "surface": {"tokenRef": "color.surface.default"},
+        "elevation": {"tokenRef": "elevation.floating"},
+        "divider": {"tokenRef": "color.border.subtle"}
+      },
+      "states": {
+        "open": {"visible": true},
+        "closed": {"visible": false}
+      },
+      "placement": {
+        "anchoredToTrigger": true,
+        "flipWhenViewportSpaceInsufficient": true,
+        "avoidKeyboard": true,
+        "avoidSafeArea": true,
+        "avoidGestureRegion": true
+      },
+      "dismissal": {
+        "selectAction": true,
+        "outsidePress": true,
+        "backOrEscapeWhenPlatformSupports": true
+      },
+      "accessibility": {
+        "triggerExposesExpandedState": true,
+        "triggerExposesMenuRelationship": true,
+        "focusExitPathRequired": true
+      },
+      "constraints": [
+        "default action count is 2-6",
+        "not for page-level navigation",
+        "not for long-form content",
+        "do not use cascading multilevel desktop menus as the mobile default",
+        "close menu before opening a blocking dialog or sheet"
+      ]
+    },
+    "menuItem": {
+      "role": "contextual-action",
+      "anatomy": ["container", "leadingIcon?", "label", "trailingMetadataOrCheck?"],
+      "geometry": {
+        "minHeight": {"modeRef": "density.controlHeightLarge"},
+        "paddingHorizontal": {"modeRef": "density.paddingHorizontal"},
+        "gap": {"modeRef": "density.internalGap"},
+        "iconSize": {"value": 20, "unit": "px"}
+      },
+      "typography": {
+        "label": {"tokenRef": "typography.body"}
+      },
+      "states": {
+        "default": {"text": {"tokenRef": "color.text.primary"}},
+        "pressed": {"background": {"tokenRef": "color.surface.pressed"}},
+        "disabled": {"text": {"tokenRef": "color.text.disabled"}, "interactive": false},
+        "selected": {"text": {"tokenRef": "color.text.brand"}, "stateIndicatorRequired": true},
+        "destructive": {"text": {"tokenRef": "color.status.dangerText"}, "icon": {"tokenRef": "color.status.danger"}}
+      },
+      "accessibility": {
+        "role": "menu-item",
+        "disabledStateRequired": true,
+        "selectedOrCheckedStateRequiredWhenApplicable": true
+      },
+      "constraints": [
+        "destructive item is not a filled red row by default",
+        "do not overload one item with icon, badge, description and multiple trailing controls",
+        "destructive group is placed last by default"
+      ]
+    }
+  },
+  "validation": {
+    "searchDefaultAppearance": "flat",
+    "searchTrailingCoreActionLimit": 1,
+    "menuDefaultActionRange": [2, 6],
+    "mobileCascadingMenuDefault": false,
+    "productSpecificSearchOrMenuBehaviorInCore": false
+  }
+}
