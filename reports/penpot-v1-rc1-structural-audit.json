@@ -1,0 +1,30 @@
+{
+  "artifact": "Com-Design-Mobile-v1.0.0-rc.1.penpot",
+  "status": "generated-structural-pass",
+  "scope": "formal-spec-visual",
+  "fileId": "8ecaa18c-084e-455a-af97-6116a21992ef",
+  "archiveBytes": 990480,
+  "zipIntegrity": "PASS",
+  "jsonIntegrity": "PASS",
+  "pageReferenceIntegrity": "PASS",
+  "overflowCheck": "PASS",
+  "pages": [
+    {"name":"00 System Overview","shapes":61,"board":"1200x1800","overflow":0},
+    {"name":"01 Foundations","shapes":103,"board":"1200x3000","overflow":0},
+    {"name":"02 Actions & Forms","shapes":88,"board":"1200x2500","overflow":0},
+    {"name":"03 Navigation & Information","shapes":85,"board":"1200x2800","overflow":0},
+    {"name":"04 Feedback Overlay & Progress","shapes":109,"board":"1200x3200","overflow":0},
+    {"name":"04B Search & Menu","shapes":62,"board":"1200x2200","overflow":0},
+    {"name":"05A Modes & Accessibility","shapes":93,"board":"1200x2800","overflow":0},
+    {"name":"05B Core Component Catalog","shapes":256,"board":"1200x3400","overflow":0},
+    {"name":"99 Release & Sync Audit","shapes":76,"board":"1200x2400","overflow":0}
+  ],
+  "penpotTokenSets": ["Primitive","Semantic-Light","Theme-Dark","Modes"],
+  "importantBoundary": "This generated RC1 is the Formal Spec Visual artifact. Do not claim the Reusable Component Asset gate passed until real PenPot component/variant metadata is created and verified.",
+  "remainingGates": [
+    "Import the generated .penpot into PenPot and verify round-trip export",
+    "Inspect actual rendered pages in PenPot",
+    "Create and verify reusable Component / Variant metadata for the V1 Core catalog",
+    "Run independent full-system review before Stable"
+  ]
+}
