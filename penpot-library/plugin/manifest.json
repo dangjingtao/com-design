@@ -1,0 +1,12 @@
+{
+  "name": "Com Design Library Builder",
+  "description": "Build Com Design Mobile V1 RC as a curated native PenPot reusable Component and Variant library from canonical contracts.",
+  "version": 3,
+  "code": "plugin-v2.js",
+  "permissions": [
+    "content:read",
+    "content:write",
+    "library:read",
+    "library:write"
+  ]
+}

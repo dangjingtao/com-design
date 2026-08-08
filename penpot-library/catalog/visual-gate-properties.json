@@ -1,0 +1,72 @@
+{
+  "$schemaVersion": 1,
+  "designSystemVersion": "1.0.0-rc.1",
+  "purpose": "Classify every property used by the visual-gate builder so PenPot implementation controls cannot be mistaken for new Core semantics.",
+  "rule": "contract = directly declared variant/state/size in canonical contract; implementation = optional anatomy, bounded content configuration, or specimen value derived from contract constraints. Implementation properties never flow back into Core.",
+  "components": {
+    "button": {
+      "contract": {"Type":"variants","State":"states","Size":"sizes"},
+      "implementation": {}
+    },
+    "input": {
+      "contract": {"State":"states"},
+      "implementation": {}
+    },
+    "searchField": {
+      "contract": {"State":"states"},
+      "implementation": {}
+    },
+    "listItem": {
+      "contract": {"Type":"variants","State":"states"},
+      "implementation": {"Content":"single-line/two-line specimen required by PENPOT-SYNC density verification and textOverflowPolicy"}
+    },
+    "tabs": {
+      "contract": {"Layout":"variants"},
+      "implementation": {"Active":"selection fixture used to inspect active/inactive child-state treatment; not a Core Tabs variant"}
+    },
+    "bottomNavigation": {
+      "contract": {},
+      "implementation": {"Destinations":"bounded by canonical 3-5 destination constraint","Selected":"current-destination fixture; not a new Core variant"}
+    },
+    "section": {
+      "contract": {},
+      "implementation": {"Header":"optional header/title/trailingAction anatomy control"}
+    },
+    "card": {
+      "contract": {"State":"states"},
+      "implementation": {"Border":"canonical optionalBorder / containment-reinforcement control"}
+    },
+    "dialog": {
+      "contract": {},
+      "implementation": {"Actions":"canonical one-or-two-actions default plus vertical stacking constraint","Intent":"destructive-action semantic treatment for destructive confirmation; not a Dialog variant"}
+    },
+    "bottomSheet": {
+      "contract": {},
+      "implementation": {"Header":"optional dragHandle/header/title anatomy","Actions":"optional stickyActions anatomy"}
+    },
+    "menuItem": {
+      "contract": {"State":"states"},
+      "implementation": {}
+    },
+    "menu": {
+      "contract": {"Type":"variants"},
+      "implementation": {"Rows":"bounded content fixture within canonical default action-count range 2-6"}
+    },
+    "tag": {
+      "contract": {"Tone":"variants/states"},
+      "implementation": {}
+    },
+    "alert": {
+      "contract": {"Type":"variants","Tone":"states"},
+      "implementation": {}
+    },
+    "progressIndicator": {
+      "contract": {"Type":"variants"},
+      "implementation": {"Value":"determinate specimen data required by accessibility contract; not a Core variant family"}
+    },
+    "stepper": {
+      "contract": {"Layout":"variants"},
+      "implementation": {"Current":"fixture used to compose completed/current/upcoming child states; not a Core Stepper variant"}
+    }
+  }
+}

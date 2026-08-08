@@ -1,0 +1,12 @@
+{
+  "name": "com-design-penpot-library",
+  "private": true,
+  "version": "1.0.0-rc.1",
+  "type": "module",
+  "scripts": {
+    "build:plugin": "node scripts/build-penpot-plugin-v2.mjs",
+    "validate": "node scripts/validate-source-contract.mjs",
+    "build:tokens": "node scripts/build-penpot-token-adapter.mjs",
+    "prepare:penpot": "npm run build:plugin && npm run validate && npm run build:tokens"
+  }
+}

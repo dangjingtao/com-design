@@ -1,0 +1,79 @@
+{
+  "$schemaVersion": 2,
+  "designSystemVersion": "1.0.0-rc.1",
+  "canonicalManifest": "../../contracts/design-system-v1.json",
+  "policy": {
+    "identitySource": "contracts/design-system-v1.json componentCatalog",
+    "variantAndStateSource": "the component's canonical contract; this catalog MUST NOT invent Core variants or states",
+    "penpotImplementationProperties": "optional anatomy/content controls may exist in PenPot only when explicitly classified as implementation properties; they never become Core semantics",
+    "patternsCountAsComponents": false
+  },
+  "counts": {"coreComponents": 33, "corePatterns": 2},
+  "families": [
+    {
+      "id": "actionsForms",
+      "path": "Actions & Forms",
+      "contract": "../../contracts/actions-forms.json",
+      "components": [
+        {"id":"button","name":"Button","priorityVisualGate":true},
+        {"id":"iconButton","name":"Icon Button"},
+        {"id":"input","name":"Input","priorityVisualGate":true},
+        {"id":"textarea","name":"Textarea"},
+        {"id":"select","name":"Select"},
+        {"id":"checkbox","name":"Checkbox"},
+        {"id":"radio","name":"Radio"},
+        {"id":"switch","name":"Switch"}
+      ]
+    },
+    {
+      "id": "navigationInformation",
+      "path": "Navigation & Information",
+      "contract": "../../contracts/navigation-information.json",
+      "components": [
+        {"id":"listItem","name":"List Item","priorityVisualGate":true},
+        {"id":"tabs","name":"Tabs","priorityVisualGate":true},
+        {"id":"segmentedControl","name":"Segmented Control"},
+        {"id":"topAppBar","name":"Top App Bar"},
+        {"id":"bottomNavigation","name":"Bottom Navigation","priorityVisualGate":true},
+        {"id":"section","name":"Section","priorityVisualGate":true},
+        {"id":"divider","name":"Divider"},
+        {"id":"card","name":"Card","priorityVisualGate":true},
+        {"id":"tag","name":"Tag","priorityVisualGate":true},
+        {"id":"badge","name":"Badge"},
+        {"id":"avatar","name":"Avatar"}
+      ]
+    },
+    {
+      "id": "feedbackOverlayProgress",
+      "path": "Feedback, Overlay & Progress",
+      "contract": "../../contracts/feedback-overlay-progress.json",
+      "components": [
+        {"id":"toast","name":"Toast"},
+        {"id":"snackbar","name":"Snackbar"},
+        {"id":"alert","name":"Alert","priorityVisualGate":true},
+        {"id":"dialog","name":"Dialog","priorityVisualGate":true},
+        {"id":"bottomSheet","name":"Bottom Sheet","priorityVisualGate":true},
+        {"id":"loadingIndicator","name":"Loading Indicator"},
+        {"id":"skeleton","name":"Skeleton"},
+        {"id":"emptyState","name":"Empty State"},
+        {"id":"progressIndicator","name":"Progress Indicator","priorityVisualGate":true},
+        {"id":"stepper","name":"Stepper","priorityVisualGate":true},
+        {"id":"timeline","name":"Timeline"}
+      ]
+    },
+    {
+      "id": "searchMenu",
+      "path": "Search & Menu",
+      "contract": "../../contracts/search-menu.json",
+      "components": [
+        {"id":"searchField","name":"Search Field","priorityVisualGate":true},
+        {"id":"menu","name":"Menu","priorityVisualGate":true},
+        {"id":"menuItem","name":"Menu Item","priorityVisualGate":true}
+      ]
+    }
+  ],
+  "patterns": [
+    {"id":"statusComposition","name":"Status Composition","path":"Patterns","contract":"../../contracts/core-patterns.json","countAsComponent":false},
+    {"id":"searchPattern","name":"Search Pattern","path":"Patterns","contract":"../../contracts/core-patterns.json","countAsComponent":false}
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "designSystemVersion": "1.0.0-rc.1",
+  "branch": "phase5-penpot-library",
+  "scope": "reusable-component-library",
+  "status": "CURATED_LAYOUT_V2_READY_VISUAL_GATE_NOT_RUN",
+  "canonicalCatalog": {
+    "coreComponents": 33,
+    "corePatterns": 2,
+    "patternsCountAsComponents": false
+  },
+  "repositoryEvidence": {
+    "draftPullRequest": 6,
+    "sourceGateWorkflowRun": 31248730835,
+    "sourceGateConclusion": "success",
+    "sourceGateChecks": [
+      "canonical 33 Component + 2 Pattern contract validation",
+      "six-part curated V2 source assembly",
+      "explicit curated layout slot coverage for every Visual Gate component",
+      "legacy cursorY and fixed-six-column layout forbidden",
+      "generated plugin-v2 JavaScript syntax check",
+      "native PenPot Component / Variant / token API boundary validation",
+      "PenPot v3 round-trip auditor Python compile check",
+      "PenPot token adapter generation",
+      "generated token adapter JSON validation",
+      "generated motion-reference JSON validation",
+      "ready-to-install curated PenPot bundle artifact upload"
+    ],
+    "curatedLayout": {
+      "version": "CURATED_ARCHIVE_V2",
+      "pages": [
+        "00 Foundations",
+        "01 Core Components · Visual Gate"
+      ],
+      "componentCanvasWidth": 1728,
+      "outerMargin": 64,
+      "principalGutter": 24,
+      "placementPolicy": "explicit per-component asymmetric modules; weight follows component complexity",
+      "forbiddenLegacyPlacement": [
+        "cursorY vertical accumulation",
+        "fixed six-column global packing",
+        "equal-card dashboard layout"
+      ]
+    },
+    "generatedBundle": {
+      "workflowArtifactName": "com-design-penpot-curated-v2",
+      "workflowArtifactId": 9019311501,
+      "digest": "sha256:10f88aee77f89cf5fd2b192f8635c8de392213a3ffa1bb6601a76cacb70911e6",
+      "contains": [
+        "plugin/manifest.json",
+        "plugin/plugin-v2.js",
+        "dist/com-design-mobile.tokens.json",
+        "dist/motion-reference.json"
+      ]
+    },
+    "generatedTokenAdapterObserved": {
+      "tokenSets": 8,
+      "themeEntries": 7,
+      "uniqueTokenNames": 157,
+      "defaultAxes": ["Theme/Light", "Density/Compact", "Platform/iOS"],
+      "motion": "reference-only"
+    },
+    "roundTripAuditorModel": {
+      "format": "PenPot v3 ZIP + JSON",
+      "nativeFields": [
+        "components/*: id/name/path/mainInstanceId/mainInstancePage",
+        "shapes: componentId/componentFile/shapeRef",
+        "shapes: appliedTokens",
+        "tokens.json: sets/themes/activeThemes",
+        "manifest/file features: components/v2, variants/v1, design-tokens/v1"
+      ]
+    }
+  },
+  "implementedRepositoryAssets": [
+    "native PenPot plugin manifest pointing to generated curated V2 builder",
+    "six-part curated V2 builder source",
+    "curated V2 builder assembly script",
+    "native Component/Variant visual-gate builder",
+    "00 Foundations production page composition",
+    "01 Core Components Visual Gate asymmetric production composition",
+    "canonical 33+2 catalog",
+    "PenPot implementation-property classification",
+    "Light/Dark + Compact/Comfortable + Platform token adapter generator",
+    "Motion reference-only adapter with tooling limitation recorded",
+    "source-of-truth and layout-regression validation script",
+    "GitHub Actions source/build validation workflow",
+    "PenPot v3 round-trip structural audit script",
+    "production/round-trip runbook",
+    "canonical Component catalog cross-check report"
+  ],
+  "visualGateBuilderComponents": [
+    "button",
+    "input",
+    "searchField",
+    "listItem",
+    "tabs",
+    "bottomNavigation",
+    "section",
+    "card",
+    "dialog",
+    "bottomSheet",
+    "menuItem",
+    "menu",
+    "tag",
+    "alert",
+    "progressIndicator",
+    "stepper"
+  ],
+  "gates": {
+    "repositoryImplementation": "READY",
+    "canonicalSourceValidation": "PASS",
+    "curatedLayoutV2SourceValidation": "PASS",
+    "legacyMechanicalLayoutRegressionGuard": "PASS",
+    "builderJavaScriptSyntax": "PASS",
+    "installableBundleBuild": "PASS",
+    "roundTripAuditorCompile": "PASS",
+    "tokenAdapterGeneration": "PASS",
+    "penpotActualImport": "NOT_EVIDENCED",
+    "penpotVisualInspection": "NOT_EVIDENCED",
+    "pageCompositionVisualAcceptance": "NOT_RUN",
+    "priorityVisualGate": "NOT_RUN",
+    "full33ComponentExpansion": "INTENTIONALLY_BLOCKED_BY_VISUAL_GATE",
+    "sourcePenpotExportAudit": "NOT_RUN",
+    "penpotReImportOpen": "NOT_RUN",
+    "roundTripReExportAudit": "NOT_RUN",
+    "overallPenpotGate": "NOT_PASS"
+  },
+  "unresolved": [
+    {
+      "id": "PPL-001",
+      "severity": "gate",
+      "issue": "Curated V2 page composition and priority components have not yet been rendered and visually inspected in an actual PenPot file.",
+      "requiredResolution": "Run the curated V2 builder in PenPot; review both overview-level composition and individual component quality; accept or revise before expanding the catalog."
+    },
+    {
+      "id": "PPL-002",
+      "severity": "gate",
+      "issue": "The full 33-component reusable catalog is intentionally not generated before PPL-001 is resolved.",
+      "requiredResolution": "After visual acceptance, assign deliberate page/module composition to the remaining canonical components and implement them without changing Core semantics."
+    },
+    {
+      "id": "PPL-003",
+      "severity": "gate",
+      "issue": "No source `.penpot` and no round-trip `.penpot` have been produced by an actual PenPot runtime in this branch yet.",
+      "requiredResolution": "Export from PenPot, re-import/open, re-export, and run both structural audits with instance evidence."
+    },
+    {
+      "id": "PPL-004",
+      "severity": "tooling-limitation",
+      "issue": "Core Motion duration/easing is not represented as a native PenPot token axis by the token types used by this implementation.",
+      "requiredResolution": "Keep `tokens/motion.json` canonical; use `motion-reference.json` in PenPot and verify motion in prototype/implementation environments."
+    }
+  ],
+  "forbiddenClaims": [
+    "PenPot PASS",
+    "round-trip PASS",
+    "33 reusable components complete",
+    "visual acceptance complete",
+    "page composition accepted"
+  ]
+}

@@ -1,0 +1,76 @@
+  }});
+
+  // Search & Menu / Menu
+  const menuVariants=[]; for(const Type of ['Action','Overflow','Context']) for(const Rows of ['3','5']) menuVariants.push({Type,Rows});
+  makeVariantSet({family:'Search & Menu',name:'Menu',id:'menu',contract:'contracts/search-menu.json',variants:menuVariants,render:({Type,Rows})=>{
+    const count=Number(Rows); const root=frame('menu',{width:256,height:count*44+16,dir:'column',surface:'color.surface.default',radius:'radius.overlay',padding:false,gap:false}); bind(root,'elevation.floating',['shadow']); root.flex.topPadding=8; root.flex.bottomPadding=8;
+    for(let i=1;i<=count;i+=1){ const row=frame(`row-${i}`,{width:256,height:44,dir:'row',surface:'transparent',padding:true,gap:true}); const lead=tinyIcon('leadingIcon',Type==='Overflow'?'⋯':Type==='Context'?'↗':'•','color.text.tertiary'); append(row,lead,txt('label',i===count&&Type==='Context'?'Context action':`Action ${i}`,'typography.body','color.text.primary')); append(root,row); }
+    return root;
+  }});
+
+  // Feedback, Overlay & Progress / Progress Indicator
+  const progressVariants=[]; for(const Type of ['Linear','Circular']) for(const Value of ['25','60','100']) progressVariants.push({Type,Value});
+  makeVariantSet({family:'Feedback, Overlay & Progress',name:'Progress Indicator',id:'progressIndicator',contract:'contracts/feedback-overlay-progress.json',variants:progressVariants,render:({Type,Value})=>{
+    if(Type==='Linear'){
+      const root=frame('progressIndicator',{width:184,height:38,dir:'column',surface:'transparent',padding:false,gap:false}); root.flex.rowGap=6;
+      const track=frame('track',{width:184,height:4,dir:'row',surface:'color.surface.subtle',radius:'radius.pill',padding:false,gap:false}); const bar=penpot.createRectangle(); bar.name='value'; bar.resize(Math.max(8,184*Number(Value)/100),4); fill(bar,'color.action.primary'); bindRadius(bar,'radius.pill'); append(track,bar); append(root,track,txt('label',`${Value}%`,'typography.caption','color.text.secondary')); return root;
+    }
+    const root=frame('progressIndicator',{width:96,height:80,dir:'column',surface:'transparent',padding:false,gap:false}); root.flex.alignItems='center'; root.flex.justifyContent='center'; root.flex.rowGap=4;
+    const ring=penpot.createEllipse(); ring.name='track'; ring.resize(52,52); transparent(ring); ring.strokes=[{strokeColor:'#E2E6F0',strokeStyle:'solid',strokeWidth:5,strokeAlignment:'inner'}]; bind(ring,'color.border.subtle',['strokeColor']);
+    append(root,ring,txt('value',`${Value}%`,'typography.labelSmall','color.text.primary')); return root;
+  }});
+
+  // Feedback, Overlay & Progress / Stepper
+  const stepperVariants=[]; for(const Layout of ['Horizontal','Vertical']) for(const Current of ['1','2','3']) stepperVariants.push({Layout,Current});
+  makeVariantSet({family:'Feedback, Overlay & Progress',name:'Stepper',id:'stepper',contract:'contracts/feedback-overlay-progress.json',variants:stepperVariants,render:({Layout,Current})=>{
+    const horizontal=Layout==='Horizontal'; const root=frame('stepper',{width:horizontal?640:300,height:horizontal?92:188,dir:horizontal?'row':'column',surface:'transparent',padding:false,gap:false}); root.flex.justifyContent='space-between';
+    for(let i=1;i<=3;i+=1){
+      const completed=i<Number(Current); const active=i===Number(Current); const item=frame(`step-${i}`,{width:horizontal?180:300,height:horizontal?72:52,dir:horizontal?'column':'row',surface:'transparent',padding:false,gap:false}); item.flex.alignItems='center'; item.flex.columnGap=10; item.flex.rowGap=4;
+      const dot=penpot.createEllipse(); dot.name='indicator'; dot.resize(24,24); fill(dot,completed?'color.action.primary':active?'color.surface.default':'color.surface.default'); if(active) stroke(dot,'color.action.primary','border.focus'); else if(!completed) stroke(dot,'color.border.default','border.control');
+      const label=txt('label',completed?`Step ${i} · done`:active?`Step ${i} · current`:`Step ${i}`,'typography.labelSmall',active?'color.text.brand':completed?'color.text.primary':'color.text.secondary');
+      append(item,dot,label); append(root,item);
+    }
+    return root;
+  }});
+
+  penpot.currentFile.setPluginData('com-design-version', VERSION);
+  penpot.currentFile.setPluginData('com-design-library-gate', 'VISUAL_GATE_READY');
+  penpot.currentFile.setPluginData('com-design-library-layout', 'CURATED_ARCHIVE_V2');
+  penpot.currentFile.setPluginData('com-design-library-built', JSON.stringify(built));
+  penpot.currentFile.setPluginData('com-design-library-note', 'Priority visual gate only. Curated layout V2. Do not claim full 33-component catalog or round-trip PASS yet.');
+
+  const validation = penpot.currentFile.validate();
+  if (validation.length) {
+    console.warn('PenPot file validation returned issues:', validation);
+    penpot.currentFile.setPluginData('com-design-file-validation', JSON.stringify(validation));
+  } else {
+    penpot.currentFile.setPluginData('com-design-file-validation', '[]');
+  }
+
+  try {
+    await penpot.currentFile.saveVersion(`Com Design ${VERSION} · curated visual gate generated`);
+  } catch (error) {
+    console.warn('Unable to save PenPot version marker:', error);
+  }
+
+  console.log(JSON.stringify({
+    status:'VISUAL_GATE_READY',
+    designSystemVersion:VERSION,
+    pages:[FOUNDATIONS_PAGE,COMPONENTS_PAGE],
+    layout:'CURATED_ARCHIVE_V2',
+    componentSets:built.length,
+    built,
+    nextGate:'Open both pages in PenPot. Judge layout rhythm and component quality at 100% before expanding the remaining canonical catalog.'
+  }, null, 2));
+
+  penpot.closePlugin();
+})().catch((error) => {
+  console.error('Com Design Library Builder failed:', error);
+  try {
+    if (penpot.currentFile) {
+      penpot.currentFile.setPluginData('com-design-library-gate','BLOCKED');
+      penpot.currentFile.setPluginData('com-design-library-error',String(error?.stack || error));
+    }
+  } catch {}
+  penpot.closePlugin();
+});

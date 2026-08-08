@@ -1,0 +1,110 @@
+    subtitle:'Canonical tokens presented as working references. Switch PenPot Token Themes to inspect Light/Dark, density, and platform mappings.'
+  });
+
+  foundationPanel({x:64,y:224,w:920,h:426,title:'Semantic color',subtitle:'Role first. Components bind semantic tokens, never primitive colors.'});
+  [
+    ['Text / Primary','color.text.primary'],['Text / Secondary','color.text.secondary'],['Brand','color.action.primary'],['Selected','color.surface.selected'],
+    ['Surface','color.surface.default'],['Subtle','color.surface.subtle'],['Success','color.status.successBg'],['Warning','color.status.warningBg'],
+    ['Danger','color.status.dangerBg'],['Info','color.status.infoBg'],['Border','color.border.default'],['Focus','color.border.focused']
+  ].forEach(([label,name],i)=>swatchCard(92+(i%4)*216,314+Math.floor(i/4)*106,label,name));
+
+  foundationPanel({x:1008,y:224,w:656,h:426,title:'Typography',subtitle:'System type hierarchy; density never changes typographic rank.'});
+  [
+    ['Title','typography.title'],['Heading','typography.heading'],['Heading small','typography.headingSmall'],['Body','typography.body'],['Body small','typography.bodySmall'],['Label','typography.label'],['Caption','typography.caption']
+  ].forEach(([label,name],i)=>{
+    const sample=txt(`type-${label}`,`${label}  Aa 0123`,name,'color.text.primary');
+    position(sample,1036,304+i*46);
+    const meta=txt(`type-${label}-meta`,name,'typography.caption','color.text.tertiary');
+    position(meta,1388,310+i*46);
+  });
+
+  foundationPanel({x:64,y:674,w:760,h:376,title:'Shape & spacing',subtitle:'A restrained radius ladder and compact-first spacing rhythm.'});
+  [
+    ['Control','radius.control',88],['Container','radius.container',112],['Overlay','radius.overlay',136],['Pill','radius.pill',160]
+  ].forEach(([label,name,size],i)=>{
+    const sample=frame(`radius-${label}`,{width:size,height:64,dir:'row',surface:'color.surface.subtle',radius:name,padding:false,gap:false});
+    position(sample,92+i*162,770);
+    const t=txt(`radius-${label}-label`,label,'typography.caption','color.text.secondary'); position(t,92+i*162,846);
+  });
+  [4,8,12,16,20,24,32].forEach((value,i)=>{
+    const bar=penpot.createRectangle(); bar.name=`space-${value}`; bar.resize(value*3,8); position(bar,92,904+i*18); fill(bar,'color.action.primary'); bindRadius(bar,'radius.pill');
+    const meta=txt(`space-${value}-label`,`${value}`, 'typography.caption','color.text.tertiary'); position(meta,212,900+i*18);
+  });
+
+  foundationPanel({x:848,y:674,w:816,h:376,title:'Modes',subtitle:'Orthogonal axes. Change the active PenPot theme; do not duplicate component libraries.'});
+  const modeData=[
+    ['Theme','Light','Dark'],['Density','Compact','Comfortable'],['Platform','iOS','Android'],['Motion','Standard','Reduced*']
+  ];
+  modeData.forEach(([axis,a,b],i)=>{
+    const axisText=txt(`mode-${axis}`,axis,'typography.labelSmall','color.text.secondary'); position(axisText,876,766+i*58);
+    const one=frame(`mode-${axis}-${a}`,{width:164,height:36,dir:'row',surface:'color.surface.selected',radius:'radius.control'}); position(one,1004,752+i*58); one.flex.justifyContent='center'; append(one,txt('label',a,'typography.labelSmall','color.text.brand'));
+    const two=frame(`mode-${axis}-${b}`,{width:164,height:36,dir:'row',surface:'color.surface.subtle',radius:'radius.control'}); position(two,1182,752+i*58); two.flex.justifyContent='center'; append(two,txt('label',b,'typography.labelSmall','color.text.secondary'));
+  });
+  const motionNote=txt('motion-note','* Motion remains reference-only in PenPot; verify behavior in prototype / implementation.','typography.caption','color.text.tertiary'); position(motionNote,876,1002);
+
+  // ---------------------------------------------------------------------------
+  // 01 Components — curated visual archive.
+  // ---------------------------------------------------------------------------
+  await ensurePage(COMPONENTS_PAGE);
+  canvasBackground(1728, 5560);
+  pageHeader({
+    eyebrow:'COM DESIGN MOBILE · CORE COMPONENTS',
+    title:'Reusable Component Library · Visual Gate',
+    subtitle:'Native PenPot Components + Variants. Curated by component complexity; not a mechanical grid. Review this page before expanding the remaining Core catalog.'
+  });
+
+  // Actions & Forms / Button
+  const buttonVariants = [];
+  for (const Type of ['Primary','Secondary','Outline','Ghost','Destructive']) {
+    for (const State of ['Default','Pressed','Disabled','Loading']) {
+      for (const Size of ['Regular','Large']) buttonVariants.push({Type,State,Size});
+    }
+  }
+  const buttonStyle = (Type, State) => {
+    const disabled = State === 'Disabled';
+    const loading = State === 'Loading';
+    const visualState = loading ? 'Default' : State;
+    const table = {
+      Primary:{Default:{bg:'color.action.primary',text:'color.text.inverse'},Pressed:{bg:'color.action.primaryPressed',text:'color.text.inverse'},Disabled:{bg:'color.action.disabled',text:'color.text.disabled'}},
+      Secondary:{Default:{bg:'color.action.secondary',text:'color.text.brand'},Pressed:{bg:'color.action.secondaryPressed',text:'color.text.brand'},Disabled:{bg:'color.action.disabled',text:'color.text.disabled'}},
+      Outline:{Default:{bg:'color.surface.default',text:'color.text.brand',border:'color.border.default'},Pressed:{bg:'color.surface.selected',text:'color.text.brand',border:'color.border.default'},Disabled:{bg:'color.surface.default',text:'color.text.disabled',border:'color.border.subtle'}},
+      Ghost:{Default:{bg:'transparent',text:'color.text.brand'},Pressed:{bg:'color.surface.selected',text:'color.text.brand'},Disabled:{bg:'transparent',text:'color.text.disabled'}},
+      Destructive:{Default:{bg:'color.action.destructive',text:'color.text.inverse'},Pressed:{bg:'color.action.destructivePressed',text:'color.text.inverse'},Disabled:{bg:'color.action.disabled',text:'color.text.disabled'}}
+    };
+    return {...table[Type][disabled ? 'Disabled' : visualState], loading};
+  };
+  makeVariantSet({family:'Actions & Forms',name:'Button',id:'button',contract:'contracts/actions-forms.json',variants:buttonVariants,render:({Type,State,Size})=>{
+    const style=buttonStyle(Type,State);
+    const board=frame('button',{width:136,height:Size==='Large'?48:40,dir:'row',surface:style.bg,radius:'radius.control'});
+    bind(board,Size==='Large'?'density.controlHeightLarge':'density.controlHeight',['height']);
+    if(style.border) stroke(board,style.border,'border.control');
+    board.flex.justifyContent='center';
+    const spinner=tinyIcon('spinner','◌',style.text); spinner.visible=State==='Loading';
+    append(board,spinner,txt('label','Button','typography.label',style.text));
+    return board;
+  }});
+
+  // Actions & Forms / Input
+  const inputVariants=['Empty','Value','Focused','Error','Disabled','Read Only'].map((State)=>({State}));
+  makeVariantSet({family:'Actions & Forms',name:'Input',id:'input',contract:'contracts/actions-forms.json',variants:inputVariants,render:({State})=>{
+    const root=frame('field',{width:328,height:88,dir:'column',surface:'transparent',padding:false,gap:false}); root.flex.rowGap=6; bind(root,'density.fieldLabelGap',['rowGap']);
+    const label=txt('label','Label','typography.labelSmall',State==='Disabled'?'color.text.disabled':'color.text.secondary');
+    const control=frame('container',{width:328,height:40,dir:'row',surface:State==='Disabled'?'color.surface.subtle':'color.surface.default',radius:'radius.control'}); bind(control,'density.controlHeight',['height']);
+    let border='color.border.default'; let width='border.control';
+    if(State==='Focused'){border='color.border.focused';width='border.focus';}
+    if(State==='Error')border='color.border.error';
+    if(State==='Disabled'||State==='Read Only')border='color.border.subtle';
+    stroke(control,border,width);
+    const content=State==='Empty'?'Placeholder':State==='Value'?'Entered value':State==='Read Only'?'Read-only value':'Input value';
+    const textColor=State==='Empty'?'color.text.placeholder':State==='Disabled'?'color.text.disabled':'color.text.primary';
+    append(control,txt('valueOrPlaceholder',content,'typography.body',textColor));
+    const helper=txt('helper',State==='Error'?'Explain what needs attention':'Helper text','typography.caption',State==='Error'?'color.status.dangerText':'color.text.tertiary');
+    append(root,label,control,helper); return root;
+  }});
+
+  // Search & Menu / Search Field
+  const searchVariants=['Idle','Focused','Query','Loading','Disabled'].map((State)=>({State}));
+  makeVariantSet({family:'Search & Menu',name:'Search Field',id:'searchField',contract:'contracts/search-menu.json',variants:searchVariants,render:({State})=>{
+    const surface=State==='Focused'?'color.surface.default':'color.surface.subtle';
+    const board=frame('searchField',{width:328,height:40,dir:'row',surface,radius:'radius.control'}); bind(board,'density.controlHeight',['height']);
+    if(State==='Focused') stroke(board,'color.border.focused','border.focus');

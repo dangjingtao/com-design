@@ -1,0 +1,110 @@
+/* Com Design Mobile V1 RC — PenPot native reusable library builder
+ *
+ * Production layout edition.
+ *
+ * The component semantics come from the canonical contracts. This file only
+ * controls PenPot-native component construction and the visual organization of
+ * the library canvas. The layout intentionally follows a curated component
+ * archive model: strict grid, asymmetric module weights, generous whitespace,
+ * and no giant spec-board poster.
+ */
+
+(async () => {
+  'use strict';
+
+  const VERSION = '1.0.0-rc.1';
+  const FOUNDATIONS_PAGE = '00 Foundations';
+  const COMPONENTS_PAGE = '01 Core Components · Visual Gate';
+  const GENERATED_KEY = 'com-design-generated';
+  const CANONICAL_KEY = 'com-design-canonical-id';
+  const CONTRACT_KEY = 'com-design-contract';
+
+  const REQUIRED_SETS = [
+    'Foundation/Core',
+    'Semantic/Light',
+    'Semantic/Dark',
+    'Density/Compact',
+    'Density/Comfortable',
+    'Platform/Canonical',
+    'Platform/iOS',
+    'Platform/Android'
+  ];
+
+  const REQUIRED_TOKENS = [
+    'color.text.primary','color.text.secondary','color.text.tertiary','color.text.placeholder','color.text.disabled','color.text.inverse','color.text.brand',
+    'color.surface.page','color.surface.default','color.surface.subtle','color.surface.selected','color.surface.pressed',
+    'color.border.subtle','color.border.default','color.border.focused','color.border.error',
+    'color.action.primary','color.action.primaryPressed','color.action.secondary','color.action.secondaryPressed','color.action.destructive','color.action.destructivePressed','color.action.disabled',
+    'color.status.success','color.status.successBg','color.status.successText','color.status.warning','color.status.warningBg','color.status.warningText','color.status.danger','color.status.dangerBg','color.status.dangerText','color.status.info','color.status.infoBg','color.status.infoText',
+    'typography.caption','typography.labelSmall','typography.bodySmall','typography.label','typography.body','typography.headingSmall','typography.heading','typography.title',
+    'radius.control','radius.container','radius.overlay','radius.pill','border.control','border.focus','elevation.floating','elevation.modal',
+    'density.controlHeight','density.controlHeightLarge','density.paddingHorizontal','density.paddingVertical','density.internalGap','density.contentInset','density.sectionGap','density.fieldLabelGap','density.fieldHelperGap'
+  ];
+
+  const library = penpot.library.local;
+  if (!library || !penpot.currentFile) throw new Error('No active PenPot file/library.');
+
+  const existingGenerated = library.components.filter((component) => {
+    try { return component.getPluginData(GENERATED_KEY) === VERSION; }
+    catch { return false; }
+  });
+  if (existingGenerated.length) {
+    throw new Error(`Com Design ${VERSION} generated assets already exist. Use a fresh file for deterministic validation instead of stacking duplicates.`);
+  }
+
+  const sets = library.tokens.sets;
+  const setNames = new Set(sets.map((set) => set.name));
+  const missingSets = REQUIRED_SETS.filter((name) => !setNames.has(name));
+  if (missingSets.length) {
+    throw new Error(`Import penpot-library/dist/com-design-mobile.tokens.json first. Missing token sets: ${missingSets.join(', ')}`);
+  }
+
+  const tokensByName = new Map();
+  for (const set of sets) {
+    for (const tokenItem of set.tokens) {
+      if (!tokensByName.has(tokenItem.name)) tokensByName.set(tokenItem.name, tokenItem);
+    }
+  }
+  const missingTokens = REQUIRED_TOKENS.filter((name) => !tokensByName.has(name));
+  if (missingTokens.length) throw new Error(`Token adapter is incomplete. Missing: ${missingTokens.join(', ')}`);
+
+  const token = (name) => {
+    const value = tokensByName.get(name);
+    if (!value) throw new Error(`Missing token: ${name}`);
+    return value;
+  };
+
+  const bind = (shape, name, properties) => {
+    token(name).applyToShapes([shape], properties);
+    return shape;
+  };
+
+  const bindRadius = (shape, name, corners = [
+    'borderRadiusTopLeft','borderRadiusTopRight','borderRadiusBottomRight','borderRadiusBottomLeft'
+  ]) => bind(shape, name, corners);
+
+  const baseFill = (shape, color = '#FFFFFF', opacity = 1) => {
+    shape.fills = [{fillColor: color, fillOpacity: opacity}];
+    return shape;
+  };
+
+  const transparent = (shape) => baseFill(shape, '#FFFFFF', 0);
+
+  const fill = (shape, tokenName) => {
+    baseFill(shape);
+    return bind(shape, tokenName, ['fill']);
+  };
+
+  const stroke = (shape, colorToken = 'color.border.default', widthToken = 'border.control') => {
+    shape.strokes = [{strokeColor:'#687288', strokeStyle:'solid', strokeWidth:1, strokeAlignment:'inner'}];
+    bind(shape, colorToken, ['strokeColor']);
+    bind(shape, widthToken, ['strokeWidth']);
+    return shape;
+  };
+
+  const txt = (name, content, typography = 'typography.body', color = 'color.text.primary') => {
+    const shape = penpot.createText(content);
+    if (!shape) throw new Error(`Unable to create text: ${content}`);
+    shape.name = name;
+    baseFill(shape, '#252B3D');
+    bind(shape, typography, ['typography']);
