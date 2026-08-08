@@ -15,7 +15,7 @@
       "platform": {"supported":["ios","android"]},
       "motion": {"default":"standard", "supported":["standard","reduced"]}
     },
-    "resolutionOrder": ["foundation", "theme", "density", "platform", "motion", "component", "product-extension"]
+    "resolutionOrder": ["foundation", "theme", "density", "platform", "motion", "component", "pattern", "product-extension"]
   },
   "sources": {
     "foundation": "../tokens/tokens.json",
@@ -24,10 +24,12 @@
     "componentSchema": "../schemas/component-contract-v1.schema.json",
     "themeOverlaySchema": "../schemas/theme-overlay-v1.schema.json",
     "motionSchema": "../schemas/motion-modes-v1.schema.json",
+    "patternSchema": "../schemas/pattern-contract-v1.schema.json",
     "actionsForms": "./actions-forms.json",
     "navigationInformation": "./navigation-information.json",
     "feedbackOverlayProgress": "./feedback-overlay-progress.json",
-    "searchMenu": "./search-menu.json"
+    "searchMenu": "./search-menu.json",
+    "corePatterns": "./core-patterns.json"
   },
   "componentCatalog": {
     "actionsForms": ["button","iconButton","input","textarea","select","checkbox","radio","switch"],
@@ -36,6 +38,11 @@
     "searchMenu": ["searchField","menu","menuItem"]
   },
   "corePatterns": ["statusComposition","searchPattern"],
+  "legacyEmbeddedPatternEntries": {
+    "feedback-overlay-progress.json": ["statusComposition"],
+    "search-menu.json": ["searchPattern"],
+    "policy": "These phase-contract entries are compatibility copies from pre-release authoring. Canonical pattern definitions come from core-patterns.json and must not be counted as Core Components."
+  },
   "counts": {
     "coreComponents": 33,
     "corePatterns": 2
@@ -65,6 +72,7 @@
     "platformTouchTargetsMapped": true,
     "motionStandardReducedMapped": true,
     "componentCatalogDeclared": true,
+    "patternsSeparatedCanonically": true,
     "humanReadableAssemblyRequired": true,
     "penpotSyncPolicyRequired": true,
     "contrastAuditRequired": true,
