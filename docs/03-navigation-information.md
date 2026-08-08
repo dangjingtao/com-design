@@ -11,7 +11,7 @@ Phase 3 建立移动端导航与高信息密度信息呈现组件，不设计具
 - Section / Divider / Card
 - Tag / Badge / Avatar
 
-所有组件延续 Foundation：**Compact-first、Flat-first、年轻科技、高信息效率**。
+所有组件延续 Foundation：**Compact-first、Flat-first、现代清晰、高信息效率**。
 
 本期的核心不是“把内容都装进 Card”，而是建立稳定的信息层级、导航层级和列表节奏。
 
@@ -52,9 +52,9 @@ Compact 仍然是默认模式，但“紧凑”只压缩几何，不牺牲触控
 
 ## 1.4 Accent Cyan
 
-Accent Cyan 继续只承担赛事节奏：进度、阶段节点、活跃事件、高亮数据。
+Accent Cyan 是辅助强调色，用于局部进度、活跃状态、数据强调和受约束的产品层 Pattern。
 
-它**不用于主导航 active state**。主导航仍使用 Brand，避免 Brand / Accent 两套主身份竞争。
+它**不用于全局主导航 active state**。主导航仍使用 Brand，避免 Brand / Accent 两套主身份竞争。
 
 ---
 
@@ -94,7 +94,7 @@ List Item 是高信息密度业务界面的基本信息单元。它既可以是�
 
 ### Metadata-rich
 
-用于赛事、项目、团队、任务等更复杂条目。
+用于项目、团队、任务、订单等更复杂条目。
 
 允许最多三层信息：
 - Primary title
@@ -154,7 +154,7 @@ Tabs 用于同一信息层级下的并列视图切换，不用于跨模块主导
 - Indicator：Brand 500，默认 2px，高度克制
 - Pressed：轻量 Surface feedback
 
-Accent Cyan 不作为默认 Tab indicator，除非该 Tab 本身表达赛事阶段/进度语义。
+Accent Cyan 不作为默认 Tab indicator，除非产品层 Pattern 对该局部强调有明确约束。
 
 ## Icon
 
@@ -311,7 +311,7 @@ Divider 是结构线，不承担品牌装饰。不要用 Brand / Accent 作为�
 
 ## 角色
 
-Card 只在内容需要明确**独立容器边界**时使用，例如可独立点击的项目摘要、跨 Section 的独立实体、需要背景承载状态的模块。
+Card 只在内容需要明确**独立容器边界**时使用，例如可独立点击的摘要、跨 Section 的独立实体、需要背景承载状态的模块。
 
 ## Visual
 
@@ -334,7 +334,7 @@ Card 只在内容需要明确**独立容器边界**时使用，例如可独立�
 
 ## 角色
 
-Tag 表达分类、筛选结果、轻量属性或赛事状态标签。
+Tag 表达分类、筛选结果、轻量属性或短状态标签。
 
 ## Families
 
@@ -347,7 +347,7 @@ Tag 表达分类、筛选结果、轻量属性或赛事状态标签。
 
 使用对应 Status Semantic：Success / Warning / Danger / Info。
 
-不要把 Accent Cyan 变成“第五种 Status”。Accent 仍服务赛事节奏，而不是状态枚举。
+不要把 Accent Cyan 变成“第五种 Status”。Accent 是辅助强调色，不属于状态枚举。
 
 ## Geometry
 
@@ -385,7 +385,7 @@ Badge 是附属信息，不能成为页面主要视觉焦点。
 
 ## Role
 
-表达用户、团队或实体身份。Avatar 本身不承担在线/获奖/认证等所有状态，应通过独立 Badge / Status indicator 组合。
+表达用户、团队或实体身份。Avatar 本身不承担在线/认证/业务状态等所有信息，应通过独立 Badge / Status indicator 组合。
 
 ## Sizes
 

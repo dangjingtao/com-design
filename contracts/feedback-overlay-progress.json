@@ -1,0 +1,335 @@
+{
+  "$schema": "https://com-design.local/schemas/component-contract-v1.json",
+  "$metadata": {
+    "name": "Com Design Mobile — Feedback, Overlay & Progress",
+    "version": "0.4.0",
+    "phase": 4,
+    "status": "candidate",
+    "foundation": "../tokens/tokens.json",
+    "contractSchema": "../schemas/component-contract-v1.schema.json",
+    "tokenNamespace": "semantic.light",
+    "modeNamespace": "modes",
+    "refRules": {
+      "tokenRef": "Resolve relative to tokenNamespace unless the ref starts with primitive., semantic., or modes.",
+      "modeRef": "Resolve relative to modeNamespace and the active orthogonal mode.",
+      "fixedGeometry": "Component-local fixed geometry may remain literal until stable cross-component reuse justifies promotion."
+    },
+    "principles": [
+      "mobile-first",
+      "compact-first",
+      "flat-first",
+      "semantic-feedback",
+      "minimum-interruption",
+      "single-blocking-overlay",
+      "color-is-not-the-only-status-signal",
+      "product-patterns-do-not-mutate-core"
+    ]
+  },
+  "shared": {
+    "feedbackHierarchy": [
+      "field-or-local-helper",
+      "inline-alert",
+      "banner",
+      "toast-or-snackbar",
+      "dialog"
+    ],
+    "touchTarget": {
+      "ios": {"modeRef": "platform.ios.touchTargetMin"},
+      "android": {"modeRef": "platform.android.touchTargetMin"}
+    },
+    "overlay": {
+      "scrim": {"tokenRef": "color.scrim"},
+      "floatingElevation": {"tokenRef": "elevation.floating"},
+      "modalElevation": {"tokenRef": "elevation.modal"},
+      "radius": {"tokenRef": "radius.overlay"},
+      "rules": [
+        "only one blocking modal layer at a time",
+        "do not stack dialog on dialog",
+        "do not stack modal bottom sheet on modal bottom sheet",
+        "transient feedback must not cover modal primary actions",
+        "keyboard and safe area must not hide required actions"
+      ]
+    },
+    "status": {
+      "info": {"background": "color.status.infoBg", "text": "color.status.infoText", "icon": "color.status.info"},
+      "success": {"background": "color.status.successBg", "text": "color.status.successText", "icon": "color.status.success"},
+      "warning": {"background": "color.status.warningBg", "text": "color.status.warningText", "icon": "color.status.warning"},
+      "danger": {"background": "color.status.dangerBg", "text": "color.status.dangerText", "icon": "color.status.danger"},
+      "neutral": {"background": "color.surface.subtle", "text": "color.text.secondary"}
+    }
+  },
+  "components": {
+    "toast": {
+      "role": "transient-non-action-feedback",
+      "anatomy": ["container", "statusIcon?", "message"],
+      "geometry": {
+        "radius": {"tokenRef": "radius.control"},
+        "paddingHorizontal": {"modeRef": "density.paddingHorizontal"},
+        "paddingVertical": {"modeRef": "density.paddingVertical"},
+        "contentInsetFromViewport": {"modeRef": "density.contentInset"}
+      },
+      "typography": {"message": {"tokenRef": "typography.bodySmall"}},
+      "states": {
+        "default": {"background": {"tokenRef": "color.surface.inverse"}, "text": {"tokenRef": "color.text.inverse"}, "elevation": {"tokenRef": "elevation.floating"}},
+        "info": {"icon": {"tokenRef": "color.status.info"}},
+        "success": {"icon": {"tokenRef": "color.status.success"}},
+        "warning": {"icon": {"tokenRef": "color.status.warning"}},
+        "danger": {"icon": {"tokenRef": "color.status.danger"}}
+      },
+      "accessibility": {
+        "announcementRequired": true,
+        "criticalInformationMustNotDependOnAutoDismiss": true
+      },
+      "constraints": [
+        "no primary action",
+        "single message hierarchy",
+        "do not use for field validation",
+        "merge or replace bursts instead of stacking a message wall",
+        "placement must avoid keyboard, safe area, bottom navigation, and bottom CTA"
+      ]
+    },
+    "snackbar": {
+      "role": "transient-feedback-with-one-recovery-action",
+      "anatomy": ["container", "message", "action?"],
+      "geometry": {
+        "radius": {"tokenRef": "radius.control"},
+        "paddingHorizontal": {"modeRef": "density.paddingHorizontal"},
+        "paddingVertical": {"modeRef": "density.paddingVertical"},
+        "contentInsetFromViewport": {"modeRef": "density.contentInset"}
+      },
+      "typography": {
+        "message": {"tokenRef": "typography.bodySmall"},
+        "action": {"tokenRef": "typography.label"}
+      },
+      "states": {
+        "default": {"background": {"tokenRef": "color.surface.inverse"}, "message": {"tokenRef": "color.text.inverse"}, "action": {"tokenRef": "color.accent.default"}, "elevation": {"tokenRef": "elevation.floating"}}
+      },
+      "accessibility": {
+        "announcementRequired": true,
+        "actionRequiresAccessibleName": true
+      },
+      "constraints": [
+        "one action maximum",
+        "do not combine close plus multiple actions",
+        "do not pretend irreversible operations are undoable",
+        "placement follows transient feedback avoidance rules"
+      ]
+    },
+    "alert": {
+      "role": "persistent-contextual-feedback",
+      "anatomy": ["container", "statusIcon?", "content", "title?", "message", "action?", "dismiss?"],
+      "variants": ["inline", "banner"],
+      "geometry": {
+        "radius": {"tokenRef": "radius.control"},
+        "paddingHorizontal": {"modeRef": "density.paddingHorizontal"},
+        "paddingVertical": {"modeRef": "density.paddingVertical"},
+        "gap": {"modeRef": "density.internalGap"}
+      },
+      "typography": {
+        "title": {"tokenRef": "typography.headingSmall"},
+        "message": {"tokenRef": "typography.bodySmall"},
+        "action": {"tokenRef": "typography.label"}
+      },
+      "states": {
+        "info": {"background": {"tokenRef": "color.status.infoBg"}, "text": {"tokenRef": "color.status.infoText"}, "icon": {"tokenRef": "color.status.info"}},
+        "success": {"background": {"tokenRef": "color.status.successBg"}, "text": {"tokenRef": "color.status.successText"}, "icon": {"tokenRef": "color.status.success"}},
+        "warning": {"background": {"tokenRef": "color.status.warningBg"}, "text": {"tokenRef": "color.status.warningText"}, "icon": {"tokenRef": "color.status.warning"}},
+        "danger": {"background": {"tokenRef": "color.status.dangerBg"}, "text": {"tokenRef": "color.status.dangerText"}, "icon": {"tokenRef": "color.status.danger"}}
+      },
+      "accessibility": {"statusCannotBeColorOnly": true},
+      "constraints": [
+        "one high-frequency action maximum",
+        "dismiss is only allowed for ignorable information",
+        "warning and danger do not automatically imply modal blocking"
+      ]
+    },
+    "dialog": {
+      "role": "blocking-short-decision-or-task",
+      "anatomy": ["scrim", "container", "icon?", "title", "body", "supportingContent?", "actions"],
+      "geometry": {
+        "radius": {"tokenRef": "radius.overlay"},
+        "contentInsetFromViewport": {"modeRef": "density.contentInset"},
+        "padding": {"modeRef": "density.contentInset"}
+      },
+      "typography": {
+        "title": {"tokenRef": "typography.heading"},
+        "body": {"tokenRef": "typography.body"}
+      },
+      "states": {
+        "default": {"background": {"tokenRef": "color.surface.default"}, "scrim": {"tokenRef": "color.scrim"}, "elevation": {"tokenRef": "elevation.modal"}}
+      },
+      "accessibility": {
+        "accessibleTitleRequired": true,
+        "focusMustEnterModal": true,
+        "focusReturnsToTriggerOnClose": true
+      },
+      "constraints": [
+        "one or two actions by default",
+        "destructive confirmation uses destructive action semantics",
+        "cancel is not danger",
+        "stack actions vertically when labels do not fit comfortably",
+        "scrim and system dismissal must follow the same data-loss rule",
+        "do not use for long forms or ordinary success feedback"
+      ]
+    },
+    "bottomSheet": {
+      "role": "modal-supplementary-mobile-task",
+      "anatomy": ["scrim", "container", "dragHandle?", "header?", "title?", "content", "stickyActions?", "safeArea"],
+      "geometry": {
+        "topRadius": {"tokenRef": "radius.overlay"},
+        "contentPadding": {"modeRef": "density.contentInset"},
+        "heightPolicy": "content-driven-with-constrained-scroll"
+      },
+      "states": {
+        "default": {"background": {"tokenRef": "color.surface.default"}, "scrim": {"tokenRef": "color.scrim"}, "elevation": {"tokenRef": "elevation.modal"}}
+      },
+      "accessibility": {
+        "accessibleTitleOrDescriptionRequired": true,
+        "focusMustEnterModal": true
+      },
+      "constraints": [
+        "no fixed percentage height for every sheet",
+        "near-full-screen complex tasks should be reconsidered as pages",
+        "swipe, scrim, and back dismissal are disabled when they would silently lose important input",
+        "do not stack modal sheets"
+      ]
+    },
+    "loadingIndicator": {
+      "role": "indeterminate-loading-feedback",
+      "anatomy": ["indicator", "label?"],
+      "variants": ["inline", "section", "page"],
+      "geometry": {
+        "inlineSize": {"value": 16, "unit": "px"},
+        "regularSize": {"value": 24, "unit": "px"}
+      },
+      "states": {
+        "default": {"color": {"tokenRef": "color.action.primary"}}
+      },
+      "accessibility": {"busyStateRequired": true},
+      "constraints": [
+        "preserve existing usable content during background refresh when possible",
+        "do not replace known structure with a blank spinner when skeleton is more appropriate",
+        "long cancellable work needs an explicit cancel path"
+      ]
+    },
+    "skeleton": {
+      "role": "known-structure-loading-placeholder",
+      "anatomy": ["container", "placeholderBlocks"],
+      "geometry": {"mirrorsRealContent": true},
+      "states": {
+        "default": {"background": {"tokenRef": "color.surface.subtle"}}
+      },
+      "accessibility": {
+        "individualBlocksHiddenFromAccessibilityTree": true,
+        "containerBusyStateRequired": true,
+        "reducedMotionDisablesShimmer": true
+      },
+      "constraints": [
+        "mirror real content structure instead of decorative random bars",
+        "do not skeletonize every tiny icon",
+        "do not mix loaded real copy with unrelated skeleton blocks",
+        "background refresh does not force a full skeleton reset"
+      ]
+    },
+    "emptyState": {
+      "role": "zero-content-or-recovery-state",
+      "anatomy": ["container", "visual?", "title", "supportingText", "primaryAction?", "secondaryAction?"],
+      "variants": ["first-use", "no-results", "no-data", "recoverable-error"],
+      "typography": {
+        "title": {"tokenRef": "typography.heading"},
+        "supporting": {"tokenRef": "typography.bodySmall"}
+      },
+      "states": {
+        "default": {"title": {"tokenRef": "color.text.primary"}, "supporting": {"tokenRef": "color.text.secondary"}},
+        "recoverableError": {"visual": {"tokenRef": "color.status.danger"}}
+      },
+      "constraints": [
+        "one visually primary action maximum",
+        "illustration is optional",
+        "copy explains the state and next useful action",
+        "do not use oversized branded illustration as the main task"
+      ]
+    },
+    "progressIndicator": {
+      "role": "determinate-progress",
+      "anatomy": ["track", "indicator", "valueLabel?"],
+      "variants": ["linear", "circular"],
+      "geometry": {
+        "linearTrackHeight": {"value": 4, "unit": "px"},
+        "linearRadius": {"tokenRef": "radius.pill"},
+        "circularDefaultSize": {"value": 24, "unit": "px"}
+      },
+      "states": {
+        "default": {"track": {"tokenRef": "color.surface.subtle"}, "indicator": {"tokenRef": "color.action.primary"}}
+      },
+      "accessibility": {"determinateValueRequired": true},
+      "constraints": [
+        "display only truthful determinate progress",
+        "percentage is optional and only shown when useful",
+        "use loadingIndicator for indeterminate work",
+        "accent color requires an explicit product pattern decision rather than becoming a second default"
+      ]
+    },
+    "stepper": {
+      "role": "finite-ordered-task-progress",
+      "anatomy": ["container", "step", "node", "connector", "label", "supportingText?"],
+      "variants": ["horizontal", "vertical"],
+      "geometry": {
+        "nodeSize": {"value": 20, "unit": "px"},
+        "connectorThickness": {"value": 2, "unit": "px"}
+      },
+      "states": {
+        "completed": {"nodeBackground": {"tokenRef": "color.action.primary"}, "nodeMark": {"tokenRef": "color.text.inverse"}, "markShape": "check", "text": {"tokenRef": "color.text.secondary"}},
+        "current": {"nodeBackground": {"tokenRef": "color.surface.default"}, "nodeBorder": {"tokenRef": "color.action.primary"}, "innerDot": {"tokenRef": "color.action.primary"}, "text": {"tokenRef": "color.text.primary"}},
+        "upcoming": {"nodeBackground": {"tokenRef": "color.surface.default"}, "nodeBorder": {"tokenRef": "color.border.default"}, "text": {"tokenRef": "color.text.tertiary"}},
+        "error": {"nodeBackground": {"tokenRef": "color.surface.default"}, "nodeBorder": {"tokenRef": "color.status.danger"}, "markShape": "error", "text": {"tokenRef": "color.status.dangerText"}}
+      },
+      "accessibility": {"currentStepStateRequired": true, "stateCannotBeColorOnly": true},
+      "constraints": [
+        "horizontal is preferred only for three to five short steps",
+        "use vertical for long labels or many steps",
+        "do not shrink labels below the system hierarchy to force horizontal fit",
+        "stepper is for task progression, not event history"
+      ]
+    },
+    "timeline": {
+      "role": "chronological-event-history",
+      "anatomy": ["container", "event", "node", "connector", "timestamp?", "title", "supportingContent?", "status?"],
+      "variants": ["vertical"],
+      "geometry": {
+        "nodeSize": {"value": 10, "unit": "px"},
+        "connectorThickness": {"value": 2, "unit": "px"}
+      },
+      "typography": {
+        "title": {"tokenRef": "typography.body"},
+        "metadata": {"tokenRef": "typography.caption"},
+        "supporting": {"tokenRef": "typography.bodySmall"}
+      },
+      "constraints": [
+        "chronological order must be explicit",
+        "status color is reserved for events that actually have status meaning",
+        "group long histories by meaningful date or phase boundaries",
+        "timeline does not replace a task stepper"
+      ]
+    },
+    "statusComposition": {
+      "role": "cross-component-status-expression-pattern",
+      "anatomy": ["statusSemantic", "textOrAccessibleEquivalent", "optionalIconOrDotOrTag"],
+      "variants": ["neutral", "info", "success", "warning", "danger"],
+      "accessibility": {"textEquivalentRequired": true, "colorOnlyForbidden": true},
+      "constraints": [
+        "business-specific state names map into system semantics instead of creating global colors",
+        "neutral uses surface.subtle plus text.secondary",
+        "status may compose text, tag, icon, dot, alert, or section presentation without inventing a new status primitive"
+      ]
+    }
+  },
+  "validation": {
+    "oneBlockingModalAtATime": true,
+    "transientFeedbackForCriticalInformation": false,
+    "colorOnlyStatus": false,
+    "fieldErrorEscalatesToToastByDefault": false,
+    "indeterminateFakePercentage": false,
+    "productDomainMayMutateCoreStatusPalette": false
+  }
+}
