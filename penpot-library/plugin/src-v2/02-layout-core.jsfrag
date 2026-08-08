@@ -1,0 +1,110 @@
+    bind(shape, color, ['fill']);
+    return shape;
+  };
+
+  const tinyIcon = (name, symbol = '•', color = 'color.text.secondary') => {
+    const shape = txt(name, symbol, 'typography.label', color);
+    shape.setPluginData?.('slot', 'icon');
+    return shape;
+  };
+
+  const frame = (name, {width = 320, height = 40, dir = 'row', surface = 'color.surface.default', radius, padding = true, gap = true} = {}) => {
+    const board = penpot.createBoard();
+    board.name = name;
+    board.resize(width, height);
+    board.clipContent = false;
+    board.showInViewMode = false;
+    if (surface === 'transparent') transparent(board); else fill(board, surface);
+    if (radius) bindRadius(board, radius);
+    const flex = board.addFlexLayout();
+    flex.dir = dir;
+    flex.wrap = 'nowrap';
+    flex.alignItems = dir === 'row' ? 'center' : 'stretch';
+    flex.justifyContent = 'start';
+    flex.horizontalSizing = 'fix';
+    flex.verticalSizing = 'fix';
+    if (padding) {
+      bind(board, 'density.paddingHorizontal', ['paddingLeft','paddingRight']);
+      bind(board, 'density.paddingVertical', ['paddingTop','paddingBottom']);
+    }
+    if (gap) bind(board, 'density.internalGap', [dir === 'row' ? 'columnGap' : 'rowGap']);
+    return board;
+  };
+
+  const append = (parent, ...children) => {
+    for (const child of children.flat().filter(Boolean)) parent.appendChild(child);
+    return parent;
+  };
+
+  const position = (shape, x, y) => {
+    shape.x = x;
+    shape.y = y;
+    return shape;
+  };
+
+  const formula = (props) => Object.entries(props).map(([key, value]) => `${key}=${value}`).join(', ');
+
+  function stamp(component, canonicalId, contract) {
+    component.setPluginData(GENERATED_KEY, VERSION);
+    component.setPluginData(CANONICAL_KEY, canonicalId);
+    component.setPluginData(CONTRACT_KEY, contract);
+  }
+
+  function stampShape(shape, canonicalId, contract) {
+    shape.setPluginData(GENERATED_KEY, VERSION);
+    shape.setPluginData(CANONICAL_KEY, canonicalId);
+    shape.setPluginData(CONTRACT_KEY, contract);
+  }
+
+  async function ensurePage(name) {
+    let page = penpot.currentFile.pages.find((item) => item.name === name);
+    if (!page) {
+      page = penpot.createPage();
+      page.name = name;
+    }
+    await penpot.openPage(page);
+    return page;
+  }
+
+  function canvasBackground(width, height) {
+    const board = penpot.createBoard();
+    board.name = 'Canvas / background';
+    board.resize(width, height);
+    board.x = 0;
+    board.y = 0;
+    board.clipContent = false;
+    board.showInViewMode = false;
+    fill(board, 'color.surface.page');
+    board.setPluginData(GENERATED_KEY, VERSION);
+    return board;
+  }
+
+  function pageHeader({eyebrow, title, subtitle}) {
+    const eye = txt('page-eyebrow', eyebrow, 'typography.labelSmall', 'color.text.brand');
+    position(eye, 64, 56);
+    const h1 = txt('page-title', title, 'typography.title', 'color.text.primary');
+    position(h1, 64, 86);
+    const sub = txt('page-subtitle', subtitle, 'typography.bodySmall', 'color.text.secondary');
+    position(sub, 64, 128);
+    const rule = penpot.createRectangle();
+    rule.name = 'page-rule';
+    rule.resize(1600, 1);
+    position(rule, 64, 176);
+    fill(rule, 'color.border.subtle');
+  }
+
+  function panelChrome({x, y, w, h, family, name, axes, count}) {
+    const panel = penpot.createBoard();
+    panel.name = `Layout / ${family} / ${name}`;
+    panel.resize(w, h);
+    panel.x = x;
+    panel.y = y;
+    panel.clipContent = false;
+    panel.showInViewMode = false;
+    fill(panel, 'color.surface.default');
+    bindRadius(panel, 'radius.container');
+    stroke(panel, 'color.border.subtle', 'border.control');
+    panel.setPluginData(GENERATED_KEY, VERSION);
+    panel.setPluginData('com-design-layout-only', 'true');
+
+    const kicker = txt(`${name}-family`, family.toUpperCase(), 'typography.labelSmall', 'color.text.tertiary');
