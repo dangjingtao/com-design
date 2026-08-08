@@ -2,7 +2,7 @@
   "$schema": "https://com-design.local/schemas/component-contract-v1.json",
   "$metadata": {
     "name": "Com Design Mobile — Navigation & Information",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "phase": 3,
     "status": "candidate",
     "foundation": "../tokens/tokens.json",
@@ -21,7 +21,7 @@
       "hierarchy-before-decoration",
       "section-before-card",
       "brand-for-navigation",
-      "accent-for-competition-rhythm",
+      "accent-for-local-emphasis",
       "lazy-component-tokens"
     ]
   },
@@ -41,7 +41,7 @@
     "navigationColorPolicy": {
       "active": {"tokenRef": "color.text.brand"},
       "inactive": {"tokenRef": "color.text.tertiary"},
-      "rule": "Accent Cyan is not the default active color for global navigation."
+      "rule": "Accent Cyan is not the default active color for global navigation; reserve it for local emphasis, progress, data, or constrained product patterns."
     },
     "surfacePolicy": {
       "default": {"tokenRef": "color.surface.default"},
