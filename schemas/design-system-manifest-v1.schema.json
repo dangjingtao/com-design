@@ -13,6 +13,7 @@
       "additionalProperties": {"type":"array", "items":{"type":"string"}, "uniqueItems":true}
     },
     "corePatterns": {"type":"array", "items":{"type":"string"}, "uniqueItems":true},
+    "legacyEmbeddedPatternEntries": {"type":"object"},
     "counts": {
       "type":"object",
       "required":["coreComponents","corePatterns"],
