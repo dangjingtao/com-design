@@ -1,0 +1,92 @@
+{
+  "$schema": "https://com-design.local/schemas/theme-overlay-v1.schema.json",
+  "$metadata": {
+    "name": "Com Design Mobile — Dark Theme",
+    "version": "1.0.0",
+    "axis": "theme",
+    "mode": "dark",
+    "base": "./tokens.json",
+    "targetNamespace": "semantic.light",
+    "status": "release-candidate",
+    "note": "V1 keeps the historical semantic.light logical namespace for contract compatibility. The active theme overlay replaces semantic values before component resolution."
+  },
+  "primitiveExtensions": {
+    "color": {
+      "neutral": {
+        "950": {"$type":"color","$value":"#10131E"}
+      },
+      "brand": {
+        "800": {"$type":"color","$value":"#30326F"},
+        "900": {"$type":"color","$value":"#25264D"}
+      },
+      "accent": {
+        "900": {"$type":"color","$value":"#123E44"}
+      },
+      "success": {
+        "900": {"$type":"color","$value":"#163629"}
+      },
+      "warning": {
+        "900": {"$type":"color","$value":"#403013"}
+      },
+      "danger": {
+        "900": {"$type":"color","$value":"#431C24"}
+      }
+    },
+    "shadow": {
+      "floatingDark": {"$type":"shadow","$value":{"color":"#00000066","offsetX":"0px","offsetY":"4px","blur":"16px","spread":"0px"}},
+      "modalDark": {"$type":"shadow","$value":{"color":"#00000080","offsetX":"0px","offsetY":"10px","blur":"32px","spread":"0px"}}
+    }
+  },
+  "patches": {
+    "color.text.primary": {"$type":"color","$value":"{primitive.color.neutral.50}"},
+    "color.text.secondary": {"$type":"color","$value":"{primitive.color.neutral.300}"},
+    "color.text.tertiary": {"$type":"color","$value":"{primitive.color.neutral.400}"},
+    "color.text.placeholder": {"$type":"color","$value":"{primitive.color.neutral.400}"},
+    "color.text.disabled": {"$type":"color","$value":"{primitive.color.neutral.400}"},
+    "color.text.inverse": {"$type":"color","$value":"{primitive.color.neutral.0}"},
+    "color.text.brand": {"$type":"color","$value":"{primitive.color.brand.200}"},
+    "color.text.link": {"$type":"color","$value":"{primitive.color.brand.200}"},
+
+    "color.surface.page": {"$type":"color","$value":"{primitive.color.neutral.950}"},
+    "color.surface.default": {"$type":"color","$value":"{primitive.color.neutral.900}"},
+    "color.surface.subtle": {"$type":"color","$value":"{primitive.color.neutral.800}"},
+    "color.surface.selected": {"$type":"color","$value":"{primitive.color.brand.900}"},
+    "color.surface.pressed": {"$type":"color","$value":"{primitive.color.neutral.800}"},
+    "color.surface.inverse": {"$type":"color","$value":"{primitive.color.neutral.700}"},
+
+    "color.border.subtle": {"$type":"color","$value":"{primitive.color.neutral.800}"},
+    "color.border.default": {"$type":"color","$value":"{primitive.color.neutral.500}"},
+    "color.border.strong": {"$type":"color","$value":"{primitive.color.neutral.400}"},
+    "color.border.focused": {"$type":"color","$value":"{primitive.color.brand.400}"},
+    "color.border.error": {"$type":"color","$value":"{primitive.color.danger.500}"},
+
+    "color.action.primary": {"$type":"color","$value":"{primitive.color.brand.500}"},
+    "color.action.primaryPressed": {"$type":"color","$value":"{primitive.color.brand.600}"},
+    "color.action.secondary": {"$type":"color","$value":"{primitive.color.brand.900}"},
+    "color.action.secondaryPressed": {"$type":"color","$value":"{primitive.color.brand.800}"},
+    "color.action.destructive": {"$type":"color","$value":"{primitive.color.danger.500}"},
+    "color.action.destructivePressed": {"$type":"color","$value":"{primitive.color.danger.700}"},
+    "color.action.disabled": {"$type":"color","$value":"{primitive.color.neutral.700}"},
+
+    "color.accent.default": {"$type":"color","$value":"{primitive.color.accent.500}"},
+    "color.accent.strong": {"$type":"color","$value":"{primitive.color.accent.500}"},
+    "color.accent.subtle": {"$type":"color","$value":"{primitive.color.accent.900}"},
+
+    "color.status.success": {"$type":"color","$value":"{primitive.color.success.500}"},
+    "color.status.successBg": {"$type":"color","$value":"{primitive.color.success.900}"},
+    "color.status.successText": {"$type":"color","$value":"{primitive.color.success.100}"},
+    "color.status.warning": {"$type":"color","$value":"{primitive.color.warning.500}"},
+    "color.status.warningBg": {"$type":"color","$value":"{primitive.color.warning.900}"},
+    "color.status.warningText": {"$type":"color","$value":"{primitive.color.warning.100}"},
+    "color.status.danger": {"$type":"color","$value":"{primitive.color.danger.500}"},
+    "color.status.dangerBg": {"$type":"color","$value":"{primitive.color.danger.900}"},
+    "color.status.dangerText": {"$type":"color","$value":"{primitive.color.danger.100}"},
+    "color.status.info": {"$type":"color","$value":"{primitive.color.brand.400}"},
+    "color.status.infoBg": {"$type":"color","$value":"{primitive.color.brand.900}"},
+    "color.status.infoText": {"$type":"color","$value":"{primitive.color.brand.100}"},
+    "color.scrim": {"$type":"color","$value":"#00000099"},
+
+    "elevation.floating": {"$type":"shadow","$value":"{primitive.shadow.floatingDark}"},
+    "elevation.modal": {"$type":"shadow","$value":"{primitive.shadow.modalDark}"}
+  }
+}

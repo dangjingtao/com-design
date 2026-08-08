@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://com-design.local/schemas/pattern-contract-v1.schema.json",
+  "title": "Com Design Core Pattern Contract V1",
+  "type": "object",
+  "required": ["$metadata", "patterns"],
+  "properties": {
+    "$metadata": {"type":"object"},
+    "patterns": {
+      "type":"object",
+      "minProperties":1,
+      "additionalProperties": {
+        "type":"object",
+        "required":["role"],
+        "properties": {
+          "role":{"type":"string"},
+          "composes":{"type":"array","items":{"type":"string"}},
+          "variants":{"type":"array","items":{"type":"string"}},
+          "states":{"type":"array","items":{"type":"string"}},
+          "rules":{"type":"array","items":{"type":"string"}},
+          "accessibility":{"type":"object"}
+        },
+        "additionalProperties":true
+      }
+    }
+  },
+  "additionalProperties":false
+}
