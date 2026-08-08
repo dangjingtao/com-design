@@ -209,6 +209,7 @@ After the full library exists:
    python3 penpot-library/scripts/audit-penpot-roundtrip.py \
      path/to/source-export.penpot \
      --expect-full-catalog \
+     --expect-instances \
      --out reports/penpot-reusable-source-audit.json
    ```
 
@@ -221,9 +222,12 @@ After the full library exists:
    python3 penpot-library/scripts/audit-penpot-roundtrip.py \
      path/to/round-trip-export.penpot \
      --expect-full-catalog \
+     --expect-instances \
      --round-trip \
      --out reports/penpot-reusable-roundtrip-audit.json
    ```
+
+The auditor checks documented PenPot v3 fields rather than guessed ZIP internals: native feature flags, Component metadata (`mainInstanceId`/`mainInstancePage`), shape component references (`componentId`/`componentFile`/`shapeRef`), exported `appliedTokens`, token sets/themes, and canonical catalog paths.
 
 ## 10. PASS language
 
@@ -233,7 +237,8 @@ After the full library exists:
 - 2 patterns remain separately classified
 - native Component metadata exists in export
 - native Variant metadata exists where expected
-- token bindings survive export/import
+- reusable Instance references exist and work in PenPot
+- `appliedTokens` survive export/import
 - no Component → Primitive direct bindings
 - actual PenPot visual inspection is recorded
 - Light/Dark visual/semantic check passes
