@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Com Design Mobile — Design System V1 Review</title>
+  <meta name="description" content="Com Design Mobile 1.0.0-rc.1 面向设计负责人/项目负责人的 Design Review 文档。">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到正文</a>
+<div class="shell">
+  <aside class="sidebar" aria-label="文档目录">
+    <div class="brand-lockup">
+      <strong>Com Design Mobile</strong>
+      <span>Design System V1 · Review</span>
+    </div>
+    <nav class="toc">
+      <small>Review</small>
+      <a href="#language">01 设计语言</a>
+      <a href="#foundation">02 全局样式</a>
+      <a href="#principles">03 设计原则</a>
+      <a href="#system">04 系统模型</a>
+      <a href="#patterns">05 设计模式</a>
+      <a href="#compositions">06 真实组合</a>
+      <a href="#catalogue">07 V1 范围</a>
+      <a href="#rc">08 RC 遗留</a>
+      <a href="#decision">09 Review 决策</a>
+    </nav>
+    <div class="sidebar-note">
+      <strong>1.0.0-rc.1</strong><br>
+      此页面用于设计评审，不是老板汇报版。<br><br>
+      真相优先级：Manifest / Token / Contract &gt; 文档 &gt; 本展示实现。
+    </div>
+  </aside>
+
+  <main id="main">
+    <header class="report-header">
+      <div class="content">
+        <p class="eyebrow">Design System V1 · Human Review</p>
+        <h1>不是看组件有多少，<br>而是看它们是否说同一种语言。</h1>
+        <p class="lede">Com Design Mobile V1 已进入 Release Candidate。这份文档把 Token、Contract 与规范收束成一次真正可评审的设计语言展示：看它长什么样、为什么这样设计、组合后是否成立，以及 Stable 之前还欠什么。</p>
+        <div class="meta-strip">
+          <span class="status-chip">Release Candidate</span>
+          <span>Version 1.0.0-rc.1</span>
+          <span>33 Core Components + 2 Core Patterns</span>
+          <span>Mobile · iOS / Android</span>
+        </div>
+        <div class="review-question">
+          <strong>这次要回答</strong>
+          <p>这套语言是否足够清晰、稳定、克制，值得继续完成独立二审并走向 Stable？</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="section section--surface" id="language">
+      <div class="content">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">01 · Visual Language</p>
+            <h2>现代、清晰、轻快，但不靠“装饰感”证明自己年轻。</h2>
+          </div>
+          <p class="section-summary">目标气质：Modern / Clear / Light / Efficient。年轻感来自 Electric Indigo、信息节奏和状态表达，而不是渐变 Hero、重阴影或满屏软圆角卡片。</p>
+        </div>
+
+        <div class="language-grid">
+          <div>
+            <p class="statement">V1 的核心视觉判断很简单：<strong>先让信息层级成立，再决定哪里需要颜色、边界或浮起。</strong></p>
+            <ul class="avoid-list">
+              <li>不做政务 / 教务系统式的沉重蓝灰</li>
+              <li>不做厚重企业 SaaS 模板感</li>
+              <li>不做电竞霓虹与赛博朋克</li>
+              <li>不做软萌、奶油化、幼稚卡通</li>
+              <li>不把 Card + Shadow 当默认页面结构</li>
+              <li>不让某个业务主题反向污染公司 Core</li>
+            </ul>
+          </div>
+          <div class="theme-pair" aria-label="Light 与 Dark 主题样例">
+            <article class="theme-card">
+              <h3>Light</h3>
+              <div class="theme-surfaces">
+                <div class="theme-surface">Page · neutral.50</div>
+                <div class="theme-surface subtle">Subtle surface · neutral.100</div>
+                <div class="theme-surface">Default surface · white</div>
+              </div>
+              <button class="btn primary sample-action" type="button">Primary action</button>
+            </article>
+            <article class="theme-card dark">
+              <h3>Dark</h3>
+              <div class="theme-surfaces">
+                <div class="theme-surface">Page · neutral.950</div>
+                <div class="theme-surface subtle">Subtle surface · neutral.800</div>
+                <div class="theme-surface">Default surface · neutral.900</div>
+              </div>
+              <button class="btn primary sample-action" type="button">Primary action</button>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="foundation">
+      <div class="content">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">02 · Global Style</p>
+            <h2>色彩、字号、间距和圆角，都有明确职责。</h2>
+          </div>
+          <p class="section-summary">V1 不追求“Token 越多越专业”。Foundation 只保留跨产品稳定的值和角色，组件局部几何留在 Contract，避免提前制造一整张 Token Matrix。</p>
+        </div>
+
+        <h3>Color · 不是一套主色包打天下</h3>
+        <div class="swatch-group" aria-label="核心色彩样例">
+          <div class="swatch-row">
+            <div class="swatch-label"><strong>Brand</strong><span>Identity / Action</span></div>
+            <div class="swatch" style="background:#f0f1ff">50</div>
+            <div class="swatch dark-label" style="background:#7b7ef8">400</div>
+            <div class="swatch dark-label" style="background:#5b5ef7">500</div>
+            <div class="swatch dark-label" style="background:#393bbe">700</div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-label"><strong>Accent</strong><span>Local emphasis</span></div>
+            <div class="swatch" style="background:#e9fcff">50</div>
+            <div class="swatch" style="background:#caf7fb">100</div>
+            <div class="swatch dark-label" style="background:#16bfd3">500</div>
+            <div class="swatch dark-label" style="background:#0e9fb3">600</div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-label"><strong>Status</strong><span>Semantic outcome</span></div>
+            <div class="swatch" style="background:#ddf8ea">Success</div>
+            <div class="swatch" style="background:#fff2d6">Warning</div>
+            <div class="swatch" style="background:#ffe4e8">Danger</div>
+            <div class="swatch" style="background:#f0f1ff">Info</div>
+          </div>
+        </div>
+
+        <table class="role-table">
+          <thead><tr><th>Family</th><th>负责什么</th><th>不负责什么</th></tr></thead>
+          <tbody>
+            <tr><td>Brand</td><td>主操作、关键选中、全局导航 active identity、品牌识别</td><td>不承担所有业务状态；不把整页染成品牌色</td></tr>
+            <tr><td>Accent</td><td>局部强调、进度、数据、受约束的产品 Pattern</td><td>不是主要 CTA，不是全局导航 active，也不是第五种 Status</td></tr>
+            <tr><td>Status</td><td>Success / Warning / Danger / Info 的语义结果</td><td>不用于排名、等级、阶段、分类等非状态语义</td></tr>
+            <tr><td>Neutral</td><td>大量正文、Surface、Border、结构层级</td><td>不被理解为“没有设计”的剩余色</td></tr>
+          </tbody>
+        </table>
+
+        <div style="height:48px"></div>
+        <h3>Typography · 高密度不等于全局小字</h3>
+        <div class="type-scale">
+          <div class="type-row"><span class="type-name">Display</span><span class="t-display">用于极少数强页面标题</span><span class="type-meta">28 / 36 · 600</span></div>
+          <div class="type-row"><span class="type-name">Title</span><span class="t-title">页面标题，而不是普通卡片标题</span><span class="type-meta">24 / 30 · 600</span></div>
+          <div class="type-row"><span class="type-name">Heading</span><span class="t-heading">页面局部标题与 Dialog 标题</span><span class="type-meta">18 / 24 · 600</span></div>
+          <div class="type-row"><span class="type-name">Heading Small</span><span class="t-heading-small">Section / 信息强调</span><span class="type-meta">16 / 22 · 600</span></div>
+          <div class="type-row"><span class="type-name">Body</span><span class="t-body">16px 是正文主力，不因 Compact 被整体压小。</span><span class="type-meta">16 / 24 · 400</span></div>
+          <div class="type-row"><span class="type-name">Body Small</span><span class="t-body-small">辅助说明、列表 Description、次要内容。</span><span class="type-meta">14 / 20 · 400</span></div>
+          <div class="type-row"><span class="type-name">Label</span><span class="t-label">按钮、Tab、短操作标签</span><span class="type-meta">14 / 20 · 500</span></div>
+          <div class="type-row"><span class="type-name">Caption</span><span class="t-caption">Metadata、Helper、低层级说明</span><span class="type-meta">12 / 18 · 400</span></div>
+        </div>
+
+        <div class="foundation-split">
+          <div>
+            <h3>Spacing & Density</h3>
+            <p class="muted small">Primitive spacing：0 / 2 / 4 / 6 / 8 / 12 / 16 / 20 / 24 / 32。Compact 是默认模式，但只压缩几何，不压缩平台 hit target。</p>
+            <div class="measure-list">
+              <div class="measure"><span>Control</span><span class="measure-line brand" style="width:50%"></span><strong>40</strong></div>
+              <div class="measure"><span>Large</span><span class="measure-line brand" style="width:60%"></span><strong>48</strong></div>
+              <div class="measure"><span>H padding</span><span class="measure-line" style="width:30%"></span><strong>12</strong></div>
+              <div class="measure"><span>Inset</span><span class="measure-line" style="width:40%"></span><strong>16</strong></div>
+              <div class="measure"><span>Section gap</span><span class="measure-line subtle" style="width:50%"></span><strong>20</strong></div>
+            </div>
+          </div>
+          <div>
+            <h3>Radius & Shape</h3>
+            <p class="muted small">“控件稍圆、容器克制、浮层更柔和”。并不是所有容器都必须拥有圆角。</p>
+            <div class="radius-demo" aria-hidden="true">
+              <div class="radius-shape"></div><div class="radius-shape"></div><div class="radius-shape"></div><div class="radius-shape"></div>
+            </div>
+            <div class="radius-caption"><span>Control 8</span><span>Container 12</span><span>Overlay 16</span><span>Pill</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--surface" id="principles">
+      <div class="content">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">03 · Principles → Rules</p>
+            <h2>原则不是海报句子，要能直接改变页面怎么画。</h2>
+          </div>
+          <p class="section-summary">这几条原则决定了 V1 为什么没有做成“圆角 Card 大全”，也决定设计师在遇到新页面时先拿什么解决问题。</p>
+        </div>
+
+        <div class="principle-list">
+          <article class="principle-row">
+            <h3>Compact-first</h3>
+            <p>默认提高信息效率：40px 控件、48px 大控件/行基线、12px 水平 padding。但 Typography role、状态语义和可访问性不随密度缩小。</p>
+            <p class="consequence"><strong>结果：</strong>视觉可以紧凑，iOS 44pt / Android 48dp 的交互区域仍独立满足。</p>
+          </article>
+          <article class="principle-row">
+            <h3>Flat-first</h3>
+            <p>常规信息层级优先 Typography → Spacing / Group → Divider / Border → Surface → Color。Shadow 不做常规分组手段。</p>
+            <p class="consequence"><strong>结果：</strong>只有 Menu / Dialog / Sheet 等真实浮层才获得 elevation。</p>
+          </article>
+          <article class="principle-row">
+            <h3>Section-before-Card</h3>
+            <p>Section 是默认内容分组。Card 只在内容确实需要独立容器边界时出现，Card inside Card 默认禁止。</p>
+            <p class="consequence"><strong>结果：</strong>高密度页面靠结构和节奏成立，而不是把每块信息装进一个白盒。</p>
+          </article>
+          <article class="principle-row">
+            <h3>Semantic role first</h3>
+            <p>组件引用 `action.primary / text.primary / border.focused` 等 Semantic role，不直接吃 Primitive。业务状态名称也先映射语义，再选表达。</p>
+            <p class="consequence"><strong>结果：</strong>Light / Dark 可以换映射，组件行为和角色不必复制一份。</p>
+          </article>
+          <article class="principle-row">
+            <h3>Core stays small</h3>
+            <p>不是所有 UI 名词都必须进入 V1。新组件需要基础性或稳定跨产品复用，并具备 role / anatomy / states / accessibility / constraints。</p>
+            <p class="consequence"><strong>结果：</strong>“另一个页面也想这么画”不是升级为 Core 的理由。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="system">
+      <div class="content">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">04 · System Model</p>
+            <h2>四层模型负责“是什么”，四个正交轴负责“在什么环境下解析”。</h2>
+          </div>
+          <p class="section-summary">V1 不生成 Dark-Compact-iOS-Reduced 这种组合 Token。组件声明自己需要的语义，各 Axis 独立解析自己的责任。</p>
+        </div>
+
+        <div class="system-flow" aria-label="Primitive 到 Pattern 的四层模型">
+          <article class="flow-step"><span>01</span><strong>Primitive</strong><p>原始设计值：色值、字号、间距、尺寸、Shadow。没有业务含义。</p></article>
+          <article class="flow-step"><span>02</span><strong>Semantic</strong><p>稳定角色：text.primary、surface.default、action.primary、status.warningText。</p></article>
+          <article class="flow-step"><span>03</span><strong>Component</strong><p>Role、Anatomy、State、Geometry、Accessibility、Constraints。</p></article>
+          <article class="flow-step"><span>04</span><strong>Pattern</strong><p>用 Core 组合可复用交互逻辑，不反向修改 Core。</p></article>
+        </div>
+
+        <div class="axes-grid">
+          <article class="axis"><small>Axis 01</small><strong>Theme</strong><p>Light / Dark。Dark 是 Semantic overlay，不是第二套手工组件。</p></article>
+          <article class="axis"><small>Axis 02</small><strong>Density</strong><p>Compact / Comfortable。只改变几何和节奏，不改变角色和语义。</p></article>
+          <article class="axis"><small>Axis 03</small><strong>Platform</strong><p>iOS / Android。处理 touch target、safe area、系统 dismissal 等真实差异。</p></article>
+          <article class="axis"><small>Axis 04</small><strong>Motion</strong><p>Standard / Reduced。动效解释关系，不作为装饰，也不是唯一状态信号。</p></article>
+        </div>
+
+        <div class="resolution"><b>Resolution</b> Foundation → Theme → Density → Platform → Motion → Component → Pattern → Product Extension</div>
+      </div>
+    </section>
+
+    <section class="section section--surface" id="patterns">
+      <div class="content">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">05 · Design Patterns</p>
+            <h2>真正决定体验一致性的，是组件之间怎么组织。</h2>
+          </div>
+          <p class="section-summary">Component Gallery 只能证明组件单独能画。Pattern 要证明在表单、导航、搜索、反馈和流程里，角色边界不会互相冒充。</p>
+        </div>
+
+        <div class="pattern-index">
+          <article><h3>Form</h3><p>Field Family 固定 Label → Control → Helper / Error。字段错误优先留在字段上下文。</p><code>Outlined / Flat · one field language</code></article>
+          <article><h3>Information</h3><p>Leading / Content / Trailing 建立列表节奏；超过三层信息优先重构，不继续缩字。</p><code>Section before Card</code></article>
+          <article><h3>Navigation</h3><p>Bottom Nav、Tabs、Segmented、Top App Bar 各有独立角色，视觉差异服务于 IA 差异。</p><code>Brand owns global active identity</code></article>
+          <article><h3>Search</h3><p>Search 是 query interaction，不是普通 Input 的别名；No Results 也不是全产品 Empty State。</p><code>query / clear / loading remain coherent</code></article>
+          <article><h3>Feedback</h3><p>反馈强度按注意力成本逐级提升。能在原位置解释的问题，不用更强打断。</p><code>local → inline → banner → transient → modal</code></article>
+          <article><h3>Overlay</h3><p>同一时间只允许一个 blocking modal。Menu 先关闭，再打开 Dialog / Sheet。</p><code>blocking stack depth = 1</code></article>
+          <article><h3>Loading / Empty</h3><p>Spinner、Skeleton、Empty、No Results、Recoverable Error 各有不同前提，不互相当皮肤。</p><code>preserve usable content on refresh</code></article>
+          <article><h3>Progress</h3><p>Determinate Progress、Stepper、Timeline 分别回答剩余量、任务步骤和事件历史。</p><code>truthful progress only</code></article>
+          <article><h3>Status</h3><p>Status 是组合语法，不是彩色胶囊本身。业务名称映射到已有语义。</p><code>color-only status forbidden</code></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="compositions">
+      <div class="content">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">06 · Composition Test</p>
+            <h2>把组件放回真实移动端组合里，看语言会不会散。</h2>
+          </div>
+          <p class="section-summary">下面不是某个业务产品原型。它们故意使用中性内容，只验证组合关系、层级、密度、状态与 Light / Dark 是否成立。</p>
+        </div>
+
+        <div class="specimen-grid">
+          <article class="specimen">
+            <div class="specimen-caption"><strong>Form · Compact</strong><span>Field hierarchy / validation / action priority</span></div>
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="phone-status"><span>9:41</span><span>● ●</span></div>
+                <div class="appbar"><button class="icon-action" type="button" aria-label="返回">‹</button><strong>编辑资料</strong><span></span></div>
+                <div class="phone-content">
+                  <div class="phone-section">
+                    <div class="phone-section-title"><strong>基本信息</strong><span>必填项 *</span></div>
+                    <div class="field"><label>名称 *</label><div class="control">Design Review</div></div>
+                    <div class="field"><label>联系邮箱 *</label><div class="control error">name@example</div><p class="helper error">邮箱格式不完整，请补全域名。</p></div>
+                    <div class="field"><label>类型</label><div class="control">团队项目 <span style="margin-left:auto;color:#687288">⌄</span></div><p class="helper">选择会影响后续协作设置。</p></div>
+                  </div>
+                  <div class="phone-section">
+                    <div class="button-row"><button class="btn primary" type="button" style="flex:1">保存</button><button class="btn secondary" type="button">取消</button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="specimen">
+            <div class="specimen-caption"><strong>List / Search</strong><span>Search is flat · Section beats Card stack</span></div>
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="phone-status"><span>9:41</span><span>● ●</span></div>
+                <div class="appbar"><span></span><strong>查找</strong><button class="icon-action" type="button" aria-label="更多">···</button></div>
+                <div class="phone-content" style="padding-bottom:0">
+                  <div class="search-field"><span class="search-mark" aria-hidden="true"></span><span class="query">Design</span><span aria-hidden="true">×</span></div>
+                  <div class="phone-section" style="margin-top:20px">
+                    <div class="phone-section-title"><strong>结果</strong><span>3 项</span></div>
+                  </div>
+                  <div class="list">
+                    <div class="list-row"><div class="row-main"><strong>Design Review</strong><span>刚刚更新 · 8 位成员</span></div><span class="tag success">正常</span></div>
+                    <div class="list-row"><div class="row-main"><strong>Design Tokens</strong><span>昨天 · Foundation</span></div><span class="tag brand">规范</span></div>
+                    <div class="list-row"><div class="row-main"><strong>Design Archive</strong><span>7 月 24 日 · 只读</span></div><span class="row-meta">›</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="specimen">
+            <div class="specimen-caption"><strong>Settings / Navigation</strong><span>Top App Bar / Section / Switch / Bottom Nav</span></div>
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="phone-status"><span>9:41</span><span>● ●</span></div>
+                <div class="appbar"><span></span><strong>设置</strong><button class="icon-action" type="button" aria-label="更多">···</button></div>
+                <div class="phone-content" style="padding-bottom:0">
+                  <div class="phone-section-title"><strong>通知</strong><span></span></div>
+                  <div class="list">
+                    <div class="list-row"><div class="row-main"><strong>推送通知</strong><span>允许重要更新提醒</span></div><span class="switch on" aria-label="已开启"></span></div>
+                    <div class="list-row"><div class="row-main"><strong>邮件摘要</strong><span>每日一次</span></div><span class="switch" aria-label="已关闭"></span></div>
+                  </div>
+                  <div class="phone-section" style="margin-top:20px"><div class="phone-section-title"><strong>显示</strong><span></span></div></div>
+                  <div class="list">
+                    <div class="list-row"><div class="row-main"><strong>外观</strong><span>跟随系统</span></div><span class="row-meta">›</span></div>
+                    <div class="list-row"><div class="row-main"><strong>密度</strong><span>Compact</span></div><span class="row-meta">›</span></div>
+                  </div>
+                </div>
+                <div class="bottom-nav"><div class="nav-item"><span class="nav-glyph"></span>首页</div><div class="nav-item"><span class="nav-glyph"></span>项目</div><div class="nav-item"><span class="nav-glyph"></span>消息</div><div class="nav-item active"><span class="nav-glyph"></span>设置</div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="specimen">
+            <div class="specimen-caption"><strong>Feedback · Dark</strong><span>Local first · transient second · modal only when needed</span></div>
+            <div class="phone-wrap">
+              <div class="phone dark">
+                <div class="phone-status"><span>9:41</span><span>● ●</span></div>
+                <div class="appbar"><button class="icon-action" type="button" aria-label="返回">‹</button><strong>同步状态</strong><span></span></div>
+                <div class="phone-content">
+                  <div class="phone-section">
+                    <div class="alert warning"><span class="alert-dot"></span><span><strong>部分内容未同步</strong><br>网络恢复后会继续，无需阻塞当前操作。</span></div>
+                  </div>
+                  <div class="phone-section">
+                    <div class="phone-section-title"><strong>最近同步</strong><span>刚刚</span></div>
+                    <div class="list">
+                      <div class="list-row"><div class="row-main"><strong>基础资料</strong><span>已完成</span></div><span class="tag success">成功</span></div>
+                      <div class="list-row"><div class="row-main"><strong>附件</strong><span>2 个待重试</span></div><span class="tag warning">注意</span></div>
+                    </div>
+                    <div class="toast-demo">已保存到本地，恢复网络后继续同步</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div style="height:64px"></div>
+        <div class="language-grid">
+          <div>
+            <div class="specimen-caption"><strong>Dialog · 真实阻塞关系才使用 modal elevation</strong><span>single blocking layer</span></div>
+            <div class="overlay-stage">
+              <div class="dialog">
+                <h4>删除这个版本？</h4>
+                <p>删除后无法恢复。取消不是危险动作，最终确认才使用 Destructive。</p>
+                <div class="dialog-actions"><button class="btn ghost" type="button">取消</button><button class="btn danger" type="button">删除</button></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="specimen-caption"><strong>Menu · 上下文动作，不承担页面 IA</strong><span>2–6 items · destructive last</span></div>
+            <div class="menu-stage">
+              <div class="menu-demo">
+                <div class="menu-item">编辑</div>
+                <div class="menu-item">复制链接</div>
+                <div class="menu-item">移动到…</div>
+                <div class="menu-item">删除</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:64px"></div>
+        <div class="language-grid">
+          <div>
+            <h3>Progress · 剩余量必须真实</h3>
+            <div class="progress-block"><div class="progress-label"><span>正在处理</span><strong>62%</strong></div><div class="track"><span></span></div></div>
+            <h3 style="margin-top:28px">Stepper · 将要完成的任务</h3>
+            <div class="stepper">
+              <div class="step completed"><div class="step-rail"><div class="step-node"></div></div><div class="step-copy"><strong>创建内容</strong><span>已完成</span></div></div>
+              <div class="step current"><div class="step-rail"><div class="step-node"></div></div><div class="step-copy"><strong>确认设置</strong><span>当前步骤</span></div></div>
+              <div class="step"><div class="step-rail"><div class="step-node"></div></div><div class="step-copy"><strong>提交</strong><span>下一步</span></div></div>
+            </div>
+          </div>
+          <div>
+            <h3>Timeline · 已经发生的事件</h3>
+            <p class="muted small">Timeline 不承担逐步操作；它只表达历史顺序。普通事件也不需要随机涂成状态色。</p>
+            <div class="timeline">
+              <div class="event"><div class="event-rail"></div><div class="event-copy"><time>10:42</time><strong>提交了新版本</strong><span class="muted small">Version 18</span></div></div>
+              <div class="event"><div class="event-rail"></div><div class="event-copy"><time>10:28</time><strong>完成内容检查</strong><span class="muted small">3 项修改</span></div></div>
+              <div class="event"><div class="event-rail"></div><div class="event-copy"><time>09:56</time><strong>创建评审</strong><span class="muted small">等待 Review</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--surface" id="catalogue">
+      <div class="content">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">07 · V1 Scope</p>
+            <h2>33 个组件不是 KPI；没有进入 V1 的东西同样重要。</h2>
+          </div>
+          <p class="section-summary">V1 的目标是覆盖稳定、高复用的移动端基础能力，而不是让所有 UI 名词都拥有一个 Core Component。</p>
+        </div>
+
+        <div class="catalogue">
+          <article class="catalogue-group"><header><strong>Actions & Forms</strong><span>8</span></header><p>Button · Icon Button · Input · Textarea · Select · Checkbox · Radio · Switch</p></article>
+          <article class="catalogue-group"><header><strong>Navigation & Information</strong><span>11</span></header><p>List Item · Tabs · Segmented Control · Top App Bar · Bottom Navigation · Section · Divider · Card · Tag · Badge · Avatar</p></article>
+          <article class="catalogue-group"><header><strong>Feedback / Overlay / Progress</strong><span>11</span></header><p>Toast · Snackbar · Alert · Dialog · Bottom Sheet · Loading Indicator · Skeleton · Empty State · Progress Indicator · Stepper · Timeline</p></article>
+          <article class="catalogue-group"><header><strong>Search / Menu</strong><span>3</span></header><p>Search Field · Menu · Menu Item</p></article>
+          <article class="catalogue-group"><header><strong>Core Patterns</strong><span>2</span></header><p>Status Composition · Search Experience</p></article>
+          <article class="catalogue-group"><header><strong>Product / Domain Extension</strong><span>boundary</span></header><p>业务状态、行业流程、排名/等级、主题插图和产品专有 IA 在消费 Core 后组合，不反写公司 Foundation。</p></article>
+        </div>
+
+        <div class="omission-note"><strong>V1 intentionally omits：</strong>Carousel、FAB、Data Table、Rich Text Editor、Navigation Rail 等。只有出现真实跨产品稳定需求，并且不能由现有 Core + Pattern 清晰组合解决时，才评估进入 Core。</div>
+      </div>
+    </section>
+
+    <section class="section" id="rc">
+      <div class="content">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">08 · Release Candidate</p>
+            <h2>这里必须保留“不完美”，否则这就不是 Design Review。</h2>
+          </div>
+          <p class="section-summary">当前作者自检已完成，但 Stable 明确要求剩余验证和独立二审。下面区分 Stable blocker、历史债和适合后续版本处理的范围。</p>
+        </div>
+
+        <div class="rc-grid">
+          <div>
+            <h3>Stable 前必须关闭</h3>
+            <ul class="checklist">
+              <li>独立 reviewer 抽样真实 iOS / Android typography 与 controls</li>
+              <li>独立验证 Manifest 引用文件、reference 与 33 + 2 count</li>
+              <li>PenPot Formal Spec 更新到 V1 Manifest</li>
+              <li>PenPot Light / Dark specimen 验证</li>
+              <li>PenPot Compact / Comfortable specimen 验证</li>
+              <li>Reusable Component Asset 与规范视觉分开验收</li>
+              <li>导出 .penpot 通过 overflow / hideInViewer / stale ref / duplicate / reusable metadata 审计</li>
+              <li>完成真正的独立 Review；作者自审不能把 RC 改成 Stable</li>
+            </ul>
+          </div>
+          <div>
+            <div class="debt-block">
+              <span class="debt-label">Historical debt</span>
+              <h3><span class="mono">semantic.light</span> 逻辑命名空间</h3>
+              <p>早期 Contract 使用 `semantic.light` 作为逻辑 namespace。V1 为避免发布前无收益迁移，Dark 通过 overlay 替换同一路径再解析组件。这是明确兼容契约，不代表 Dark 是二等公民。</p>
+            </div>
+            <div class="debt-block">
+              <span class="debt-label">Not fully validated</span>
+              <h3>真机、动态字体、Adaptive</h3>
+              <p>当前仍未覆盖所有 iOS / Android 实现环境、任意系统字体倍率，以及平板 / 折叠屏 / 宽屏 Adaptive。V1 文档给出基线，但这些不应被 HTML specimen 假装已经验证。</p>
+            </div>
+            <div class="debt-block">
+              <span class="debt-label">Later versions</span>
+              <h3>让真实需求拉动扩张</h3>
+              <p>未来组件、Pointer / Adaptive 扩展、业务 Pattern 与命名空间清理应在收益明确后进入后续版本，而不是为了让 1.0 看起来“完整”提前膨胀。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="decision" id="decision">
+      <div class="content">
+        <p class="section-kicker">09 · Review Decision</p>
+        <h2>放行的标准，不是“这个 HTML 看着不错”。</h2>
+        <div class="decision-grid">
+          <div class="decision-item"><strong>语言是否统一？</strong>Form、List、Settings、Feedback、Overlay、Progress 放在一起，是否仍像同一个系统。</div>
+          <div class="decision-item"><strong>Compact 是否真的高效？</strong>紧凑有没有伤害可读性、触控和层级，还是只压掉了多余几何。</div>
+          <div class="decision-item"><strong>Flat 是否足够有层级？</strong>没有大量 Card / Shadow 后，页面是否仍然清楚而不是“太素”。</div>
+          <div class="decision-item"><strong>颜色职责是否可执行？</strong>Brand / Accent / Status 的边界是否足以阻止产品设计各自发挥。</div>
+          <div class="decision-item"><strong>模式边界是否清楚？</strong>Tabs / Segmented / Bottom Nav、Toast / Alert / Dialog、Progress / Stepper / Timeline 会不会被互相替代。</div>
+          <div class="decision-item"><strong>系统模型是否能实现？</strong>Theme / Density / Platform / Motion 四轴是否足够独立，避免复制组件和组合 Token 爆炸。</div>
+          <div class="decision-item"><strong>Core 是否克制？</strong>当前 33 + 2 是否覆盖基础能力，同时给 Product / Domain Extension 留出正确空间。</div>
+          <div class="decision-item"><strong>RC blocker 是否只是验证债？</strong>如果独立二审发现的是设计语言矛盾，而不只是资产同步/实现验证，应回到 RC 修规则，而不是硬推 Stable。</div>
+        </div>
+        <p class="footer-note">Canonical machine entrypoint: contracts/design-system-v1.json · 本页面只解释与展示，不新增设计真相。</p>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>
