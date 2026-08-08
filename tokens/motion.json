@@ -1,5 +1,5 @@
 {
-  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$schema": "https://com-design.local/schemas/motion-modes-v1.schema.json",
   "$metadata": {
     "name": "Com Design Mobile — Motion",
     "version": "1.0.0",
