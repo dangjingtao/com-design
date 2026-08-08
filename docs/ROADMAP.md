@@ -80,8 +80,11 @@ Theme / Density / Platform 是正交模式，不制造 `Dark-Compact-iOS` 一类
 - Progress Indicator / Stepper / Timeline
 - Status Composition Pattern
 - Overlay stacking / dismissal / interruption rules
+- Search / Search Field
+- Menu / Action Menu / Overflow Menu / Context Menu contract
 - Human-readable spec: `docs/04-feedback-overlay-progress.md`
-- Machine-readable contract: `contracts/feedback-overlay-progress.json`
+- Core gap closure: `docs/04b-search-menu.md`
+- Machine-readable contracts: `contracts/feedback-overlay-progress.json` + `contracts/search-menu.json`
 - Author self-review: `reviews/phase4-self-review.md`
 
 关键决策：
@@ -90,9 +93,11 @@ Theme / Density / Platform 是正交模式，不制造 `Dark-Compact-iOS` 一类
 - Loading / Skeleton / Empty / Progress / Stepper / Timeline 角色严格分离
 - 新增 `surface.inverse` 与 `elevation.floating / modal`，但普通信息组件继续 Flat-first
 - Status 永远不只靠颜色表达
+- Search 是独立查询组件，不是普通 Input 换皮；Loading 不应夺走非空 query 的 Clear 能力
+- Menu 是上下文短动作容器，不承担页面导航；移动端默认禁止桌面式级联多级菜单
 - 具体行业阶段、排名、评分、主题化进度属于 Product / Domain Extension，不进入 Core
 
-验收：Phase 4 Core 可被不同产品复用；Overlay 层级有真实 Token 支撑；无业务域状态反向污染 Foundation。
+验收：Phase 4 Core 可被不同产品复用；Overlay 层级有真实 Token 支撑；Search / Overflow 等高频断口已闭合；无业务域状态反向污染 Foundation。
 
 ## Phase 5 — Systemization & Release ⏭ Next
 
