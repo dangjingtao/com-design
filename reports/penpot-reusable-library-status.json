@@ -1,0 +1,85 @@
+{
+  "designSystemVersion": "1.0.0-rc.1",
+  "branch": "phase5-penpot-library",
+  "scope": "reusable-component-library",
+  "status": "IMPLEMENTATION_READY_VISUAL_GATE_NOT_RUN",
+  "canonicalCatalog": {
+    "coreComponents": 33,
+    "corePatterns": 2,
+    "patternsCountAsComponents": false
+  },
+  "implementedRepositoryAssets": [
+    "native PenPot plugin manifest",
+    "native Component/Variant visual-gate builder",
+    "canonical 33+2 catalog",
+    "PenPot implementation-property classification",
+    "Light/Dark + Compact/Comfortable + Platform token adapter generator",
+    "Motion reference-only adapter with tooling limitation recorded",
+    "source-of-truth validation script",
+    "GitHub Actions source validation workflow",
+    "PenPot v3 round-trip structural audit script",
+    "production/round-trip runbook"
+  ],
+  "visualGateBuilderComponents": [
+    "button",
+    "input",
+    "searchField",
+    "listItem",
+    "tabs",
+    "bottomNavigation",
+    "section",
+    "card",
+    "dialog",
+    "bottomSheet",
+    "menuItem",
+    "menu",
+    "tag",
+    "alert",
+    "progressIndicator",
+    "stepper"
+  ],
+  "gates": {
+    "repositoryImplementation": "READY",
+    "canonicalSourceValidation": "AUTOMATED_WORKFLOW_ADDED",
+    "penpotActualImport": "NOT_EVIDENCED",
+    "penpotVisualInspection": "NOT_EVIDENCED",
+    "priorityVisualGate": "NOT_RUN",
+    "full33ComponentExpansion": "INTENTIONALLY_BLOCKED_BY_VISUAL_GATE",
+    "sourcePenpotExportAudit": "NOT_RUN",
+    "penpotReImportOpen": "NOT_RUN",
+    "roundTripReExportAudit": "NOT_RUN",
+    "overallPenpotGate": "NOT_PASS"
+  },
+  "unresolved": [
+    {
+      "id": "PPL-001",
+      "severity": "gate",
+      "issue": "Priority components have not yet been rendered and visually inspected in an actual PenPot file.",
+      "requiredResolution": "Run the builder in PenPot and accept/reject the visual-gate batch before expanding the catalog."
+    },
+    {
+      "id": "PPL-002",
+      "severity": "gate",
+      "issue": "The full 33-component reusable catalog is intentionally not generated before PPL-001 is resolved.",
+      "requiredResolution": "After visual acceptance, implement remaining canonical components without changing Core semantics."
+    },
+    {
+      "id": "PPL-003",
+      "severity": "gate",
+      "issue": "No source `.penpot` and no round-trip `.penpot` have been produced by an actual PenPot runtime in this branch yet.",
+      "requiredResolution": "Export from PenPot, re-import/open, re-export, and run both structural audits."
+    },
+    {
+      "id": "PPL-004",
+      "severity": "tooling-limitation",
+      "issue": "Core Motion duration/easing is not represented as a native PenPot token axis by the token types used by this implementation.",
+      "requiredResolution": "Keep `tokens/motion.json` canonical; use `motion-reference.json` in PenPot and verify motion in prototype/implementation environments."
+    }
+  ],
+  "forbiddenClaims": [
+    "PenPot PASS",
+    "round-trip PASS",
+    "33 reusable components complete",
+    "visual acceptance complete"
+  ]
+}
