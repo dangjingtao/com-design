@@ -2,7 +2,7 @@
   "$schema": "https://com-design.local/schemas/pattern-contract-v1.schema.json",
   "$metadata": {
     "name": "Com Design Mobile — Core Patterns",
-    "version": "1.0.0-rc.1",
+    "version": "1.0.0-rc.2",
     "status": "release-candidate",
     "foundation": "./design-system-v1.json"
   },
@@ -15,11 +15,15 @@
         "business-specific state names map into system semantics instead of creating global status colors",
         "color is never the only state signal",
         "neutral uses normal surface/text semantics instead of inventing a sixth status family",
-        "ranking, level, stage and category are not automatically status semantics"
+        "ranking, level, stage and category are not automatically status semantics",
+        "base status chroma is a marker semantic, not a guaranteed foreground on every background",
+        "on a tinted status background, text and necessary status graphics use the corresponding *Text semantic unless a different pairing is separately contrast-audited",
+        "on an inverse transient-feedback surface, status meaning may be carried by icon shape plus message while the icon uses the inverse foreground semantic"
       ],
       "accessibility": {
         "textOrAccessibleEquivalentRequired": true,
-        "colorOnlyForbidden": true
+        "colorOnlyForbidden": true,
+        "necessaryGraphicContrastMustBeAuditedAgainstActualSurface": true
       }
     },
     "searchPattern": {
