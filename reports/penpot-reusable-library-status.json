@@ -10,11 +10,12 @@
   },
   "repositoryEvidence": {
     "draftPullRequest": 6,
-    "sourceGateWorkflowRun": 31242968887,
+    "sourceGateWorkflowRun": 31243124109,
     "sourceGateConclusion": "success",
     "sourceGateChecks": [
       "canonical 33 Component + 2 Pattern contract validation",
       "native PenPot builder JavaScript syntax check",
+      "PenPot v3 round-trip auditor Python compile check",
       "PenPot token adapter generation",
       "generated token adapter JSON validation",
       "generated motion-reference JSON validation",
@@ -26,6 +27,16 @@
       "uniqueTokenNames": 157,
       "defaultAxes": ["Theme/Light", "Density/Compact", "Platform/iOS"],
       "motion": "reference-only"
+    },
+    "roundTripAuditorModel": {
+      "format": "PenPot v3 ZIP + JSON",
+      "nativeFields": [
+        "components/*: id/name/path/mainInstanceId/mainInstancePage",
+        "shapes: componentId/componentFile/shapeRef",
+        "shapes: appliedTokens",
+        "tokens.json: sets/themes/activeThemes",
+        "manifest/file features: components/v2, variants/v1, design-tokens/v1"
+      ]
     }
   },
   "implementedRepositoryAssets": [
@@ -38,7 +49,8 @@
     "source-of-truth validation script",
     "GitHub Actions source validation workflow",
     "PenPot v3 round-trip structural audit script",
-    "production/round-trip runbook"
+    "production/round-trip runbook",
+    "canonical Component catalog cross-check report"
   ],
   "visualGateBuilderComponents": [
     "button",
@@ -62,6 +74,7 @@
     "repositoryImplementation": "READY",
     "canonicalSourceValidation": "PASS",
     "builderJavaScriptSyntax": "PASS",
+    "roundTripAuditorCompile": "PASS",
     "tokenAdapterGeneration": "PASS",
     "penpotActualImport": "NOT_EVIDENCED",
     "penpotVisualInspection": "NOT_EVIDENCED",
@@ -89,7 +102,7 @@
       "id": "PPL-003",
       "severity": "gate",
       "issue": "No source `.penpot` and no round-trip `.penpot` have been produced by an actual PenPot runtime in this branch yet.",
-      "requiredResolution": "Export from PenPot, re-import/open, re-export, and run both structural audits."
+      "requiredResolution": "Export from PenPot, re-import/open, re-export, and run both structural audits with instance evidence."
     },
     {
       "id": "PPL-004",
