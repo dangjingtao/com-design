@@ -25,11 +25,13 @@ Com Design Mobile 是公司的移动端 Design System，不绑定某一个具体
 V1 使用偏年轻、清晰的 Electric Indigo 作为品牌主色：
 
 - Brand 500 `#5B5EF7`：主操作、关键选中、核心品牌识别
-- Brand 600 `#494CE0`：文字链接、需要更强对比的品牌表达
-- Brand 700 `#393BBE`：Pressed / 深色品牌文字
-- Brand 50 / 100 / 200：选中背景、轻提示、柔和品牌层
+- Brand 600 `#494CE0`：Light Theme 下的文字链接、需要更强对比的品牌表达
+- Brand 700 `#393BBE`：Pressed / 深色品牌表达
+- Brand 50 / 100 / 200：Light Theme 下的选中背景、轻提示、柔和品牌层
 
 主色不承担所有状态含义。一个页面通常只需要少量高纯度 Brand 点位。
+
+Dark Theme 不机械复用 Light 的每个具体档位；Semantic role 由 Theme Overlay 重新映射。
 
 ### Accent — Cyan
 
@@ -52,11 +54,13 @@ Accent 500 `#16BFD3` 是辅助强调色，不与 Brand 平权。
 
 Neutral 刻意采用轻微冷调，而不是直接复制 Tailwind Gray。目标是让大量高信息密度业务界面保持轻、清楚，同时和 Electric Indigo 有统一冷感。
 
-页面背景优先 `neutral.50`，内容 Surface 优先白色；通过分组、边界、留白和层级建立结构，不依赖阴影堆叠。
+Light 页面背景优先 `neutral.50`，内容 Surface 优先白色；Dark 由 Theme Overlay 映射到深色 Surface 层级。两种 Theme 都通过分组、边界、留白和层级建立结构，不依赖阴影堆叠。
 
 ### Status
 
-Success / Warning / Danger 各提供浅背景、主色、深文字三档。Info 复用 Brand 语义，不新增一套重复蓝色。
+Success / Warning / Danger 提供 Background / Main Signal / Text 三类语义。Info 复用 Brand family，不新增一套重复蓝色。
+
+Status 是语义，不是固定色值；Light / Dark 使用各自映射。
 
 ---
 
@@ -106,7 +110,7 @@ Primitive spacing 不是“所有 4 的倍数都生成”，而是保留真实�
 - 页面内容 inset：16
 - Section gap：24
 
-Density 是模式，不进入 Primitive 名字。组件只消费稳定语义或 Component Token。
+Density 是模式，不进入 Primitive 名字。组件只消费稳定语义或 Component Contract。
 
 Compact-first 的含义是提高信息效率，不是压缩点击区域、文字可读性或视觉层级。
 
@@ -137,9 +141,9 @@ V1 采用“控件稍圆、容器克制、浮层更柔和”的层级：
 3. Spacing / Group
 4. Typography hierarchy
 
-Shadow 只用于真实悬浮关系，例如 Popover、Dialog、Sheet 等 Overlay。普通 Card 默认不使用 Shadow。
+Shadow 只用于真实悬浮关系，例如 Menu、Dialog、Sheet 等 Overlay。普通 Card 默认不使用 Shadow。
 
-Elevation 是层级语义，不等于“换一个白色色值”；它由 Surface + Scrim + Shadow / Platform Layer 共同表达。
+Elevation 是层级语义，不等于“换一个白色色值”；它由 Surface + Scrim + Shadow / Platform Layer 共同表达。Dark Theme 有独立的 Floating / Modal shadow 映射。
 
 ---
 
@@ -170,6 +174,15 @@ Hover 不属于 Mobile-first 核心状态，未来由桌面/指针平台扩展�
 
 Disabled、Placeholder、Tertiary 是不同语义，即使当前可能解析到接近色值，也不能互相借用 Token。
 
+V1 正式支持四个正交 Axis：
+
+- Theme: Light / Dark
+- Density: Compact / Comfortable
+- Platform: iOS / Android
+- Motion: Standard / Reduced
+
+不生成组合模式 Token。
+
 ---
 
 ## Product / Domain Extension Boundary
@@ -189,12 +202,23 @@ Foundation 只定义跨产品稳定的视觉和交互语义。
 
 ## Source of Truth
 
-唯一机器真相：`tokens/tokens.json`。
+V1 的 **Canonical machine entrypoint** 是：
 
-Human-readable 文档解释“为什么与如何使用”；PenPot 负责视觉资产与检查；研发端可从同一 Token Source 映射到 iOS / Android / Web 实现。
+`contracts/design-system-v1.json`
+
+它统一引用：
+
+- `tokens/tokens.json` — Foundation / Light / Density / Platform
+- `tokens/theme-dark.json` — Dark Theme Overlay
+- `tokens/motion.json` — Standard / Reduced Motion
+- Component Contracts
+
+因此 `tokens/tokens.json` 仍是 Foundation Token 真相，但不再被错误地描述为“整个设计系统唯一文件”。Design System 的唯一机器入口是 Manifest。
+
+Human-readable 文档解释“为什么与如何使用”；PenPot 负责视觉资产与检查；研发 / AI / Agent 从同一 Manifest 解析 Token + Contract。
 
 任何修改需遵守：
 
 `Primitive → Semantic → Component → Pattern`
 
-组件不得直接消费 Primitive。Theme / Density / Platform 分别覆盖自己负责的语义，不生成组合模式爆炸。
+组件不得直接消费 Primitive。Theme / Density / Platform / Motion 分别覆盖自己负责的语义，不生成组合模式爆炸。
