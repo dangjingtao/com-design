@@ -1,0 +1,38 @@
+{
+  "$schema": "https://com-design.local/schemas/pattern-contract-v1.schema.json",
+  "$metadata": {
+    "name": "Com Design Mobile — Core Patterns",
+    "version": "1.0.0-rc.1",
+    "status": "release-candidate",
+    "foundation": "./design-system-v1.json"
+  },
+  "patterns": {
+    "statusComposition": {
+      "role": "cross-component-status-expression",
+      "composes": ["text", "icon?", "tag?", "dot?", "alert?", "section?"],
+      "variants": ["neutral", "info", "success", "warning", "danger"],
+      "rules": [
+        "business-specific state names map into system semantics instead of creating global status colors",
+        "color is never the only state signal",
+        "neutral uses normal surface/text semantics instead of inventing a sixth status family",
+        "ranking, level, stage and category are not automatically status semantics"
+      ],
+      "accessibility": {
+        "textOrAccessibleEquivalentRequired": true,
+        "colorOnlyForbidden": true
+      }
+    },
+    "searchPattern": {
+      "role": "search-experience-composition",
+      "composes": ["searchField", "recentQueries?", "suggestions?", "resultList?", "loading?", "noResults?", "recoverableError?"],
+      "states": ["initial", "suggesting", "loading", "results", "no-results", "recoverable-error"],
+      "rules": [
+        "no-results is contextual to the current query and is not the whole-product empty state",
+        "preserve query on recoverable request failure",
+        "preserve usable previous results during background refresh when possible",
+        "query-match emphasis cannot rely on color alone",
+        "avoid major layout jumps on each keystroke"
+      ]
+    }
+  }
+}
