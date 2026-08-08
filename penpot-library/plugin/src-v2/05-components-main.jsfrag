@@ -1,0 +1,110 @@
+    const disabled=State==='Disabled';
+    const icon=tinyIcon('leadingIcon',State==='Loading'?'◌':'⌕',disabled?'color.text.disabled':'color.text.tertiary');
+    const query=txt('query',State==='Query'||State==='Loading'?'Design system':'Search','typography.body',State==='Idle'||State==='Focused'?'color.text.placeholder':disabled?'color.text.disabled':'color.text.primary');
+    const trailing=tinyIcon('trailingAction','×',disabled?'color.text.disabled':'color.text.tertiary'); trailing.visible=['Query','Loading'].includes(State);
+    append(board,icon,query,trailing); return board;
+  }});
+
+  // Navigation & Information / List Item
+  const listVariants=[];
+  for(const Content of ['Single line','Two line']){
+    listVariants.push({Type:'Static',State:'Default',Content});
+    for(const State of ['Default','Pressed','Disabled']) listVariants.push({Type:'Actionable',State,Content});
+    for(const State of ['Default','Pressed','Selected','Disabled']) listVariants.push({Type:'Selectable',State,Content});
+    listVariants.push({Type:'Status-bearing',State:'Default',Content});
+  }
+  makeVariantSet({family:'Navigation & Information',name:'List Item',id:'listItem',contract:'contracts/navigation-information.json',variants:listVariants,render:({Type,State,Content})=>{
+    const surface=State==='Pressed'?'color.surface.pressed':State==='Selected'?'color.surface.selected':'color.surface.default';
+    const board=frame('listItem',{width:344,height:Content==='Two line'?64:48,dir:'row',surface,radius:null}); bind(board,'density.contentInset',['paddingLeft','paddingRight']);
+    const lead=tinyIcon('leading','●',State==='Disabled'?'color.text.disabled':Type==='Status-bearing'?'color.status.info':'color.text.tertiary');
+    const content=frame('content',{width:230,height:Content==='Two line'?44:24,dir:'column',surface:'transparent',padding:false,gap:false}); content.flex.rowGap=2;
+    const primary=txt('primary','List item','typography.body',State==='Disabled'?'color.text.disabled':'color.text.primary');
+    const secondary=txt('secondary','Supporting information','typography.bodySmall',State==='Disabled'?'color.text.disabled':'color.text.secondary'); secondary.visible=Content==='Two line';
+    append(content,primary,secondary);
+    const trail=tinyIcon('trailing',Type==='Selectable'&&State==='Selected'?'✓':Type==='Status-bearing'?'Info':'›',State==='Disabled'?'color.text.disabled':Type==='Selectable'&&State==='Selected'?'color.text.brand':'color.text.tertiary');
+    append(board,lead,content,trail); return board;
+  }});
+
+  // Navigation & Information / Tabs
+  const tabsVariants=[]; for(const Layout of ['Fixed','Scrollable']) for(const Active of ['1','2','3']) tabsVariants.push({Layout,Active});
+  makeVariantSet({family:'Navigation & Information',name:'Tabs',id:'tabs',contract:'contracts/navigation-information.json',variants:tabsVariants,render:({Layout,Active})=>{
+    const root=frame('tabs',{width:344,height:48,dir:'row',surface:'color.surface.default',padding:false,gap:false}); root.flex.justifyContent=Layout==='Fixed'?'space-between':'start'; root.flex.columnGap=Layout==='Scrollable'?24:0;
+    ['1','2','3'].forEach((index)=>{
+      const item=frame(`tab-${index}`,{width:Layout==='Fixed'?110:88,height:48,dir:'column',surface:'transparent',padding:false,gap:false}); item.flex.alignItems='center'; item.flex.justifyContent='center'; item.flex.rowGap=8;
+      const active=Active===index; const label=txt('label',`Tab ${index}`,'typography.label',active?'color.text.brand':'color.text.secondary');
+      const indicator=penpot.createRectangle(); indicator.name='indicator'; indicator.resize(Layout==='Fixed'?76:56,2); if(active) fill(indicator,'color.action.primary'); else transparent(indicator);
+      append(item,label,indicator); append(root,item);
+    }); return root;
+  }});
+
+  // Navigation & Information / Bottom Navigation
+  const navVariants=[]; for(const Destinations of ['3','4','5']) for(const Selected of ['1','2']) navVariants.push({Destinations,Selected});
+  makeVariantSet({family:'Navigation & Information',name:'Bottom Navigation',id:'bottomNavigation',contract:'contracts/navigation-information.json',variants:navVariants,render:({Destinations,Selected})=>{
+    const count=Number(Destinations); const root=frame('bottomNavigation',{width:360,height:56,dir:'row',surface:'color.surface.default',padding:false,gap:false}); stroke(root,'color.border.subtle','border.control'); root.flex.justifyContent='space-around'; root.flex.alignItems='center';
+    for(let i=1;i<=count;i+=1){
+      const active=Selected===String(i); const item=frame(`destination-${i}`,{width:64,height:56,dir:'column',surface:'transparent',padding:false,gap:false}); item.flex.alignItems='center'; item.flex.justifyContent='center'; item.flex.rowGap=4;
+      append(item,tinyIcon('icon',active?'●':'○',active?'color.text.brand':'color.text.tertiary'),txt('label',`Item ${i}`,'typography.labelSmall',active?'color.text.brand':'color.text.tertiary')); append(root,item);
+    } return root;
+  }});
+
+  // Navigation & Information / Section
+  const sectionVariants=['None','Title','Title + action'].map((Header)=>({Header}));
+  makeVariantSet({family:'Navigation & Information',name:'Section',id:'section',contract:'contracts/navigation-information.json',variants:sectionVariants,render:({Header})=>{
+    const root=frame('section',{width:344,height:144,dir:'column',surface:'transparent',padding:false,gap:false}); bind(root,'density.sectionGap',['rowGap']);
+    const header=frame('header',{width:344,height:28,dir:'row',surface:'transparent',padding:false,gap:false}); header.flex.justifyContent='space-between';
+    const titleText=txt('title','Section title','typography.headingSmall','color.text.primary'); const action=txt('action','View all','typography.labelSmall','color.text.brand'); titleText.visible=Header!=='None'; action.visible=Header==='Title + action'; append(header,titleText,action);
+    const content=frame('content',{width:344,height:96,dir:'column',surface:'transparent',padding:false,gap:false}); content.flex.rowGap=8; append(content,txt('content-line-1','Grouped content belongs here','typography.body','color.text.primary'),txt('content-line-2','Section creates hierarchy without forcing a card.','typography.bodySmall','color.text.secondary'));
+    append(root,header,content); return root;
+  }});
+
+  // Navigation & Information / Card
+  const cardVariants=[]; for(const State of ['Default','Pressed']) for(const Border of ['Off','On']) cardVariants.push({State,Border});
+  makeVariantSet({family:'Navigation & Information',name:'Card',id:'card',contract:'contracts/navigation-information.json',variants:cardVariants,render:({State,Border})=>{
+    const root=frame('card',{width:328,height:132,dir:'column',surface:State==='Pressed'?'color.surface.pressed':'color.surface.default',radius:'radius.container'}); root.flex.rowGap=8; if(Border==='On') stroke(root,'color.border.subtle','border.control'); append(root,txt('title','Card title','typography.headingSmall','color.text.primary'),txt('body','Use a card only when content needs a bounded container.','typography.bodySmall','color.text.secondary')); return root;
+  }});
+
+  const statusTone={
+    Neutral:{bg:'color.surface.subtle',text:'color.text.secondary'},Brand:{bg:'color.surface.selected',text:'color.text.brand'},Success:{bg:'color.status.successBg',text:'color.status.successText'},Warning:{bg:'color.status.warningBg',text:'color.status.warningText'},Danger:{bg:'color.status.dangerBg',text:'color.status.dangerText'},Info:{bg:'color.status.infoBg',text:'color.status.infoText'}
+  };
+
+  // Navigation & Information / Tag
+  const tagVariants=['Neutral','Brand','Success','Warning','Danger','Info'].map((Tone)=>({Tone}));
+  makeVariantSet({family:'Navigation & Information',name:'Tag',id:'tag',contract:'contracts/navigation-information.json',variants:tagVariants,render:({Tone})=>{
+    const style=statusTone[Tone]; const root=frame('tag',{width:96,height:28,dir:'row',surface:style.bg,radius:'radius.pill'}); root.flex.justifyContent='center'; append(root,txt('label',Tone,'typography.labelSmall',style.text)); return root;
+  }});
+
+  // Feedback, Overlay & Progress / Alert
+  const alertVariants=[]; for(const Type of ['Inline','Banner']) for(const Tone of ['Info','Success','Warning','Danger']) alertVariants.push({Type,Tone});
+  makeVariantSet({family:'Feedback, Overlay & Progress',name:'Alert',id:'alert',contract:'contracts/feedback-overlay-progress.json',variants:alertVariants,render:({Type,Tone})=>{
+    const style=statusTone[Tone]; const root=frame('alert',{width:Type==='Banner'?360:328,height:Type==='Banner'?72:88,dir:'row',surface:style.bg,radius:Type==='Banner'?null:'radius.container'});
+    const icon=tinyIcon('statusIcon',Tone==='Success'?'✓':Tone==='Warning'?'!':Tone==='Danger'?'!':'i',style.text);
+    const content=frame('content',{width:260,height:56,dir:'column',surface:'transparent',padding:false,gap:false}); content.flex.rowGap=4; append(content,txt('title',`${Tone} message`,'typography.label',style.text),txt('description','A concise message with a clear next step.','typography.bodySmall',style.text)); append(root,icon,content); return root;
+  }});
+
+  // Feedback, Overlay & Progress / Dialog
+  const dialogVariants=[]; for(const Actions of ['One','Two','Stacked']) for(const Intent of ['Default','Destructive']) dialogVariants.push({Actions,Intent});
+  makeVariantSet({family:'Feedback, Overlay & Progress',name:'Dialog',id:'dialog',contract:'contracts/feedback-overlay-progress.json',variants:dialogVariants,render:({Actions,Intent})=>{
+    const root=frame('dialog',{width:328,height:Actions==='Stacked'?236:208,dir:'column',surface:'color.surface.default',radius:'radius.overlay'}); bind(root,'elevation.modal',['shadow']); root.flex.rowGap=16;
+    append(root,txt('title',Intent==='Destructive'?'Delete item?':'Confirm action','typography.heading','color.text.primary'),txt('body',Intent==='Destructive'?'This action cannot be undone.':'Review the information before continuing.','typography.body','color.text.secondary'));
+    const actions=frame('actions',{width:296,height:Actions==='Stacked'?96:44,dir:Actions==='Stacked'?'column':'row',surface:'transparent',padding:false,gap:false}); actions.flex.justifyContent='end'; actions.flex.columnGap=8; actions.flex.rowGap=8;
+    const cancel=frame('secondaryAction',{width:96,height:40,dir:'row',surface:'color.action.secondary',radius:'radius.control'}); cancel.flex.justifyContent='center'; append(cancel,txt('label','Cancel','typography.label','color.text.brand'));
+    const confirm=frame('primaryAction',{width:112,height:40,dir:'row',surface:Intent==='Destructive'?'color.action.destructive':'color.action.primary',radius:'radius.control'}); confirm.flex.justifyContent='center'; append(confirm,txt('label',Intent==='Destructive'?'Delete':'Continue','typography.label','color.text.inverse'));
+    if(Actions==='One') cancel.visible=false; append(actions,cancel,confirm); append(root,actions); return root;
+  }});
+
+  // Feedback, Overlay & Progress / Bottom Sheet
+  const sheetVariants=[]; for(const Header of ['Title','Title + handle']) for(const Actions of ['None','Sticky']) sheetVariants.push({Header,Actions});
+  makeVariantSet({family:'Feedback, Overlay & Progress',name:'Bottom Sheet',id:'bottomSheet',contract:'contracts/feedback-overlay-progress.json',variants:sheetVariants,render:({Header,Actions})=>{
+    const root=frame('bottomSheet',{width:360,height:Actions==='Sticky'?268:212,dir:'column',surface:'color.surface.default',padding:true,gap:true});
+    bindRadius(root,'radius.overlay',['borderRadiusTopLeft','borderRadiusTopRight']); root.borderRadiusBottomLeft=0; root.borderRadiusBottomRight=0; bind(root,'elevation.modal',['shadow']); root.flex.rowGap=12;
+    const handle=penpot.createRectangle(); handle.name='handle'; handle.resize(36,4); fill(handle,'color.border.default'); handle.borderRadius=2; handle.visible=Header==='Title + handle';
+    const titleText=txt('title','Sheet title','typography.heading','color.text.primary'); const body=txt('body','Contextual mobile actions or focused supporting content.','typography.body','color.text.secondary');
+    const sticky=frame('stickyAction',{width:328,height:44,dir:'row',surface:'color.action.primary',radius:'radius.control'}); sticky.flex.justifyContent='center'; append(sticky,txt('label','Primary action','typography.label','color.text.inverse')); sticky.visible=Actions==='Sticky'; append(root,handle,titleText,body,sticky); return root;
+  }});
+
+  // Search & Menu / Menu Item
+  const menuItemVariants=['Default','Pressed','Disabled','Selected','Destructive'].map((State)=>({State}));
+  makeVariantSet({family:'Search & Menu',name:'Menu Item',id:'menuItem',contract:'contracts/search-menu.json',variants:menuItemVariants,render:({State})=>{
+    const root=frame('menuItem',{width:240,height:48,dir:'row',surface:State==='Pressed'?'color.surface.pressed':State==='Selected'?'color.surface.selected':'color.surface.default',radius:null}); bind(root,'density.controlHeightLarge',['height']);
+    const disabled=State==='Disabled'; const destructive=State==='Destructive'; const icon=tinyIcon('leadingIcon',destructive?'!':'•',disabled?'color.text.disabled':destructive?'color.status.dangerText':'color.text.tertiary');
+    const label=txt('label',destructive?'Delete':'Menu item','typography.body',disabled?'color.text.disabled':destructive?'color.status.dangerText':State==='Selected'?'color.text.brand':'color.text.primary'); const check=tinyIcon('selection','✓','color.text.brand'); check.visible=State==='Selected'; append(root,icon,label,check); return root;
