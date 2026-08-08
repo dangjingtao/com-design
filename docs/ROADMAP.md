@@ -10,21 +10,19 @@
 
 `Primitive → Semantic → Component → Pattern`
 
-Theme / Density / Platform 是正交模式，不制造 `Dark-Compact-iOS` 一类组合爆炸。
+Theme / Density / Platform / Motion 是正交模式，不制造组合模式爆炸。
 
 ---
 
 ## Phase 1 — Foundation & Token Contract ✅
 
 已完成：
-- Color / Typography / Spacing / Radius / Border / Size 基础体系
-- Light Theme 语义色
-- Compact / Comfortable Density 映射
-- iOS / Android Touch Target 约束
-- Foundation Token Source `tokens/tokens.json`
-- Foundation 人读规范 `docs/01-foundations.md`
-
-验收：Foundation 层级稳定；Semantic 不包含具体组件名；设计方向可以被稳定复用。
+- Color / Typography / Spacing / Radius / Border / Size
+- Light Theme
+- Compact / Comfortable Density
+- iOS / Android Touch Target
+- Foundation Token Source
+- Human-readable Foundation
 
 ## Phase 2 — Actions & Forms ✅
 
@@ -33,19 +31,10 @@ Theme / Density / Platform 是正交模式，不制造 `Dark-Compact-iOS` 一类
 - Input / Textarea
 - Select / Picker Trigger
 - Checkbox / Radio / Switch
-- Field Family / validation / focus / touch 共同规则
-- Human-readable spec: `docs/02-actions-forms.md`
-- Machine-readable contract: `contracts/actions-forms.json`
+- Field Family / validation / focus / touch rules
+- Human + Machine contracts
 
-关键决策：
-- Button 只保留 Regular / Large 两个业务尺寸，Density 决定具体高度
-- V1 Input 采用单一 Outlined / Flat 主外观，不同时维护 Filled 套系
-- Select 是移动端 Picker Trigger，不伪装桌面网页 dropdown
-- Checkbox / Radio 视觉紧凑，但 hit area 独立满足平台约束
-- Switch 只用于立即生效的二元状态
-- Error 优先绑定 Field，不用 Toast 替代表单错误
-
-验收：组件颜色只消费 Semantic role；Density 不进入组件命名；组件固定几何按 lazy policy 保留在 Component Contract，不提前污染 Foundation。
+关键决策：组件只消费 Semantic role；Density 不进入组件命名；固定几何按 lazy policy 保留在 Component Contract。
 
 ## Phase 3 — Navigation & Information ✅
 
@@ -56,19 +45,9 @@ Theme / Density / Platform 是正交模式，不制造 `Dark-Compact-iOS` 一类
 - Bottom Navigation
 - Section / Divider / Card
 - Tag / Badge / Avatar
-- Human-readable spec: `docs/03-navigation-information.md`
-- Machine-readable contract: `contracts/navigation-information.json`
+- Human + Machine contracts
 
-关键决策：
-- Section 是默认分组方式，Card 只在需要独立容器边界时使用
-- List Item 最多三层信息；多行高度由内容自然撑开，不靠固定巨型 Row
-- Tabs 服务并列视图，Segmented Control 服务局部模式，Bottom Navigation 只服务顶层目的地
-- 全局导航 active 使用 Brand；Accent 只承担局部强调 / 进度 / 数据等辅助角色
-- Bottom Navigation 保持 3–5 项并始终显示 Label
-- Badge 的 Attention 使用 Status Danger，不借用 Destructive Action 语义
-- Avatar 只承担身份，不把认证 / 在线 / 业务状态全部塞进头像本体
-
-验收：信息层级优先于装饰；导航层级之间角色清晰；常规信息组件默认无 Shadow；Card 不成为通用容器。
+关键决策：Section-before-Card；导航层级角色分离；Brand 承担全局 active identity；Accent 只承担辅助强调。
 
 ## Phase 4 — Feedback, Overlay & Progress ✅
 
@@ -76,39 +55,52 @@ Theme / Density / Platform 是正交模式，不制造 `Dark-Compact-iOS` 一类
 - Toast / Snackbar
 - Banner / Inline Alert
 - Dialog / Bottom Sheet
-- Loading Indicator / Skeleton / Empty State
-- Progress Indicator / Stepper / Timeline
+- Loading / Skeleton / Empty State
+- Progress / Stepper / Timeline
 - Status Composition Pattern
+- Search / Search Pattern
+- Menu / Action Menu / Overflow Menu / Context Menu
 - Overlay stacking / dismissal / interruption rules
-- Search / Search Field
-- Menu / Action Menu / Overflow Menu / Context Menu contract
-- Human-readable spec: `docs/04-feedback-overlay-progress.md`
-- Core gap closure: `docs/04b-search-menu.md`
-- Machine-readable contracts: `contracts/feedback-overlay-progress.json` + `contracts/search-menu.json`
-- Author self-review: `reviews/phase4-self-review.md`
+
+关键决策：Feedback 按 interruption cost 分层；一个时刻只允许一个 Blocking Modal；Search 不是普通 Input；Menu 不承担页面导航；产品业务模式不污染公司级 Core。
+
+## Phase 5 — Systemization & Release ✅ RC
+
+已完成：
+- Dark Theme overlay
+- Standard / Reduced Motion modes
+- Density / Platform / Theme / Motion resolution model
+- Accessibility / Touch / Focus / Contrast baseline
+- Human-readable Design System 总入口
+- Canonical machine manifest `contracts/design-system-v1.json`
+- Component catalog：33 Core Components + 2 Core Patterns
+- PenPot sync / export audit policy
+- Versioning / Deprecated / Migration policy
+- Product / Domain Extension policy
+- Contrast release spot-check
+- V1 release checklist
 
 关键决策：
-- Feedback 按 interruption cost 分层，不把“重要”直接等同于 Dialog
-- 同一时刻只允许一个 Blocking Modal Layer
-- Loading / Skeleton / Empty / Progress / Stepper / Timeline 角色严格分离
-- 新增 `surface.inverse` 与 `elevation.floating / modal`，但普通信息组件继续 Flat-first
-- Status 永远不只靠颜色表达
-- Search 是独立查询组件，不是普通 Input 换皮；Loading 不应夺走非空 query 的 Clear 能力
-- Menu 是上下文短动作容器，不承担页面导航；移动端默认禁止桌面式级联多级菜单
-- 具体行业阶段、排名、评分、主题化进度属于 Product / Domain Extension，不进入 Core
+- V1 的机器入口从“单一 token 文件”升级为 Manifest
+- `tokens/tokens.json` 继续是 Foundation / Light / Density / Platform source
+- Dark Theme 通过 overlay 在 Component tokenRef 解析前替换 Semantic values
+- Motion 作为独立正交 Axis，不复制 Component
+- Stable release 必须经过独立二审，作者自检只能到 Release Candidate
 
-验收：Phase 4 Core 可被不同产品复用；Overlay 层级有真实 Token 支撑；Search / Overflow 等高频断口已闭合；无业务域状态反向污染 Foundation。
+---
 
-## Phase 5 — Systemization & Release ⏭ Next
+# V1 当前状态
 
-计划完成：
-- Density 视觉验证与模式规范
-- Dark Mode 架构与首轮映射（若实际需要则落地）
-- Accessibility / Touch / Contrast / Motion 基线
-- Human-readable Design System 文档总装
-- Machine-readable Token + Component Contract 总装
-- PenPot 同步包与检查清单
-- Versioning / Deprecated / Migration / Changelog 规则
-- Product / Domain Extension 接入规则
+**`1.0.0-rc.1` — 五期设计系统主体完成，进入统一独立二审前状态。**
 
-V1 完成标准：研发、设计、AI/Agent 可以消费同一套设计真相；新增组件不需要绕过 Token Contract；人读文档不是 Demo，也不是 Token 数据库；具体产品可以扩展 Pattern，而不污染公司级 Core。
+Human entrypoint：`docs/DESIGN-SYSTEM.md`
+
+Machine entrypoint：`contracts/design-system-v1.json`
+
+Release gate：`release/v1-checklist.md`
+
+Stable 前剩余主要事项：
+
+- 独立二审
+- PenPot Formal Spec / Reusable Component Asset 与 V1 Manifest 对齐并导出验收
+- 真机 / 实现环境抽查动态字体、Focus、Motion、系统 inset 等平台行为
