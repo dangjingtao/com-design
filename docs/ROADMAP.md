@@ -47,19 +47,30 @@ Theme / Density / Platform 是正交模式，不制造 `Dark-Compact-iOS` 一类
 
 验收：组件颜色只消费 Semantic role；Density 不进入组件命名；组件固定几何按 lazy policy 保留在 Component Contract，不提前污染 Foundation。
 
-## Phase 3 — Navigation & Information ⏭ Next
+## Phase 3 — Navigation & Information ✅
 
-计划完成：
+已完成：
 - List Item
 - Tabs / Segmented Control
-- Navigation Bar / Top App Bar
+- Top App Bar
 - Bottom Navigation
-- Card / Section / Divider
+- Section / Divider / Card
 - Tag / Badge / Avatar
+- Human-readable spec: `docs/03-navigation-information.md`
+- Machine-readable contract: `contracts/navigation-information.json`
 
-重点：高信息密度、层级、Leading/Trailing、Flat-first，不把一切装进 Card。
+关键决策：
+- Section 是默认分组方式，Card 只在需要独立容器边界时使用
+- List Item 最多三层信息；多行高度由内容自然撑开，不靠固定巨型 Row
+- Tabs 服务并列视图，Segmented Control 服务局部模式，Bottom Navigation 只服务顶层目的地
+- 全局导航 active 使用 Brand；Accent Cyan 继续只承担赛事节奏
+- Bottom Navigation 保持 3–5 项并始终显示 Label
+- Badge 的 Attention 使用 Status Danger，不借用 Destructive Action 语义
+- Avatar 只承担身份，不把认证/在线/获奖等状态全部塞进头像本体
 
-## Phase 4 — Feedback, Overlay & Competition Patterns
+验收：信息层级优先于装饰；导航层级之间角色清晰；常规信息组件默认无 Shadow；Card 不成为通用容器；无新增 Foundation Token。
+
+## Phase 4 — Feedback, Overlay & Competition Patterns ⏭ Next
 
 计划完成：
 - Toast / Banner / Alert
