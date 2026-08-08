@@ -2,7 +2,7 @@
   "$schema": "https://com-design.local/schemas/component-contract-v1.json",
   "$metadata": {
     "name": "Com Design Mobile — Navigation & Information",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "phase": 3,
     "status": "candidate",
     "foundation": "../tokens/tokens.json",
@@ -10,7 +10,7 @@
     "tokenNamespace": "semantic.light",
     "modeNamespace": "modes",
     "refRules": {
-      "tokenRef": "Resolve relative to tokenNamespace unless the ref starts with primitive., semantic., or modes.",
+      "tokenRef": "Resolve relative to tokenNamespace unless the ref starts with primitive., semantic., or modes.; shared non-theme semantics use absolute semantic.shared.* refs",
       "modeRef": "Resolve relative to modeNamespace and the active orthogonal mode.",
       "fixedGeometry": "Component-local fixed geometry may remain literal until stable cross-component reuse justifies promotion."
     },
@@ -67,7 +67,7 @@
         "paddingHorizontal": {"modeRef": "density.paddingHorizontal"},
         "paddingVertical": {"modeRef": "density.paddingVertical"},
         "gap": {"modeRef": "density.internalGap"},
-        "disclosureIconSize": {"value": 20, "unit": "px"}
+        "disclosureIconSize": {"tokenRef": "semantic.shared.icon.size.medium"}
       },
       "typography": {
         "titleDefault": {"tokenRef": "typography.body"},
@@ -100,7 +100,8 @@
       "variants": ["fixed", "scrollable"],
       "geometry": {
         "indicatorHeight": {"value": 2, "unit": "px"},
-        "itemGap": {"modeRef": "density.internalGap"}
+        "itemGap": {"modeRef": "density.internalGap"},
+        "iconSizeWhenUsed": {"tokenRef": "semantic.shared.icon.size.medium"}
       },
       "typography": {"label": {"tokenRef": "typography.label"}},
       "states": {
@@ -128,7 +129,8 @@
       "geometry": {
         "radius": {"tokenRef": "radius.control"},
         "padding": {"value": 2, "unit": "px"},
-        "gap": {"value": 2, "unit": "px"}
+        "gap": {"value": 2, "unit": "px"},
+        "iconSizeWhenUsed": {"tokenRef": "semantic.shared.icon.size.small"}
       },
       "typography": {"label": {"tokenRef": "typography.label"}},
       "states": {
@@ -146,7 +148,7 @@
       "anatomy": ["container", "leadingAction?", "title", "trailingActions?", "overflow?"],
       "geometry": {
         "contentMinHeight": {"modeRef": "density.controlHeightLarge"},
-        "iconSize": {"value": 24, "unit": "px"},
+        "iconSize": {"tokenRef": "semantic.shared.icon.size.large"},
         "contentInset": {"modeRef": "density.contentInset"}
       },
       "typography": {"title": {"tokenRef": "typography.heading"}},
@@ -168,7 +170,7 @@
       "anatomy": ["container", "destinationItem", "icon", "label", "badge?"],
       "geometry": {
         "contentMinHeight": {"value": 56, "unit": "px"},
-        "iconSize": {"value": 24, "unit": "px"},
+        "iconSize": {"tokenRef": "semantic.shared.icon.size.large"},
         "safeArea": "platform-owned"
       },
       "typography": {"label": {"tokenRef": "typography.labelSmall"}},
@@ -232,7 +234,9 @@
       "variants": ["neutral", "brand", "success", "warning", "danger", "info"],
       "geometry": {
         "paddingHorizontal": {"value": 8, "unit": "px"},
-        "radius": {"tokenRef": "radius.pill"}
+        "radius": {"tokenRef": "radius.pill"},
+        "leadingIconSize": {"tokenRef": "semantic.shared.icon.size.small"},
+        "dismissIconSize": {"tokenRef": "semantic.shared.icon.size.small"}
       },
       "typography": {"label": {"tokenRef": "typography.labelSmall"}},
       "states": {
