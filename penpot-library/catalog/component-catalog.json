@@ -1,0 +1,73 @@
+{
+  "$schemaVersion": 1,
+  "designSystemVersion": "1.0.0-rc.1",
+  "canonicalManifest": "../../contracts/design-system-v1.json",
+  "counts": {"coreComponents": 33, "corePatterns": 2},
+  "families": [
+    {
+      "id": "actionsForms",
+      "path": "Actions & Forms",
+      "contract": "../../contracts/actions-forms.json",
+      "components": [
+        {"id":"button","name":"Button","priorityVisualGate":true,"variantAxes":{"Type":["Primary","Secondary","Outline","Ghost","Destructive"],"State":["Default","Pressed","Disabled","Loading"],"Size":["Regular","Large"]}},
+        {"id":"iconButton","name":"Icon Button","variantAxes":{"Type":["Ghost","Subtle","Destructive"],"State":["Default","Pressed","Selected","Disabled"],"Size":["Regular","Large"]}},
+        {"id":"input","name":"Input","priorityVisualGate":true,"variantAxes":{"State":["Empty","Value","Focused","Error","Disabled","Read Only"],"Density":["Mode"]}},
+        {"id":"textarea","name":"Textarea","variantAxes":{"State":["Empty","Value","Focused","Error","Disabled","Read Only"],"Density":["Mode"]}},
+        {"id":"select","name":"Select","variantAxes":{"State":["Empty","Value","Pressed","Open","Error","Disabled"],"Density":["Mode"]}},
+        {"id":"checkbox","name":"Checkbox","variantAxes":{"State":["Unchecked","Checked","Indeterminate","Pressed","Disabled Unchecked","Disabled Checked"]}},
+        {"id":"radio","name":"Radio","variantAxes":{"State":["Unselected","Selected","Pressed","Disabled Unselected","Disabled Selected"]}},
+        {"id":"switch","name":"Switch","variantAxes":{"State":["Off","On","Pressed","Disabled Off","Disabled On"],"Density":["Compact","Comfortable"]}}
+      ]
+    },
+    {
+      "id": "navigationInformation",
+      "path": "Navigation & Information",
+      "contract": "../../contracts/navigation-information.json",
+      "components": [
+        {"id":"listItem","name":"List Item","priorityVisualGate":true,"variantAxes":{"Type":["Static","Actionable","Selectable","Status-bearing"],"State":["Default","Pressed","Selected","Disabled"],"Content":["Single line","Two line"]}},
+        {"id":"tabs","name":"Tabs","priorityVisualGate":true,"variantAxes":{"Layout":["Fixed","Scrollable"],"State":["Active","Inactive","Pressed","Disabled"]}},
+        {"id":"segmentedControl","name":"Segmented Control","variantAxes":{"State":["Selected","Unselected","Pressed","Disabled"]}},
+        {"id":"topAppBar","name":"Top App Bar","variantAxes":{"State":["Default","Scrolled"]}},
+        {"id":"bottomNavigation","name":"Bottom Navigation","priorityVisualGate":true,"variantAxes":{"Destinations":["3","4","5"],"State":["Default"]}},
+        {"id":"section","name":"Section","priorityVisualGate":true,"variantAxes":{"Header":["None","Title","Title + action"]}},
+        {"id":"divider","name":"Divider","variantAxes":{"Type":["Full","Inset"]}},
+        {"id":"card","name":"Card","priorityVisualGate":true,"variantAxes":{"State":["Default","Pressed"],"Border":["Off","On"]}},
+        {"id":"tag","name":"Tag","priorityVisualGate":true,"variantAxes":{"Tone":["Neutral","Brand","Success","Warning","Danger","Info"]}},
+        {"id":"badge","name":"Badge","variantAxes":{"Type":["Dot","Count"],"Tone":["Brand","Attention"]}},
+        {"id":"avatar","name":"Avatar","variantAxes":{"Size":["Small","Regular","Large"],"Content":["Initials","Generic"]}}
+      ]
+    },
+    {
+      "id": "feedbackOverlayProgress",
+      "path": "Feedback, Overlay & Progress",
+      "contract": "../../contracts/feedback-overlay-progress.json",
+      "components": [
+        {"id":"toast","name":"Toast","variantAxes":{"Tone":["Neutral","Info","Success","Warning","Danger"]}},
+        {"id":"snackbar","name":"Snackbar","variantAxes":{"Action":["None","Recovery"]}},
+        {"id":"alert","name":"Alert","priorityVisualGate":true,"variantAxes":{"Type":["Inline","Banner"],"Tone":["Info","Success","Warning","Danger"]}},
+        {"id":"dialog","name":"Dialog","priorityVisualGate":true,"variantAxes":{"Actions":["One","Two","Stacked"],"Intent":["Default","Destructive"]}},
+        {"id":"bottomSheet","name":"Bottom Sheet","priorityVisualGate":true,"variantAxes":{"Header":["Title","Title + handle"],"Actions":["None","Sticky"]}},
+        {"id":"loadingIndicator","name":"Loading Indicator","variantAxes":{"Size":["Inline","Regular"],"Context":["Inline","Section","Page"]}},
+        {"id":"skeleton","name":"Skeleton","variantAxes":{"Structure":["Text","List row","Card"]}},
+        {"id":"emptyState","name":"Empty State","variantAxes":{"Type":["First use","No results","No data","Recoverable error"]}},
+        {"id":"progressIndicator","name":"Progress Indicator","priorityVisualGate":true,"variantAxes":{"Type":["Linear","Circular"],"Value":["25","60","100"]}},
+        {"id":"stepper","name":"Stepper","priorityVisualGate":true,"variantAxes":{"Layout":["Horizontal","Vertical"],"State":["Completed","Current","Upcoming","Error"]}},
+        {"id":"timeline","name":"Timeline","variantAxes":{"Tone":["Neutral","Info","Success","Warning","Danger"]}}
+      ]
+    },
+    {
+      "id": "searchMenu",
+      "path": "Search & Menu",
+      "contract": "../../contracts/search-menu.json",
+      "components": [
+        {"id":"searchField","name":"Search Field","priorityVisualGate":true,"variantAxes":{"State":["Idle","Focused","Query","Loading","Disabled"]}},
+        {"id":"menu","name":"Menu","priorityVisualGate":true,"variantAxes":{"Type":["Action","Overflow","Context"],"Rows":["3","5"]}},
+        {"id":"menuItem","name":"Menu Item","priorityVisualGate":true,"variantAxes":{"State":["Default","Pressed","Disabled","Selected","Destructive"]}}
+      ]
+    }
+  ],
+  "patterns": [
+    {"id":"statusComposition","name":"Status Composition","path":"Patterns","contract":"../../contracts/core-patterns.json","countAsComponent":false},
+    {"id":"searchPattern","name":"Search Pattern","path":"Patterns","contract":"../../contracts/core-patterns.json","countAsComponent":false}
+  ]
+}
