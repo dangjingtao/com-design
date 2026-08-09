@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skeleton · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); }
+  .specimen { display: flex; flex-direction: column; gap: var(--space-16); }
+  .story { display: flex; flex-direction: column; gap: var(--space-8); }
+  .story-label { font: var(--type-label-small); color: var(--color-text-tertiary); }
+  .surface { background: var(--color-surface); border-radius: var(--radius-container); padding: var(--space-12); border: 1px solid var(--color-border-subtle); }
+
+  /* @component-css-start */
+  .sk { position: relative; overflow: hidden; }
+  .sk__block { background: var(--color-surface-subtle); border-radius: var(--radius-sm); position: relative; overflow: hidden; }
+  .sk__block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.55), rgba(255,255,255,0)); animation: sk-shimmer 1.4s ease-in-out infinite; }
+  .sk.is-static .sk__block::after { display: none; }
+  @keyframes sk-shimmer { 100% { transform: translateX(100%); } }
+  @media (prefers-reduced-motion: reduce) { .sk__block::after { animation: none; transform: none; } }
+  .sk__line { height: 12px; }
+  .sk-list { display: flex; flex-direction: column; gap: var(--space-12); }
+  .sk-list__row { display: flex; align-items: center; gap: var(--space-12); }
+  .sk-list__thumb { width: var(--com-size-40); height: var(--com-size-40); border-radius: var(--radius-sm); flex-shrink: 0; }
+  .sk-list__lines { display: flex; flex-direction: column; gap: var(--space-8); flex: 1; min-width: 0; }
+  .sk-card { display: flex; flex-direction: column; gap: var(--space-8); }
+  .sk-card__header { display: flex; flex-direction: column; gap: var(--space-8); margin-bottom: var(--space-4); }
+  .sk-profile { display: flex; flex-direction: column; align-items: center; gap: var(--space-12); }
+  .sk-profile__avatar { width: var(--com-size-56); height: var(--com-size-56); border-radius: var(--radius-pill); }
+  .sk-profile__lines { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); width: 100%; }
+  /* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="story">
+    <span class="story-label">列表</span>
+    <div class="surface">
+      <div class="sk sk-list" role="status" aria-busy="true" aria-label="内容加载中" data-evidence-sample="list">
+        <div class="sk-list__row">
+          <div class="sk__block sk-list__thumb"></div>
+          <div class="sk-list__lines">
+            <div class="sk__block sk__line" style="width:60%"></div>
+            <div class="sk__block sk__line" style="width:40%"></div>
+          </div>
+        </div>
+        <div class="sk-list__row">
+          <div class="sk__block sk-list__thumb"></div>
+          <div class="sk-list__lines">
+            <div class="sk__block sk__line" style="width:60%"></div>
+            <div class="sk__block sk__line" style="width:40%"></div>
+          </div>
+        </div>
+        <div class="sk-list__row">
+          <div class="sk__block sk-list__thumb"></div>
+          <div class="sk-list__lines">
+            <div class="sk__block sk__line" style="width:60%"></div>
+            <div class="sk__block sk__line" style="width:40%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="story">
+    <span class="story-label">卡片</span>
+    <div class="surface">
+      <div class="sk sk-card" role="status" aria-busy="true" aria-label="内容加载中" data-evidence-sample="card">
+        <div class="sk-card__header">
+          <div class="sk__block sk__line" style="width:60%"></div>
+          <div class="sk__block sk__line" style="width:90%"></div>
+        </div>
+        <div class="sk__block sk__line" style="width:100%"></div>
+        <div class="sk__block sk__line" style="width:80%"></div>
+      </div>
+    </div>
+  </div>
+  <div class="story">
+    <span class="story-label">资料</span>
+    <div class="surface">
+      <div class="sk sk-profile" role="status" aria-busy="true" aria-label="内容加载中" data-evidence-sample="profile">
+        <div class="sk__block sk-profile__avatar"></div>
+        <div class="sk-profile__lines">
+          <div class="sk__block sk__line" style="width:40%"></div>
+          <div class="sk__block sk__line" style="width:60%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

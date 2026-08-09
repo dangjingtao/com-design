@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 2,
+  "slug": "skeleton",
+  "name": "Skeleton",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["feedback-overlay", "loading-placeholder"],
+  "variantDimensions": { "variant": ["list", "card", "profile"] },
+  "representativeVariants": [
+    { "variant": "list", "rows": 3 },
+    { "variant": "card" },
+    { "variant": "profile" }
+  ],
+  "anatomy": ["container", "placeholderBlocks"],
+  "traits": {
+    "background": "var(--color-surface-subtle)",
+    "radius": "var(--radius-sm)",
+    "blockGap": "var(--space-8)",
+    "shimmerColor": "rgba(255,255,255,0.5)"
+  },
+  "structurePatterns": [
+    "placeholder blocks mirror the real content structure (avatar circle, title lines, body lines)",
+    "blocks are subtle-surface rounded rectangles; a subtle shimmer can sweep across",
+    "a list skeleton = repeated rows of a leading square + two text lines",
+    "a card skeleton = header block + 2-3 body lines; profile = avatar circle + two centered lines"
+  ],
+  "usageHints": [
+    "use when the loading structure is known; prefer it over a blank spinner for content areas",
+    "mirror real content, do not use decorative random bars",
+    "individual blocks are hidden from the accessibility tree; container marks busy state",
+    "reduced motion disables shimmer"
+  ],
+  "doNotInvent": ["no skeletonizing tiny icons", "no mixing loaded copy with unrelated skeleton blocks", "no full-screen skeleton reset on background refresh"],
+  "unknowns": []
+}

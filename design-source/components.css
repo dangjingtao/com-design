@@ -23,6 +23,43 @@
 .alert-warning { background:var(--color-warning-bg); color:var(--color-warning-text); }
 .alert-danger { background:var(--color-danger-bg); color:var(--color-danger-text); }
 
+/* ── Avatar ────────────────────────────────────────────────── */
+/* @anatomy
+   <div class="avatar-cell"><span class="avatar avatar-sm avatar-tint-brand">LX</span><span class="cap">24</span>
+*/
+.avatar { position:relative; display:inline-flex; align-items:center; justify-content:center; border-radius:var(--radius-pill); overflow:hidden; flex-shrink:0; line-height:1; user-select:none; }
+.avatar-sm { width:24px; height:24px; font:var(--type-label-small); }
+.avatar-rg { width:32px; height:32px; font:var(--type-label); }
+.avatar-lg { width:40px; height:40px; font:var(--type-heading-small); }
+.avatar-initials { background:var(--color-surface-selected); color:var(--color-text-brand); }
+.avatar-tint-brand { background:var(--color-primary-container); color:var(--color-text-brand); }
+.avatar-tint-neutral { background:var(--color-surface-subtle); color:var(--color-text-brand); }
+.avatar-image { background:linear-gradient(135deg,var(--color-surface-subtle),var(--com-brand-100)); color:var(--color-text-brand); }
+.avatar-icon { background:var(--color-surface-subtle); color:var(--color-text-tertiary); }
+.avatar svg { width:18px; height:18px; display:block; }
+.avatar-sm svg { width:14px; height:14px; }
+.avatar-lg svg { width:22px; height:22px; }
+.avatar-dot { position:absolute; right:0; bottom:0; width:10px; height:10px; border-radius:var(--radius-pill); border:2px solid var(--color-surface); box-sizing:border-box; }
+.avatar-dot-online { background:var(--color-success); }
+.avatar-dot-offline { background:var(--color-text-tertiary); }
+.avatar-row { display:flex; align-items:center; gap:12px; width:100%; padding:8px 0; min-width:0; }
+.avatar-row + .avatar-row { border-top:1px solid var(--color-border-subtle); }
+.avatar-meta { min-width:0; display:flex; flex-direction:column; }
+.avatar-name { font:var(--type-label); color:var(--color-text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.avatar-caption { font:var(--type-caption); color:var(--color-text-tertiary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* ── Badge ─────────────────────────────────────────────────── */
+/* @anatomy
+   <span class="host" data-evidence-sample="dot"> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg> <span class="badge badge...
+*/
+.badge { position:absolute; box-sizing:border-box; border:2px solid var(--color-surface); }
+.badge-dot { width:8px; height:8px; border-radius:var(--radius-pill); top:-2px; right:-2px; padding:0; }
+.badge-count { min-width:18px; height:18px; padding:0 5px; border-radius:var(--radius-pill); top:-2px; right:-2px; display:inline-flex; align-items:center; justify-content:center; font:var(--type-label-small); color:var(--color-text-inverse); white-space:nowrap; line-height:1; }
+.badge--brand { background:var(--color-primary); }
+.badge--attention { background:var(--color-danger); }
+.badge--success { background:var(--color-success); }
+.badge--avatar { top:auto; right:auto; bottom:-2px; right:-2px; }
+
 /* ── Bottom Navigation ─────────────────────────────────────── */
 /* @anatomy
    <div class="phone"> <div class="page-content"> <h1>首页</h1> <p>欢迎回来，今天有新的工作动态与消息提醒。</p> <p>底部导航固定在页面底部，提供四个顶级目的地。当前选中项使用品牌靛蓝色，未选中项使用三级文字色。</p> </div>
@@ -37,6 +74,34 @@
   .bn-badge { position: absolute; top: -4px; right: -8px; display: flex; align-items: center; justify-content: center; background: var(--color-danger); color: var(--color-text-inverse); }
   .bn-badge-count { min-width: 18px; height: 18px; padding: 0 5px; border-radius: var(--radius-pill); font: var(--type-label-small); box-sizing: border-box; }
   .bn-badge-dot { width: 8px; height: 8px; border-radius: var(--radius-pill); }
+
+/* ── Bottom Sheet ──────────────────────────────────────────── */
+/* @anatomy
+   <div class="specimen"> <div class="stage"> <div class="story"> <span class="story-label">操作列表</span> <div class="device"> <div class="sheet-scrim" data-evidence-sample="action-list"></div>
+*/
+.sheet-scrim { position: absolute; inset: 0; background: var(--color-scrim); }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; background: var(--color-surface); border-top-left-radius: var(--radius-overlay); border-top-right-radius: var(--radius-overlay); box-shadow: var(--shadow-2); padding: var(--space-12) var(--space-16) var(--space-16); display: flex; flex-direction: column; max-height: 100%; }
+  .sheet--scroll { height: 78%; }
+  .sheet__handle { width: 36px; height: 4px; border-radius: var(--radius-pill); background: var(--color-border); margin: 0 auto var(--space-12); }
+  .sheet__header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-8); margin-bottom: var(--space-8); }
+  .sheet__title { margin: 0; font: var(--type-heading); color: var(--color-text-primary); }
+  .sheet__close { width: 24px; height: 24px; padding: 0; border: none; background: none; color: var(--color-text-tertiary); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: var(--radius-pill); transition: background .15s; }
+  .sheet__close:hover { background: var(--color-surface-subtle); }
+  .sheet__list { display: flex; flex-direction: column; }
+  .sheet__row { display: flex; align-items: center; gap: var(--space-12); min-height: 48px; padding: 0; border: none; background: none; width: 100%; text-align: left; font: var(--type-body); color: var(--color-text-primary); cursor: pointer; border-radius: var(--radius-sm); transition: background .15s; }
+  .sheet__row:hover { background: var(--color-surface-subtle); }
+  .sheet__row svg { width: var(--size-icon-md); height: var(--size-icon-md); color: var(--color-text-secondary); flex-shrink: 0; }
+  .sheet__divider { height: 1px; background: var(--color-border-subtle); margin: var(--space-4) 0; }
+  .sheet__cancel { justify-content: center; color: var(--color-text-tertiary); font: var(--type-label); min-height: 44px; }
+  .sheet__body { overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-16); padding: var(--space-4) 0 var(--space-12); }
+  .sheet__group { display: flex; flex-direction: column; gap: var(--space-8); }
+  .sheet__group-label { font: var(--type-label-small); color: var(--color-text-tertiary); }
+  .sheet__chips { display: flex; flex-wrap: wrap; gap: var(--space-8); }
+  .sheet__chip { display: inline-flex; align-items: center; height: 32px; padding: 0 var(--space-12); border-radius: var(--radius-pill); background: var(--color-surface-subtle); font: var(--type-label-small); color: var(--color-text-secondary); white-space: nowrap; }
+  .sheet__chip--active { background: var(--color-primary-container); color: var(--color-on-primary-container); }
+  .sheet__footer { margin-top: auto; padding-top: var(--space-8); }
+  .sheet__btn { width: 100%; height: 44px; border: none; border-radius: var(--radius-control); background: var(--color-primary); color: var(--color-on-primary); font: var(--type-label); white-space: nowrap; cursor: pointer; transition: background .15s; }
+  .sheet__btn:hover { background: var(--color-primary-hover); }
 
 /* ── Button ────────────────────────────────────────────────── */
 /* @anatomy
@@ -107,6 +172,54 @@
   .dialog__btn--destructive { background: var(--color-destructive); color: var(--color-text-inverse); }
   .dialog__btn--destructive:hover { background: var(--color-destructive-hover); }
 
+/* ── Divider ───────────────────────────────────────────────── */
+/* @anatomy
+   <div class="specimen"> <div class="stage"> <div class="story"> <span class="story-label">通栏分隔</span> <div class="surface" data-evidence-sample="full"> <div class="text-block">订单已提交，等待商家确认</div>
+*/
+.divider { width:100%; height:1px; background:var(--color-border-subtle); border:none; margin:0; display:block; }
+.divider--inset { margin-left:var(--space-12); width:calc(100% - var(--space-12)); }
+
+/* ── Empty State ───────────────────────────────────────────── */
+/* @anatomy
+   <div class="phone-list"> <div class="phone" data-evidence-sample="no-data"> <div class="empty"> <div class="empty__visual"> <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h...
+*/
+.phone { width: 340px; max-width: 100%; background: var(--color-surface); border-radius: var(--radius-container); padding: var(--space-24) var(--space-16); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-1); }
+  .empty { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); max-width: 280px; padding: var(--space-16); text-align: center; }
+  .empty__visual { width: 64px; height: 64px; border-radius: var(--radius-full); background: var(--color-surface-subtle); display: flex; align-items: center; justify-content: center; color: var(--color-text-tertiary); flex-shrink: 0; }
+  .empty__visual.is-danger { background: var(--color-danger-bg); color: var(--color-danger-text); }
+  .empty__title { margin: 0; font: var(--type-heading); color: var(--color-text-primary); }
+  .empty__supporting { margin: 0; font: var(--type-body-small); color: var(--color-text-secondary); }
+  .empty__actions { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); margin-top: var(--space-8); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 var(--space-16); border: none; border-radius: var(--radius-control); font: var(--type-label); cursor: pointer; white-space: nowrap; min-width: 40px; transition: background .15s, border-color .15s; }
+  .btn.primary { background: var(--color-primary); color: var(--color-on-primary); }
+  .btn.primary:hover { background: var(--color-primary-hover); }
+  .text-action { background: none; border: none; padding: 0; font: var(--type-label); color: var(--color-text-brand); cursor: pointer; white-space: nowrap; }
+  .text-action:hover { color: var(--color-primary-hover); }
+
+/* ── Icon Button ───────────────────────────────────────────── */
+/* @anatomy
+   <button type="button" class="icon-btn ghost" aria-label="搜索" data-evidence-sample="ghost-regular-search"><svg><use href="#ib-search"/></svg></button> <button type="button" class="icon-btn ghost" aria-label="通知" data-evidence-sample="ghost-regular-bell-dot"><svg><use href="#ib-bell"/></svg><span class="dot" aria-hidden="true"></span></button> <button type="button" class="icon-btn ghost" aria-lab...
+*/
+/* Component definitions — extracted to components.css by deterministic script */
+.icon-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 40px; height: 40px; min-width: 40px; padding: 0; border: none; border-radius: var(--radius-control); background: transparent; color: var(--color-text-primary); cursor: pointer; transition: background-color .15s; }
+.icon-btn svg { width: var(--size-icon-md); height: var(--size-icon-md); display: block; }
+.icon-btn:focus-visible { outline: var(--com-border-focus) solid var(--color-border-focused); outline-offset: var(--space-2); }
+.icon-btn.large { width: 48px; height: 48px; min-width: 48px; }
+.icon-btn.large svg { width: var(--size-icon-lg); height: var(--size-icon-lg); }
+.icon-btn.ghost { background: transparent; color: var(--color-text-primary); }
+.icon-btn.ghost:hover { background: var(--color-surface-pressed); }
+.icon-btn.ghost.is-pressed, .icon-btn.ghost:active { background: var(--color-surface-pressed); }
+.icon-btn.ghost.is-selected { background: var(--color-surface-selected); color: var(--color-text-brand); }
+.icon-btn.ghost.is-selected:hover { background: var(--color-surface-selected); }
+.icon-btn.subtle { background: var(--color-surface-subtle); color: var(--color-text-primary); }
+.icon-btn.subtle:hover { background: var(--color-surface-pressed); }
+.icon-btn.subtle.is-pressed, .icon-btn.subtle:active { background: var(--color-surface-pressed); }
+.icon-btn.destructive { background: transparent; color: var(--color-danger-text); }
+.icon-btn.destructive:hover { background: var(--color-danger-bg); }
+.icon-btn.destructive.is-pressed, .icon-btn.destructive:active { background: var(--color-danger-bg); }
+.icon-btn:disabled, .icon-btn.disabled { background: transparent; color: var(--color-text-disabled); cursor: not-allowed; pointer-events: none; }
+.icon-btn .dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--color-danger); box-shadow: 0 0 0 2px var(--color-surface); }
+
 /* ── Input ─────────────────────────────────────────────────── */
 /* @anatomy
    <div class="specimen"> <div class="stage"> <div class="story"> <span class="story-label">标准输入</span> <label class="field" data-evidence-sample="default"> <span class="field-label">用户名</span> <span class="control"><input type="text" placeholder="请输入用户名"></span> <span class="field-helper">用于登录的账号</span> </label> <label class="field is-focused" data-evidence-sample="focused"> <span class="field-la...
@@ -145,6 +258,88 @@
   .li.is-selected .li-trail{color:var(--color-primary)}
   .li svg{width:var(--size-icon-md);height:var(--size-icon-md);display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
+/* ── Loading Indicator ─────────────────────────────────────── */
+/* @anatomy
+   <span class="loader--pending-btn"> <span class="spinner spinner--inline"><svg class="spinner__svg" viewBox="0 0 20 20" aria-hidden="true"><circle class="spinner__track" cx="10" cy="10" r="9" stroke-width="2.4"/><circle class="spinner__arc" cx="10" cy="10" r="9" stroke-width="2.4" stroke-dasharray="30 56.55"/></svg></span>保存中… </span> <span class="spinner spinner--inline"><svg class="spinner__sv...
+*/
+.spinner{display:inline-flex;flex-shrink:0}
+.spinner__svg{display:block;animation:spin .8s linear infinite;transform-origin:50% 50%}
+.spinner__track{fill:none;stroke:var(--color-surface-subtle)}
+.spinner__arc{fill:none;stroke:var(--color-primary);stroke-linecap:round}
+.spinner--inline .spinner__svg{width:var(--size-icon-md);height:var(--size-icon-md)}
+.spinner--regular .spinner__svg{width:var(--size-icon-lg);height:var(--size-icon-lg)}
+.loader{display:inline-flex;align-items:center;gap:var(--space-8)}
+.loader__label{font:var(--type-body-small);color:var(--color-text-secondary)}
+.loader--section{justify-content:center}
+.loader--page{flex-direction:column;gap:var(--space-8)}
+.loader--page .loader__label{text-align:center}
+.loader--pending-btn{display:inline-flex;align-items:center;gap:var(--space-8);height:40px;padding:0 var(--space-12);border-radius:var(--radius-control);background:var(--color-disabled);color:var(--color-text-disabled);font:var(--type-label);white-space:nowrap}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spinner__svg{animation:none}}
+
+/* ── Menu Item ─────────────────────────────────────────────── */
+/* @anatomy
+   <div class="menu" role="menu"> <button class="mi" data-evidence-sample="default" role="menuitem"> <span class="mi-icon"><svg><use href="#i-pencil"/></svg></span> <span class="mi-label">重命名</span> <span class="mi-trail"><svg><use href="#i-check"/></svg></span> </button> <button class="mi" data-evidence-sample="default" role="menuitem"> <span class="mi-icon"><svg><use href="#i-folder-input"/></sv...
+*/
+.menu{display:flex;flex-direction:column;background:var(--color-surface);border-radius:var(--radius-overlay);box-shadow:var(--shadow-1);padding:4px 0;min-width:200px;max-width:240px}
+  .menu-divider{height:8px;position:relative;flex-shrink:0}
+  .menu-divider::after{content:"";position:absolute;top:3px;left:12px;right:12px;height:1px;background:var(--color-border-subtle)}
+  .mi{display:flex;align-items:center;gap:8px;min-height:48px;padding:0 12px;background:transparent;border:none;width:100%;text-align:left;cursor:pointer;color:var(--color-text-primary)}
+  .mi:hover{background:var(--color-surface-pressed)}
+  .mi.is-pressed{background:var(--color-surface-pressed)}
+  .mi.is-selected{color:var(--color-text-brand)}
+  .mi.is-selected .mi-trail{display:flex}
+  .mi.is-disabled{color:var(--color-text-disabled);cursor:not-allowed}
+  .mi.is-disabled:hover{background:transparent}
+  .mi.is-destructive{color:var(--color-danger-text)}
+  .mi.is-destructive .mi-icon{color:var(--color-danger)}
+  .mi-icon{flex:0 0 auto;display:flex;align-items:center;color:var(--color-text-secondary)}
+  .mi.is-selected .mi-icon{color:var(--color-text-brand)}
+  .mi-label{flex:1 1 auto;min-width:0;font:var(--type-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mi-trail{flex:0 0 auto;display:none;align-items:center;color:var(--color-text-brand)}
+  .mi svg{width:20px;height:20px;display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── Menu ──────────────────────────────────────────────────── */
+/* @anatomy
+   <div class="specimen"> <div class="stage"> <p class="stage-label">溢出菜单</p> <button class="trigger" type="button"><svg><use href="#i-more"/></svg><span>更多</span></button>
+*/
+.menu{display:flex;flex-direction:column;background:var(--color-surface);border-radius:var(--radius-overlay);box-shadow:var(--shadow-1);padding:4px 0;min-width:180px;max-width:280px}
+  .menu-item{display:flex;align-items:center;gap:var(--space-8);min-height:48px;padding:0 var(--space-12);background:transparent;border:none;width:100%;text-align:left;cursor:pointer;color:var(--color-text-primary);box-sizing:border-box}
+  .menu-item:hover{background:var(--color-surface-pressed)}
+  .menu-item.is-pressed{background:var(--color-surface-pressed)}
+  .menu-item.is-selected{color:var(--color-text-brand)}
+  .menu-item.is-selected .menu-item-trail{display:flex}
+  .menu-item.is-disabled{color:var(--color-text-disabled);cursor:not-allowed}
+  .menu-item.is-disabled:hover{background:transparent}
+  .menu-item.is-destructive{color:var(--color-danger-text)}
+  .menu-item.is-destructive .menu-item-icon{color:var(--color-danger)}
+  .menu-item-icon{flex:0 0 auto;display:flex;align-items:center;color:var(--color-text-secondary)}
+  .menu-item.is-selected .menu-item-icon{color:var(--color-text-brand)}
+  .menu-item-label{flex:1 1 auto;min-width:0;font:var(--type-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .menu-item-trail{flex:0 0 auto;display:none;align-items:center;color:var(--color-text-brand)}
+  .menu-item svg{width:20px;height:20px;display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .menu-divider{height:8px;position:relative;flex-shrink:0}
+  .menu-divider::after{content:"";position:absolute;top:3px;left:12px;right:12px;height:1px;background:var(--color-border-subtle)}
+
+/* ── Progress Indicator ────────────────────────────────────── */
+/* @anatomy
+   <div class="specimen"> <div class="story" data-evidence-sample="linear"> <span class="story-label">线性</span> <div class="surface-card"> <div class="progress progress--block"> <div class="progress__row"> <span class="progress__label">存储空间</span> <span class="progress__value">68%</span> </div>
+*/
+.progress { display: flex; flex-direction: column; gap: var(--space-4); }
+  .progress--block { width: 100%; }
+  .progress__row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-8); }
+  .progress__label { font: var(--type-body-small); color: var(--color-text-primary); white-space: nowrap; }
+  .progress__value { font: var(--type-caption); color: var(--color-text-tertiary); white-space: nowrap; }
+  .progress__track { width: 100%; height: 4px; background: var(--color-surface-subtle); border-radius: var(--radius-pill); overflow: hidden; }
+  .progress__fill { height: 100%; background: var(--color-primary); border-radius: var(--radius-pill); }
+  .progress--circular { flex-direction: row; align-items: center; gap: var(--space-8); }
+  .progress__ring { position: relative; width: 24px; height: 24px; flex-shrink: 0; }
+  .progress__ring svg { display: block; transform: rotate(-90deg); }
+  .progress__ring-track { fill: none; stroke: var(--color-surface-subtle); stroke-width: 2.5; }
+  .progress__ring-arc { fill: none; stroke: var(--color-primary); stroke-width: 2.5; stroke-linecap: round; }
+  .progress__ring-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: var(--type-caption); color: var(--color-text-secondary); }
+  .progress__below { font: var(--type-caption); color: var(--color-text-tertiary); }
+
 /* ── Radio ─────────────────────────────────────────────────── */
 /* @anatomy
    <label class="radio" data-evidence-sample="selected"> <input type="radio" name="density" value="compact" checked> <span class="radio-outer"><span class="radio-dot"></span></span> <span class="radio-text"> <span class="radio-label">紧凑模式</span> <span class="radio-helper">更短的控件高度与更密的间距</span> </span> </label> <label class="radio" data-evidence-sample="unselected"> <input type="radio" name="density...
@@ -166,6 +361,157 @@
   .radio.is-disabled input:checked + .radio-outer { border-color: var(--color-text-disabled); }
   .radio.is-disabled input:checked + .radio-outer .radio-dot { background: var(--color-text-disabled); opacity: 1; transform: scale(1); }
 
+/* ── Search Field ──────────────────────────────────────────── */
+/* @anatomy
+   <div class="specimen"> <div class="stage"> <div class="story"> <span class="story-label">默认</span> <label class="search-field" data-evidence-sample="idle"> <span class="leading" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span> <input...
+*/
+.search-field { display: flex; align-items: center; gap: var(--space-8); height: var(--size-control-height); padding: 0 var(--space-12); border-radius: var(--radius-control); background: var(--color-surface-subtle); border: var(--com-border-control) solid transparent; transition: border-color .15s, border-width .15s, background .15s; }
+  .search-field .leading, .search-field .trailing { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--color-text-tertiary); }
+  .search-field .leading svg, .search-field .trailing svg { width: var(--size-icon-md); height: var(--size-icon-md); display: block; }
+  .search-field input { flex: 1; min-width: 0; border: none; outline: none; background: transparent; padding: 0; font: var(--type-body); color: var(--color-text-primary); }
+  .search-field input::placeholder { color: var(--color-text-placeholder); }
+  .search-field input::-webkit-search-decoration, .search-field input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+  .search-field.is-focused { background: var(--color-surface); border: var(--com-border-focus) solid var(--color-border-focused); padding: 0 11px; }
+  .search-field.is-loading .leading { color: var(--color-primary); }
+  .search-field .spinner { width: var(--size-icon-sm); height: var(--size-icon-sm); animation: sf-spin .8s linear infinite; }
+  @keyframes sf-spin { to { transform: rotate(360deg); } }
+  .search-field .clear { display: inline-flex; align-items: center; justify-content: center; width: var(--size-icon-md); height: var(--size-icon-md); padding: 0; border: none; background: transparent; color: var(--color-text-tertiary); cursor: pointer; border-radius: var(--radius-xs); }
+  .search-field .clear:hover { color: var(--color-text-secondary); }
+  .search-field.is-disabled { background: var(--color-surface-subtle); }
+  .search-field.is-disabled input { color: var(--color-text-disabled); cursor: not-allowed; }
+  .search-field.is-disabled input::placeholder { color: var(--color-text-disabled); }
+  .search-field.is-disabled .leading, .search-field.is-disabled .trailing { color: var(--color-text-disabled); }
+
+/* ── Section ───────────────────────────────────────────────── */
+/* @anatomy
+   <section class="section" data-evidence-sample="with-header-trailing"> <header class="section-header"> <div class="section-titles"><h3 class="section-title">账号</h3>
+*/
+.section{display:flex;flex-direction:column;gap:var(--space-8);background:none;border:none;box-shadow:none}
+  .section + .section{margin-top:var(--space-20)}
+  .section-header{display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-12);padding:0 var(--space-12)}
+  .section-titles{display:flex;flex-direction:column;gap:var(--space-2);min-width:0}
+  .section-title{font:var(--type-heading-small);color:var(--color-text-primary);margin:0}
+  .section-supporting{font:var(--type-body-small);color:var(--color-text-secondary);margin:0}
+  .section-action{font:var(--type-label);color:var(--color-text-brand);background:none;border:none;padding:0;cursor:pointer;white-space:nowrap;flex:0 0 auto}
+  .section-action:hover{color:var(--color-primary-hover)}
+  .section-content{display:flex;flex-direction:column;gap:var(--space-8)}
+  .list-card{background:var(--color-surface);border-radius:var(--radius-container);overflow:hidden}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:var(--space-8);height:48px;padding:0 var(--space-12);background:var(--color-surface);position:relative}
+  .row + .row::before{content:"";position:absolute;top:0;left:var(--space-12);right:0;height:1px;background:var(--color-border-subtle)}
+  .row-label{font:var(--type-body);color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .switch{flex:0 0 auto;width:44px;height:24px;border-radius:var(--radius-pill);background:var(--color-primary);position:relative}
+  .switch::after{content:"";position:absolute;top:2px;right:2px;width:20px;height:20px;border-radius:var(--radius-pill);background:var(--color-on-primary)}
+
+/* ── Segmented Control ─────────────────────────────────────── */
+/* @anatomy
+   <div class="seg" role="radiogroup" aria-label="时间范围" data-evidence-sample="range"> <button type="button" class="seg-item" role="radio" aria-checked="false">日</button> <button type="button" class="seg-item is-active" role="radio" aria-checked="true">周</button> <button type="button" class="seg-item" role="radio" aria-checked="false">月</button>
+*/
+.seg { display:inline-flex; align-items:stretch; gap:2px; padding:2px; width:240px; background:var(--color-surface-subtle); border-radius:var(--radius-control); box-shadow:none; }
+.seg-item { flex:1; min-width:0; min-height:32px; display:inline-flex; align-items:center; justify-content:center; padding:0 12px; border:none; outline:none; background:transparent; color:var(--color-text-secondary); font:var(--type-label); white-space:nowrap; border-radius:calc(var(--radius-control) - 2px); cursor:pointer; transition:background .15s, color .15s; }
+.seg-item:not(.is-active):active { background:var(--color-surface-pressed); }
+.seg-item.is-active { background:var(--color-surface); color:var(--color-text-brand); cursor:default; }
+.seg.is-disabled { pointer-events:none; }
+.seg.is-disabled .seg-item { color:var(--color-text-disabled); cursor:not-allowed; }
+.seg.is-disabled .seg-item.is-active { background:var(--color-surface); color:var(--color-text-disabled); }
+
+/* ── Select ────────────────────────────────────────────────── */
+/* @anatomy
+   <div class="specimen"> <div class="stage"> <div class="story"> <span class="story-label">选择触发器</span> <div class="select" data-evidence-sample="empty"> <span class="select-label">所在部门</span> <button type="button" class="select-trigger" aria-haspopup="listbox" aria-expanded="false"> <span class="select-value select-placeholder">请选择部门</span> <svg class="select-chevron" viewBox="0 0 24 24" fill="n...
+*/
+.select { display: flex; flex-direction: column; gap: var(--space-6); }
+  .select-label { font: var(--type-label); color: var(--color-text-primary); }
+  .select-trigger { display: flex; align-items: center; gap: var(--space-8); width: 100%; height: var(--size-control-height); padding: 0 var(--space-12); border: var(--com-border-control) solid var(--color-border); border-radius: var(--radius-control); background: var(--color-surface); color: var(--color-text-primary); font: var(--type-body); text-align: left; cursor: pointer; user-select: none; transition: background .15s, border-color .15s, border-width .15s; }
+  .select-trigger::-moz-focus-inner { border: 0; }
+  .select-trigger:focus { outline: none; }
+  .select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .select-placeholder { color: var(--color-text-placeholder); }
+  .select-chevron { flex-shrink: 0; width: var(--size-icon-md); height: var(--size-icon-md); color: var(--color-text-tertiary); transition: transform .15s; }
+  .select.is-focused .select-trigger, .select.is-open .select-trigger { border-width: var(--com-border-focus); border-color: var(--color-border-focused); padding-left: 11px; padding-right: 11px; }
+  .select.is-open .select-chevron { transform: rotate(180deg); }
+  .select.is-pressed .select-trigger { background: var(--color-surface-pressed); }
+  .select.is-error .select-trigger { border-color: var(--color-border-error); }
+  .select.is-error .select-trigger:focus, .select.is-error.is-focused .select-trigger, .select.is-error.is-open .select-trigger { border-color: var(--color-border-error); }
+  .select.is-disabled .select-trigger { background: var(--color-surface-subtle); border-color: var(--color-border-subtle); cursor: not-allowed; }
+  .select.is-disabled .select-value { color: var(--color-text-disabled); }
+  .select.is-disabled .select-placeholder { color: var(--color-text-disabled); }
+  .select.is-disabled .select-chevron { color: var(--color-text-disabled); }
+  .select-error { font: var(--type-body-small); color: var(--color-danger-text); }
+
+/* ── Skeleton ──────────────────────────────────────────────── */
+/* @anatomy
+   <div class="specimen"> <div class="story"> <span class="story-label">列表</span> <div class="surface"> <div class="sk sk-list" role="status" aria-busy="true" aria-label="内容加载中" data-evidence-sample="list"> <div class="sk-list__row"> <div class="sk__block sk-list__thumb"></div>
+*/
+.sk { position: relative; overflow: hidden; }
+  .sk__block { background: var(--color-surface-subtle); border-radius: var(--radius-sm); position: relative; overflow: hidden; }
+  .sk__block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.55), rgba(255,255,255,0)); animation: sk-shimmer 1.4s ease-in-out infinite; }
+  .sk.is-static .sk__block::after { display: none; }
+  @keyframes sk-shimmer { 100% { transform: translateX(100%); } }
+  @media (prefers-reduced-motion: reduce) { .sk__block::after { animation: none; transform: none; } }
+  .sk__line { height: 12px; }
+  .sk-list { display: flex; flex-direction: column; gap: var(--space-12); }
+  .sk-list__row { display: flex; align-items: center; gap: var(--space-12); }
+  .sk-list__thumb { width: var(--com-size-40); height: var(--com-size-40); border-radius: var(--radius-sm); flex-shrink: 0; }
+  .sk-list__lines { display: flex; flex-direction: column; gap: var(--space-8); flex: 1; min-width: 0; }
+  .sk-card { display: flex; flex-direction: column; gap: var(--space-8); }
+  .sk-card__header { display: flex; flex-direction: column; gap: var(--space-8); margin-bottom: var(--space-4); }
+  .sk-profile { display: flex; flex-direction: column; align-items: center; gap: var(--space-12); }
+  .sk-profile__avatar { width: var(--com-size-56); height: var(--com-size-56); border-radius: var(--radius-pill); }
+  .sk-profile__lines { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); width: 100%; }
+
+/* ── Snackbar ──────────────────────────────────────────────── */
+/* @anatomy
+   <div class="specimen"> <div class="story"> <span class="story-label">Snackbar 轻提示操作</span> <p class="caption">Snackbar 至多一个操作,位于底部内容之上</p> <div class="device"> <div class="snackbar-stack"> <div class="snackbar" role="status" data-evidence-sample="with-action"> <span class="snackbar-message">1 张照片已删除</span> <button class="snackbar__action" type="button">撤销</button>
+*/
+/* Component definitions — extracted to components.css by deterministic script */
+.snackbar { display: flex; align-items: center; gap: var(--space-8); max-width: min(360px, 100%); padding: var(--space-8) var(--space-8) var(--space-8) var(--space-12); background: var(--color-surface-inverse); color: var(--color-text-inverse); border-radius: var(--radius-control); box-shadow: var(--shadow-1); }
+.snackbar-message { flex: 1; min-width: 0; font: var(--type-body-small); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.snackbar__action { appearance: none; border: none; background: transparent; min-height: var(--size-control-height); padding: 0 var(--space-8); font: var(--type-label); color: var(--color-accent); white-space: nowrap; cursor: pointer; flex-shrink: 0; border-radius: var(--radius-xs); transition: background .15s, filter .15s; }
+.snackbar__action:hover { filter: brightness(1.15); }
+.snackbar__action:active { background: rgba(255,255,255,0.08); }
+.snackbar__action:focus-visible { outline: var(--com-border-focus) solid var(--color-accent); outline-offset: var(--space-2); }
+
+/* ── Stepper ───────────────────────────────────────────────── */
+/* @anatomy
+   <div class="stage"> <div class="surface" data-evidence-sample="horizontal"> <div class="stepper stepper--h"> <div class="stepper__step is-completed"> <span class="stepper__node"><svg width="14" height="14"><use href="#stp-check"/></svg></span> <span class="stepper__connector"></span> <p class="stepper__label">基本信息</p> </div>
+*/
+.stepper { display: flex; }
+  .stepper__step { position: relative; display: flex; }
+
+  /* horizontal */
+  .stepper--h { align-items: flex-start; }
+  .stepper--h .stepper__step { flex: 1; flex-direction: column; align-items: center; }
+  .stepper--h .stepper__connector { position: absolute; top: 9px; left: calc(50% + 12px); right: calc(-50% + 12px); height: 2px; background: var(--color-border-subtle); }
+  .stepper--h .stepper__step:last-child .stepper__connector { display: none; }
+  .stepper--h .stepper__label { margin-top: var(--space-8); text-align: center; }
+
+  /* vertical */
+  .stepper--v { flex-direction: column; gap: var(--space-16); }
+  .stepper--v .stepper__step { align-items: flex-start; gap: var(--space-12); }
+  .stepper--v .stepper__step:not(:last-child)::after { content: ""; position: absolute; left: 9px; top: 20px; bottom: calc(-1 * var(--space-16)); width: 2px; background: var(--color-border-subtle); }
+  .stepper--v .stepper__content { display: flex; flex-direction: column; gap: var(--space-2); padding-bottom: var(--space-4); }
+
+  /* node */
+  .stepper__node { width: 20px; height: 20px; border-radius: var(--radius-pill); display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; flex-shrink: 0; background: var(--color-surface); border: 1px solid var(--color-border); position: relative; z-index: 1; }
+  .stepper__node svg { display: block; }
+
+  .stepper__step.is-completed .stepper__node { background: var(--color-primary); border-color: var(--color-primary); }
+  .stepper__step.is-completed .stepper__connector,
+  .stepper--v .stepper__step.is-completed:not(:last-child)::after { background: var(--color-primary); }
+  .stepper__step.is-completed .stepper__label { color: var(--color-text-secondary); }
+
+  .stepper__step.is-current .stepper__node { border: 2px solid var(--color-primary); }
+  .stepper__step.is-current .stepper__node::after { content: ""; width: 8px; height: 8px; border-radius: var(--radius-pill); background: var(--color-primary); }
+  .stepper__step.is-current .stepper__label { color: var(--color-text-primary); }
+
+  .stepper__step.is-upcoming .stepper__label { color: var(--color-text-tertiary); }
+
+  .stepper__step.is-error .stepper__node { border: 2px solid var(--color-danger); }
+  .stepper__step.is-error .stepper__label { color: var(--color-danger-text); }
+
+  .stepper__label { font: var(--type-label); color: var(--color-text-tertiary); margin: 0; }
+  .stepper__supporting { font: var(--type-body-small); color: var(--color-text-tertiary); margin: 0; }
+  .stepper__step.is-current .stepper__supporting { color: var(--color-text-secondary); }
+
 /* ── Switch ────────────────────────────────────────────────── */
 /* @anatomy
    <div class="list"> <label class="switch-row" data-evidence-sample="on"> <span class="switch-text"><span class="switch-title">推送通知</span><span class="switch-helper">审核结果与任务提醒</span></span> <span class="switch-control"> <input type="checkbox" class="switch-input" checked> <span class="switch-track"><span class="switch-thumb"></span></span> </span> </label> <label class="switch-row" data-evidence-...
@@ -186,6 +532,23 @@
   .switch-input:disabled:not(:checked) + .switch-track{background:var(--color-surface-subtle);border-color:var(--color-border-subtle)}
   .switch-input:disabled:checked + .switch-track{background:var(--color-disabled);border-color:var(--color-disabled)}
 
+/* ── Tabs ──────────────────────────────────────────────────── */
+/* @anatomy
+   <div class="tablist" role="tablist" aria-label="任务状态"> <button class="tab is-active" type="button" role="tab" aria-selected="true">待办</button> <button class="tab" type="button" role="tab" aria-selected="false">已完成</button> <button class="tab" type="button" role="tab" aria-selected="false">全部</button>
+*/
+.tablist { display:flex; align-items:stretch; width:100%; padding:0 var(--space-16); gap:var(--space-8); border:none; outline:none; }
+.tablist-scroll { display:flex; align-items:stretch; gap:var(--space-8); padding:0 var(--space-16); overflow-x:auto; overflow-y:hidden; scrollbar-width:none; -ms-overflow-style:none; width:100%; }
+.tablist-scroll::-webkit-scrollbar { display:none; width:0; height:0; }
+.tab { position:relative; display:inline-flex; align-items:center; justify-content:center; flex:1 1 0; min-width:0; padding:var(--space-8) var(--space-12); border:none; background:transparent; color:var(--color-text-secondary); font:var(--type-label); white-space:nowrap; cursor:pointer; line-height:20px; outline:none; transition:background .15s,color .15s; }
+.tablist-scroll .tab { flex:0 0 auto; }
+.tab::after { content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--color-primary); transform:scaleX(0); transform-origin:center; transition:transform .18s ease; }
+.tab:hover { background:var(--color-surface-pressed); }
+.tab:active { background:var(--color-surface-pressed); }
+.tab.is-active { color:var(--color-text-brand); }
+.tab.is-active::after { transform:scaleX(1); }
+.tab[disabled], .tab.is-disabled { color:var(--color-text-disabled); cursor:not-allowed; pointer-events:none; }
+.tab:focus-visible { outline:2px solid var(--color-border-focused); outline-offset:-2px; border-radius:var(--radius-xs); }
+
 /* ── Tag ───────────────────────────────────────────────────── */
 /* @anatomy
    <span class="tag tag-neutral" data-evidence-sample="neutral">默认</span> <span class="tag tag-brand" data-evidence-sample="brand">品牌</span> <span class="tag tag-success" data-evidence-sample="success"> <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.2l2.8 2.8 6.2-6.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> 已完成 </span...
@@ -203,6 +566,45 @@
 .tag-close { width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; margin-left:2px; border:none; background:transparent; padding:0; cursor:pointer; color:currentColor; opacity:0.72; border-radius:var(--radius-pill); }
 .tag-close:hover { opacity:1; background:rgba(0,0,0,0.06); }
 
+/* ── Textarea ──────────────────────────────────────────────── */
+/* @anatomy
+   <div class="specimen"> <div class="stage"> <div class="story"> <span class="story-label">多行输入</span> <label class="textarea-field" data-evidence-sample="empty"> <span class="textarea-label">审批意见</span> <textarea class="textarea-control" placeholder="请输入审批意见(选填)"></textarea> </label> <label class="textarea-field is-focused" data-evidence-sample="focused"> <span class="textarea-label">任务描述</span>...
+*/
+.textarea-field { display: flex; flex-direction: column; gap: var(--space-6); }
+  .textarea-label { font: var(--type-label); color: var(--color-text-primary); }
+  .textarea-control { display: block; width: 100%; min-height: 88px; padding: var(--space-8) var(--space-12); border: var(--com-border-control) solid var(--color-border); border-radius: var(--radius-control); background: var(--color-surface); font: var(--type-body-small); color: var(--color-text-primary); resize: none; box-sizing: border-box; transition: border-color .15s, border-width .15s; }
+  .textarea-control::placeholder { color: var(--color-text-placeholder); }
+  .textarea-control:focus { outline: none; border-width: var(--com-border-focus); border-color: var(--color-border-focused); padding: 7px 11px; }
+  .is-focused .textarea-control { border-width: var(--com-border-focus); border-color: var(--color-border-focused); padding: 7px 11px; }
+  .is-error .textarea-control { border-color: var(--color-border-error); }
+  .is-error .textarea-control:focus { border-color: var(--color-border-error); }
+  .is-disabled .textarea-control { background: var(--color-surface-subtle); border-color: var(--color-border-subtle); color: var(--color-text-disabled); cursor: not-allowed; }
+  .is-readonly .textarea-control { color: var(--color-text-primary); border-color: var(--color-border-subtle); cursor: default; }
+  .textarea-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-12); }
+  .textarea-helper { font: var(--type-caption); color: var(--color-text-tertiary); }
+  .textarea-error { font: var(--type-caption); color: var(--color-danger-text); }
+  .textarea-counter { font: var(--type-caption); color: var(--color-text-tertiary); margin-left: auto; }
+  .is-error .textarea-counter { color: var(--color-danger-text); }
+
+/* ── Timeline ──────────────────────────────────────────────── */
+/* @anatomy
+   <div class="card" data-evidence-sample="history"> <div class="timeline"> <div class="tl-event"> <div class="tl-rail"><span class="tl-node is-success"></span>
+*/
+.timeline{display:flex;flex-direction:column;gap:var(--space-12)}
+  .tl-event{display:flex;align-items:flex-start;gap:var(--space-12);position:relative}
+  .tl-rail{flex:0 0 auto;position:relative;width:10px;display:flex;justify-content:center;padding-top:6px;padding-bottom:0}
+  .tl-node{width:10px;height:10px;border-radius:var(--radius-full);background:var(--color-border-strong);flex-shrink:0;position:relative;z-index:1}
+  .tl-event + .tl-event .tl-rail::before{content:"";position:absolute;top:0;bottom:calc(-1 * var(--space-12));left:50%;width:2px;transform:translateX(-50%);background:var(--color-border-subtle);z-index:0}
+  .tl-event:last-child .tl-rail::before{display:none}
+  .tl-node.is-success{background:var(--color-success)}
+  .tl-node.is-warning{background:var(--color-warning)}
+  .tl-node.is-danger{background:var(--color-danger)}
+  .tl-node.is-info{background:var(--color-info)}
+  .tl-content{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:var(--space-2);padding-bottom:0}
+  .tl-time{font:var(--type-caption);color:var(--color-text-tertiary);white-space:nowrap}
+  .tl-title{font:var(--type-body);color:var(--color-text-primary);word-break:break-word}
+  .tl-support{font:var(--type-body-small);color:var(--color-text-secondary);word-break:break-word}
+
 /* ── Toast ─────────────────────────────────────────────────── */
 /* @anatomy
    <div class="specimen"> <div class="story"> <span class="story-label">Toast 轻提示</span> <p class="caption">同一时刻仅展示一条</p> <div class="device"> <div class="toast-stack"> <div class="toast" role="status" data-evidence-sample="success"> <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circ...
@@ -214,3 +616,17 @@
 .toast-action { appearance: none; border: none; background: transparent; padding: 0; font: var(--type-label); color: var(--color-accent); white-space: nowrap; cursor: pointer; flex-shrink: 0; border-radius: var(--radius-xs); }
 .toast-action:hover { filter: brightness(1.15); }
 .toast-action:focus-visible { outline: var(--com-border-focus) solid var(--color-accent); outline-offset: var(--space-2); }
+
+/* ── Top App Bar ───────────────────────────────────────────── */
+/* @anatomy
+   <div class="phone-surface"> <header class="app-bar" data-evidence-sample="title-only"> <h1 class="app-bar__title">设置</h1> </header> </div>
+*/
+.app-bar { display: flex; align-items: center; gap: var(--space-12); min-height: var(--size-control-height-lg); padding: 0 var(--space-16); background: var(--color-surface); }
+  .app-bar.is-scrolled { border-bottom: 1px solid var(--color-border-subtle); }
+  .app-bar__title { flex: 1 1 auto; min-width: 0; margin: 0; font: var(--type-heading); color: var(--color-text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .app-bar__actions { display: flex; align-items: center; gap: var(--space-4); flex-shrink: 0; }
+  .app-bar__action { position: relative; display: inline-flex; align-items: center; justify-content: center; width: var(--size-control-height); height: var(--size-control-height); padding: 0; border: none; background: transparent; color: var(--color-text-secondary); border-radius: var(--radius-control); cursor: pointer; transition: background .15s; flex-shrink: 0; }
+  .app-bar__action:hover { background: var(--color-surface-pressed); }
+  .app-bar__action:active { background: var(--color-surface-pressed); }
+  .app-bar__action svg { width: var(--size-icon-lg); height: var(--size-icon-lg); display: block; }
+  .app-bar__dot { position: absolute; top: var(--space-8); right: var(--space-8); width: var(--space-8); height: var(--space-8); border-radius: var(--radius-pill); background: var(--color-danger); border: 2px solid var(--color-surface); }

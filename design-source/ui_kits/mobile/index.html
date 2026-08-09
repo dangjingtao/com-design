@@ -1,558 +1,766 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Com Workbench · 移动工作台</title>
+<title>Com 审批 · 移动端 UI Kit</title>
 <link rel="stylesheet" href="../../colors_and_type.css">
 <link rel="stylesheet" href="../../components.css">
 <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <style>
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    background: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-family-base);
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
+  /* ── UIKit layout guards ── */
+  html,body{margin:0;padding:0;background:var(--color-surface-subtle);font-family:var(--font-family-base);color:var(--color-text-primary);}
+  .uikit-shell{width:100%;max-width:1184px;margin:0 auto;overflow:hidden;padding:24px 16px 40px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:20px;}
+  .uikit-main,.uikit-toolbar{min-width:0}
+  .uikit-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-12);justify-content:center;}
+  .uikit-tb-group{display:inline-flex;align-items:center;gap:var(--space-8);}
+  .uikit-tb-label{font:var(--type-label-small);color:var(--color-text-secondary);}
+  .uikit-seg{display:inline-flex;padding:2px;background:var(--color-surface);border:1px solid var(--color-border-subtle);border-radius:var(--radius-control);gap:2px;}
+  .uikit-seg button{height:30px;padding:0 12px;border:none;background:transparent;font:var(--type-label-small);color:var(--color-text-secondary);border-radius:calc(var(--radius-control) - 2px);cursor:pointer;white-space:nowrap;}
+  .uikit-seg button.is-active{background:var(--color-primary);color:var(--color-on-primary);}
+  .uikit-caption{font:var(--type-caption);color:var(--color-text-tertiary);text-align:center;}
+  .uikit-truncate{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .uikit-nowrap{white-space:nowrap;flex-shrink:0}
+  .uikit-responsive-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-16);min-width:0}
+  .uikit-table-wrap{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}
+  .uikit-action-cell{display:flex;align-items:center;gap:8px;min-width:0;max-width:160px;overflow:hidden}
+  .uikit-action{min-width:0;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  [data-component]{min-width:0;max-width:100%;}
+  @media(max-width:900px){.uikit-responsive-grid{grid-template-columns:minmax(0,1fr)}}
+  @media(max-width:640px){.uikit-toolbar{flex-direction:column;align-items:stretch}.uikit-responsive-grid{grid-template-columns:minmax(0,1fr)}}
+
+  /* ── Phone frame ── */
+  .phone-wrap{position:relative;}
+  #phoneFrame{
+    width:390px;height:820px;border-radius:44px;
+    background:var(--color-surface);
+    box-shadow:var(--shadow-2);
+    border:8px solid var(--color-surface-inverse);
+    overflow:hidden;position:relative;display:flex;flex-direction:column;
   }
-  .uikit-shell {
-    width: 100%;
-    max-width: 1184px;
-    margin: 0 auto;
-    overflow: hidden;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: var(--space-24) var(--space-16) var(--space-32);
-    gap: var(--space-20);
-  }
-  .uikit-main, .uikit-toolbar { min-width: 0; }
-  .uikit-truncate { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .uikit-nowrap { white-space: nowrap; flex-shrink: 0; }
-  .uikit-responsive-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-    gap: var(--space-16);
-    min-width: 0;
-    width: 100%;
-  }
-  [data-component] { min-width: 0; max-width: 100%; }
+  .screen{flex:1 1 auto;min-height:0;position:relative;display:flex;flex-direction:column;background:var(--color-background);overflow:hidden;}
+  .screen.is-active{animation:com-fade-in var(--motion-duration-standard) var(--motion-easing-standard);}
+  .status-bar{flex:0 0 auto;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font:var(--type-label);color:var(--color-text-primary);}
+  .status-bar .sb-time{font-weight:600;}
+  .status-bar .sb-icons{display:flex;align-items:center;gap:6px;}
+  .status-bar .sb-icons svg{width:16px;height:16px;display:block;}
+  .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:28px;background:var(--color-surface-inverse);border-radius:0 0 18px 18px;z-index:50;}
+  .scroll-body{flex:1 1 auto;overflow-y:auto;position:relative;}
+  .scroll-body::-webkit-scrollbar{display:none;}
+  .home-indicator{flex:0 0 auto;height:24px;display:flex;align-items:flex-start;justify-content:center;padding-top:6px;}
+  .home-indicator span{width:120px;height:4px;border-radius:var(--radius-pill);background:var(--color-text-tertiary);opacity:0.5;}
 
-  .stage-head { text-align: center; display: flex; flex-direction: column; gap: var(--space-8); align-items: center; }
-  .stage-head .com-body-small { color: var(--color-text-secondary); max-width: 460px; margin: 0; }
+  /* ── Top app bar (in-screen) ── */
+  .app-topbar{flex:0 0 auto;display:flex;align-items:center;gap:var(--space-8);min-height:var(--density-control-height-lg);padding:0 var(--density-content-inset);background:var(--color-surface);border-bottom:1px solid var(--color-border-subtle);}
+  .app-topbar h1{flex:1;min-width:0;margin:0;font:var(--type-heading);color:var(--color-text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
-  .theme-toggle {
-    display: inline-flex; align-items: center; gap: var(--space-8);
-    height: var(--size-control-height); padding: 0 var(--space-12);
-    border-radius: var(--radius-pill); border: 1px solid var(--color-border-subtle);
-    background: var(--color-surface); color: var(--color-text-primary);
-    font: var(--type-label); cursor: pointer;
-  }
-  .theme-toggle svg { width: var(--size-icon-md); height: var(--size-icon-md); stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .theme-toggle:hover { background: var(--color-surface-pressed); }
+  /* ── Page content padding / density ── */
+  .app-pad{padding:var(--density-section-gap) var(--density-content-inset);display:flex;flex-direction:column;gap:var(--density-section-gap);}
+  .app-field{gap:var(--density-field-label-gap);}
+  .app-field .control{height:var(--density-control-height);padding-left:var(--density-padding-h);padding-right:var(--density-padding-h);}
+  .app-field .select-trigger{height:var(--density-control-height);padding-left:var(--density-padding-h);padding-right:var(--density-padding-h);}
+  .app-field .textarea-control{padding:var(--density-padding-v) var(--density-padding-h);}
+  .app-form-gap{gap:var(--density-field-gap);}
+  .app-rows .li{min-height:var(--size-touch-min);padding-top:var(--density-padding-v);padding-bottom:var(--density-padding-v);}
+  .app-rows .switch-row{min-height:var(--size-touch-min);}
+  .app-cta{padding:0 var(--density-content-inset) var(--density-section-gap);display:flex;flex-direction:column;gap:var(--space-8);}
+  .app-cta .btn{height:var(--density-control-height);}
+  .platform-android .app-pressable:active{border-radius:4px;background:var(--color-surface-pressed);}
+  .platform-android .icon-btn:active{border-radius:4px;}
 
-  /* Phone frame */
-  .phone-frame {
-    position: relative;
-    width: 390px;
-    height: 780px;
-    border-radius: 44px;
-    background: var(--color-surface-inverse);
-    padding: 10px;
-    box-shadow: var(--shadow-2);
-  }
-  .phone-screen {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: 36px;
-    overflow: hidden;
-    background: var(--color-background);
-    display: flex;
-    flex-direction: column;
-  }
-  .phone-notch {
-    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-    width: 120px; height: 26px; background: var(--color-surface-inverse);
-    border-radius: 0 0 18px 18px; z-index: 30;
-  }
+  /* ── Home ── */
+  .app-greet{display:flex;flex-direction:column;gap:2px;}
+  .app-greet h2{margin:0;font:var(--type-title);color:var(--color-text-primary);}
+  .app-greet p{margin:0;font:var(--type-body-small);color:var(--color-text-secondary);}
+  .app-stat-card{gap:var(--space-12);}
+  .app-stats{display:flex;}
+  .app-stat{flex:1;display:flex;flex-direction:column;gap:2px;align-items:center;min-width:0;}
+  .app-stat + .app-stat{border-left:1px solid var(--color-border-subtle);}
+  .app-stat-num{font:var(--type-display);color:var(--color-primary);font-variant-numeric:tabular-nums;line-height:1.1;}
+  .app-stat-lbl{font:var(--type-caption);color:var(--color-text-secondary);text-align:center;}
+  .app-search-btn{display:flex;align-items:center;gap:var(--space-8);height:var(--density-control-height);padding:0 var(--space-12);border-radius:var(--radius-control);background:var(--color-surface-subtle);border:none;width:100%;cursor:pointer;color:var(--color-text-placeholder);font:var(--type-body);}
+  .app-search-btn svg{width:20px;height:20px;color:var(--color-text-tertiary);}
+  .app-li-avatar{width:32px;height:32px;border-radius:var(--radius-pill);background:var(--color-primary-container);color:var(--color-text-brand);display:inline-flex;align-items:center;justify-content:center;font:var(--type-label);flex-shrink:0;}
+  .app-li-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+  .app-li-title{font:var(--type-body);color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .app-li-sub{font:var(--type-body-small);color:var(--color-text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .app-amount{font:var(--type-label);color:var(--color-text-primary);font-variant-numeric:tabular-nums;}
 
-  /* Status bar */
-  .status-bar {
-    flex: 0 0 auto; height: 44px; padding: 0 var(--space-20);
-    display: flex; align-items: center; justify-content: space-between;
-    font: var(--type-label-small); color: var(--color-text-primary);
-    padding-top: var(--space-8);
-  }
-  .status-bar .sb-icons { display: flex; align-items: center; gap: var(--space-8); }
-  .status-bar svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  /* ── Search ── */
+  .app-filter-row{display:flex;gap:var(--space-8);align-items:center;}
+  .app-filter-btn{display:inline-flex;align-items:center;gap:6px;height:var(--density-control-height);padding:0 var(--space-12);border:1px solid var(--color-border-subtle);border-radius:var(--radius-control);background:var(--color-surface);font:var(--type-label);color:var(--color-text-primary);cursor:pointer;position:relative;}
+  .app-filter-btn svg{width:16px;height:16px;}
+  .app-menu-wrap{position:relative;}
+  .app-menu-pop{position:absolute;top:calc(100% + 4px);left:0;z-index:60;}
+  .app-empty{padding:48px 16px;display:flex;flex-direction:column;align-items:center;gap:var(--space-12);text-align:center;}
 
-  /* App bar */
-  .app-bar {
-    flex: 0 0 auto; padding: var(--space-8) var(--space-16) var(--space-12);
-    display: flex; align-items: center; justify-content: space-between; gap: var(--space-12);
-  }
-  .app-bar .com-heading { margin: 0; }
-  .app-bar-actions { display: flex; align-items: center; gap: var(--space-4); }
-  .icon-btn {
-    width: var(--size-control-height); height: var(--size-control-height); border-radius: var(--radius-control);
-    border: none; background: transparent; color: var(--color-text-secondary);
-    display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
-    position: relative;
-  }
-  .icon-btn:hover { background: var(--color-surface-pressed); }
-  .icon-btn svg { width: var(--size-icon-md); height: var(--size-icon-md); stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .icon-btn .dot { position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; border-radius: var(--radius-pill); background: var(--color-danger); border: 2px solid var(--color-surface); }
+  /* ── Profile ── */
+  .app-profile-head{display:flex;flex-direction:column;align-items:center;gap:var(--space-8);padding:var(--space-16) 0;}
+  .app-avatar-xl{width:64px;height:64px;border-radius:var(--radius-pill);background:var(--color-primary-container);color:var(--color-text-brand);display:inline-flex;align-items:center;justify-content:center;font:var(--type-title);}
+  .app-profile-name{font:var(--type-heading);color:var(--color-text-primary);margin:0;}
+  .app-profile-cap{font:var(--type-body-small);color:var(--color-text-secondary);margin:0;}
+  .app-tag-row{display:flex;gap:var(--space-8);}
+  .app-tl-card{gap:var(--space-12);}
 
-  /* Scroll body */
-  .screen-body {
-    flex: 1 1 auto; overflow-y: auto; padding: 0 var(--space-16) calc(56px + var(--space-24));
-    display: flex; flex-direction: column; gap: var(--space-16);
-  }
-  .screen-body::-webkit-scrollbar { width: 0; }
+  /* ── Overlay base ── */
+  .overlay-scrim{position:absolute;inset:0;z-index:80;background:var(--color-scrim);display:flex;animation:com-fade-in var(--motion-duration-standard) var(--motion-easing-standard);}
+  .overlay-dialog{align-items:center;justify-content:center;padding:var(--space-16);}
+  .overlay-sheet{align-items:flex-end;}
+  .motion-reduced *{animation-duration:0ms !important;transition-duration:0ms !important;}
 
-  .greet .com-title { margin: 0 0 var(--space-4); }
-  .greet .com-body-small { margin: 0; color: var(--color-text-secondary); }
+  /* ── Toast / snackbar stack ── */
+  .toast-stack{position:absolute;left:0;right:0;top:56px;display:flex;flex-direction:column;align-items:center;gap:var(--space-8);z-index:90;pointer-events:none;padding:0 var(--space-16);}
+  .toast-stack .toast,.toast-stack .snackbar{pointer-events:auto;animation:com-toast-in var(--motion-duration-standard) var(--motion-easing-emphasized);}
+  .snackbar-stack{position:absolute;left:0;right:0;bottom:72px;display:flex;flex-direction:column;align-items:center;z-index:90;padding:0 var(--space-16);}
+  .snackbar-stack .snackbar{animation:com-toast-in var(--motion-duration-standard) var(--motion-easing-emphasized);}
 
-  /* Stats grid inside card */
-  .stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: var(--space-8); }
-  .stat { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .stat .num { font: var(--type-title); color: var(--color-text-primary); font-variant-numeric: tabular-nums; }
-  .stat .lbl { font: var(--type-caption); color: var(--color-text-tertiary); }
-  .stat + .stat { border-left: 1px solid var(--color-border-subtle); padding-left: var(--space-12); }
+  /* ── Bottom nav: flow layout inside flex phone (override absolute) ── */
+  #phoneFrame .bottom-nav{position:static;flex:0 0 auto;}
+  #phoneFrame .screen{z-index:1;}
 
-  /* Page-level composition: storage usage progress bar */
-  .uikit-storage-progress { display: flex; flex-direction: column; gap: var(--space-8); }
-  .uikit-progress-meta { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-8); }
-  .uikit-progress-meta .val { font: var(--type-heading-small); color: var(--color-accent-strong); font-variant-numeric: tabular-nums; }
-  .uikit-progress-meta .cap { font: var(--type-caption); color: var(--color-text-tertiary); }
-  .uikit-progress-track { height: 8px; border-radius: var(--radius-pill); background: var(--color-accent-subtle); overflow: hidden; }
-  .uikit-progress-fill { height: 100%; border-radius: var(--radius-pill); background: var(--color-accent); }
-
-  /* Page-level composition: tag wrapping row */
-  .uikit-tag-row { display: flex; flex-wrap: wrap; gap: var(--space-8); }
-
-  /* Action row */
-  .action-row { display: flex; align-items: center; gap: var(--space-8); }
-  .action-row .btn { flex: 0 0 auto; }
-  .action-row .spacer { flex: 1 1 auto; }
-
-  /* Status row */
-  .status-line { display: flex; align-items: center; gap: var(--space-12); flex-wrap: wrap; }
-  .status-pill { display: inline-flex; align-items: center; gap: var(--space-6); font: var(--type-label-small); }
-  .status-pill svg, .status-pill .lucide { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .uikit-dot { width: 8px; height: 8px; border-radius: var(--radius-pill); background: currentColor; display: inline-block; flex: 0 0 auto; }
-  .st-success { color: var(--color-success-text); }
-  .st-warning { color: var(--color-warning-text); }
-  .st-danger { color: var(--color-danger-text); }
-
-  /* List group */
-  .list-group { display: flex; flex-direction: column; gap: var(--space-16); }
-  .list-group-title { font: var(--type-label-small); color: var(--color-text-tertiary); padding: 0 var(--space-12); text-transform: none; }
-  .list-card { border-radius: var(--radius-container); overflow: hidden; background: var(--color-surface); }
-  .list-card .li:first-child { border-radius: var(--radius-container) var(--radius-container) 0 0; }
-  .list-card .li:last-child { border-radius: 0 0 var(--radius-container) var(--radius-container); }
-
-  /* Avatar */
-  .uikit-avatar {
-    width: 64px; height: 64px; border-radius: var(--radius-pill);
-    background: var(--color-primary-container); color: var(--color-on-primary-container);
-    display: inline-flex; align-items: center; justify-content: center;
-    font: var(--type-title); flex: 0 0 auto;
-  }
-  .profile-head { display: flex; flex-direction: column; align-items: center; gap: var(--space-12); padding: var(--space-8) 0 var(--space-4); }
-  .profile-head .com-heading { margin: 0; }
-  .profile-head .com-body-small { margin: 0; color: var(--color-text-secondary); }
-
-  /* Toggle row trailing switch (visual only, page-level uikit class built from tokens) */
-  .uikit-switch { width: 40px; height: 24px; border-radius: var(--radius-pill); background: var(--color-border); position: relative; flex: 0 0 auto; transition: background-color .15s; }
-  .uikit-switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: var(--radius-pill); background: #ffffff; transition: transform .15s; }
-  .uikit-switch.on { background: var(--color-primary); }
-  .uikit-switch.on::after { transform: translateX(16px); }
-
-  /* Bottom nav pinned inside phone */
-  .phone-nav { position: absolute; left: 0; right: 0; bottom: 0; z-index: 20; }
-  .home-indicator {
-    position: absolute; left: 50%; transform: translateX(-50%); bottom: 6px;
-    width: 134px; height: 5px; border-radius: var(--radius-pill);
-    background: var(--color-text-primary); opacity: .55; z-index: 25;
-  }
-
-  /* Screen transitions */
-  .screen-fade { animation: fade .22s cubic-bezier(.3,0,0,1); }
-  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-  @media (prefers-reduced-motion: reduce) { .screen-fade { animation: none; } }
-
-  /* Inline icon sizing guard: every decorative SVG inside components is an icon,
-     never a full-bleed illustration. Specific containers (.icon-btn, .status-bar,
-     .theme-toggle, .bn-icon) override with their own size. */
-  .btn svg,
-  .li-trail svg,
-  .li-leading svg,
-  .uikit-switch svg,
-  .uikit-avatar svg,
-  .status-pill svg {
-    width: var(--size-icon-md);
-    height: var(--size-icon-md);
-    flex: 0 0 auto;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-  .bn-icon svg { width: var(--size-icon-lg); height: var(--size-icon-lg); }
-
-  @media (max-width: 900px) {
-    .uikit-responsive-grid { grid-template-columns: minmax(0,1fr); }
-  }
-  @media (max-width: 640px) {
-    .uikit-shell { padding: var(--space-16) var(--space-8) var(--space-24); }
-    .uikit-toolbar { flex-direction: column; align-items: stretch; }
-  }
-
-  /* Interactive pressed states (in addition to components.css :hover) */
-  .btn:active:not(:disabled) { transform: scale(0.985); }
-  .btn.primary:active:not(:disabled) { background: var(--color-primary-hover); }
-  .btn.secondary:active:not(:disabled) { background: var(--color-secondary-hover); }
-  .btn.tertiary:active:not(:disabled) { background: var(--color-surface-pressed); }
-  .btn.destructive:active:not(:disabled) { background: var(--color-destructive-hover); }
-  .icon-btn:active { background: var(--color-surface-pressed); }
-  .theme-toggle:active { background: var(--color-surface-pressed); }
-
-  /* Layout guards (defined; structural wrapper usage around settings list) */
-  .uikit-table-wrap { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
-  .uikit-action-cell { display: flex; align-items: center; gap: 8px; min-width: 0; max-width: 160px; overflow: hidden; }
-  .uikit-action { min-width: 0; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* ── Section helper overrides to respect density ── */
+  .app-section{gap:var(--density-gap);}
+  .app-section .section-header{padding:0;}
+  .app-section .list-card .li,.app-section .list-card .switch-row{min-height:var(--size-touch-min);}
 </style>
 </head>
 <body>
 <div class="uikit-shell" data-layout-guard="uikit-v1">
-  <div class="stage-head">
-    <h1 class="com-title">Com Workbench</h1>
-    <p class="com-body-small">公司移动工作台设计系统展示,三个真实业务场景共用同一套组件契约。</p>
-  </div>
-  <div class="uikit-toolbar">
-    <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换主题">
-      <i data-lucide="moon" aria-hidden="true"></i>
-      <span id="themeLabel">深色模式</span>
-    </button>
-  </div>
-  <div id="root" class="uikit-main"></div>
+  <div id="root"></div>
 </div>
 
 <script type="text/babel">
-const { useState, useEffect } = React;
+const { useState, useRef, useEffect, useCallback, useMemo } = React;
 
-// Lucide icons — rendered as <i data-lucide="..."> and hydrated by lucide.createIcons()
-// after each render. This keeps all icons consistent (24x24 source grid, 2px outline,
-// round caps) per the com-design iconography contract, without hand-written SVG.
-function Icon({ name, className }) {
-  return <i data-lucide={name} className={className} aria-hidden="true"></i>;
+/* ───────── Icon helper (inline Lucide-style SVG) ───────── */
+const ICONS = {
+  search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+  'chevron-right':'<path d="m9 18 6-6-6-6"/>',
+  'chevron-left':'<path d="m15 18-6-6 6-6"/>',
+  'chevron-down':'<path d="m6 9 6 6 6-6"/>',
+  x:'<path d="M18 6 6 18M6 6l12 12"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  house:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>',
+  'list-checks':'<path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8M13 12h8M13 18h8"/>',
+  'check-square':'<path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+  user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  'triangle-alert':'<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/>',
+  'arrow-left':'<path d="m12 19-7-7 7-7M19 12H5"/>',
+  filter:'<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>',
+  bell:'<path d="M10.3 21a2 2 0 0 0 3.5 0"/><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>',
+  signal:'<path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8M22 4v16"/>',
+  wifi:'<path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M2 8.82a15 15 0 0 1 20 0"/><line x1="12" y1="20" x2="12.01" y2="20"/>',
+  battery:'<rect x="2" y="7" width="18" height="10" rx="2" ry="2"/><line x1="22" y1="11" x2="22" y2="13"/>',
+  'circle-check':'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>'
+};
+function Icon({name,size=20,stroke=2,style}){
+  const path = ICONS[name] || '';
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round" style={style} dangerouslySetInnerHTML={{__html:path}}/>;
 }
 
-function useLucide() {
-  useEffect(() => {
-    if (window.lucide && typeof window.lucide.createIcons === "function") {
-      window.lucide.createIcons();
-    }
-  });
-}
-
-function StatusBar() {
+/* ───────── Status bar ───────── */
+function StatusBar(){
   return (
     <div className="status-bar">
-      <span className="uikit-nowrap">9:41</span>
-      <div className="sb-icons uikit-nowrap">
-        <Icon name="signal"/>
-        <Icon name="wifi"/>
-        <Icon name="battery-full"/>
-      </div>
+      <span className="sb-time">9:41</span>
+      <span className="sb-icons">
+        <Icon name="signal" size={16}/>
+        <Icon name="wifi" size={16}/>
+        <Icon name="battery" size={18}/>
+      </span>
     </div>
   );
 }
 
-function HomeScreen() {
-  useLucide();
+/* ───────── Bottom navigation ───────── */
+function BottomNav({tab,onTab}){
+  const items=[
+    {id:'home',label:'首页',icon:'house'},
+    {id:'task',label:'任务',icon:'list-checks',badge:'3'},
+    {id:'search',label:'搜索',icon:'search'},
+    {id:'me',label:'我的',icon:'user',dot:true}
+  ];
   return (
-    <div className="screen-body screen-fade">
-      <div className="greet">
-        <h2 className="com-title">上午好,林晓</h2>
-        <p className="com-body-small">今天有 3 项待办需要在 18:00 前完成。</p>
-      </div>
-
-      <div className="uikit-tag-row">
-        <span className="tag tag-success" data-component="tag">已完成</span>
-        <span className="tag tag-warning" data-component="tag">待审核</span>
-        <span className="tag tag-info" data-component="tag">新功能</span>
-      </div>
-
-      <div className="card" data-component="card">
-        <div className="card__header">
-          <h3 className="card__title">今日概览</h3>
-          <span className="tag tag-brand">8月9日</span>
-        </div>
-        <div className="stats">
-          <div className="stat"><span className="num">12</span><span className="lbl">待处理</span></div>
-          <div className="stat"><span className="num">3</span><span className="lbl">今日到期</span></div>
-          <div className="stat"><span className="num">96%</span><span className="lbl">完成率</span></div>
-        </div>
-      </div>
-
-      <div className="card outlined" data-component="card">
-        <div className="card__header">
-          <h3 className="card__title">存储空间</h3>
-          <a className="card__action uikit-nowrap" href="#" onClick={e=>e.preventDefault()}>管理</a>
-        </div>
-        <div className="uikit-storage-progress">
-          <div className="uikit-progress-meta">
-            <span className="cap">已使用 87 GB,共 128 GB</span>
-            <span className="val">68%</span>
-          </div>
-          <div className="uikit-progress-track"><div className="uikit-progress-fill" style={{width:'68%'}}></div></div>
-        </div>
-      </div>
-
-      <div className="card" data-component="card">
-        <div className="card__header">
-          <h3 className="card__title">团队动态</h3>
-          <span className="tag tag-neutral uikit-nowrap">3 条更新</span>
-        </div>
-        <p className="card__body">张维更新了《移动工作台设计规范 v1.0.0-rc.2》,李航提交了订单 COM-20260809-8821 的审核。</p>
-        <div className="status-line">
-          <span className="status-pill st-success"><Icon name="check-circle-2"/> 已完成</span>
-          <span className="status-pill st-warning"><span className="uikit-dot"></span> 待审核</span>
-          <span className="status-pill st-danger"><span className="uikit-dot"></span> 1 项逾期</span>
-        </div>
-      </div>
-
-      <div className="action-row">
-        <button className="btn primary" data-component="button" type="button"><Icon name="plus"/>新建任务</button>
-        <button className="btn secondary" data-component="button" type="button">导入</button>
-        <span className="spacer"></span>
-        <button className="btn tertiary" data-component="button" type="button">筛选</button>
-      </div>
+    <div data-component="bottom-navigation" className="bottom-nav" style={{position:'static'}}>
+      {items.map(it=>(
+        <button key={it.id} type="button" className={'bn-item app-pressable'+(tab===it.id?' is-active':'')} onClick={()=>onTab(it.id)} aria-label={it.label}>
+          <span className="bn-icon">
+            <Icon name={it.icon} size={24} stroke={2}/>
+            {it.badge && <span className="bn-badge bn-badge-count">{it.badge}</span>}
+            {it.dot && <span className="bn-badge bn-badge-dot"></span>}
+          </span>
+          <span className="bn-label">{it.label}</span>
+        </button>
+      ))}
     </div>
   );
 }
 
-function ListScreen() {
-  useLucide();
+/* ───────── Data ───────── */
+const PENDING=[
+  {id:'A2024-0812',initials:'陈',title:'陈昊 · 差旅报销',sub:'差旅与交通 · 08-09',amount:'¥3,280'},
+  {id:'A2024-0811',initials:'王',title:'王敏 · 采购申请',sub:'市场物料 · 08-08',amount:'¥12,500'},
+  {id:'A2024-0809',initials:'李',title:'李哲 · 请假申请',sub:'年假 3 天 · 08-07',amount:''}
+];
+const RESULTS=[
+  {id:'A2024-0812',initials:'陈',title:'陈昊 · 差旅报销',amount:'¥3,280',date:'08-09',status:'审批中',tag:'tag-warning'},
+  {id:'A2024-0811',initials:'王',title:'王敏 · 采购申请',amount:'¥12,500',date:'08-08',status:'已通过',tag:'tag-success'},
+  {id:'A2024-0808',initials:'赵',title:'赵雪 · 报销申请',amount:'¥680',date:'08-06',status:'已驳回',tag:'tag-danger'},
+  {id:'A2024-0805',initials:'刘',title:'刘畅 · 请假申请',amount:'年假 2 天',date:'08-04',status:'已通过',tag:'tag-success'},
+  {id:'A2024-0801',initials:'周',title:'周宁 · 采购申请',amount:'¥5,980',date:'08-01',status:'审批中',tag:'tag-warning'}
+];
+const TIMELINE=[
+  {type:'is-success',time:'今天 10:24',title:'王敏 的采购申请已通过',support:'审批人:林晓'},
+  {type:'',time:'今天 09:12',title:'你提交了请假申请',support:'事由:家庭事务,共 3 天'},
+  {type:'is-warning',time:'昨天 16:40',title:'陈昊 请求补充报销材料',support:'缺少登机牌存根'}
+];
+
+/* ───────── HOME ───────── */
+function HomeScreen({go,openSheet}){
+  const [seg,setSeg]=useState('todo');
   return (
-    <div className="screen-body screen-fade">
-      <div className="greet">
-        <h2 className="com-heading">设置</h2>
-        <p className="com-body-small">管理账号、通知与企业信息。</p>
-      </div>
-
-      <label className="field" data-component="input">
-        <span className="field-label uikit-truncate">搜索设置</span>
-        <span className="control">
-          <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-text-tertiary)',marginRight:'var(--space-8)'}}><Icon name="search"/></span>
-          <input type="text" placeholder="输入关键词,如“通知”" />
-        </span>
-      </label>
-
-      <div className="uikit-table-wrap">
-      <div className="list-group">
-        <div className="list-card" data-component="list-item">
-          <div className="li">
-            <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-text-secondary)'}}><Icon name="shield"/></span>
-            <div className="li-content">
-              <span className="li-title">账号与安全</span>
-              <span className="li-desc">密码、两步验证、登录设备</span>
-            </div>
-            <span className="li-trail"><Icon name="chevron-right"/></span>
+    <div className="screen is-active">
+      <StatusBar/>
+      <div className="scroll-body">
+        <div className="app-pad">
+          <div className="app-greet">
+            <h2>上午好,林晓</h2>
+            <p>今天有 12 项审批等待你处理</p>
           </div>
-          <div className="li is-selected">
-            <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-primary)'}}><Icon name="bell"/></span>
-            <div className="li-content">
-              <span className="li-title">消息通知</span>
-              <span className="li-desc">推送、免打扰时段已开启</span>
-            </div>
-            <span className="li-trail"><Icon name="check"/></span>
+          <div data-component="segmented-control" className="seg" role="radiogroup" aria-label="审批范围" style={{width:'100%'}}>
+            <button type="button" className={'seg-item'+(seg==='todo'?' is-active':'')} role="radio" aria-checked={seg==='todo'} onClick={()=>setSeg('todo')}>待办</button>
+            <button type="button" className={'seg-item'+(seg==='done'?' is-active':'')} role="radio" aria-checked={seg==='done'} onClick={()=>setSeg('done')}>已办</button>
+            <button type="button" className={'seg-item'+(seg==='all'?' is-active':'')} role="radio" aria-checked={seg==='all'} onClick={()=>setSeg('all')}>全部</button>
           </div>
-          <div className="li is-pressed">
-            <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-text-secondary)'}}><Icon name="cloud"/></span>
-            <div className="li-content">
-              <span className="li-title">存储空间</span>
-              <span className="li-desc">已使用 87 GB,共 128 GB</span>
+          <div data-component="card" className="card app-stat-card">
+            <h3 className="card__title">今日待办</h3>
+            <div className="app-stats">
+              <div className="app-stat"><span className="app-stat-num">12</span><span className="app-stat-lbl">待我审批</span></div>
+              <div className="app-stat"><span className="app-stat-num">3</span><span className="app-stat-lbl">我发起的</span></div>
+              <div className="app-stat"><span className="app-stat-num">28</span><span className="app-stat-lbl">抄送我的</span></div>
             </div>
-            <span className="li-meta uikit-nowrap">68%</span>
-            <span className="li-trail"><Icon name="chevron-right"/></span>
           </div>
-        </div>
-
-        <div className="list-group-title">关于</div>
-        <div className="list-card" data-component="list-item">
-          <div className="li">
-            <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-text-secondary)'}}><Icon name="settings-2"/></span>
-            <div className="li-content">
-              <span className="li-title">当前版本</span>
-              <span className="li-desc">Com Design Mobile RC2</span>
+          <button type="button" className="app-search-btn app-pressable" onClick={()=>go('search')} aria-label="搜索审批单">
+            <Icon name="search" size={20}/><span>搜索审批单</span>
+          </button>
+          <div data-component="section" className="section app-section">
+            <header className="section-header"><div className="section-titles"><h3 className="section-title">待审批</h3></div></header>
+            <div data-component="card" className="card outlined app-rows" style={{padding:0,gap:0}}>
+              {PENDING.map((p,i)=>(
+                <button key={p.id} type="button" data-component="list-item" className="li app-pressable" onClick={()=>openSheet(p)} style={{width:'100%',textAlign:'left',border:'none',cursor:'pointer',font:'inherit'}}>
+                  <span className="app-li-avatar">{p.initials}</span>
+                  <span className="app-li-main">
+                    <span className="app-li-title">{p.title}</span>
+                    <span className="app-li-sub">{p.sub}</span>
+                  </span>
+                  {p.amount && <span className="app-amount uikit-nowrap">{p.amount}</span>}
+                  <span className="li-trail"><Icon name="chevron-right" size={20}/></span>
+                </button>
+              ))}
             </div>
-            <span className="li-meta uikit-nowrap">1.0.0-rc.2</span>
-          </div>
-          <div className="li is-disabled">
-            <span className="uikit-nowrap" style={{display:'inline-flex'}}><Icon name="users"/></span>
-            <div className="li-content">
-              <span className="li-title">企业管理后台</span>
-              <span className="li-desc">当前账号无访问权限</span>
-            </div>
-            <span className="tag tag-neutral uikit-nowrap">未开通</span>
           </div>
         </div>
       </div>
-      </div>
-
-      <button className="btn primary block" data-component="button" type="button" disabled>同步企业数据</button>
-    </div>
-  );
-}
-
-function ProfileScreen() {
-  const [push, setPush] = useState(true);
-  const [compact, setCompact] = useState(false);
-  useLucide();
-  return (
-    <div className="screen-body screen-fade">
-      <div className="profile-head">
-        <span className="uikit-avatar" aria-hidden="true">LX</span>
-        <h2 className="com-heading">林晓</h2>
-        <p className="com-body-small">产品设计中心 · 工号 COM-0217</p>
-        <div className="uikit-tag-row" style={{justifyContent:'center'}}>
-          <span className="tag tag-brand" data-component="tag">设计师</span>
-          <span className="tag tag-info" data-component="tag">Beta 测试</span>
-          <span className="tag tag-success" data-component="tag">已认证</span>
-        </div>
-      </div>
-
-      <div className="list-group">
-        <div className="list-group-title">偏好设置</div>
-        <div className="list-card" data-component="list-item">
-          <div className="li">
-            <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-text-secondary)'}}><Icon name="bell"/></span>
-            <div className="li-content">
-              <span className="li-title">推送通知</span>
-              <span className="li-desc">审核结果与任务提醒</span>
-            </div>
-            <span className="li-trail">
-              <button className={"uikit-switch " + (push ? "on" : "")} onClick={()=>setPush(v=>!v)} aria-pressed={push} aria-label="推送通知"></button>
-            </span>
-          </div>
-          <div className="li">
-            <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-text-secondary)'}}><Icon name="settings-2"/></span>
-            <div className="li-content">
-              <span className="li-title">紧凑模式</span>
-              <span className="li-desc">更短的控件高度与更密的间距</span>
-            </div>
-            <span className="li-trail">
-              <button className={"uikit-switch " + (compact ? "on" : "")} onClick={()=>setCompact(v=>!v)} aria-pressed={compact} aria-label="紧凑模式"></button>
-            </span>
-          </div>
-          <div className="li">
-            <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-text-secondary)'}}><Icon name="user"/></span>
-            <div className="li-content">
-              <span className="li-title">个人资料</span>
-              <span className="li-desc">头像、姓名、联系方式</span>
-            </div>
-            <span className="li-meta uikit-nowrap">未完善</span>
-            <span className="li-trail"><Icon name="chevron-right"/></span>
-          </div>
-        </div>
-      </div>
-
-      <div className="action-row" style={{flexDirection:'column',alignItems:'stretch',gap:'var(--space-8)'}}>
-        <button className="btn primary block" data-component="button" type="button"><Icon name="user-round"/>切换账号</button>
-        <button className="btn destructive block" data-component="button" type="button"><Icon name="log-out"/>退出登录</button>
-      </div>
-    </div>
-  );
-}
-
-function AppBar({ title }) {
-  return (
-    <div className="app-bar">
-      <h1 className="com-heading uikit-truncate">{title}</h1>
-      <div className="app-bar-actions">
-        <button className="icon-btn" type="button" aria-label="搜索"><Icon name="search"/></button>
-        <button className="icon-btn" type="button" aria-label="通知">
-          <Icon name="bell"/><span className="dot" aria-hidden="true"></span>
+      <div className="app-cta" style={{paddingBottom:'calc(var(--density-section-gap) + 8px)'}}>
+        <button data-component="button" type="button" className="btn primary block app-pressable" onClick={()=>go('task')}>
+          <Icon name="plus" size={18}/>发起审批
         </button>
       </div>
     </div>
   );
 }
 
-function BottomNav({ active, onChange }) {
-  useLucide();
-  const item = (key, label, iconName, badge) => (
-    <button
-      type="button"
-      className={"bn-item" + (active === key ? " is-active" : "")}
-      onClick={() => onChange(key)}
-      aria-current={active === key ? "page" : undefined}
-    >
-      <span className="bn-icon">
-        <Icon name={iconName}/>
-        {badge === "count" && <span className="bn-badge bn-badge-count">8</span>}
-        {badge === "dot" && <span className="bn-badge bn-badge-dot"></span>}
-      </span>
-      <span className="bn-label uikit-truncate">{label}</span>
-    </button>
-  );
-  return (
-    <nav className="bottom-nav phone-nav" data-component="bottom-navigation" aria-label="主导航">
-      {item("home", "首页", "house")}
-      {item("discover", "发现", "compass")}
-      {item("messages", "消息", "message-circle", "count")}
-      {item("me", "我的", "user", "dot")}
-    </nav>
-  );
-}
+/* ───────── TASK / CREATE ───────── */
+function TaskScreen({back,onSubmitted}){
+  const [type,setType]=useState('请假申请');
+  const [reason,setReason]=useState('');
+  const [amount,setAmount]=useState('');
+  const [date,setDate]=useState('');
+  const [detail,setDetail]=useState('');
+  const [urgent,setUrgent]=useState(false);
+  const [typeOpen,setTypeOpen]=useState(false);
+  const [dateOpen,setDateOpen]=useState(false);
+  const [error,setError]=useState(false);
+  const [submitting,setSubmitting]=useState(false);
+  const types=['请假申请','报销申请','采购申请'];
+  const dates=['2024-08-12','2024-08-13','2024-08-14'];
 
-function App() {
-  const [tab, setTab] = useState("home");
-  const [dark, setDark] = useState(false);
-  useLucide();
-
-  useEffect(() => {
-    const frame = document.getElementById("phoneFrame");
-    if (frame) frame.classList.toggle("dark", dark);
-    const lbl = document.getElementById("themeLabel");
-    if (lbl) lbl.textContent = dark ? "浅色模式" : "深色模式";
-  }, [dark]);
-
-  const titles = { home: "工作台", messages: "消息设置", me: "我的" };
-  const screen = tab === "home" ? <HomeScreen/> : tab === "messages" ? <ListScreen/> : tab === "me" ? <ProfileScreen/> : <HomeScreen/>;
+  function submit(){
+    if(!reason.trim()){setError(true);return;}
+    setError(false);setSubmitting(true);
+    setTimeout(()=>{setSubmitting(false);onSubmitted();},900);
+  }
+  function saveDraft(){onSubmitted('draft');}
 
   return (
-    <div className="phone-frame" id="phoneFrame">
-      <div className="phone-notch" aria-hidden="true"></div>
-      <div className="phone-screen">
-        <StatusBar/>
-        <AppBar title={titles[tab] || "工作台"}/>
-        {screen}
-        <BottomNav active={tab} onChange={setTab}/>
-        <div className="home-indicator" aria-hidden="true"></div>
+    <div className="screen is-active">
+      <StatusBar/>
+      <div data-component="top-app-bar" className="app-topbar">
+        <button type="button" data-component="icon-button" className="icon-btn ghost app-pressable" onClick={back} aria-label="返回"><Icon name="chevron-left" size={24}/></button>
+        <h1>发起审批</h1>
+      </div>
+      <div className="scroll-body">
+        <div className="app-pad app-form-gap">
+          {error && (
+            <div data-component="alert" className="alert alert-danger" role="alert" style={{animation:'com-fade-in var(--motion-duration-fast)'}}>
+              <Icon name="triangle-alert" size={20}/>
+              <div className="alert-body"><p className="alert-message">请填写必填项后再提交</p></div>
+            </div>
+          )}
+          <div data-component="select" className={'select app-field'+(typeOpen?' is-open':'')}>
+            <span className="select-label">审批类型</span>
+            <button type="button" className="select-trigger app-pressable" aria-haspopup="listbox" aria-expanded={typeOpen} onClick={()=>{setTypeOpen(v=>!v);setDateOpen(false);}}>
+              <span className="select-value">{type}</span>
+              <Icon name="chevron-down" size={20}/>
+            </button>
+            {typeOpen && (
+              <div data-component="menu" className="menu" role="menu" style={{marginTop:4}}>
+                {types.map(t=>(
+                  <button key={t} type="button" data-component="menu-item" className={'menu-item'+(t===type?' is-selected':'')} role="menuitem" onClick={()=>{setType(t);setTypeOpen(false);}}>
+                    <span className="menu-item-label">{t}</span>
+                    {t===type && <span className="menu-item-trail"><Icon name="check" size={18}/></span>}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <label data-component="input" className={'field app-field'+(error?' is-error':'')}>
+            <span className="field-label">事由</span>
+            <span className="control"><input type="text" value={reason} onChange={e=>{setReason(e.target.value);if(e.target.value)setError(false);}} placeholder="请简要说明事由"/></span>
+            {error && <span className="field-error">事由为必填项</span>}
+          </label>
+          <label data-component="input" className="field app-field">
+            <span className="field-label">审批金额</span>
+            <span className="control"><input type="text" inputMode="decimal" value={amount} onChange={e=>setAmount(e.target.value)} placeholder="如 3280.00"/></span>
+          </label>
+          <div data-component="select" className={'select app-field'+(dateOpen?' is-open':'')}>
+            <span className="select-label">开始日期</span>
+            <button type="button" className="select-trigger app-pressable" aria-haspopup="listbox" aria-expanded={dateOpen} onClick={()=>{setDateOpen(v=>!v);setTypeOpen(false);}}>
+              <span className={'select-value'+(date?'':' select-placeholder')}>{date||'请选择日期'}</span>
+              <Icon name="chevron-down" size={20}/>
+            </button>
+            {dateOpen && (
+              <div data-component="menu" className="menu" role="menu" style={{marginTop:4}}>
+                {dates.map(d=>(
+                  <button key={d} type="button" data-component="menu-item" className={'menu-item'+(d===date?' is-selected':'')} role="menuitem" onClick={()=>{setDate(d);setDateOpen(false);}}>
+                    <span className="menu-item-label">{d}</span>
+                    {d===date && <span className="menu-item-trail"><Icon name="check" size={18}/></span>}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <label data-component="textarea" className="textarea-field app-field">
+            <span className="textarea-label">详细说明</span>
+            <textarea className="textarea-control" value={detail} onChange={e=>setDetail(e.target.value)} placeholder="请补充审批背景、金额构成或附件说明(选填)"></textarea>
+          </label>
+          <div data-component="section" className="section app-section" style={{marginTop:0}}>
+            <div data-component="card" className="card outlined" style={{padding:0,gap:0}}>
+              <label data-component="switch" className="switch-row">
+                <span className="switch-text"><span className="switch-title">加急处理</span><span className="switch-helper">主管将收到加急提醒</span></span>
+                <span className="switch-control">
+                  <input type="checkbox" className="switch-input" checked={urgent} onChange={e=>setUrgent(e.target.checked)}/>
+                  <span className="switch-track"><span className="switch-thumb"></span></span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="app-cta">
+        {submitting ? (
+          <span data-component="loading-indicator" className="loader--pending-btn" style={{width:'100%',justifyContent:'center',height:'var(--density-control-height)'}}>
+            <span className="spinner spinner--inline"><svg className="spinner__svg" viewBox="0 0 20 20" aria-hidden="true"><circle className="spinner__track" cx="10" cy="10" r="9" strokeWidth="2.4"/><circle className="spinner__arc" cx="10" cy="10" r="9" strokeWidth="2.4" strokeDasharray="30 56.55"/></svg></span>
+            提交中…
+          </span>
+        ) : (
+          <button data-component="button" type="button" className="btn primary block app-pressable" onClick={submit}>提交审批</button>
+        )}
+        <button data-component="button" type="button" className="btn tertiary block app-pressable" onClick={saveDraft}>保存草稿</button>
       </div>
     </div>
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+/* ───────── SEARCH ───────── */
+function SearchScreen(){
+  const [q,setQ]=useState('');
+  const [tab,setTab]=useState('全部');
+  const [sort,setSort]=useState('最新优先');
+  const [menuOpen,setMenuOpen]=useState(false);
+  const [loading,setLoading]=useState(true);
+  const inputRef=useRef(null);
+  useEffect(()=>{const t=setTimeout(()=>setLoading(false),600);return ()=>clearTimeout(t);},[]);
+  useEffect(()=>{inputRef.current && inputRef.current.focus();},[]);
 
-document.getElementById("themeToggle").addEventListener("click", () => {
-  const frame = document.getElementById("phoneFrame");
-  const isDark = frame.classList.toggle("dark");
-  document.getElementById("themeLabel").textContent = isDark ? "浅色模式" : "深色模式";
-});
+  const filtered=useMemo(()=>{
+    let list=RESULTS.filter(r=>!q || r.title.includes(q)||r.id.includes(q));
+    if(tab!=='全部') list=list.filter(r=>r.status===tab);
+    if(sort==='金额从高到低') list=[...list].sort((a,b)=>parseFloat(b.amount.replace(/[^\d.]/g,''))-parseFloat(a.amount.replace(/[^\d.]/g,'')));
+    if(sort==='金额从低到高') list=[...list].sort((a,b)=>parseFloat(a.amount.replace(/[^\d.]/g,''))-parseFloat(b.amount.replace(/[^\d.]/g,'')));
+    return list;
+  },[q,tab,sort]);
+
+  const tabs=['全部','审批中','已通过','已驳回'];
+
+  return (
+    <div className="screen is-active">
+      <StatusBar/>
+      <div data-component="top-app-bar" className="app-topbar" style={{gap:8}}>
+        <label data-component="search-field" className="search-field is-focused" style={{flex:1,height:'var(--density-control-height)'}}>
+          <span className="leading"><Icon name="search" size={20}/></span>
+          <input ref={inputRef} type="search" value={q} onChange={e=>setQ(e.target.value)} placeholder="搜索审批单 / 编号"/>
+          {q && <button type="button" className="clear" aria-label="清除" onClick={()=>setQ('')}><Icon name="x" size={16}/></button>}
+        </label>
+      </div>
+      <div style={{padding:'8px var(--density-content-inset) 0',display:'flex',flexDirection:'column',gap:'var(--density-gap)'}}>
+        <div className="app-filter-row">
+          <div className="app-menu-wrap">
+            <button type="button" className="app-filter-btn app-pressable" onClick={()=>setMenuOpen(v=>!v)} aria-haspopup="menu" aria-expanded={menuOpen}>
+              <Icon name="filter" size={16}/>筛选
+              <Icon name="chevron-down" size={14}/>
+            </button>
+            {menuOpen && (
+              <div data-component="menu" className="menu app-menu-pop" role="menu">
+                {['最新优先','金额从高到低','金额从低到高'].map(s=>(
+                  <button key={s} type="button" data-component="menu-item" className={'menu-item'+(sort===s?' is-selected':'')} role="menuitem" onClick={()=>{setSort(s);setMenuOpen(false);}}>
+                    <span className="menu-item-label">{s}</span>
+                    {sort===s && <span className="menu-item-trail"><Icon name="check" size={18}/></span>}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <span style={{flex:1}}/>
+          <span className="tag tag-neutral">{sort}</span>
+        </div>
+        <div data-component="tabs" className="tablist" role="tablist" aria-label="审批状态" style={{padding:0}}>
+          {tabs.map(t=>(
+            <button key={t} type="button" className={'tab'+(tab===t?' is-active':'')} role="tab" aria-selected={tab===t} onClick={()=>setTab(t)}>{t}</button>
+          ))}
+        </div>
+      </div>
+      <div className="scroll-body">
+        {loading ? (
+          <div style={{padding:'var(--space-16)'}}>
+            <div data-component="skeleton" className="sk sk-list" role="status" aria-busy="true" aria-label="加载中">
+              {[0,1,2,3].map(i=>(
+                <div key={i} className="sk-list__row">
+                  <div className="sk__block sk-list__thumb"></div>
+                  <div className="sk-list__lines">
+                    <div className="sk__block sk__line" style={{width:'70%'}}></div>
+                    <div className="sk__block sk__line" style={{width:'40%'}}></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : filtered.length===0 ? (
+          <div data-component="empty-state" className="empty" style={{margin:'32px auto'}}>
+            <div className="empty__visual"><Icon name="search" size={28}/></div>
+            <p className="empty__title">未找到相关审批单</p>
+            <p className="empty__supporting">尝试更换关键词或清空筛选条件</p>
+            <div className="empty__actions">
+              <button type="button" className="btn tertiary" onClick={()=>{setQ('');setTab('全部');}}>清空搜索</button>
+            </div>
+          </div>
+        ) : (
+          <div data-component="list" style={{padding:'var(--space-12) var(--density-content-inset)'}}>
+            <div data-component="card" className="card outlined app-rows" style={{padding:0,gap:0}}>
+              {filtered.map(r=>(
+                <div key={r.id} className="li app-pressable">
+                  <span className="app-li-avatar">{r.initials}</span>
+                  <span className="app-li-main">
+                    <span className="app-li-title">{r.title}</span>
+                    <span className="app-li-sub">{r.id} · {r.date}</span>
+                  </span>
+                  <span className="app-amount uikit-nowrap" style={{marginRight:8}}>{r.amount}</span>
+                  <span data-component="tag" className={'tag '+r.tag}>{r.status}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ───────── PROFILE ───────── */
+function ProfileScreen({dark,setDark,comfortable,setComfortable,logout}){
+  const [notify,setNotify]=useState(true);
+  const [cache,setCache]=useState('68 MB');
+  return (
+    <div className="screen is-active">
+      <StatusBar/>
+      <div data-component="top-app-bar" className="app-topbar">
+        <h1>我的</h1>
+        <button type="button" data-component="icon-button" className="icon-btn ghost app-pressable" aria-label="通知" onClick={()=>{}}><Icon name="bell" size={24}/><span data-component="badge" className="app-bar__dot" aria-label="3 条未读"></span></button>
+      </div>
+      <div className="scroll-body">
+        <div className="app-pad">
+          <div data-component="card" className="card outlined app-profile-head">
+            <span data-component="avatar" className="app-avatar-xl">LX</span>
+            <p className="app-profile-name">林晓</p>
+            <p className="app-profile-cap">产品设计中心 · 工号 COM-0217</p>
+            <div className="app-tag-row">
+              <span data-component="tag" className="tag tag-brand">设计师</span>
+              <span data-component="tag" className="tag tag-info">Beta 测试</span>
+            </div>
+          </div>
+
+          <div data-component="card" className="card outlined">
+            <h3 className="card__title">审批进度</h3>
+            <div data-component="progress-indicator" className="progress progress--block">
+              <div className="progress__row"><span className="progress__label">整体进度</span><span className="progress__value">68%</span></div>
+              <div className="progress__track"><div className="progress__fill" style={{width:'68%'}}></div></div>
+            </div>
+            <div data-component="stepper" className="stepper stepper--h" style={{marginTop:8}}>
+              <div className="stepper__step is-completed">
+                <span className="stepper__node"><Icon name="check" size={12}/></span>
+                <span className="stepper__connector"></span>
+                <p className="stepper__label">提交</p>
+              </div>
+              <div className="stepper__step is-current">
+                <span className="stepper__node"></span>
+                <span className="stepper__connector"></span>
+                <p className="stepper__label">主管审批</p>
+                <p className="stepper__supporting">陈昊 · 预计 08-10</p>
+              </div>
+              <div className="stepper__step is-upcoming">
+                <span className="stepper__node"></span>
+                <p className="stepper__label">归档</p>
+              </div>
+            </div>
+          </div>
+
+          <div data-component="section" className="section app-section">
+            <header className="section-header"><div className="section-titles"><h3 className="section-title">设置</h3></div></header>
+            <div data-component="card" className="card outlined" style={{padding:0,gap:0}}>
+              <label className="switch-row">
+                <span className="switch-text"><span className="switch-title">消息通知</span><span className="switch-helper">审核结果与加急提醒</span></span>
+                <span className="switch-control"><input type="checkbox" className="switch-input" checked={notify} onChange={e=>setNotify(e.target.checked)}/><span className="switch-track"><span className="switch-thumb"></span></span></span>
+              </label>
+              <label className="switch-row">
+                <span className="switch-text"><span className="switch-title">紧凑模式</span><span className="switch-helper">关闭后切换为舒适密度</span></span>
+                <span className="switch-control"><input type="checkbox" className="switch-input" checked={!comfortable} onChange={e=>setComfortable(!e.target.checked)}/><span className="switch-track"><span className="switch-thumb"></span></span></span>
+              </label>
+              <label className="switch-row">
+                <span className="switch-text"><span className="switch-title">深色模式</span><span className="switch-helper">跟随系统或手动切换</span></span>
+                <span className="switch-control"><input type="checkbox" className="switch-input" checked={dark} onChange={e=>setDark(e.target.checked)}/><span className="switch-track"><span className="switch-thumb"></span></span></span>
+              </label>
+              <button type="button" className="li app-pressable" style={{width:'100%',textAlign:'left',border:'none',background:'transparent',cursor:'pointer',font:'inherit'}}>
+                <span className="li-content"><span className="li-title">关于</span></span>
+                <span className="li-meta" style={{marginRight:8}}>1.0.0-rc.2</span>
+                <span className="li-trail"><Icon name="chevron-right" size={20}/></span>
+              </button>
+              <button type="button" className="li app-pressable" style={{width:'100%',textAlign:'left',border:'none',background:'transparent',cursor:'pointer',font:'inherit'}} onClick={()=>setCache('0 MB')}>
+                <span className="li-content"><span className="li-title">清空缓存</span></span>
+                <span className="li-meta" style={{marginRight:8}}>{cache}</span>
+                <span className="li-trail"><Icon name="chevron-right" size={20}/></span>
+              </button>
+            </div>
+          </div>
+
+          <div data-component="card" className="card outlined app-tl-card">
+            <h3 className="card__title">最近动态</h3>
+            <div data-component="timeline" className="timeline">
+              {TIMELINE.map((e,i)=>(
+                <div key={i} className="tl-event">
+                  <div className="tl-rail"><span className={'tl-node '+e.type}></span></div>
+                  <div className="tl-content">
+                    <span className="tl-time">{e.time}</span>
+                    <span className="tl-title">{e.title}</span>
+                    <span className="tl-support">{e.support}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button data-component="button" type="button" className="btn destructive block app-pressable" onClick={logout}>退出登录</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ───────── Overlays ───────── */
+function Sheet({item,onClose}){
+  if(!item) return null;
+  return (
+    <div className="overlay-scrim overlay-sheet" onClick={onClose}>
+      <div data-component="bottom-sheet" className="sheet sheet--scroll" onClick={e=>e.stopPropagation()} style={{animation:'com-slide-up var(--motion-duration-slow) var(--motion-easing-emphasized)'}}>
+        <div className="sheet__handle"></div>
+        <div className="sheet__header">
+          <h3 className="sheet__title">审批详情</h3>
+          <button type="button" className="sheet__close" aria-label="关闭" onClick={onClose}><Icon name="x" size={20}/></button>
+        </div>
+        <div className="sheet__body">
+          <div className="sheet__row"><span style={{color:'var(--color-text-secondary)',width:64}}>申请人</span><span style={{flex:1}}>{item.title}</span></div>
+          <div className="sheet__row"><span style={{color:'var(--color-text-secondary)',width:64}}>编号</span><span style={{flex:1}}>{item.id}</span></div>
+          <div className="sheet__row"><span style={{color:'var(--color-text-secondary)',width:64}}>金额</span><span style={{flex:1}}>{item.amount||'—'}</span></div>
+          <div className="sheet__row"><span style={{color:'var(--color-text-secondary)',width:64}}>事由</span><span style={{flex:1}}>{item.sub}</span></div>
+          <hr data-component="divider" className="divider" style={{margin:'4px 0'}}/>
+        </div>
+        <div className="sheet__footer" style={{display:'flex',gap:8}}>
+          <button type="button" className="btn secondary" style={{flex:1}} onClick={onClose}>驳回</button>
+          <button type="button" className="btn primary" style={{flex:1}} onClick={onClose}>同意</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+function ConfirmDialog({onCancel,onConfirm}){
+  return (
+    <div className="overlay-scrim overlay-dialog">
+      <div data-component="dialog" className="dialog" role="dialog" aria-modal="true" style={{animation:'com-scale-in var(--motion-duration-standard) var(--motion-easing-emphasized)'}}>
+        <Icon name="circle-check" size={24} stroke={2} style={{color:'var(--color-primary)'}}/>
+        <h3 className="dialog__title">提交审批?</h3>
+        <p className="dialog__body">审批单将进入主管审批环节,提交后可在「我发起的」中查看进度。</p>
+        <div className="dialog__actions">
+          <button type="button" className="dialog__btn dialog__btn--secondary" onClick={onCancel}>取消</button>
+          <button type="button" className="dialog__btn dialog__btn--primary" onClick={onConfirm}>确认提交</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+function DestructiveDialog({onCancel,onConfirm}){
+  return (
+    <div className="overlay-scrim overlay-dialog">
+      <div data-component="dialog" className="dialog" role="dialog" aria-modal="true" style={{animation:'com-scale-in var(--motion-duration-standard) var(--motion-easing-emphasized)'}}>
+        <span className="dialog__icon"><Icon name="triangle-alert" size={24}/></span>
+        <h3 className="dialog__title">退出登录?</h3>
+        <p className="dialog__body">退出后需要重新验证身份,未提交的草稿将保留在本机。</p>
+        <div className="dialog__actions">
+          <button type="button" className="dialog__btn dialog__btn--secondary" onClick={onCancel}>取消</button>
+          <button type="button" className="dialog__btn dialog__btn--destructive" onClick={onConfirm}>退出</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ───────── Toolbar ───────── */
+function Toolbar({dark,setDark,comfortable,setComfortable,android,setAndroid,reduced,setReduced}){
+  const Group=({label,children})=>(
+    <div className="uikit-tb-group">
+      <span className="uikit-tb-label">{label}</span>
+      <div className="uikit-seg">{children}</div>
+    </div>
+  );
+  const Pill=({active,on,off,val})=><button type="button" className={val===active?'is-active':''} onClick={()=>{}}>{active?'':''}{val}</button>;
+  return (
+    <div className="uikit-toolbar">
+      <Group label="主题">
+        <button type="button" className={!dark?'is-active':''} onClick={()=>setDark(false)}>浅色</button>
+        <button type="button" className={dark?'is-active':''} onClick={()=>setDark(true)}>深色</button>
+      </Group>
+      <Group label="密度">
+        <button type="button" className={!comfortable?'is-active':''} onClick={()=>setComfortable(false)}>紧凑</button>
+        <button type="button" className={comfortable?'is-active':''} onClick={()=>setComfortable(true)}>舒适</button>
+      </Group>
+      <Group label="平台">
+        <button type="button" className={!android?'is-active':''} onClick={()=>setAndroid(false)}>iOS</button>
+        <button type="button" className={android?'is-active':''} onClick={()=>setAndroid(true)}>Android</button>
+      </Group>
+      <Group label="动效">
+        <button type="button" className={!reduced?'is-active':''} onClick={()=>setReduced(false)}>标准</button>
+        <button type="button" className={reduced?'is-active':''} onClick={()=>setReduced(true)}>减弱动效</button>
+      </Group>
+    </div>
+  );
+}
+
+/* ───────── App root ───────── */
+function App(){
+  const [tab,setTab]=useState('home');
+  const [dark,setDark]=useState(false);
+  const [comfortable,setComfortable]=useState(false);
+  const [android,setAndroid]=useState(false);
+  const [reduced,setReduced]=useState(false);
+  const [sheetItem,setSheetItem]=useState(null);
+  const [confirm,setConfirm]=useState(false);
+  const [logoutDlg,setLogoutDlg]=useState(false);
+  const [toast,setToast]=useState(null);
+  const [snackbar,setSnackbar]=useState(null);
+  const toastTimer=useRef(null);
+  const snackTimer=useRef(null);
+
+  const frameClass=['screen-root',dark?'dark':'',comfortable?'density-comfortable':'',android?'platform-android':'',reduced?'motion-reduced':''].join(' ');
+
+  function showToast(msg){
+    setToast(msg);
+    clearTimeout(toastTimer.current);
+    toastTimer.current=setTimeout(()=>setToast(null),2200);
+  }
+  function showSnackbar(msg,actionLabel,onAction){
+    setSnackbar({msg,actionLabel,onAction});
+    clearTimeout(snackTimer.current);
+    snackTimer.current=setTimeout(()=>setSnackbar(null),3600);
+  }
+
+  function go(t){setTab(t);}
+  function handleSubmitted(mode){
+    if(mode==='draft'){
+      go('home');
+      showSnackbar('草稿已保存','撤销',()=>{setSnackbar(null);showToast('已撤销');});
+      return;
+    }
+    setConfirm(true);
+  }
+  function confirmSubmit(){
+    setConfirm(false);
+    go('home');
+    showToast('审批已提交');
+  }
+
+  const touchMin = android ? 48 : 44;
+
+  return (
+    <>
+      <Toolbar dark={dark} setDark={setDark} comfortable={comfortable} setComfortable={setComfortable} android={android} setAndroid={setAndroid} reduced={reduced} setReduced={setReduced}/>
+      <p className="uikit-caption" style={{margin:'-8px 0 0'}}>当前触摸目标 ≥ {touchMin}px · {comfortable?'舒适密度':'紧凑密度'} · {android?'Android':'iOS'} 平台</p>
+      <div id="phoneFrame" className={frameClass} style={{position:'relative'}}>
+          <div className="notch"></div>
+          {tab==='home' && <HomeScreen go={go} openSheet={setSheetItem}/>}
+          {tab==='task' && <TaskScreen back={()=>go('home')} onSubmitted={handleSubmitted}/>}
+          {tab==='search' && <SearchScreen/>}
+          {tab==='me' && <ProfileScreen dark={dark} setDark={setDark} comfortable={comfortable} setComfortable={setComfortable} logout={()=>setLogoutDlg(true)}/>}
+          <BottomNav tab={tab} onTab={go}/>
+          <div className="home-indicator"><span></span></div>
+
+          {sheetItem && <Sheet item={sheetItem} onClose={()=>setSheetItem(null)}/>}
+          {confirm && <ConfirmDialog onCancel={()=>setConfirm(false)} onConfirm={confirmSubmit}/>}
+          {logoutDlg && <DestructiveDialog onCancel={()=>setLogoutDlg(false)} onConfirm={()=>{setLogoutDlg(false);showToast('已退出登录');}}/>}
+
+          {toast && (
+            <div className="toast-stack">
+              <div data-component="toast" className="toast" role="status">
+                <Icon name="circle-check" size={20}/>
+                <span className="toast-message">{toast}</span>
+              </div>
+            </div>
+          )}
+          {snackbar && (
+            <div className="snackbar-stack">
+              <div data-component="snackbar" className="snackbar" role="status">
+                <span className="snackbar-message">{snackbar.msg}</span>
+                <button type="button" className="snackbar__action" onClick={()=>{snackbar.onAction&&snackbar.onAction();setSnackbar(null);}}>{snackbar.actionLabel}</button>
+              </div>
+            </div>
+          )}
+      </div>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 </body>
 </html>
+

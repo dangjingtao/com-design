@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Textarea · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  /* Page scaffold — NOT extracted */
+  body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); color: var(--color-foreground); }
+  .specimen { display: flex; flex-direction: column; gap: var(--space-16); max-width: 390px; }
+  .stage { display: flex; flex-direction: column; gap: var(--space-16); }
+  .story { display: flex; flex-direction: column; gap: var(--space-16); }
+  .story-label { font: var(--type-label-small); color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: .04em; }
+  .divider { border: none; border-top: 1px solid var(--color-border-subtle); margin: var(--space-4) 0; }
+
+  /* @component-css-start */
+  .textarea-field { display: flex; flex-direction: column; gap: var(--space-6); }
+  .textarea-label { font: var(--type-label); color: var(--color-text-primary); }
+  .textarea-control { display: block; width: 100%; min-height: 88px; padding: var(--space-8) var(--space-12); border: var(--com-border-control) solid var(--color-border); border-radius: var(--radius-control); background: var(--color-surface); font: var(--type-body-small); color: var(--color-text-primary); resize: none; box-sizing: border-box; transition: border-color .15s, border-width .15s; }
+  .textarea-control::placeholder { color: var(--color-text-placeholder); }
+  .textarea-control:focus { outline: none; border-width: var(--com-border-focus); border-color: var(--color-border-focused); padding: 7px 11px; }
+  .is-focused .textarea-control { border-width: var(--com-border-focus); border-color: var(--color-border-focused); padding: 7px 11px; }
+  .is-error .textarea-control { border-color: var(--color-border-error); }
+  .is-error .textarea-control:focus { border-color: var(--color-border-error); }
+  .is-disabled .textarea-control { background: var(--color-surface-subtle); border-color: var(--color-border-subtle); color: var(--color-text-disabled); cursor: not-allowed; }
+  .is-readonly .textarea-control { color: var(--color-text-primary); border-color: var(--color-border-subtle); cursor: default; }
+  .textarea-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-12); }
+  .textarea-helper { font: var(--type-caption); color: var(--color-text-tertiary); }
+  .textarea-error { font: var(--type-caption); color: var(--color-danger-text); }
+  .textarea-counter { font: var(--type-caption); color: var(--color-text-tertiary); margin-left: auto; }
+  .is-error .textarea-counter { color: var(--color-danger-text); }
+  /* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">多行输入</span>
+      <label class="textarea-field" data-evidence-sample="empty">
+        <span class="textarea-label">审批意见</span>
+        <textarea class="textarea-control" placeholder="请输入审批意见(选填)"></textarea>
+      </label>
+      <label class="textarea-field is-focused" data-evidence-sample="focused">
+        <span class="textarea-label">任务描述</span>
+        <textarea class="textarea-control">需要在本周内完成移动端登录页的视觉走查。</textarea>
+      </label>
+      <label class="textarea-field is-error" data-evidence-sample="error">
+        <span class="textarea-label">驳回原因</span>
+        <textarea class="textarea-control" aria-invalid="true">材料不全</textarea>
+        <span class="textarea-foot">
+          <span class="textarea-error">驳回原因至少 10 个字</span>
+          <span class="textarea-counter">3/10</span>
+        </span>
+      </label>
+    </div>
+    <hr class="divider">
+    <div class="story">
+      <span class="story-label">不可编辑状态</span>
+      <label class="textarea-field is-disabled" data-evidence-sample="disabled">
+        <span class="textarea-label">系统备注</span>
+        <textarea class="textarea-control" disabled>该记录由系统自动生成,不可编辑。</textarea>
+      </label>
+      <label class="textarea-field is-readonly" data-evidence-sample="readonly">
+        <span class="textarea-label">申请编号</span>
+        <textarea class="textarea-control" readonly>APP-20260809-0087</textarea>
+      </label>
+    </div>
+  </div>
+</div>
+</body>
+</html>

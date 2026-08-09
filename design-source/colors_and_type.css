@@ -229,9 +229,25 @@
   --com-elevation-floating: 0 4px 12px 0 rgba(23,27,42,0.14);
   --com-elevation-modal: 0 8px 28px 0 rgba(23,27,42,0.18);
 
-  /* density (compact default) */
+  /* density (compact default; override via .density-comfortable) */
   --com-density-control-height: var(--com-size-40);
   --com-density-control-height-large: var(--com-size-48);
+
+  /* portable density tokens — consumer-facing, switched by density class */
+  --density-control-height: 40px;
+  --density-control-height-lg: 48px;
+  --density-padding-h: 12px;
+  --density-padding-v: 8px;
+  --density-gap: 8px;
+  --density-content-inset: 16px;
+  --density-section-gap: 20px;
+  --density-field-label-gap: 6px;
+  --density-field-helper-gap: 6px;
+  --density-field-gap: 16px;
+
+  /* platform touch target (default iOS; override via .platform-android) */
+  --platform-touch-min: 44px;
+  --platform-name: "iOS";
 
   /* portable typography */
   --font-family-base: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -286,9 +302,11 @@
   --size-icon-sm: var(--com-icon-size-sm);
   --size-icon-md: var(--com-icon-size-md);
   --size-icon-lg: var(--com-icon-size-lg);
-  --size-control-height: var(--com-size-40);
+  --size-control-height: var(--density-control-height);
   --size-touch-ios: var(--com-size-44);
-  --size-control-height-lg: var(--com-size-48);
+  --size-touch-android: var(--com-size-48);
+  --size-control-height-lg: var(--density-control-height-lg);
+  --size-touch-min: var(--platform-touch-min);
 
   /* portable shadow */
   --shadow-1: var(--com-elevation-floating); /* Floating */
@@ -379,3 +397,56 @@
 .com-label { font: var(--type-label); }
 .com-label-small { font: var(--type-label-small); }
 .com-caption { font: var(--type-caption); }
+
+/* ── Density: comfortable (apply on a scope, e.g. .density-comfortable) ── */
+.density-comfortable {
+  --density-control-height: 44px;
+  --density-control-height-lg: 56px;
+  --density-padding-h: 16px;
+  --density-padding-v: 12px;
+  --density-gap: 8px;
+  --density-content-inset: 16px;
+  --density-section-gap: 24px;
+  --density-field-label-gap: 8px;
+  --density-field-helper-gap: 8px;
+  --density-field-gap: 20px;
+}
+
+/* ── Platform: Android (default scope is iOS 44px touch target) ── */
+.platform-android {
+  --platform-touch-min: 48px;
+  --platform-name: "Android";
+}
+
+/* ── Motion: standard timing/easing tokens ── */
+:root {
+  --motion-duration-fast: 120ms;
+  --motion-duration-standard: 220ms;
+  --motion-duration-slow: 320ms;
+  --motion-easing-standard: cubic-bezier(0.3, 0, 0, 1);
+  --motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Reduced motion: collapse transitions/animations */
+.motion-reduced,
+@media (prefers-reduced-motion: reduce) {
+  --motion-duration-fast: 0ms;
+  --motion-duration-standard: 0ms;
+  --motion-duration-slow: 0ms;
+}
+.motion-reduced *,
+@media (prefers-reduced-motion: reduce) {
+  animation-duration: 0ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Feedback motion keyframes (consumed by UI Kit / feedback components) */
+@keyframes com-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes com-scale-in { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes com-slide-up { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes com-sheet-handle { 0% { transform: translateY(0); } 50% { transform: translateY(-2px); } 100% { transform: translateY(0); } }
+@keyframes com-spin { to { transform: rotate(360deg); } }
+@keyframes com-shimmer { 100% { transform: translateX(100%); } }
+@keyframes com-toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }

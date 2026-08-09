@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Icon Button · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+/* Page scaffold — NOT extracted */
+body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); color: var(--color-text-primary); display: flex; justify-content: center; }
+.specimen { width: 100%; max-width: 390px; display: flex; flex-direction: column; gap: var(--space-16); }
+.header { display: flex; flex-direction: column; gap: var(--space-4); }
+.header h1 { margin: 0; font: var(--type-heading-small); color: var(--color-text-primary); }
+.header p { margin: 0; font: var(--type-body-small); color: var(--color-text-secondary); }
+.stage { display: flex; flex-direction: column; gap: var(--space-12); padding: var(--space-16); background: var(--color-surface); border: var(--com-border-control) solid var(--color-border-subtle); border-radius: var(--radius-container); }
+.story { display: flex; flex-direction: column; gap: var(--space-8); }
+.story-label { font: var(--type-label-small); color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; }
+.rail { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-8); }
+.divider { border: 0; border-top: var(--com-border-control) solid var(--color-border-subtle); margin: 0; }
+
+/* @component-css-start */
+/* Component definitions — extracted to components.css by deterministic script */
+.icon-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 40px; height: 40px; min-width: 40px; padding: 0; border: none; border-radius: var(--radius-control); background: transparent; color: var(--color-text-primary); cursor: pointer; transition: background-color .15s; }
+.icon-btn svg { width: var(--size-icon-md); height: var(--size-icon-md); display: block; }
+.icon-btn:focus-visible { outline: var(--com-border-focus) solid var(--color-border-focused); outline-offset: var(--space-2); }
+.icon-btn.large { width: 48px; height: 48px; min-width: 48px; }
+.icon-btn.large svg { width: var(--size-icon-lg); height: var(--size-icon-lg); }
+.icon-btn.ghost { background: transparent; color: var(--color-text-primary); }
+.icon-btn.ghost:hover { background: var(--color-surface-pressed); }
+.icon-btn.ghost.is-pressed, .icon-btn.ghost:active { background: var(--color-surface-pressed); }
+.icon-btn.ghost.is-selected { background: var(--color-surface-selected); color: var(--color-text-brand); }
+.icon-btn.ghost.is-selected:hover { background: var(--color-surface-selected); }
+.icon-btn.subtle { background: var(--color-surface-subtle); color: var(--color-text-primary); }
+.icon-btn.subtle:hover { background: var(--color-surface-pressed); }
+.icon-btn.subtle.is-pressed, .icon-btn.subtle:active { background: var(--color-surface-pressed); }
+.icon-btn.destructive { background: transparent; color: var(--color-danger-text); }
+.icon-btn.destructive:hover { background: var(--color-danger-bg); }
+.icon-btn.destructive.is-pressed, .icon-btn.destructive:active { background: var(--color-danger-bg); }
+.icon-btn:disabled, .icon-btn.disabled { background: transparent; color: var(--color-text-disabled); cursor: not-allowed; pointer-events: none; }
+.icon-btn .dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--color-danger); box-shadow: 0 0 0 2px var(--color-surface); }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="ib-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="ib-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+  <symbol id="ib-more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></symbol>
+  <symbol id="ib-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+  <symbol id="ib-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+  <symbol id="ib-star-fill" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+  <symbol id="ib-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></symbol>
+  <symbol id="ib-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></symbol>
+</svg>
+<div class="specimen">
+  <div class="header">
+    <h1>Icon Button 图标按钮</h1>
+    <p>方形图标按钮，40px / 48px，扁平无阴影，悬停与按压通过底色反馈。</p>
+  </div>
+
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">基础（ghost）</span>
+      <div class="rail">
+        <button type="button" class="icon-btn ghost" aria-label="搜索" data-evidence-sample="ghost-regular-search"><svg><use href="#ib-search"/></svg></button>
+        <button type="button" class="icon-btn ghost" aria-label="通知" data-evidence-sample="ghost-regular-bell-dot"><svg><use href="#ib-bell"/></svg><span class="dot" aria-hidden="true"></span></button>
+        <button type="button" class="icon-btn ghost" aria-label="更多" data-evidence-sample="ghost-regular-more"><svg><use href="#ib-more"/></svg></button>
+        <button type="button" class="icon-btn ghost large" aria-label="新建" data-evidence-sample="ghost-large-plus"><svg><use href="#ib-plus"/></svg></button>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="story">
+      <span class="story-label">衬底与选中</span>
+      <div class="rail">
+        <button type="button" class="icon-btn subtle" aria-label="更多" data-evidence-sample="subtle-regular-more"><svg><use href="#ib-more"/></svg></button>
+        <button type="button" class="icon-btn ghost is-selected" aria-label="已收藏" data-evidence-sample="ghost-regular-star-selected"><svg><use href="#ib-star-fill"/></svg></button>
+        <button type="button" class="icon-btn ghost" aria-label="收藏" data-evidence-sample="ghost-regular-star-default"><svg><use href="#ib-star"/></svg></button>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="story">
+      <span class="story-label">危险与禁用</span>
+      <div class="rail">
+        <button type="button" class="icon-btn destructive is-pressed" aria-label="删除" data-evidence-sample="destructive-regular-trash-pressed"><svg><use href="#ib-trash"/></svg></button>
+        <button type="button" class="icon-btn ghost" aria-label="分享" disabled data-evidence-sample="ghost-regular-share-disabled"><svg><use href="#ib-share"/></svg></button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

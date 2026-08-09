@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 2,
+  "slug": "avatar",
+  "name": "Avatar",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["navigation-information", "identity-representation"],
+  "variantDimensions": { "size": ["small", "regular", "large"], "variant": ["image", "initials", "icon"] },
+  "representativeVariants": [
+    { "size": "small", "variant": "initials", "initials": "LX" },
+    { "size": "regular", "variant": "image", "alt": "林晓" },
+    { "size": "large", "variant": "initials", "initials": "ZW" },
+    { "size": "regular", "variant": "icon" }
+  ],
+  "anatomy": ["container", "imageOrFallback", "statusIndicator?"],
+  "traits": {
+    "small": "24px",
+    "regular": "32px",
+    "large": "40px",
+    "radius": "var(--radius-pill)",
+    "background": "var(--color-surface-selected)",
+    "color": "var(--color-text-brand)",
+    "fontSmall": "var(--type-label-small)",
+    "fontRegular": "var(--type-label)",
+    "fontLarge": "var(--type-heading-small)",
+    "iconSize": { "small": "14px", "regular": "18px", "large": "22px" }
+  },
+  "structurePatterns": [
+    "circular container; fallback priority: image -> initials -> generic identity icon (Lucide user)",
+    "initials use stable low-saturation tinted backgrounds and brand text",
+    "optional status indicator (small dot) overlays bottom-right with a 2px surface ring",
+    "image fills the circle with object-fit cover"
+  ],
+  "usageHints": [
+    "do not encode all status into the avatar itself",
+    "meaningful images require accessible name or adjacent text",
+    "larger profile imagery belongs to patterns, not the base avatar"
+  ],
+  "doNotInvent": ["no square avatars", "no status color ring by default", "no decorative gradients"],
+  "unknowns": ["image source is placeholder in previews"]
+}

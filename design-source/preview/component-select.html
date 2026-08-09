@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Select · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  /* Page scaffold — NOT extracted */
+  body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); color: var(--color-foreground); }
+  .specimen { display: flex; flex-direction: column; gap: var(--space-16); max-width: 390px; }
+  .stage { display: flex; flex-direction: column; gap: var(--space-16); }
+  .story { display: flex; flex-direction: column; gap: var(--space-8); }
+  .story-label { font: var(--type-label-small); color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: .04em; }
+  .divider { border: none; border-top: 1px solid var(--color-border-subtle); margin: var(--space-4) 0; }
+
+  /* @component-css-start */
+  .select { display: flex; flex-direction: column; gap: var(--space-6); }
+  .select-label { font: var(--type-label); color: var(--color-text-primary); }
+  .select-trigger { display: flex; align-items: center; gap: var(--space-8); width: 100%; height: var(--size-control-height); padding: 0 var(--space-12); border: var(--com-border-control) solid var(--color-border); border-radius: var(--radius-control); background: var(--color-surface); color: var(--color-text-primary); font: var(--type-body); text-align: left; cursor: pointer; user-select: none; transition: background .15s, border-color .15s, border-width .15s; }
+  .select-trigger::-moz-focus-inner { border: 0; }
+  .select-trigger:focus { outline: none; }
+  .select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .select-placeholder { color: var(--color-text-placeholder); }
+  .select-chevron { flex-shrink: 0; width: var(--size-icon-md); height: var(--size-icon-md); color: var(--color-text-tertiary); transition: transform .15s; }
+  .select.is-focused .select-trigger, .select.is-open .select-trigger { border-width: var(--com-border-focus); border-color: var(--color-border-focused); padding-left: 11px; padding-right: 11px; }
+  .select.is-open .select-chevron { transform: rotate(180deg); }
+  .select.is-pressed .select-trigger { background: var(--color-surface-pressed); }
+  .select.is-error .select-trigger { border-color: var(--color-border-error); }
+  .select.is-error .select-trigger:focus, .select.is-error.is-focused .select-trigger, .select.is-error.is-open .select-trigger { border-color: var(--color-border-error); }
+  .select.is-disabled .select-trigger { background: var(--color-surface-subtle); border-color: var(--color-border-subtle); cursor: not-allowed; }
+  .select.is-disabled .select-value { color: var(--color-text-disabled); }
+  .select.is-disabled .select-placeholder { color: var(--color-text-disabled); }
+  .select.is-disabled .select-chevron { color: var(--color-text-disabled); }
+  .select-error { font: var(--type-body-small); color: var(--color-danger-text); }
+  /* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">选择触发器</span>
+      <div class="select" data-evidence-sample="empty">
+        <span class="select-label">所在部门</span>
+        <button type="button" class="select-trigger" aria-haspopup="listbox" aria-expanded="false">
+          <span class="select-value select-placeholder">请选择部门</span>
+          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </div>
+      <div class="select" data-evidence-sample="value">
+        <span class="select-label">审批类型</span>
+        <button type="button" class="select-trigger" aria-haspopup="listbox" aria-expanded="false">
+          <span class="select-value">请假申请</span>
+          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </div>
+      <div class="select is-open" data-evidence-sample="open">
+        <span class="select-label">优先级</span>
+        <button type="button" class="select-trigger" aria-haspopup="listbox" aria-expanded="true">
+          <span class="select-value">高</span>
+          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </div>
+      <div class="select is-error" data-evidence-sample="error">
+        <span class="select-label">费用类型</span>
+        <button type="button" class="select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-invalid="true">
+          <span class="select-value select-placeholder">请选择费用类型</span>
+          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <span class="select-error">请选择费用类型</span>
+      </div>
+      <div class="select is-disabled" data-evidence-sample="disabled">
+        <span class="select-label">归属公司</span>
+        <button type="button" class="select-trigger" aria-haspopup="listbox" aria-expanded="false" disabled>
+          <span class="select-value">Com Design(不可修改)</span>
+          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

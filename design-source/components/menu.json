@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 2,
+  "slug": "menu",
+  "name": "Menu",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["search-menu", "contextual-action-container", "action-menu"],
+  "variantDimensions": { "variant": ["action-menu", "overflow-menu"], "state": ["open", "closed"] },
+  "representativeVariants": [
+    { "variant": "overflow-menu", "items": ["重命名", "移动到…", "复制链接", "删除"] },
+    { "variant": "action-menu", "items": ["设为默认", "紧凑模式(selected)", "归档(disabled)"] }
+  ],
+  "anatomy": ["container", "menuItem", "groupDivider?"],
+  "traits": {
+    "radius": "var(--radius-overlay)",
+    "background": "var(--color-surface)",
+    "elevation": "var(--shadow-1)",
+    "divider": "1px solid var(--color-border-subtle)",
+    "minWidth": "180px",
+    "maxWidth": "280px",
+    "paddingVertical": "4px"
+  },
+  "structurePatterns": [
+    "floating rounded surface with floating elevation, anchored to a trigger",
+    "contains 2-6 menu items; optional group dividers separate sections",
+    "opens above/below trigger, flips when viewport space insufficient",
+    "dismisses on item select, outside press, or back/escape"
+  ],
+  "usageHints": [
+    "menu carries contextual actions, not page-level navigation",
+    "default action count is 2-6; destructive item placed last",
+    "no cascading multi-level submenus as the mobile default",
+    "close the menu before opening a blocking dialog or sheet"
+  ],
+  "doNotInvent": ["no long-form content in a menu", "no multi-level cascading on mobile", "no menu as a bottom-sheet replacement"],
+  "unknowns": ["placement/flip is implementation/popover policy"]
+}

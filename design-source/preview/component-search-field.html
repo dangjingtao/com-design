@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Search Field · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  /* Page scaffold — NOT extracted */
+  body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); color: var(--color-foreground); }
+  .specimen { display: flex; flex-direction: column; gap: var(--space-16); max-width: 390px; }
+  .stage { display: flex; flex-direction: column; gap: var(--space-16); }
+  .story { display: flex; flex-direction: column; gap: var(--space-8); }
+  .story-label { font: var(--type-label-small); color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: .04em; }
+
+  /* @component-css-start */
+  .search-field { display: flex; align-items: center; gap: var(--space-8); height: var(--size-control-height); padding: 0 var(--space-12); border-radius: var(--radius-control); background: var(--color-surface-subtle); border: var(--com-border-control) solid transparent; transition: border-color .15s, border-width .15s, background .15s; }
+  .search-field .leading, .search-field .trailing { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--color-text-tertiary); }
+  .search-field .leading svg, .search-field .trailing svg { width: var(--size-icon-md); height: var(--size-icon-md); display: block; }
+  .search-field input { flex: 1; min-width: 0; border: none; outline: none; background: transparent; padding: 0; font: var(--type-body); color: var(--color-text-primary); }
+  .search-field input::placeholder { color: var(--color-text-placeholder); }
+  .search-field input::-webkit-search-decoration, .search-field input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+  .search-field.is-focused { background: var(--color-surface); border: var(--com-border-focus) solid var(--color-border-focused); padding: 0 11px; }
+  .search-field.is-loading .leading { color: var(--color-primary); }
+  .search-field .spinner { width: var(--size-icon-sm); height: var(--size-icon-sm); animation: sf-spin .8s linear infinite; }
+  @keyframes sf-spin { to { transform: rotate(360deg); } }
+  .search-field .clear { display: inline-flex; align-items: center; justify-content: center; width: var(--size-icon-md); height: var(--size-icon-md); padding: 0; border: none; background: transparent; color: var(--color-text-tertiary); cursor: pointer; border-radius: var(--radius-xs); }
+  .search-field .clear:hover { color: var(--color-text-secondary); }
+  .search-field.is-disabled { background: var(--color-surface-subtle); }
+  .search-field.is-disabled input { color: var(--color-text-disabled); cursor: not-allowed; }
+  .search-field.is-disabled input::placeholder { color: var(--color-text-disabled); }
+  .search-field.is-disabled .leading, .search-field.is-disabled .trailing { color: var(--color-text-disabled); }
+  /* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">默认</span>
+      <label class="search-field" data-evidence-sample="idle">
+        <span class="leading" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="search" placeholder="搜索设置、成员、文档">
+      </label>
+    </div>
+    <div class="story">
+      <span class="story-label">聚焦</span>
+      <label class="search-field is-focused" data-evidence-sample="focused">
+        <span class="leading" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="search" value="登录">
+      </label>
+    </div>
+    <div class="story">
+      <span class="story-label">已输入</span>
+      <label class="search-field" data-evidence-sample="query">
+        <span class="leading" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="search" value="设计规范">
+        <button class="clear trailing" type="button" aria-label="清除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      </label>
+    </div>
+    <div class="story">
+      <span class="story-label">搜索中</span>
+      <label class="search-field is-loading" data-evidence-sample="loading">
+        <span class="leading" aria-hidden="true"><svg class="spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity=".2" stroke-width="3"/><path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>
+        <input type="search" value="token">
+        <button class="clear trailing" type="button" aria-label="清除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      </label>
+    </div>
+    <div class="story">
+      <span class="story-label">禁用</span>
+      <label class="search-field is-disabled" data-evidence-sample="disabled">
+        <span class="leading" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="search" placeholder="搜索不可用" disabled>
+      </label>
+    </div>
+  </div>
+</div>
+</body>
+</html>

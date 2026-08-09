@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Empty State · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); }
+  .phone-list { display: flex; flex-direction: column; gap: var(--space-16); align-items: center; }
+
+  /* @component-css-start */
+  .phone { width: 340px; max-width: 100%; background: var(--color-surface); border-radius: var(--radius-container); padding: var(--space-24) var(--space-16); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-1); }
+  .empty { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); max-width: 280px; padding: var(--space-16); text-align: center; }
+  .empty__visual { width: 64px; height: 64px; border-radius: var(--radius-full); background: var(--color-surface-subtle); display: flex; align-items: center; justify-content: center; color: var(--color-text-tertiary); flex-shrink: 0; }
+  .empty__visual.is-danger { background: var(--color-danger-bg); color: var(--color-danger-text); }
+  .empty__title { margin: 0; font: var(--type-heading); color: var(--color-text-primary); }
+  .empty__supporting { margin: 0; font: var(--type-body-small); color: var(--color-text-secondary); }
+  .empty__actions { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); margin-top: var(--space-8); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 var(--space-16); border: none; border-radius: var(--radius-control); font: var(--type-label); cursor: pointer; white-space: nowrap; min-width: 40px; transition: background .15s, border-color .15s; }
+  .btn.primary { background: var(--color-primary); color: var(--color-on-primary); }
+  .btn.primary:hover { background: var(--color-primary-hover); }
+  .text-action { background: none; border: none; padding: 0; font: var(--type-label); color: var(--color-text-brand); cursor: pointer; white-space: nowrap; }
+  .text-action:hover { color: var(--color-primary-hover); }
+  /* @component-css-end */
+</style>
+</head>
+<body>
+<div class="phone-list">
+  <div class="phone" data-evidence-sample="no-data">
+    <div class="empty">
+      <div class="empty__visual">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+      </div>
+      <h3 class="empty__title">还没有任务</h3>
+      <p class="empty__supporting">点击右下角按钮创建你的第一个任务。</p>
+      <div class="empty__actions">
+        <button class="btn primary" type="button">新建任务</button>
+      </div>
+    </div>
+  </div>
+  <div class="phone" data-evidence-sample="no-results">
+    <div class="empty">
+      <div class="empty__visual">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13.5 8.5-5 5"/><path d="m8.5 8.5 5 5"/><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </div>
+      <h3 class="empty__title">未找到相关结果</h3>
+      <p class="empty__supporting">试试调整关键词或筛选条件。</p>
+      <div class="empty__actions">
+        <button class="text-action" type="button">清空筛选</button>
+      </div>
+    </div>
+  </div>
+  <div class="phone" data-evidence-sample="recoverable-error">
+    <div class="empty">
+      <div class="empty__visual is-danger">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+      </div>
+      <h3 class="empty__title">加载失败</h3>
+      <p class="empty__supporting">网络连接异常,请检查后重试。</p>
+      <div class="empty__actions">
+        <button class="btn primary" type="button">重新加载</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

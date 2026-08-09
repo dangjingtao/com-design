@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Menu · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:12px;background:var(--color-surface-subtle);font-family:var(--font-family-base);color:var(--color-text-primary)}
+  .specimen{display:flex;flex-direction:column;gap:16px;max-width:390px;margin:0 auto}
+  .stage{position:relative;background:var(--color-surface);border:1px solid var(--color-border-subtle);border-radius:var(--radius-lg);padding:16px;min-height:120px}
+  .stage-label{font:var(--type-label-small);color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.04em;margin:0 0 10px}
+  .trigger{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:var(--radius-control);border:1px solid var(--color-border-subtle);background:var(--color-surface);color:var(--color-text-secondary);font:var(--type-label);cursor:pointer}
+  .trigger:hover{background:var(--color-surface-pressed)}
+  .trigger svg{width:18px;height:18px;display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .menu-anchor{position:relative;margin-top:10px}
+  .menu-anchor.right{display:flex;justify-content:flex-end}
+
+  /* @component-css-start */
+  .menu{display:flex;flex-direction:column;background:var(--color-surface);border-radius:var(--radius-overlay);box-shadow:var(--shadow-1);padding:4px 0;min-width:180px;max-width:280px}
+  .menu-item{display:flex;align-items:center;gap:var(--space-8);min-height:48px;padding:0 var(--space-12);background:transparent;border:none;width:100%;text-align:left;cursor:pointer;color:var(--color-text-primary);box-sizing:border-box}
+  .menu-item:hover{background:var(--color-surface-pressed)}
+  .menu-item.is-pressed{background:var(--color-surface-pressed)}
+  .menu-item.is-selected{color:var(--color-text-brand)}
+  .menu-item.is-selected .menu-item-trail{display:flex}
+  .menu-item.is-disabled{color:var(--color-text-disabled);cursor:not-allowed}
+  .menu-item.is-disabled:hover{background:transparent}
+  .menu-item.is-destructive{color:var(--color-danger-text)}
+  .menu-item.is-destructive .menu-item-icon{color:var(--color-danger)}
+  .menu-item-icon{flex:0 0 auto;display:flex;align-items:center;color:var(--color-text-secondary)}
+  .menu-item.is-selected .menu-item-icon{color:var(--color-text-brand)}
+  .menu-item-label{flex:1 1 auto;min-width:0;font:var(--type-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .menu-item-trail{flex:0 0 auto;display:none;align-items:center;color:var(--color-text-brand)}
+  .menu-item svg{width:20px;height:20px;display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .menu-divider{height:8px;position:relative;flex-shrink:0}
+  .menu-divider::after{content:"";position:absolute;top:3px;left:12px;right:12px;height:1px;background:var(--color-border-subtle)}
+  /* @component-css-end */
+</style>
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+  <symbol id="i-folder-input" viewBox="0 0 24 24"><path d="M2 9V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.7.9l.9 1.2a2 2 0 0 0 1.7.9H20a2 2 0 0 1 2 2v3"/><path d="M2 13v4a2 2 0 0 0 2 2h6"/><path d="m11 14 3 3-3 3"/><path d="M14 17H2"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></symbol>
+</svg>
+<div class="specimen">
+  <div class="stage">
+    <p class="stage-label">溢出菜单</p>
+    <button class="trigger" type="button"><svg><use href="#i-more"/></svg><span>更多</span></button>
+    <div class="menu-anchor right" data-evidence-sample="overflow">
+      <div class="menu" role="menu">
+        <button class="menu-item" role="menuitem">
+          <span class="menu-item-icon"><svg><use href="#i-pencil"/></svg></span>
+          <span class="menu-item-label">重命名</span>
+          <span class="menu-item-trail"><svg><use href="#i-check"/></svg></span>
+        </button>
+        <button class="menu-item" role="menuitem">
+          <span class="menu-item-icon"><svg><use href="#i-folder-input"/></svg></span>
+          <span class="menu-item-label">移动到…</span>
+          <span class="menu-item-trail"><svg><use href="#i-check"/></svg></span>
+        </button>
+        <button class="menu-item" role="menuitem">
+          <span class="menu-item-icon"><svg><use href="#i-link"/></svg></span>
+          <span class="menu-item-label">复制链接</span>
+          <span class="menu-item-trail"><svg><use href="#i-check"/></svg></span>
+        </button>
+        <div class="menu-divider" aria-hidden="true"></div>
+        <button class="menu-item is-destructive" role="menuitem">
+          <span class="menu-item-icon"><svg><use href="#i-trash"/></svg></span>
+          <span class="menu-item-label">删除</span>
+          <span class="menu-item-trail"><svg><use href="#i-check"/></svg></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="stage">
+    <p class="stage-label">操作菜单</p>
+    <button class="trigger" type="button"><span>排序</span></button>
+    <div class="menu-anchor" data-evidence-sample="action">
+      <div class="menu" role="menu">
+        <button class="menu-item" role="menuitem">
+          <span class="menu-item-label">设为默认</span>
+          <span class="menu-item-trail"><svg><use href="#i-check"/></svg></span>
+        </button>
+        <button class="menu-item is-selected" role="menuitemcheckbox" aria-checked="true">
+          <span class="menu-item-label">紧凑模式</span>
+          <span class="menu-item-trail"><svg><use href="#i-check"/></svg></span>
+        </button>
+        <div class="menu-divider" aria-hidden="true"></div>
+        <button class="menu-item is-disabled" role="menuitem" disabled>
+          <span class="menu-item-label">归档</span>
+          <span class="menu-item-trail"><svg><use href="#i-check"/></svg></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

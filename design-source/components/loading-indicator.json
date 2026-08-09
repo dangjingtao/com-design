@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 2,
+  "slug": "loading-indicator",
+  "name": "Loading Indicator",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["feedback-overlay", "indeterminate-progress", "spinner"],
+  "variantDimensions": { "variant": ["inline", "section", "page"], "state": ["default"] },
+  "representativeVariants": [
+    { "variant": "inline", "label": "加载中" },
+    { "variant": "section", "label": "正在加载更多" },
+    { "variant": "page", "label": "加载中,请稍候" }
+  ],
+  "anatomy": ["indicator", "label?"],
+  "traits": {
+    "inlineSize": "var(--size-icon-md)",
+    "regularSize": "var(--size-icon-lg)",
+    "color": "var(--color-primary)",
+    "labelFont": "var(--type-body-small)",
+    "labelColor": "var(--color-text-secondary)",
+    "trackColor": "var(--color-surface-subtle)",
+    "gap": "var(--space-8)"
+  },
+  "structurePatterns": [
+    "circular spinner rendered as a rotating partial ring (SVG circle with stroke-dasharray)",
+    "inline = 20px used inside buttons/inputs; section = 24px with optional label; page = 24px centered with label over a content block",
+    "spinner uses brand color on a subtle track; rotation ~0.8s linear",
+    "honors prefers-reduced-motion (show static ring or no rotation)"
+  ],
+  "usageHints": [
+    "use for indeterminate work; use Progress Indicator for determinate values",
+    "preserve usable content during background refresh when possible",
+    "long cancellable work needs an explicit cancel path",
+    "busy state must be announced for accessibility"
+  ],
+  "doNotInvent": ["no brand-gradient spinner", "no oversized decorative spinners", "no multiple spinners per view"],
+  "unknowns": []
+}

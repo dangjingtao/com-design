@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 2,
+  "slug": "search-field",
+  "name": "Search Field",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["search-menu", "query-input", "search"],
+  "variantDimensions": { "state": ["idle", "focused", "query", "loading", "disabled"] },
+  "representativeVariants": [
+    { "state": "idle", "placeholder": "搜索设置、成员、文档" },
+    { "state": "focused", "value": "登录" },
+    { "state": "query", "value": "设计规范" },
+    { "state": "loading", "value": "token" },
+    { "state": "disabled", "placeholder": "搜索不可用" }
+  ],
+  "anatomy": ["container", "leadingSlot", "queryOrPlaceholder", "trailingSlot?"],
+  "traits": {
+    "height": "var(--size-control-height)",
+    "paddingHorizontal": "var(--space-12)",
+    "gap": "var(--space-8)",
+    "radius": "var(--radius-control)",
+    "idleBackground": "var(--color-surface-subtle)",
+    "focusedBackground": "var(--color-surface)",
+    "queryBackground": "var(--color-surface-subtle)",
+    "border": "1px solid var(--color-border-subtle)",
+    "focusBorder": "2px solid var(--color-border-focused)",
+    "leadingIconSize": "var(--size-icon-md)",
+    "trailingIconSize": "var(--size-icon-md)",
+    "leadingColor": "var(--color-text-tertiary)",
+    "queryFont": "var(--type-body)",
+    "placeholderColor": "var(--color-text-placeholder)",
+    "clearColor": "var(--color-text-tertiary)"
+  },
+  "structurePatterns": [
+    "flat pill/rounded field: subtle surface in idle, surface + 2px focused border on focus",
+    "leading slot priority: loading spinner (when loading) otherwise search icon",
+    "trailing slot: clear (x) button when query non-empty, otherwise at most one product action",
+    "loading preserves query and keeps clear accessible"
+  ],
+  "usageHints": [
+    "search is not an alias of generic Input — flat appearance with subtle surface",
+    "no default shadow",
+    "placeholder on subtle surface must meet contrast",
+    "clear action keeps focus and requires accessible name"
+  ],
+  "doNotInvent": ["no toolbar in the trailing slot", "no outlined Input look", "no disabling search to represent no results"],
+  "unknowns": []
+}

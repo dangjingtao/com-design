@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 2,
+  "slug": "empty-state",
+  "name": "Empty State",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["feedback-overlay", "zero-content", "recovery-state"],
+  "variantDimensions": { "variant": ["first-use", "no-results", "no-data", "recoverable-error"] },
+  "representativeVariants": [
+    { "variant": "no-data", "title": "还没有任务", "supporting": "点击右下角按钮创建你的第一个任务。", "action": "新建任务" },
+    { "variant": "no-results", "title": "未找到相关结果", "supporting": "试试调整关键词或筛选条件。", "action": "清空筛选" },
+    { "variant": "recoverable-error", "title": "加载失败", "supporting": "网络连接异常,请检查后重试。", "action": "重新加载" }
+  ],
+  "anatomy": ["container", "visual?", "title", "supportingText", "primaryAction?", "secondaryAction?"],
+  "traits": {
+    "titleFont": "var(--type-heading)",
+    "supportingFont": "var(--type-body-small)",
+    "titleColor": "var(--color-text-primary)",
+    "supportingColor": "var(--color-text-secondary)",
+    "errorColor": "var(--color-danger-text)",
+    "gap": "var(--space-8)",
+    "maxWidth": "280px",
+    "visualSize": "64px",
+    "visualColor": "var(--color-text-tertiary)"
+  },
+  "structurePatterns": [
+    "centered vertical column: optional visual, title, supporting text, actions",
+    "visual is an optional Lucide icon in a soft tinted circle (64px) or small illustration",
+    "at most one visually primary action; an optional secondary text action",
+    "recoverable-error uses danger accent for the visual and a retry action"
+  ],
+  "usageHints": [
+    "copy explains the state and the next useful action",
+    "illustration is optional; do not let it dominate the task",
+    "no-results is contextual to the query, not a global product empty state",
+    "one primary action maximum"
+  ],
+  "doNotInvent": ["no oversized branded illustration", "no multiple competing primary actions"],
+  "unknowns": []
+}

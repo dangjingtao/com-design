@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 2,
+  "slug": "select",
+  "name": "Select / Picker Trigger",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["actions-forms", "picker-trigger", "form-control"],
+  "variantDimensions": {
+    "state": ["empty", "value", "pressed", "open", "error", "disabled"]
+  },
+  "representativeVariants": [
+    { "state": "empty", "label": "所在部门", "placeholder": "请选择部门" },
+    { "state": "value", "label": "审批类型", "value": "请假申请" },
+    { "state": "open", "label": "优先级", "value": "高" },
+    { "state": "error", "label": "费用类型", "value": "", "errorText": "请选择费用类型" },
+    { "state": "disabled", "label": "归属公司", "value": "Com Design(不可修改)" }
+  ],
+  "anatomy": ["label?", "trigger", "valueOrPlaceholder", "disclosure", "helperOrError?"],
+  "traits": {
+    "height": "var(--size-control-height)",
+    "paddingHorizontal": "var(--space-12)",
+    "radius": "var(--radius-control)",
+    "borderWidth": "1px",
+    "focusBorderWidth": "2px",
+    "background": "var(--color-surface)",
+    "border": "var(--color-border)",
+    "focusBorder": "var(--color-border-focused)",
+    "errorBorder": "var(--color-border-error)",
+    "disabledBackground": "var(--color-surface-subtle)",
+    "disclosureSize": "var(--size-icon-md)",
+    "disclosureColor": "var(--color-text-tertiary)",
+    "labelFont": "var(--type-label)",
+    "valueFont": "var(--type-body)",
+    "placeholderColor": "var(--color-text-placeholder)",
+    "valueColor": "var(--color-text-primary)",
+    "labelGap": "var(--space-6)"
+  },
+  "structurePatterns": [
+    "looks like an outlined Input but with a chevron disclosure on the trailing edge",
+    "horizontal: label over trigger; trigger contains value/placeholder + chevron, 8px gap",
+    "open state uses the focused 2px border; pressed uses a subtle surface",
+    "trigger shows no text cursor; the actual picker presentation is a platform/overlay policy"
+  ],
+  "usageHints": [
+    "must expose expanded state when open (aria-expanded)",
+    "picker UI (wheel / menu / sheet) is platform policy, not part of trigger appearance",
+    "error + open keeps danger semantics"
+  ],
+  "doNotInvent": ["no custom dropdown styling baked into the trigger", "no multi-select chips in V1 trigger"],
+  "unknowns": ["picker overlay presentation not visualized"]
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 2,
+  "slug": "segmented-control",
+  "name": "Segmented Control",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["navigation-information", "local-mode-switch"],
+  "variantDimensions": {
+    "state": ["selected", "unselected", "pressed", "disabled"]
+  },
+  "representativeVariants": [
+    { "options": ["日", "周", "月"], "selected": "周" },
+    { "options": ["列表", "看板"], "selected": "列表" },
+    { "options": ["未读", "全部"], "selected": "未读", "disabled": false }
+  ],
+  "anatomy": ["container", "segmentItem", "label", "icon?"],
+  "traits": {
+    "radius": "var(--radius-control)",
+    "innerPadding": "2px",
+    "itemGap": "2px",
+    "iconSizeWhenUsed": "var(--size-icon-sm)",
+    "containerBackground": "var(--color-surface-subtle)",
+    "selectedBackground": "var(--color-surface)",
+    "selectedColor": "var(--color-text-brand)",
+    "unselectedColor": "var(--color-text-secondary)",
+    "pressedBackground": "var(--color-surface-pressed)",
+    "disabledColor": "var(--color-text-disabled)",
+    "labelFont": "var(--type-label)",
+    "itemMinHeight": "32px"
+  },
+  "structurePatterns": [
+    "rounded container with a subtle surface; 2px inner padding",
+    "selected segment is a white/surface pill sliding between options",
+    "2-4 short single-line labels; equal width distribution",
+    "selected uses brand text, not accent cyan; no elevation"
+  ],
+  "usageHints": [
+    "use for local mode/view switching, not peer-page navigation (that is Tabs)",
+    "use Tabs or a Select for longer labels",
+    "must expose single-select group semantics"
+  ],
+  "doNotInvent": ["no default shadow", "no accent-cyan selected state", "no 5+ segments"],
+  "unknowns": []
+}

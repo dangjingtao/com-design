@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "slug": "bottom-sheet",
+  "name": "Bottom Sheet",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["feedback-overlay", "modal", "supplementary-task"],
+  "variantDimensions": { "state": ["open"], "variant": ["action-list", "content"] },
+  "representativeVariants": [
+    { "variant": "action-list", "title": "分享到", "actions": ["微信", "企业微信", "复制链接", "更多"] },
+    { "variant": "content", "title": "筛选条件", "content": "筛选选项区(可滚动)", "stickyAction": "查看 128 条结果" }
+  ],
+  "anatomy": ["scrim", "container", "dragHandle?", "header?", "title?", "content", "stickyActions?", "safeArea"],
+  "traits": {
+    "scrim": "var(--color-scrim)",
+    "background": "var(--color-surface)",
+    "topRadius": "var(--radius-overlay)",
+    "contentPadding": "var(--space-16)",
+    "elevation": "var(--shadow-2)",
+    "titleFont": "var(--type-heading)",
+    "dragHandleWidth": "36px",
+    "dragHandleHeight": "4px",
+    "dragHandleColor": "var(--color-border-default)"
+  },
+  "structurePatterns": [
+    "anchored to viewport bottom; top 16px rounded corners; content-driven height with constrained scroll",
+    "scrim covers viewport; sheet slides up; at most one modal sheet at a time",
+    "optional drag handle centered at top; header with title and optional close; sticky action at bottom",
+    "action list uses full-width list rows with 48px min height"
+  ],
+  "usageHints": [
+    "use for supplementary mobile tasks, not long complex flows (those should be pages)",
+    "swipe/scrim/back dismissal disabled when it would silently lose input",
+    "do not stack modal sheets",
+    "safe area padding at the bottom is platform-owned"
+  ],
+  "doNotInvent": ["no fixed percentage height for every sheet", "no multiple stacked sheets", "no close button plus destructive dismissal ambiguity"],
+  "unknowns": []
+}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "slug": "progress-indicator",
+  "name": "Progress Indicator",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["feedback-overlay", "determinate-progress"],
+  "variantDimensions": { "variant": ["linear", "circular"], "state": ["default", "with-label"] },
+  "representativeVariants": [
+    { "variant": "linear", "value": 68, "label": "存储空间" },
+    { "variant": "linear", "value": 100 },
+    { "variant": "circular", "value": 75, "label": "75%" },
+    { "variant": "circular", "value": 40 }
+  ],
+  "anatomy": ["track", "indicator", "valueLabel?"],
+  "traits": {
+    "linearTrackHeight": "4px",
+    "linearRadius": "var(--radius-pill)",
+    "track": "var(--color-surface-subtle)",
+    "indicator": "var(--color-primary)",
+    "circularSize": "24px",
+    "circularStroke": "2.5px",
+    "labelFont": "var(--type-caption)",
+    "labelColor": "var(--color-text-secondary)"
+  },
+  "structurePatterns": [
+    "linear: a pill track with a fill from 0% to the determinate value",
+    "circular: an SVG ring with a partial arc (stroke-dasharray) representing progress, 24px",
+    "optional value label shown to the right (linear) or centered (circular)",
+    "percentage only shown when useful"
+  ],
+  "usageHints": [
+    "only show truthful determinate progress; use Loading Indicator for indeterminate work",
+    "accent cyan requires an explicit product decision — default indicator is brand primary",
+    "determinate value must be exposed to accessibility"
+  ],
+  "doNotInvent": ["no gradient fills", "no indeterminate animation masquerading as determinate", "no accent-cyan default"],
+  "unknowns": []
+}

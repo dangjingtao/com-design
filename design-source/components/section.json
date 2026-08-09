@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "slug": "section",
+  "name": "Section",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["navigation-information", "content-grouping"],
+  "variantDimensions": { "variant": ["with-header", "body-only"] },
+  "representativeVariants": [
+    { "variant": "with-header", "title": "账号", "trailingAction": "管理", "body": "list of items" },
+    { "variant": "with-header", "title": "通知", "supporting": "管理推送与免打扰" },
+    { "variant": "body-only", "body": "a card group without a header" }
+  ],
+  "anatomy": ["header?", "title?", "supportingText?", "trailingAction?", "content", "footer?"],
+  "traits": {
+    "sectionGap": "var(--space-20)",
+    "titleFont": "var(--type-heading-small)",
+    "supportingFont": "var(--type-body-small)",
+    "trailingActionFont": "var(--type-label)",
+    "titleColor": "var(--color-text-primary)",
+    "supportingColor": "var(--color-text-secondary)",
+    "trailingColor": "var(--color-text-brand)",
+    "headerPaddingHorizontal": "var(--space-12)",
+    "contentGap": "var(--space-8)"
+  },
+  "structurePatterns": [
+    "vertical group with a header row (title + optional supporting text + trailing action) and content below",
+    "no background or border by default; sections group content before Cards are considered",
+    "title uses heading-small; supporting text uses body-small secondary; trailing action is a brand text button",
+    "multiple sections separated by sectionGap (20px)"
+  ],
+  "usageHints": [
+    "prefer Section grouping before wrapping content in a Card",
+    "section does not require a background or border",
+    "trailing action is for navigation to 'see all' / 'manage', not primary actions"
+  ],
+  "doNotInvent": ["no card-like background", "no bold large title (that is a page heading)"],
+  "unknowns": []
+}

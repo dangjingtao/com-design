@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 2,
+  "slug": "snackbar",
+  "name": "Snackbar",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["feedback-overlay", "transient-feedback", "actionable-toast"],
+  "variantDimensions": { "withAction": ["one-action", "no-action"] },
+  "representativeVariants": [
+    { "withAction": "one-action", "message": "1 张照片已删除", "action": "撤销" },
+    { "withAction": "one-action", "message": "已离线,将在重新连接后同步", "action": "重试" },
+    { "withAction": "no-action", "message": "已复制到剪贴板" }
+  ],
+  "anatomy": ["container", "message", "action?"],
+  "traits": {
+    "background": "var(--color-surface-inverse)",
+    "textColor": "var(--color-text-inverse)",
+    "radius": "var(--radius-control)",
+    "padding": "var(--space-8) var(--space-8) var(--space-8) var(--space-12)",
+    "gap": "var(--space-8)",
+    "elevation": "var(--shadow-1)",
+    "messageFont": "var(--type-body-small)",
+    "actionFont": "var(--type-label)",
+    "actionColor": "var(--color-accent)",
+    "maxWidth": "min(360px, 100%)",
+    "contentInsetFromViewport": "var(--space-16)"
+  },
+  "structurePatterns": [
+    "anchored near the bottom of the viewport, above bottom nav/CTA with 16px inset",
+    "horizontal: message (grows, single-line ellipsis) + optional single action button on the end",
+    "action uses accent cyan and is a text button with 40px height",
+    "at most one action; never combine a close button plus multiple actions"
+  ],
+  "usageHints": [
+    "use for transient feedback with exactly one recovery action (undo/retry)",
+    "do not pretend irreversible operations are undoable",
+    "announced to accessibility; placement avoids keyboard and safe area",
+    "plain Toast (no action) is used when there is nothing to act on"
+  ],
+  "doNotInvent": ["no multiple actions", "no filled primary action button inside snackbar", "no stacking"],
+  "unknowns": ["auto-dismiss duration is motion/platform policy"]
+}

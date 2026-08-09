@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loading Indicator · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body{margin:0;padding:var(--space-12);background:var(--color-background);font-family:var(--font-family-base);color:var(--color-text-primary);display:flex;justify-content:center}
+.specimen{width:100%;max-width:390px;display:flex;flex-direction:column;gap:var(--space-16)}
+.header{display:flex;flex-direction:column;gap:var(--space-4)}
+.header h1{margin:0;font:var(--type-heading-small);color:var(--color-text-primary)}
+.header p{margin:0;font:var(--type-body-small);color:var(--color-text-secondary)}
+.stage{display:flex;flex-direction:column;gap:var(--space-16);padding:var(--space-16);background:var(--color-surface);border:var(--com-border-control) solid var(--color-border-subtle);border-radius:var(--radius-container)}
+.story{display:flex;flex-direction:column;gap:var(--space-8)}
+.story-label{font:var(--type-label-small);color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.04em}
+.rail{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-12)}
+.rail.center{justify-content:center}
+.page-area{height:200px;display:flex;align-items:center;justify-content:center;background:var(--color-surface-subtle);border-radius:var(--radius-sm)}
+.divider{border:0;border-top:var(--com-border-control) solid var(--color-border-subtle);margin:0}
+
+/* @component-css-start */
+.spinner{display:inline-flex;flex-shrink:0}
+.spinner__svg{display:block;animation:spin .8s linear infinite;transform-origin:50% 50%}
+.spinner__track{fill:none;stroke:var(--color-surface-subtle)}
+.spinner__arc{fill:none;stroke:var(--color-primary);stroke-linecap:round}
+.spinner--inline .spinner__svg{width:var(--size-icon-md);height:var(--size-icon-md)}
+.spinner--regular .spinner__svg{width:var(--size-icon-lg);height:var(--size-icon-lg)}
+.loader{display:inline-flex;align-items:center;gap:var(--space-8)}
+.loader__label{font:var(--type-body-small);color:var(--color-text-secondary)}
+.loader--section{justify-content:center}
+.loader--page{flex-direction:column;gap:var(--space-8)}
+.loader--page .loader__label{text-align:center}
+.loader--pending-btn{display:inline-flex;align-items:center;gap:var(--space-8);height:40px;padding:0 var(--space-12);border-radius:var(--radius-control);background:var(--color-disabled);color:var(--color-text-disabled);font:var(--type-label);white-space:nowrap}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spinner__svg{animation:none}}
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="header">
+    <h1>Loading Indicator 加载指示器</h1>
+    <p>不确定进度的环形旋转器，20px 行内 / 24px 常规，品牌主色弧线。</p>
+  </div>
+
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">行内</span>
+      <div class="rail" data-evidence-sample="inline">
+        <span class="loader--pending-btn">
+          <span class="spinner spinner--inline"><svg class="spinner__svg" viewBox="0 0 20 20" aria-hidden="true"><circle class="spinner__track" cx="10" cy="10" r="9" stroke-width="2.4"/><circle class="spinner__arc" cx="10" cy="10" r="9" stroke-width="2.4" stroke-dasharray="30 56.55"/></svg></span>保存中…
+        </span>
+        <span class="spinner spinner--inline"><svg class="spinner__svg" viewBox="0 0 20 20" aria-hidden="true"><circle class="spinner__track" cx="10" cy="10" r="9" stroke-width="2.4"/><circle class="spinner__arc" cx="10" cy="10" r="9" stroke-width="2.4" stroke-dasharray="30 56.55"/></svg></span>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="story">
+      <span class="story-label">区块</span>
+      <div class="rail center" data-evidence-sample="section">
+        <span class="loader loader--section">
+          <span class="spinner spinner--regular"><svg class="spinner__svg" viewBox="0 0 24 24" aria-hidden="true"><circle class="spinner__track" cx="12" cy="12" r="10" stroke-width="2.4"/><circle class="spinner__arc" cx="12" cy="12" r="10" stroke-width="2.4" stroke-dasharray="34 62.83"/></svg></span>
+          <span class="loader__label">正在加载更多</span>
+        </span>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="story">
+      <span class="story-label">页面</span>
+      <div class="page-area" data-evidence-sample="page">
+        <span class="loader loader--page">
+          <span class="spinner spinner--regular"><svg class="spinner__svg" viewBox="0 0 24 24" aria-hidden="true"><circle class="spinner__track" cx="12" cy="12" r="10" stroke-width="2.4"/><circle class="spinner__arc" cx="12" cy="12" r="10" stroke-width="2.4" stroke-dasharray="34 62.83"/></svg></span>
+          <span class="loader__label">加载中,请稍候</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

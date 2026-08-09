@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Timeline · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:12px;background:var(--color-background);font-family:var(--font-family-base);color:var(--color-text-primary)}
+  .specimen{display:flex;flex-direction:column;gap:12px;max-width:390px;margin:0 auto}
+  .story{display:flex;flex-direction:column;gap:8px}
+  .story-label{font:var(--type-label-small);color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.04em;padding:0 4px}
+  .rail{display:flex;flex-direction:column}
+  .card{background:var(--color-surface);border-radius:var(--radius-container);padding:16px}
+
+  /* @component-css-start */
+  .timeline{display:flex;flex-direction:column;gap:var(--space-12)}
+  .tl-event{display:flex;align-items:flex-start;gap:var(--space-12);position:relative}
+  .tl-rail{flex:0 0 auto;position:relative;width:10px;display:flex;justify-content:center;padding-top:6px;padding-bottom:0}
+  .tl-node{width:10px;height:10px;border-radius:var(--radius-full);background:var(--color-border-strong);flex-shrink:0;position:relative;z-index:1}
+  .tl-event + .tl-event .tl-rail::before{content:"";position:absolute;top:0;bottom:calc(-1 * var(--space-12));left:50%;width:2px;transform:translateX(-50%);background:var(--color-border-subtle);z-index:0}
+  .tl-event:last-child .tl-rail::before{display:none}
+  .tl-node.is-success{background:var(--color-success)}
+  .tl-node.is-warning{background:var(--color-warning)}
+  .tl-node.is-danger{background:var(--color-danger)}
+  .tl-node.is-info{background:var(--color-info)}
+  .tl-content{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:var(--space-2);padding-bottom:0}
+  .tl-time{font:var(--type-caption);color:var(--color-text-tertiary);white-space:nowrap}
+  .tl-title{font:var(--type-body);color:var(--color-text-primary);word-break:break-word}
+  .tl-support{font:var(--type-body-small);color:var(--color-text-secondary);word-break:break-word}
+  /* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="story">
+    <span class="story-label">审批历史</span>
+    <div class="rail">
+      <div class="card" data-evidence-sample="history">
+        <div class="timeline">
+          <div class="tl-event">
+            <div class="tl-rail"><span class="tl-node is-success"></span></div>
+            <div class="tl-content"><span class="tl-time">今天 14:32</span><span class="tl-title">审批通过</span><span class="tl-support">张维 已通过你的请假申请</span></div>
+          </div>
+          <div class="tl-event">
+            <div class="tl-rail"><span class="tl-node"></span></div>
+            <div class="tl-content"><span class="tl-time">今天 10:05</span><span class="tl-title">提交审批</span><span class="tl-support">流程已送达主管</span></div>
+          </div>
+          <div class="tl-event">
+            <div class="tl-rail"><span class="tl-node is-warning"></span></div>
+            <div class="tl-content"><span class="tl-time">昨天 16:48</span><span class="tl-title">材料待补充</span><span class="tl-support">请补充出差行程明细</span></div>
+          </div>
+          <div class="tl-event">
+            <div class="tl-rail"><span class="tl-node is-danger"></span></div>
+            <div class="tl-content"><span class="tl-time">昨天 09:20</span><span class="tl-title">驳回</span><span class="tl-support">附件缺失,请重新提交</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

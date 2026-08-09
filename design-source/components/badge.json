@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "slug": "badge",
+  "name": "Badge",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["navigation-information", "count-indicator", "attention-dot"],
+  "variantDimensions": { "variant": ["dot", "count"], "tone": ["brand", "attention"] },
+  "representativeVariants": [
+    { "variant": "dot", "tone": "attention" },
+    { "variant": "count", "tone": "brand", "count": "8" },
+    { "variant": "count", "tone": "attention", "count": "99+" }
+  ],
+  "anatomy": ["container", "count?"],
+  "traits": {
+    "dotSize": "8px",
+    "countMinHeight": "18px",
+    "countMinWidth": "18px",
+    "countPaddingHorizontal": "5px",
+    "radius": "var(--radius-pill)",
+    "font": "var(--type-label-small)",
+    "brand": { "background": "var(--color-primary)", "color": "var(--color-text-inverse)" },
+    "attention": { "background": "var(--color-danger)", "color": "var(--color-text-inverse)" },
+    "border": "2px solid var(--color-surface)"
+  },
+  "structurePatterns": [
+    "dot: an 8px filled circle positioned at the top-right of an icon/avatar",
+    "count: a pill with min 18x18, single-digit centered, values 1-99 then 99+; white 2px ring separates from host",
+    "typically overlays an icon button, bottom navigation item, or avatar",
+    "brand tone for counts; attention (danger) tone for critical alerts"
+  ],
+  "usageHints": [
+    "count range is 1-99, display 99+ beyond that",
+    "do not stack dot, count, and text alert on the same target",
+    "critical meaning requires a text equivalent for accessibility"
+  ],
+  "doNotInvent": ["no large badges with long text", "no accent-cyan badge tone"],
+  "unknowns": []
+}

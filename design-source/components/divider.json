@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 2,
+  "slug": "divider",
+  "name": "Divider",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["navigation-information", "structural-separator"],
+  "variantDimensions": { "variant": ["full", "inset"] },
+  "representativeVariants": [
+    { "variant": "full" },
+    { "variant": "inset", "inset": "12px" }
+  ],
+  "anatomy": ["line"],
+  "traits": {
+    "thickness": "1px",
+    "color": "var(--color-border-subtle)",
+    "fullInset": "0",
+    "contentInset": "var(--space-12)"
+  },
+  "structurePatterns": [
+    "a 1px horizontal hairline in border-subtle color",
+    "full-bleed variant spans container width; inset variant aligns to content start (e.g. 12px in lists)",
+    "used between list rows, sections, and card content, not as decorative brand element"
+  ],
+  "usageHints": [
+    "not a brand decoration; use neutral subtle color",
+    "inset aligns to content start in lists (after leading icons/avatars)",
+    "prefer spacing rhythm over heavy dividers"
+  ],
+  "doNotInvent": ["no bold/brand-colored dividers", "no dashed/dotted default"],
+  "unknowns": []
+}

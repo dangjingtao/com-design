@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 2,
+  "slug": "timeline",
+  "name": "Timeline",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["feedback-overlay", "chronological-history", "event-log"],
+  "variantDimensions": { "state": ["default", "success", "warning", "danger", "info"] },
+  "representativeVariants": [
+    { "title": "审批通过", "timestamp": "今天 14:32", "status": "success" },
+    { "title": "提交审批", "timestamp": "今天 10:05", "status": "default" },
+    { "title": "材料待补充", "timestamp": "昨天 16:48", "status": "warning" },
+    { "title": "驳回", "timestamp": "昨天 09:20", "status": "danger" }
+  ],
+  "anatomy": ["container", "event", "node", "connector", "timestamp?", "title", "supportingContent?", "status?"],
+  "traits": {
+    "nodeSize": "10px",
+    "connectorThickness": "2px",
+    "connectorColor": "var(--color-border-subtle)",
+    "titleFont": "var(--type-body)",
+    "metadataFont": "var(--type-caption)",
+    "supportingFont": "var(--type-body-small)",
+    "titleColor": "var(--color-text-primary)",
+    "metadataColor": "var(--color-text-tertiary)",
+    "supportingColor": "var(--color-text-secondary)",
+    "defaultNode": "var(--color-border-strong)",
+    "successNode": "var(--color-success)",
+    "warningNode": "var(--color-warning)",
+    "dangerNode": "var(--color-danger)",
+    "infoNode": "var(--color-info)",
+    "gap": "var(--space-12)"
+  },
+  "structurePatterns": [
+    "vertical list of events; each event has a 10px node on the left connected by a 2px subtle vertical line",
+    "content to the right: optional timestamp caption, title (body), optional supporting text (body-small)",
+    "node color carries status only when the event actually has status meaning",
+    "the last event's connector fades or is omitted"
+  ],
+  "usageHints": [
+    "chronological order must be explicit (newest first or oldest first, labeled if needed)",
+    "group long histories by meaningful date or phase boundaries",
+    "timeline records event history; it does not replace a task Stepper",
+    "status is never conveyed by color alone (icon shape + text)"
+  ],
+  "doNotInvent": ["no horizontal timeline in V1", "no oversized icons replacing the 10px node"],
+  "unknowns": []
+}

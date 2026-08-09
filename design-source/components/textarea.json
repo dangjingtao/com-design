@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "slug": "textarea",
+  "name": "Textarea",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["actions-forms", "multiline-text-input", "form-control"],
+  "variantDimensions": {
+    "state": ["empty", "value", "focused", "error", "disabled", "readonly"]
+  },
+  "representativeVariants": [
+    { "state": "empty", "label": "审批意见", "placeholder": "请输入审批意见(选填)" },
+    { "state": "focused", "label": "任务描述", "value": "需要在本周内完成移动端登录页的视觉走查。" },
+    { "state": "error", "label": "驳回原因", "value": "材料不全", "errorText": "驳回原因至少 10 个字" },
+    { "state": "disabled", "label": "系统备注", "value": "该记录由系统自动生成,不可编辑。" },
+    { "state": "readonly", "label": "申请编号", "value": "APP-20260809-0087" }
+  ],
+  "anatomy": ["label?", "container", "valueOrPlaceholder", "counter?", "helperOrError?"],
+  "traits": {
+    "minHeightCompact": "88px",
+    "radius": "var(--radius-control)",
+    "padding": "var(--space-8) var(--space-12)",
+    "borderWidth": "1px",
+    "focusBorderWidth": "2px",
+    "background": "var(--color-surface)",
+    "border": "var(--color-border)",
+    "focusBorder": "var(--color-border-focused)",
+    "errorBorder": "var(--color-border-error)",
+    "disabledBackground": "var(--color-surface-subtle)",
+    "labelFont": "var(--type-label)",
+    "valueFont": "var(--type-body-small)",
+    "counterFont": "var(--type-caption)",
+    "helperFont": "var(--type-caption)",
+    "labelGap": "var(--space-6)",
+    "helperGap": "var(--space-6)",
+    "textColor": "var(--color-text-primary)",
+    "placeholderColor": "var(--color-text-placeholder)"
+  },
+  "structurePatterns": [
+    "vertical stack: label -> control -> helper/counter with 6px gaps",
+    "control is an outlined rounded box with 88px min height and 8/12 padding",
+    "optional character counter sits right-aligned below the control in tertiary color",
+    "error swaps border to danger and shows danger helper text"
+  ],
+  "usageHints": [
+    "inherits Input states (empty/value/focused/error/disabled/readonly)",
+    "counter is optional and must not be the only error signal",
+    "readonly stays visually distinct from disabled",
+    "resize is vertical-only or disabled on mobile"
+  ],
+  "doNotInvent": ["no filled/pilled variant", "no auto-grow beyond 160px visible without scroll on compact"],
+  "unknowns": []
+}

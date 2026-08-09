@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stepper · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); }
+  .stage { display: flex; flex-direction: column; gap: var(--space-12); }
+  .surface { background: var(--color-surface); border-radius: var(--radius-container); padding: var(--space-16); }
+  .surface + .surface { margin-top: var(--space-4); }
+
+  /* @component-css-start */
+  .stepper { display: flex; }
+  .stepper__step { position: relative; display: flex; }
+
+  /* horizontal */
+  .stepper--h { align-items: flex-start; }
+  .stepper--h .stepper__step { flex: 1; flex-direction: column; align-items: center; }
+  .stepper--h .stepper__connector { position: absolute; top: 9px; left: calc(50% + 12px); right: calc(-50% + 12px); height: 2px; background: var(--color-border-subtle); }
+  .stepper--h .stepper__step:last-child .stepper__connector { display: none; }
+  .stepper--h .stepper__label { margin-top: var(--space-8); text-align: center; }
+
+  /* vertical */
+  .stepper--v { flex-direction: column; gap: var(--space-16); }
+  .stepper--v .stepper__step { align-items: flex-start; gap: var(--space-12); }
+  .stepper--v .stepper__step:not(:last-child)::after { content: ""; position: absolute; left: 9px; top: 20px; bottom: calc(-1 * var(--space-16)); width: 2px; background: var(--color-border-subtle); }
+  .stepper--v .stepper__content { display: flex; flex-direction: column; gap: var(--space-2); padding-bottom: var(--space-4); }
+
+  /* node */
+  .stepper__node { width: 20px; height: 20px; border-radius: var(--radius-pill); display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; flex-shrink: 0; background: var(--color-surface); border: 1px solid var(--color-border); position: relative; z-index: 1; }
+  .stepper__node svg { display: block; }
+
+  .stepper__step.is-completed .stepper__node { background: var(--color-primary); border-color: var(--color-primary); }
+  .stepper__step.is-completed .stepper__connector,
+  .stepper--v .stepper__step.is-completed:not(:last-child)::after { background: var(--color-primary); }
+  .stepper__step.is-completed .stepper__label { color: var(--color-text-secondary); }
+
+  .stepper__step.is-current .stepper__node { border: 2px solid var(--color-primary); }
+  .stepper__step.is-current .stepper__node::after { content: ""; width: 8px; height: 8px; border-radius: var(--radius-pill); background: var(--color-primary); }
+  .stepper__step.is-current .stepper__label { color: var(--color-text-primary); }
+
+  .stepper__step.is-upcoming .stepper__label { color: var(--color-text-tertiary); }
+
+  .stepper__step.is-error .stepper__node { border: 2px solid var(--color-danger); }
+  .stepper__step.is-error .stepper__label { color: var(--color-danger-text); }
+
+  .stepper__label { font: var(--type-label); color: var(--color-text-tertiary); margin: 0; }
+  .stepper__supporting { font: var(--type-body-small); color: var(--color-text-tertiary); margin: 0; }
+  .stepper__step.is-current .stepper__supporting { color: var(--color-text-secondary); }
+  /* @component-css-end */
+</style>
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="stp-check" viewBox="0 0 14 14"><path d="M3 7.2L5.8 10L11 4.2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="stp-x" viewBox="0 0 14 14"><path d="M4 4L10 10M10 4L4 10" fill="none" stroke="var(--color-danger)" stroke-width="2.4" stroke-linecap="round"/></symbol>
+</svg>
+<div class="stage">
+  <div class="surface" data-evidence-sample="horizontal">
+    <div class="stepper stepper--h">
+      <div class="stepper__step is-completed">
+        <span class="stepper__node"><svg width="14" height="14"><use href="#stp-check"/></svg></span>
+        <span class="stepper__connector"></span>
+        <p class="stepper__label">基本信息</p>
+      </div>
+      <div class="stepper__step is-current">
+        <span class="stepper__node"></span>
+        <span class="stepper__connector"></span>
+        <p class="stepper__label">审批人</p>
+      </div>
+      <div class="stepper__step is-upcoming">
+        <span class="stepper__node"></span>
+        <span class="stepper__connector"></span>
+        <p class="stepper__label">完成</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="surface" data-evidence-sample="vertical">
+    <div class="stepper stepper--v">
+      <div class="stepper__step is-completed">
+        <span class="stepper__node"><svg width="14" height="14"><use href="#stp-check"/></svg></span>
+        <div class="stepper__content">
+          <p class="stepper__label">提交申请</p>
+          <p class="stepper__supporting">今天 10:05</p>
+        </div>
+      </div>
+      <div class="stepper__step is-current">
+        <span class="stepper__node"></span>
+        <div class="stepper__content">
+          <p class="stepper__label">主管审批</p>
+          <p class="stepper__supporting">处理中</p>
+        </div>
+      </div>
+      <div class="stepper__step is-upcoming">
+        <span class="stepper__node"></span>
+        <div class="stepper__content">
+          <p class="stepper__label">财务复核</p>
+        </div>
+      </div>
+      <div class="stepper__step is-upcoming">
+        <span class="stepper__node"></span>
+        <div class="stepper__content">
+          <p class="stepper__label">归档</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="surface" data-evidence-sample="error">
+    <div class="stepper stepper--h">
+      <div class="stepper__step is-completed">
+        <span class="stepper__node"><svg width="14" height="14"><use href="#stp-check"/></svg></span>
+        <span class="stepper__connector"></span>
+        <p class="stepper__label">填写</p>
+      </div>
+      <div class="stepper__step is-error">
+        <span class="stepper__node"><svg width="14" height="14"><use href="#stp-x"/></svg></span>
+        <span class="stepper__connector"></span>
+        <p class="stepper__label">校验</p>
+      </div>
+      <div class="stepper__step is-upcoming">
+        <span class="stepper__node"></span>
+        <span class="stepper__connector"></span>
+        <p class="stepper__label">提交</p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

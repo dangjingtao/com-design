@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Divider · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin:0; padding:12px; background:var(--color-background); font-family:var(--font-family-base); color:var(--color-text-primary); }
+.specimen { display:flex; flex-direction:column; gap:12px; }
+.stage { display:flex; flex-direction:column; gap:8px; }
+.story { display:flex; flex-direction:column; gap:6px; }
+.story-label { font:var(--type-caption); color:var(--color-text-tertiary); }
+.surface { background:var(--color-surface); border-radius:var(--radius-container); padding:0; overflow:hidden; }
+.text-block { padding:12px; font:var(--type-body-small); color:var(--color-text-secondary); }
+.list-row { display:flex; align-items:center; gap:12px; padding:12px; }
+.leading-slot { width:20px; height:20px; border-radius:var(--radius-xs); background:var(--color-surface-subtle); flex-shrink:0; }
+.row-label { font:var(--type-label); color:var(--color-text-primary); }
+
+/* @component-css-start */
+.divider { width:100%; height:1px; background:var(--color-border-subtle); border:none; margin:0; display:block; }
+.divider--inset { margin-left:var(--space-12); width:calc(100% - var(--space-12)); }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">通栏分隔</span>
+      <div class="surface" data-evidence-sample="full">
+        <div class="text-block">订单已提交，等待商家确认</div>
+        <hr class="divider">
+        <div class="text-block">商家已接单，正在安排发货</div>
+        <hr class="divider">
+        <div class="text-block">包裹已发出，预计明日送达</div>
+      </div>
+    </div>
+    <div class="story">
+      <span class="story-label">内凹分隔</span>
+      <div class="surface" data-evidence-sample="inset">
+        <div class="list-row">
+          <span class="leading-slot" aria-hidden="true"></span>
+          <span class="row-label">账号与安全</span>
+        </div>
+        <hr class="divider divider--inset">
+        <div class="list-row">
+          <span class="leading-slot" aria-hidden="true"></span>
+          <span class="row-label">消息通知</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

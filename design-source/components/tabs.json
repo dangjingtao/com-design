@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 2,
+  "slug": "tabs",
+  "name": "Tabs",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["navigation-information", "peer-view-navigation"],
+  "variantDimensions": {
+    "variant": ["fixed", "scrollable"],
+    "state": ["active", "inactive", "pressed", "disabled"]
+  },
+  "representativeVariants": [
+    { "variant": "fixed", "label": "待办", "active": true },
+    { "variant": "fixed", "label": "已完成", "active": false },
+    { "variant": "fixed", "label": "全部", "active": false },
+    { "variant": "scrollable", "labels": ["全部", "待我审批", "我发起的", "抄送我", "已归档"] },
+    { "variant": "fixed", "label": "已停用", "active": false, "disabled": true }
+  ],
+  "anatomy": ["tabList", "tabItem", "label", "icon?", "indicator"],
+  "traits": {
+    "indicatorHeight": "2px",
+    "itemGap": "var(--space-8)",
+    "iconSizeWhenUsed": "var(--size-icon-md)",
+    "labelFont": "var(--type-label)",
+    "activeColor": "var(--color-text-brand)",
+    "inactiveColor": "var(--color-text-secondary)",
+    "disabledColor": "var(--color-text-disabled)",
+    "indicatorColor": "var(--color-primary)",
+    "pressedBackground": "var(--color-surface-pressed)",
+    "paddingHorizontal": "var(--space-12)",
+    "paddingVertical": "var(--space-8)"
+  },
+  "structurePatterns": [
+    "horizontal row of equal (fixed) or intrinsic (scrollable) tab targets",
+    "active tab shows a 2px primary indicator under the label plus brand text",
+    "labels single-line, never wrap or shrink to fit more tabs",
+    "text-only is the V1 default; icons optional and 20px"
+  ],
+  "usageHints": [
+    "fixed for 2-4 items; scrollable for 5+ items",
+    "do not nest tabs inside tabs",
+    "selected state is required for accessibility (tablist/tab roles)"
+  ],
+  "doNotInvent": ["no pill/segmented look (that is Segmented Control)", "no accent-cyan active color"],
+  "unknowns": []
+}

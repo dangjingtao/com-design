@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "screensGenerated": 3,
-  "coreComponentsUsed": ["button", "input", "list-item", "card", "tag", "bottom-navigation"],
+  "screensGenerated": 4,
+  "coreComponentsUsed": ["button", "icon-button", "input", "textarea", "select", "switch", "list-item", "tabs", "segmented-control", "top-app-bar", "bottom-navigation", "section", "divider", "card", "tag", "badge", "avatar", "toast", "snackbar", "alert", "dialog", "bottom-sheet", "loading-indicator", "skeleton", "empty-state", "progress-indicator", "stepper", "timeline", "search-field", "menu", "menu-item"],
   "supportComponentsUsed": [],
-  "previewClassReuseRate": 0.8,
+  "previewClassReuseRate": 0.85,
   "hasProductContext": true,
+  "interactiveStatesRendered": ["hover", "pressed", "disabled", "selected", "active", "focus"],
+  "primaryActionPerScreen": true,
   "inventedComponents": [],
   "renderedFromEvidence": [],
-  "interactiveStatesRendered": true,
-  "primaryActionPerScreen": true,
   "warnings": []
 }

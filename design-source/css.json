@@ -448,6 +448,8 @@
     "size-icon-lg": "24px",
     "size-control-height": "40px",
     "size-touch-ios": "44px",
-    "size-control-height-lg": "48px"
+    "size-touch-android": "48px",
+    "size-control-height-lg": "48px",
+    "size-touch-min": "44px"
   }
 }

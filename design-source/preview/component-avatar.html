@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avatar · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin:0; padding:12px; background:var(--color-background); font-family:var(--font-family-base); color:var(--color-text-primary); }
+.specimen { display:flex; flex-direction:column; gap:12px; }
+.stage { display:flex; flex-direction:column; gap:8px; }
+.story { display:flex; flex-direction:column; gap:6px; }
+.story-label { font:var(--type-caption); color:var(--color-text-tertiary); }
+.rail { display:flex; flex-wrap:wrap; gap:16px; align-items:center; background:var(--color-surface); border-radius:var(--radius-container); padding:12px; }
+.rail-list { flex-direction:column; align-items:stretch; gap:0; padding:4px 12px; }
+.avatar-cell { display:flex; flex-direction:column; align-items:center; gap:4px; }
+.avatar-cell .cap { font:var(--type-caption); color:var(--color-text-tertiary); }
+
+/* @component-css-start */
+.avatar { position:relative; display:inline-flex; align-items:center; justify-content:center; border-radius:var(--radius-pill); overflow:hidden; flex-shrink:0; line-height:1; user-select:none; }
+.avatar-sm { width:24px; height:24px; font:var(--type-label-small); }
+.avatar-rg { width:32px; height:32px; font:var(--type-label); }
+.avatar-lg { width:40px; height:40px; font:var(--type-heading-small); }
+.avatar-initials { background:var(--color-surface-selected); color:var(--color-text-brand); }
+.avatar-tint-brand { background:var(--color-primary-container); color:var(--color-text-brand); }
+.avatar-tint-neutral { background:var(--color-surface-subtle); color:var(--color-text-brand); }
+.avatar-image { background:linear-gradient(135deg,var(--color-surface-subtle),var(--com-brand-100)); color:var(--color-text-brand); }
+.avatar-icon { background:var(--color-surface-subtle); color:var(--color-text-tertiary); }
+.avatar svg { width:18px; height:18px; display:block; }
+.avatar-sm svg { width:14px; height:14px; }
+.avatar-lg svg { width:22px; height:22px; }
+.avatar-dot { position:absolute; right:0; bottom:0; width:10px; height:10px; border-radius:var(--radius-pill); border:2px solid var(--color-surface); box-sizing:border-box; }
+.avatar-dot-online { background:var(--color-success); }
+.avatar-dot-offline { background:var(--color-text-tertiary); }
+.avatar-row { display:flex; align-items:center; gap:12px; width:100%; padding:8px 0; min-width:0; }
+.avatar-row + .avatar-row { border-top:1px solid var(--color-border-subtle); }
+.avatar-meta { min-width:0; display:flex; flex-direction:column; }
+.avatar-name { font:var(--type-label); color:var(--color-text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.avatar-caption { font:var(--type-caption); color:var(--color-text-tertiary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">尺寸</span>
+      <div class="rail" data-evidence-sample="sizes">
+        <div class="avatar-cell"><span class="avatar avatar-sm avatar-tint-brand">LX</span><span class="cap">24</span></div>
+        <div class="avatar-cell"><span class="avatar avatar-rg avatar-initials">林</span><span class="cap">32</span></div>
+        <div class="avatar-cell"><span class="avatar avatar-lg avatar-tint-neutral">ZW</span><span class="cap">40</span></div>
+      </div>
+    </div>
+    <div class="story">
+      <span class="story-label">图像与回退</span>
+      <div class="rail" data-evidence-sample="fallbacks">
+        <span class="avatar avatar-rg avatar-image" aria-label="有头像">林</span>
+        <span class="avatar avatar-rg avatar-initials">LX</span>
+        <span class="avatar avatar-rg avatar-icon" aria-label="匿名用户">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </span>
+      </div>
+    </div>
+    <div class="story">
+      <span class="story-label">状态角标</span>
+      <div class="rail" data-evidence-sample="status">
+        <span class="avatar avatar-lg avatar-initials">林<span class="avatar-dot avatar-dot-online"></span></span>
+        <span class="avatar avatar-rg avatar-tint-neutral">ZW<span class="avatar-dot avatar-dot-offline"></span></span>
+      </div>
+    </div>
+    <div class="story">
+      <span class="story-label">列表场景</span>
+      <div class="rail rail-list" data-evidence-sample="list">
+        <div class="avatar-row">
+          <span class="avatar avatar-rg avatar-initials">林</span>
+          <span class="avatar-meta"><span class="avatar-name">林晓</span><span class="avatar-caption">产品设计 · 刚刚在线</span></span>
+        </div>
+        <div class="avatar-row">
+          <span class="avatar avatar-lg avatar-tint-brand">ZW</span>
+          <span class="avatar-meta"><span class="avatar-name">张伟</span><span class="avatar-caption">前端工程 · 2 小时前活跃</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

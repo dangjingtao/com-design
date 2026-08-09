@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 2,
+  "slug": "icon-button",
+  "name": "Icon Button",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["actions-forms", "icon-action", "toolbar-action"],
+  "variantDimensions": {
+    "variant": ["ghost", "subtle", "destructive"],
+    "size": ["regular", "large"],
+    "state": ["default", "pressed", "selected", "disabled"]
+  },
+  "representativeVariants": [
+    { "variant": "ghost", "size": "regular", "icon": "search", "label": "搜索" },
+    { "variant": "ghost", "size": "regular", "state": "pressed", "icon": "bell", "label": "通知" },
+    { "variant": "subtle", "size": "regular", "icon": "more-vertical", "label": "更多" },
+    { "variant": "ghost", "size": "large", "icon": "plus", "label": "新建" },
+    { "variant": "ghost", "size": "regular", "state": "selected", "icon": "star", "label": "已收藏" },
+    { "variant": "destructive", "size": "regular", "icon": "trash-2", "label": "删除" },
+    { "variant": "ghost", "size": "regular", "state": "disabled", "icon": "share-2", "label": "分享" }
+  ],
+  "anatomy": ["container", "icon"],
+  "traits": {
+    "regularContainer": "40px",
+    "largeContainer": "48px",
+    "regularIcon": "var(--size-icon-md)",
+    "largeIcon": "var(--size-icon-lg)",
+    "radius": "var(--radius-control)",
+    "ghost": { "background": "transparent", "icon": "var(--color-text-primary)", "pressed": "var(--color-surface-pressed)", "selectedBg": "var(--color-surface-selected)", "selectedIcon": "var(--color-text-brand)" },
+    "subtle": { "background": "var(--color-surface-subtle)", "icon": "var(--color-text-primary)", "pressed": "var(--color-surface-pressed)" },
+    "destructive": { "background": "transparent", "icon": "var(--color-danger-text)", "pressed": "var(--color-danger-bg)" },
+    "disabled": { "icon": "var(--color-text-disabled)" }
+  },
+  "structurePatterns": [
+    "square button centered on a single Lucide icon; visual box may be smaller than platform hit target",
+    "ghost is transparent until pressed; subtle uses a filled subtle surface",
+    "selected uses brand-tinted surface + brand icon; destructive uses danger text/icon, pressed on danger tint",
+    "dot badge can overlay the top-right corner (e.g. notification)"
+  ],
+  "usageHints": [
+    "use a text button when the icon meaning is ambiguous",
+    "always provide an accessible name (aria-label)",
+    "visual container and interactive hit area are independent"
+  ],
+  "doNotInvent": ["no default shadow", "no 32px interactive size", "no brand-filled default icon button"],
+  "unknowns": []
+}

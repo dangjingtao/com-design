@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 2,
+  "slug": "menu-item",
+  "name": "Menu Item",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["search-menu", "contextual-action", "menu-row"],
+  "variantDimensions": { "state": ["default", "pressed", "selected", "disabled", "destructive"] },
+  "representativeVariants": [
+    { "state": "default", "label": "重命名" },
+    { "state": "default", "label": "移动到…", "hasLeadingIcon": "folder-input" },
+    { "state": "selected", "label": "紧凑模式" },
+    { "state": "pressed", "label": "复制链接" },
+    { "state": "destructive", "label": "删除", "hasLeadingIcon": "trash-2" },
+    { "state": "disabled", "label": "归档(无权限)" }
+  ],
+  "anatomy": ["container", "leadingIcon?", "label", "trailingMetadataOrCheck?"],
+  "traits": {
+    "minHeight": "48px",
+    "paddingHorizontal": "var(--space-12)",
+    "gap": "var(--space-8)",
+    "iconSize": "var(--size-icon-md)",
+    "labelFont": "var(--type-body)",
+    "defaultColor": "var(--color-text-primary)",
+    "pressedBackground": "var(--color-surface-pressed)",
+    "selectedColor": "var(--color-text-brand)",
+    "disabledColor": "var(--color-text-disabled)",
+    "destructiveColor": "var(--color-danger-text)",
+    "destructiveIconColor": "var(--color-danger)"
+  },
+  "structurePatterns": [
+    "horizontal row: optional leading icon | label (grows) | optional trailing check/metadata",
+    "selected shows a check at the trailing edge and brand-colored label",
+    "destructive uses danger text/icon but is not a filled red row",
+    "destructive group placed last; dividers separate groups (handled by Menu)"
+  ],
+  "usageHints": [
+    "menu items are contextual actions, not page navigation targets",
+    "do not overload one item with icon, badge, description and multiple trailing controls",
+    "default action count in a menu is 2-6; destructive item placed last"
+  ],
+  "doNotInvent": ["no filled destructive row", "no multi-line descriptions in V1 menu item", "no cascading submenu as mobile default"],
+  "unknowns": []
+}

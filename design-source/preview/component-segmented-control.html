@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Segmented Control · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin:0; padding:12px; background:var(--color-background); font-family:var(--font-family-base); color:var(--color-text-primary); }
+.specimen { display:flex; flex-direction:column; gap:12px; }
+.stage { display:flex; flex-direction:column; gap:8px; }
+.story { display:flex; flex-direction:column; gap:6px; }
+.story-label { font:var(--type-caption); color:var(--color-text-tertiary); }
+.rail { display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:var(--color-surface); border-radius:var(--radius-container); padding:12px; }
+
+/* @component-css-start */
+.seg { display:inline-flex; align-items:stretch; gap:2px; padding:2px; width:240px; background:var(--color-surface-subtle); border-radius:var(--radius-control); box-shadow:none; }
+.seg-item { flex:1; min-width:0; min-height:32px; display:inline-flex; align-items:center; justify-content:center; padding:0 12px; border:none; outline:none; background:transparent; color:var(--color-text-secondary); font:var(--type-label); white-space:nowrap; border-radius:calc(var(--radius-control) - 2px); cursor:pointer; transition:background .15s, color .15s; }
+.seg-item:not(.is-active):active { background:var(--color-surface-pressed); }
+.seg-item.is-active { background:var(--color-surface); color:var(--color-text-brand); cursor:default; }
+.seg.is-disabled { pointer-events:none; }
+.seg.is-disabled .seg-item { color:var(--color-text-disabled); cursor:not-allowed; }
+.seg.is-disabled .seg-item.is-active { background:var(--color-surface); color:var(--color-text-disabled); }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">时间范围</span>
+      <div class="rail">
+        <div class="seg" role="radiogroup" aria-label="时间范围" data-evidence-sample="range">
+          <button type="button" class="seg-item" role="radio" aria-checked="false">日</button>
+          <button type="button" class="seg-item is-active" role="radio" aria-checked="true">周</button>
+          <button type="button" class="seg-item" role="radio" aria-checked="false">月</button>
+        </div>
+      </div>
+    </div>
+    <div class="story">
+      <span class="story-label">视图切换</span>
+      <div class="rail">
+        <div class="seg" role="radiogroup" aria-label="视图切换" data-evidence-sample="view">
+          <button type="button" class="seg-item is-active" role="radio" aria-checked="true">列表</button>
+          <button type="button" class="seg-item" role="radio" aria-checked="false">看板</button>
+        </div>
+      </div>
+    </div>
+    <div class="story">
+      <span class="story-label">过滤</span>
+      <div class="rail">
+        <div class="seg" role="radiogroup" aria-label="过滤" data-evidence-sample="filter">
+          <button type="button" class="seg-item is-active" role="radio" aria-checked="true">未读</button>
+          <button type="button" class="seg-item" role="radio" aria-checked="false">全部</button>
+        </div>
+      </div>
+    </div>
+    <div class="story">
+      <span class="story-label">同步中（禁用）</span>
+      <div class="rail">
+        <div class="seg is-disabled" role="radiogroup" aria-label="同步中" aria-disabled="true" data-evidence-sample="disabled">
+          <button type="button" class="seg-item is-active" role="radio" aria-checked="true" tabindex="-1">同步中</button>
+          <button type="button" class="seg-item" role="radio" aria-checked="false" tabindex="-1">手动</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

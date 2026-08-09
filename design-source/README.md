@@ -1,6 +1,6 @@
 # Com Design Mobile 设计系统
 
-Com Design Mobile 是一套公司级的移动端 Design System（版本 `1.0.0-rc.2`），不归属于任何单一业务产品，而是作为集团移动应用的共同视觉与交互地基。三创赛系列 App 是首批消费方，但 token、组件契约与密度规则在落地到具体产品时不得被改写——产品侧只能在 Core 之上做扩展。系统的整体气质可以概括为 *"Modern / Clear / Light / Efficient"*，并在工程上坚持 *"Compact-first、Flat-first、信息层级优先于装饰"*。本文档基于 `com-design` phase5-foundation-hardening 的结构化 token 与组件契约重建，覆盖 Foundation tokens、12 个代表性核心组件以及一套移动端 UI kit，作为新加入设计师的入门 brief，而非 token 查阅手册。
+Com Design Mobile 是一套公司级的移动端 Design System（版本 `1.0.0-rc.2`），不归属于任何单一业务产品，而是作为集团移动应用的共同视觉与交互地基。三创赛系列 App 是首批消费方，但 token、组件契约与密度规则在落地到具体产品时不得被改写——产品侧只能在 Core 之上做扩展。系统的整体气质可以概括为 *"Modern / Clear / Light / Efficient"*，并在工程上坚持 *"Compact-first、Flat-first、信息层级优先于装饰"*。本文档基于 `com-design` phase5-foundation-hardening 的结构化 token 与组件契约重建，覆盖 Foundation tokens 与 **V1 全部 33 个核心组件**（分布在 Actions & Forms、Navigation & Information、Feedback / Overlay / Progress、Search & Menu 四个契约分组），以及一套移动端 UI kit，作为新加入设计师的入门 brief，而非 token 查阅手册。
 
 > *"Compact-first、Flat-first、信息层级优先于装饰"*；*"Product extension does not mutate Core"*；*"Section before Card"*；*"Accent Cyan is not the default active color for global navigation; reserve it for local emphasis, progress, data"*。
 
@@ -61,38 +61,81 @@ Com Design 的文案是**中文优先、专业、克制、信息密度高**的�
 
 ## COMPONENT PATTERNS
 
-| Component | Preview | Contract | CSS Source | Key Facts | Key Insight |
-|---|---|---|---|---|---|
-| button | `preview/component-button.html` | `components/button.json` | `components.css` | compact 40px / large 48px；primary 用 brand-500、pressed brand-700；secondary 用 brand-50 底 + brand-700 字；destructive 走 danger 阶；圆角 8px；无默认阴影 | 主按钮在一屏内只出现一个；次要操作优先用 secondary 而非 tertiary 文字链 |
-| input | `preview/component-input.html` | `components/input.json` | `components.css` | 高 40px、左右内边距 12px；默认 1px neutral-400 边框，focus 切 2px brand-500（注意宽度变化由 outline 承担不引发布局抖动）；错误态 border danger-500 + 下方 caption danger-700 | label 用 14/20 Medium；校验文案必须给修正动作，不写"输入有误" |
-| list-item | `preview/component-list-item.html` | `components/list-item.json` | `components.css` | 最小高 48px（≥ Android 触摸下限）；左侧图标槽 24px、右槽可为 chevron/开关/数值；分割线左内缩 16px 与文字对齐，不顶满 | 列表整体属于 Section，**Section before Card**：优先用分组 + 分割，而非把每一项包成独立卡片 |
-| card | `preview/component-card.html` | `components/card.json` | `components.css` | 容器圆角 12px；默认 1px neutral-200 边框 + neutral-0 底，无阴影；内边距 16px；可点按时 pressed 底切 neutral-100 | resting 态不上阴影；只有被拖起或悬浮时才借 floating 阴影，严格 flat-first |
-| tag | `preview/component-tag.html` | `components/tag.json` | `components.css` | pill 9999px；语义色采用 tinted bg + 深色文字（success-100/success-700 等）；小尺寸高 20px、12px Medium 文字 | 标签是状态信号，不是按钮；不可点击的 tag 不应该有 hover/active 态 |
-| bottom-navigation | `preview/component-bottom-navigation.html` | `components/bottom-navigation.json` | `components.css` | 高 56px；激活态用 brand-500 图标 + brand-600 文字（**不是 cyan**），未激活 neutral-500；图标 24px、label 12/16 Medium | Cyan 被刻意排除在全局导航之外，仅用于内容区局部强调/进度/数据 |
-| checkbox | `preview/component-checkbox.html` | `components/checkbox.json` | `components.css` | 表单选择；20px 方框、4px 圆角、1px 边框；checked/indeterminate 均为 brand-500 实底 + inverse 标记，对勾与横杠分别表达全选/部分选中；indicator 与 label/helper 共享点击区 | 20px 方框,选中填充品牌主色配白色对勾;indeterminate 用横杠;指示器与文案共享点击区 |
-| radio | `preview/component-radio.html` | `components/radio.json` | `components.css` | 表单选择；20px 圆环、1px 边框；选中为 brand-500 ring + 8px 同色实心点；组内纵向间距 12px，outer 与 label 共享 hit target | 20px 圆环,选中为主色环 + 8px 实心点;仅用于组内互斥单选 |
-| switch | `preview/component-switch.html` | `components/switch.json` | `components.css` | 表单开关；44×24 pill 轨道、20px thumb、2px inset、行程 18px；on 为 brand-500 轨道、off 为 subtle 底；整行可点，轨道内无 ON/OFF 文案 | 44×24 胶囊轨道 + 20px 滑块,即时生效的二元设置;禁用态仍需保留开/关区分 |
-| dialog | `preview/component-dialog.html` | `components/dialog.json` | `components.css` | 反馈浮层；52% scrim、容器宽 min(320px, 100%-48px)、16px 圆角、modal 阴影；纵向 icon/title/body/actions；至多一个 primary + 一个 cancel，危险确认主操作用 destructive | 阻断式决策,scrim + 16px 圆角 + modal 阴影;至多两个操作,危险确认用 destructive 按钮 |
-| alert | `preview/component-alert.html` | `components/alert.json` | `components.css` | 反馈提示；inline/banner 两变体，info/success/warning/danger 四 tone；8px 圆角、12×8 padding、tinted bg + 对应 *Text 色图标文案；至多一个高频操作 | 持久化行内/横幅提示,色调背景 + 对应 *Text 色图标文案;至多一个高频操作 |
-| toast | `preview/component-toast.html` | `components/toast.json` | `components.css` | 反馈轻提示；深色 inverse surface、8px 圆角、12×8 padding、底部 16px inset、floating 阴影；状态由图标形状 + 文案共同表达，带一个恢复操作时即 Snackbar 变体 | 瞬时非阻断,深色 inverse 胶囊,状态由图标形状 + 文案共同表达;至多一个恢复操作(Snackbar) |
+V1 核心组件共 **33 个**，按四个契约分组排列：Actions & Forms（8）、Navigation & Information（11）、Feedback / Overlay / Progress（11）、Search & Menu（3）。下表顺序与 `components/index.json` 完全一致，每个组件均同时具备契约 JSON、聚合 CSS 段落与独立预览页。
+
+### Actions & Forms（8）
+
+| 组件 | 类别 | 一句话设计要点 |
+|---|---|---|
+| Button | 动作 | 扁平 Electric Indigo 主按钮，40/48px，无阴影，主次/描边/幽灵/危险层级 |
+| Icon Button | 动作 | 40/48px 方形图标按钮，ghost/subtle/destructive 三种样式，视觉尺寸与点击区分离 |
+| Input | 表单输入 | outlined 文本框，字段级校验优先，readonly 与 disabled 语义分离 |
+| Textarea | 表单输入 | 多行输入，88px 最小高，可选字数计数，继承 Input 状态 |
+| Select | 表单输入 | 选择触发器，尾部下拉箭头，展开态 2px 聚焦边；弹出层为平台策略 |
+| Checkbox | 选择 | 20px 方框，选中主色填充配白勾，含 indeterminate 横杠 |
+| Radio | 选择 | 20px 圆环 + 8px 实心点，组内互斥单选 |
+| Switch | 开关 | 44×24 轨道 + 20px 滑块，即时生效的二元设置 |
+
+### Navigation & Information（11）
+
+| 组件 | 类别 | 一句话设计要点 |
+|---|---|---|
+| List Item | 信息行 | 48px 最小高，leading/content/trailing 结构，section-before-card |
+| Tabs | 导航 | 同级视图切换，激活项主色文字 + 2px 下划线，2-4 项固定/更多可滚动 |
+| Segmented Control | 导航 | 局部模式切换，subtle 容器内白色滑块，2-4 个短选项 |
+| Top App Bar | 导航 | 页级导航，48px 高，至多两个尾部图标操作，滚动时出现细分隔线 |
+| Bottom Navigation | 导航 | 56px 底栏，3-5 个目的地，Brand 为激活色（非 Cyan） |
+| Section | 分组 | 默认无背景无边框的内容分组，优先于 Card 使用 |
+| Divider | 分隔 | 1px subtle 发丝线，支持通栏与内容内凹 |
+| Card | 容器 | 默认无边框无阴影，边框仅在需要强化收纳时使用，禁止嵌套 |
+| Tag | 标签 | 色调药丸，六种语义色，Accent Cyan 不充当状态色 |
+| Badge | 徽标 | 红点/数字（1-99，超出 99+），叠加在图标或头像上 |
+| Avatar | 身份 | 24/32/40 圆形，图像→首字母→图标三级回退 |
+
+### Feedback / Overlay / Progress（11）
+
+| 组件 | 类别 | 一句话设计要点 |
+|---|---|---|
+| Toast | 反馈 | 瞬时无操作轻提示，深色 inverse 胶囊，状态靠图标形状+文案 |
+| Snackbar | 反馈 | 瞬时但带唯一恢复操作（撤销/重试），操作使用 Cyan |
+| Alert | 反馈 | 持久化行内/横幅提示，色调背景配 *Text 色，至多一个操作 |
+| Dialog | 浮层 | 阻断式决策，scrim + 16px 圆角 + modal 阴影，至多两操作 |
+| Bottom Sheet | 浮层 | 底部弹层，内容驱动高度，拖拽把手，禁止堆叠 |
+| Loading Indicator | 进度 | 不确定圆形转圈（16/24px），品牌主色 |
+| Skeleton | 进度 | 已知结构的加载占位，镜像真实内容，支持微光 |
+| Empty State | 状态 | 零内容/错误恢复，居中图标+标题+说明+唯一主操作 |
+| Progress Indicator | 进度 | 确定进度（线性 4px / 环形 24px），仅展示真实进度 |
+| Stepper | 进度 | 有限有序任务步骤，完成/当前/未到/错误四态 |
+| Timeline | 信息 | 纵向事件历史，10px 节点 + 连接线，状态色仅用于有语义的事件 |
+
+### Search & Menu（3）
+
+| 组件 | 类别 | 一句话设计要点 |
+|---|---|---|
+| Search Field | 搜索 | 扁平搜索框，subtle 底，聚焦变 surface + 2px 边，loading 与清除不冲突 |
+| Menu | 菜单 | 浮动上下文操作容器，16px 圆角 + floating 阴影，2-6 项 |
+| Menu Item | 菜单 | 48px 上下文操作行，可选/危险/禁用态，危险项置末 |
 
 ## Index
 
 - `README.md` — 本文档，面向设计师的品牌叙述与使用 brief
 - `colors_and_type.css` — 颜色、字体、间距、圆角、阴影的 CSS 变量（含暗色模式 `.dark`）
 - `css.json` — 上述 token 的结构化 JSON 表达，供程序化消费
-- `components/` — 12 个代表性核心组件的契约 JSON（`index.json` + button / input / list-item / card / tag / bottom-navigation / checkbox / radio / switch / dialog / alert / toast）
-- `preview/` — 每个组件的独立 HTML 预览页（`component-button.html`、`component-input.html`、`component-list-item.html`、`component-card.html`、`component-tag.html`、`component-bottom-navigation.html`、`component-checkbox.html`、`component-radio.html`、`component-switch.html`、`component-dialog.html`、`component-alert.html`、`component-toast.html`）
-- `specs/` — 设计系统 v1 结构化规范（`design-system-v1.json`）
-- `components.css` — 从预览页聚合的组件运行时样式，当前覆盖全部 12 个组件
+- `components.css` — 从预览页聚合的组件运行时样式，覆盖全部 33 个 V1 核心组件
+- `components/` — 33 个 V1 核心组件契约 JSON（`index.json` + 每个组件一份契约，分属 actions-forms / navigation-information / feedback-overlay-progress / search-menu 四个契约分组）
+- `preview/` — 33 个组件独立 HTML 预览页（`component-{slug}.html`，每个组件对应一份）
+- `specs/` — 设计系统 v1 结构化规范（`design-system-v1.json` 等）
+- `ui_kits/mobile/` — 移动端 click-thru 套件，演示精选组件组合（非一屏 33 件全铺）
 - `SKILL.md` — AI 代理入口清单
+- `library-consumption.json` — 下游消费方推荐读取顺序
 
 ## Caveats / 已知替换与缺口
 
 1. **字体栈为 `system-ui, -apple-system, Segoe UI, Roboto, sans-serif`，不引入任何 web font**。这是有意为之——首屏性能与原生感优先于跨设备字形完全一致；跨端截图时数字与拉丁字符字形会随平台变化，属于预期。
-2. **图标在预览中以内联 SVG（Lucide 风格 outline 图标）渲染**，未引入 icon font 或图标包。线条粗细、24px 画布与 1.5-2px 描边是匹配 token 的，但实际生产库应替换为集团统一的 SVG sprite。
-3. 本次仅生成 V1 计划中 **33 个核心组件里的 12 个代表件**（button、input、list-item、card、tag、bottom-navigation、checkbox、radio、switch、dialog、alert、toast）。新增表单控件（Checkbox / Radio / Switch）遵循已确立的 fieldFamily 约定：20px 选择器尺寸、14/20 label、14/20 helper、8px 指示器与文案间距、组级错误复用 Input 的 helper 表现；新增反馈组件（Dialog / Alert / Toast）遵循最小打断与单阻断浮层层级——Dialog 是唯一阻断式 modal，Alert 持久但不阻断，Toast 瞬时且不堆叠。其余组件遵循同一份 token 契约与密度规则，可按相同模式扩展，并非被遗漏；其中 select / textarea / icon-button，以及 tabs 与 dialog 邻近浮层（bottom sheet、Snackbar action 变体、loading / skeleton）仍保留给后续扩展。
-4. Token 中已记录 comfortable 密度（控件 48px）与 iOS/Platform 模式变量，但**预览与组件契约当前默认展示 compact 密度**；切换到 comfortable 时主要影响控件高度与触摸外扩，色板与字号不变。
-5. 动效契约（过渡时长、缓动、位移距离）在规范中被引用，但**预览页未做可视化**，目前只能从 specs 中读取数值。
-6. 版本号 `1.0.0-rc.2` 表示仍在候选阶段，**RC2 的 P1 加固项（组件覆盖扩展、动效可视化、暗色模式回归）仍在上游计划中**，不在本次重建产出范围内。
-7. Token 采用**双层命名**：`--com-*` 为保留的源命名（对齐 com-design 原始契约），`--color-*` / `--radius-*` / `--space-*` / `--type-*` 为可移植消费层，组件与预览只消费后者。两层在 `css.json` 中会投影出相同数值，属于有意保留的设计契约，而非重复定义。
+2. **图标在预览中以 Lucide 内联 SVG（outline 风格）渲染**，未引入 icon font 或独立图标包。线条粗细、24px 画布与 1.5-2px 描边对齐 token，但实际生产库应替换为集团统一的 SVG sprite。
+3. **V1 全部 33 个核心组件均已具备契约 + 聚合 CSS 段落 + 独立预览页**，覆盖 Actions & Forms（8）、Navigation & Information（11）、Feedback / Overlay / Progress（11）、Search & Menu（3）四个契约分组，不再存在代表性子集的覆盖缺口。表单族沿用统一的 fieldFamily 约定（20px 选择器、14/20 label、14/20 helper、8px 指示器与文案间距、组级错误复用 Input 的 helper）；反馈族沿用最小打断与单阻断浮层层级（Dialog 是唯一阻断式 modal，Bottom Sheet 不堆叠，Alert 持久但不阻断，Toast 瞬时且不堆叠，Snackbar 仅带唯一恢复操作）。
+4. Token 中已记录 **comfortable 密度（控件 48px）以及 iOS / Android 平台差异变量**，但**预览与组件契约当前默认展示 compact 密度**；切换到 comfortable 时主要影响控件高度与触摸外扩，色板与字号不变。平台差异（iOS 44px / Android 48px 触摸下限、切页/返回手势等）继续以 token 形式记录，预览页不逐平台复刻。
+5. **动效契约**（过渡时长、缓动、位移距离）在规范中被引用，但**预览页未做动画可视化**，目前只能从 specs 中读取数值；组件的进入/退出、按下、聚焦过渡需由消费方按规范实现。
+6. **移动端 UI Kit 演示的是经过策展的组件子集与典型页面组合**，用于展示布局、密度与组件协同模式，并非把 33 个组件全部堆在同一屏；逐组件的完整状态与变体请以 `preview/` 下的独立预览页和 `components/*.json` 契约为准。
+7. 版本号 `1.0.0-rc.2` 表示仍在候选阶段，**RC2 的 P1 加固项（动效可视化、暗色模式回归、跨平台预览补齐）仍在上游计划中继续推进**，不在本次重建产出范围内。
+8. Token 采用**双层命名**：`--com-*` 为保留的源命名（对齐 com-design 原始契约），`--color-*` / `--radius-*` / `--space-*` / `--type-*` 为可移植消费层，组件与预览只消费后者。两层在 `css.json` 中投影出相同数值，属于有意保留的设计契约，而非重复定义。

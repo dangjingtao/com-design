@@ -17,83 +17,99 @@
       "slot": "navigation"
     },
     {
+      "slug": "menu",
+      "reason": "fixed slot \"menu\"; semantic=menu:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/menu.json",
+      "priority": 3,
+      "slot": "menu"
+    },
+    {
       "slug": "card",
       "reason": "fixed slot \"card\"; semantic=card:0.75; policy=fixed-slots-first",
       "evidenceFile": "components/card.json",
-      "priority": 3,
+      "priority": 4,
       "slot": "card"
     },
     {
-      "slug": "tag",
+      "slug": "badge",
       "reason": "fixed slot \"tag\"; semantic=tag:0.75; policy=fixed-slots-first",
-      "evidenceFile": "components/tag.json",
-      "priority": 4,
+      "evidenceFile": "components/badge.json",
+      "priority": 5,
       "slot": "tag"
     },
     {
       "slug": "alert",
       "reason": "fallback after fixed slots; semantic=alert:0.75; policy=fixed-slots-first",
       "evidenceFile": "components/alert.json",
-      "priority": 5
-    },
-    {
-      "slug": "checkbox",
-      "reason": "fallback after fixed slots; semantic=checkbox:0.75; policy=fixed-slots-first",
-      "evidenceFile": "components/checkbox.json",
       "priority": 6
     }
   ],
   "supportEvidenceComponents": [
     {
-      "slug": "dialog",
-      "reason": "fallback after fixed slots; semantic=dialog:0.75; policy=fixed-slots-first",
-      "evidenceFile": "components/dialog.json",
-      "priority": 7
+      "slug": "segmented-control",
+      "reason": "fixed slot \"tabs\"; semantic=tabs:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/segmented-control.json",
+      "priority": 7,
+      "slot": "tabs"
     },
     {
-      "slug": "input",
-      "reason": "fallback after fixed slots; semantic=input:0.75; policy=fixed-slots-first",
-      "evidenceFile": "components/input.json",
+      "slug": "avatar",
+      "reason": "fallback after fixed slots; semantic=avatar:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/avatar.json",
       "priority": 8
     },
     {
-      "slug": "list-item",
-      "reason": "fallback after fixed slots; semantic=list-item:0.75; policy=fixed-slots-first",
-      "evidenceFile": "components/list-item.json",
+      "slug": "bottom-sheet",
+      "reason": "fallback after fixed slots; semantic=bottom-sheet:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/bottom-sheet.json",
       "priority": 9
     },
     {
-      "slug": "radio",
-      "reason": "fallback after fixed slots; semantic=radio:0.75; policy=fixed-slots-first",
-      "evidenceFile": "components/radio.json",
+      "slug": "checkbox",
+      "reason": "fallback after fixed slots; semantic=checkbox:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/checkbox.json",
       "priority": 10
     },
     {
-      "slug": "switch",
-      "reason": "fallback after fixed slots; semantic=switch:0.75; policy=fixed-slots-first",
-      "evidenceFile": "components/switch.json",
+      "slug": "dialog",
+      "reason": "fallback after fixed slots; semantic=dialog:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/dialog.json",
       "priority": 11
     },
     {
-      "slug": "toast",
-      "reason": "fallback after fixed slots; semantic=toast:0.75; policy=fixed-slots-first",
-      "evidenceFile": "components/toast.json",
+      "slug": "divider",
+      "reason": "fallback after fixed slots; semantic=divider:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/divider.json",
       "priority": 12
+    },
+    {
+      "slug": "empty-state",
+      "reason": "fallback after fixed slots; semantic=empty-state:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/empty-state.json",
+      "priority": 13
+    },
+    {
+      "slug": "icon-button",
+      "reason": "fallback after fixed slots; semantic=button:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/icon-button.json",
+      "priority": 14
     }
   ],
   "allowedComponents": [
     "button",
     "bottom-navigation",
+    "menu",
     "card",
-    "tag",
+    "badge",
     "alert",
+    "segmented-control",
+    "avatar",
+    "bottom-sheet",
     "checkbox",
     "dialog",
-    "input",
-    "list-item",
-    "radio",
-    "switch",
-    "toast"
+    "divider",
+    "empty-state",
+    "icon-button"
   ],
   "screenBlueprints": [
     {
@@ -132,29 +148,37 @@
       "reason": "semantic"
     },
     {
+      "slot": "menu",
+      "slug": "menu",
+      "reason": "semantic"
+    },
+    {
       "slot": "card",
       "slug": "card",
       "reason": "semantic"
     },
     {
       "slot": "tag",
-      "slug": "tag",
+      "slug": "badge",
       "reason": "semantic"
+    },
+    {
+      "slot": "tabs",
+      "slug": "segmented-control",
+      "reason": "semantic",
+      "preferredSupport": true
     }
   ],
   "missingFixedSlots": [
-    "menu",
     "table"
   ],
   "fallbackComponents": [
-    "alert",
-    "checkbox"
+    "alert"
   ],
   "needsNarrative": false,
   "forbiddenInventedComponents": [],
   "lowConfidence": false,
   "warnings": [
-    "missing-fixed-slot:menu",
     "missing-fixed-slot:table"
   ]
 }

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tabs · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin:0; padding:12px; background:var(--color-background); font-family:var(--font-family-base); color:var(--color-text-primary); }
+.specimen { display:flex; flex-direction:column; gap:12px; }
+.stage { display:flex; flex-direction:column; gap:8px; }
+.story { display:flex; flex-direction:column; gap:6px; }
+.story-label { font:var(--type-caption); color:var(--color-text-tertiary); }
+.rail { display:flex; align-items:center; background:var(--color-surface); border-radius:var(--radius-container); padding:0; overflow:hidden; }
+
+/* @component-css-start */
+.tablist { display:flex; align-items:stretch; width:100%; padding:0 var(--space-16); gap:var(--space-8); border:none; outline:none; }
+.tablist-scroll { display:flex; align-items:stretch; gap:var(--space-8); padding:0 var(--space-16); overflow-x:auto; overflow-y:hidden; scrollbar-width:none; -ms-overflow-style:none; width:100%; }
+.tablist-scroll::-webkit-scrollbar { display:none; width:0; height:0; }
+.tab { position:relative; display:inline-flex; align-items:center; justify-content:center; flex:1 1 0; min-width:0; padding:var(--space-8) var(--space-12); border:none; background:transparent; color:var(--color-text-secondary); font:var(--type-label); white-space:nowrap; cursor:pointer; line-height:20px; outline:none; transition:background .15s,color .15s; }
+.tablist-scroll .tab { flex:0 0 auto; }
+.tab::after { content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--color-primary); transform:scaleX(0); transform-origin:center; transition:transform .18s ease; }
+.tab:hover { background:var(--color-surface-pressed); }
+.tab:active { background:var(--color-surface-pressed); }
+.tab.is-active { color:var(--color-text-brand); }
+.tab.is-active::after { transform:scaleX(1); }
+.tab[disabled], .tab.is-disabled { color:var(--color-text-disabled); cursor:not-allowed; pointer-events:none; }
+.tab:focus-visible { outline:2px solid var(--color-border-focused); outline-offset:-2px; border-radius:var(--radius-xs); }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">固定标签</span>
+      <div class="rail" data-evidence-sample="fixed">
+        <div class="tablist" role="tablist" aria-label="任务状态">
+          <button class="tab is-active" type="button" role="tab" aria-selected="true">待办</button>
+          <button class="tab" type="button" role="tab" aria-selected="false">已完成</button>
+          <button class="tab" type="button" role="tab" aria-selected="false">全部</button>
+        </div>
+      </div>
+    </div>
+    <div class="story">
+      <span class="story-label">可滚动</span>
+      <div class="rail" data-evidence-sample="scrollable">
+        <div class="tablist tablist-scroll" role="tablist" aria-label="审批分类">
+          <button class="tab" type="button" role="tab" aria-selected="false">全部</button>
+          <button class="tab is-active" type="button" role="tab" aria-selected="true">待我审批</button>
+          <button class="tab" type="button" role="tab" aria-selected="false">我发起的</button>
+          <button class="tab" type="button" role="tab" aria-selected="false">抄送我</button>
+          <button class="tab" type="button" role="tab" aria-selected="false">已归档</button>
+        </div>
+      </div>
+    </div>
+    <div class="story">
+      <span class="story-label">含禁用</span>
+      <div class="rail" data-evidence-sample="disabled">
+        <div class="tablist" role="tablist" aria-label="账号状态">
+          <button class="tab is-active" type="button" role="tab" aria-selected="true">正常</button>
+          <button class="tab" type="button" role="tab" aria-selected="false" disabled>已停用</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

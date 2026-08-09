@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 2,
+  "slug": "top-app-bar",
+  "name": "Top App Bar",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["navigation-information", "page-level-navigation"],
+  "variantDimensions": {
+    "state": ["default", "scrolled"],
+    "variant": ["title-only", "with-actions"]
+  },
+  "representativeVariants": [
+    { "variant": "title-only", "title": "设置" },
+    { "variant": "with-actions", "title": "工作台", "actions": ["search", "notifications"] },
+    { "variant": "with-actions", "state": "scrolled", "title": "消息设置", "actions": ["more"] }
+  ],
+  "anatomy": ["container", "leadingAction?", "title", "trailingActions?", "overflow?"],
+  "traits": {
+    "contentMinHeight": "var(--size-control-height-lg)",
+    "iconSize": "var(--size-icon-lg)",
+    "contentInset": "var(--space-16)",
+    "background": "var(--color-surface)",
+    "scrolledDivider": "1px solid var(--color-border-subtle)",
+    "titleFont": "var(--type-heading)",
+    "titleColor": "var(--color-text-primary)",
+    "actionMaxVisible": 2,
+    "gap": "var(--space-12)"
+  },
+  "structurePatterns": [
+    "horizontal row: optional leading back/close action | title (grows, single-line ellipsis) | trailing icon actions",
+    "no shadow by default; on scroll a 1px subtle divider appears (not elevation)",
+    "at most 2 visible trailing icon actions before overflow",
+    "safe area is owned by the platform layer"
+  ],
+  "usageHints": [
+    "large page titles belong in content, not an ever-growing app bar",
+    "icon actions require accessible names",
+    "title truncates with ellipsis rather than wrapping"
+  ],
+  "doNotInvent": ["no default shadow", "no gradient", "no brand-filled background"],
+  "unknowns": []
+}

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bottom Sheet · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); }
+  .specimen { display: flex; flex-direction: column; gap: var(--space-16); }
+  .stage { display: flex; flex-wrap: wrap; gap: var(--space-16); }
+  .story { display: flex; flex-direction: column; gap: var(--space-8); }
+  .story-label { font: var(--type-label-small); color: var(--color-text-tertiary); }
+  .device { position: relative; width: 390px; height: 340px; border-radius: var(--radius-lg); background: var(--color-background); overflow: hidden; border: 1px solid var(--color-border-subtle); }
+
+  /* @component-css-start */
+  .sheet-scrim { position: absolute; inset: 0; background: var(--color-scrim); }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; background: var(--color-surface); border-top-left-radius: var(--radius-overlay); border-top-right-radius: var(--radius-overlay); box-shadow: var(--shadow-2); padding: var(--space-12) var(--space-16) var(--space-16); display: flex; flex-direction: column; max-height: 100%; }
+  .sheet--scroll { height: 78%; }
+  .sheet__handle { width: 36px; height: 4px; border-radius: var(--radius-pill); background: var(--color-border); margin: 0 auto var(--space-12); }
+  .sheet__header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-8); margin-bottom: var(--space-8); }
+  .sheet__title { margin: 0; font: var(--type-heading); color: var(--color-text-primary); }
+  .sheet__close { width: 24px; height: 24px; padding: 0; border: none; background: none; color: var(--color-text-tertiary); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: var(--radius-pill); transition: background .15s; }
+  .sheet__close:hover { background: var(--color-surface-subtle); }
+  .sheet__list { display: flex; flex-direction: column; }
+  .sheet__row { display: flex; align-items: center; gap: var(--space-12); min-height: 48px; padding: 0; border: none; background: none; width: 100%; text-align: left; font: var(--type-body); color: var(--color-text-primary); cursor: pointer; border-radius: var(--radius-sm); transition: background .15s; }
+  .sheet__row:hover { background: var(--color-surface-subtle); }
+  .sheet__row svg { width: var(--size-icon-md); height: var(--size-icon-md); color: var(--color-text-secondary); flex-shrink: 0; }
+  .sheet__divider { height: 1px; background: var(--color-border-subtle); margin: var(--space-4) 0; }
+  .sheet__cancel { justify-content: center; color: var(--color-text-tertiary); font: var(--type-label); min-height: 44px; }
+  .sheet__body { overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-16); padding: var(--space-4) 0 var(--space-12); }
+  .sheet__group { display: flex; flex-direction: column; gap: var(--space-8); }
+  .sheet__group-label { font: var(--type-label-small); color: var(--color-text-tertiary); }
+  .sheet__chips { display: flex; flex-wrap: wrap; gap: var(--space-8); }
+  .sheet__chip { display: inline-flex; align-items: center; height: 32px; padding: 0 var(--space-12); border-radius: var(--radius-pill); background: var(--color-surface-subtle); font: var(--type-label-small); color: var(--color-text-secondary); white-space: nowrap; }
+  .sheet__chip--active { background: var(--color-primary-container); color: var(--color-on-primary-container); }
+  .sheet__footer { margin-top: auto; padding-top: var(--space-8); }
+  .sheet__btn { width: 100%; height: 44px; border: none; border-radius: var(--radius-control); background: var(--color-primary); color: var(--color-on-primary); font: var(--type-label); white-space: nowrap; cursor: pointer; transition: background .15s; }
+  .sheet__btn:hover { background: var(--color-primary-hover); }
+  /* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">操作列表</span>
+      <div class="device">
+        <div class="sheet-scrim" data-evidence-sample="action-list"></div>
+        <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="bs-share-title">
+          <span class="sheet__handle"></span>
+          <div class="sheet__header">
+            <h3 class="sheet__title" id="bs-share-title">分享到</h3>
+            <button class="sheet__close" type="button" aria-label="关闭"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <div class="sheet__list">
+            <button class="sheet__row" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              <span>微信</span>
+            </button>
+            <button class="sheet__row" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              <span>企业微信</span>
+            </button>
+            <button class="sheet__row" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              <span>复制链接</span>
+            </button>
+            <button class="sheet__row" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+              <span>更多</span>
+            </button>
+          </div>
+          <div class="sheet__divider"></div>
+          <button class="sheet__row sheet__cancel" type="button">取消</button>
+        </div>
+      </div>
+    </div>
+    <div class="story">
+      <span class="story-label">内容</span>
+      <div class="device">
+        <div class="sheet-scrim" data-evidence-sample="content"></div>
+        <div class="sheet sheet--scroll" role="dialog" aria-modal="true" aria-labelledby="bs-filter-title">
+          <span class="sheet__handle"></span>
+          <div class="sheet__header">
+            <h3 class="sheet__title" id="bs-filter-title">筛选条件</h3>
+            <button class="sheet__close" type="button" aria-label="关闭"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <div class="sheet__body">
+            <div class="sheet__group">
+              <span class="sheet__group-label">状态</span>
+              <div class="sheet__chips">
+                <span class="sheet__chip sheet__chip--active">进行中</span>
+                <span class="sheet__chip">已完成</span>
+                <span class="sheet__chip">已暂停</span>
+                <span class="sheet__chip">已取消</span>
+              </div>
+            </div>
+            <div class="sheet__group">
+              <span class="sheet__group-label">优先级</span>
+              <div class="sheet__chips">
+                <span class="sheet__chip">全部</span>
+                <span class="sheet__chip sheet__chip--active">高</span>
+                <span class="sheet__chip">中</span>
+                <span class="sheet__chip">低</span>
+              </div>
+            </div>
+            <div class="sheet__group">
+              <span class="sheet__group-label">负责人</span>
+              <div class="sheet__chips">
+                <span class="sheet__chip">我负责的</span>
+                <span class="sheet__chip sheet__chip--active">我参与的</span>
+                <span class="sheet__chip">下属的</span>
+              </div>
+            </div>
+          </div>
+          <div class="sheet__footer">
+            <button class="sheet__btn" type="button">查看 128 条结果</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

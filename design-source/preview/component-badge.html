@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Badge · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin:0; padding:12px; background:var(--color-background); font-family:var(--font-family-base); color:var(--color-text-primary); }
+.specimen { display:flex; flex-direction:column; gap:12px; }
+.stage { display:flex; flex-direction:column; gap:8px; }
+.story { display:flex; flex-direction:column; gap:6px; }
+.story-label { font:var(--type-caption); color:var(--color-text-tertiary); }
+.rail { display:flex; flex-wrap:wrap; gap:24px; align-items:center; background:var(--color-surface); border-radius:var(--radius-container); padding:16px; }
+.host { position:relative; width:40px; height:40px; border-radius:var(--radius-sm); background:var(--color-surface-subtle); display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--color-text-secondary); }
+.host svg { width:24px; height:24px; display:block; }
+.avatar-host { position:relative; width:32px; height:32px; border-radius:var(--radius-pill); background:var(--color-primary-container); color:var(--color-on-primary-container); display:inline-flex; align-items:center; justify-content:center; font:var(--type-label-small); flex-shrink:0; }
+
+/* @component-css-start */
+.badge { position:absolute; box-sizing:border-box; border:2px solid var(--color-surface); }
+.badge-dot { width:8px; height:8px; border-radius:var(--radius-pill); top:-2px; right:-2px; padding:0; }
+.badge-count { min-width:18px; height:18px; padding:0 5px; border-radius:var(--radius-pill); top:-2px; right:-2px; display:inline-flex; align-items:center; justify-content:center; font:var(--type-label-small); color:var(--color-text-inverse); white-space:nowrap; line-height:1; }
+.badge--brand { background:var(--color-primary); }
+.badge--attention { background:var(--color-danger); }
+.badge--success { background:var(--color-success); }
+.badge--avatar { top:auto; right:auto; bottom:-2px; right:-2px; }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">角标</span>
+      <div class="rail">
+        <span class="host" data-evidence-sample="dot">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+          <span class="badge badge-dot badge--attention" aria-label="新通知"></span>
+        </span>
+        <span class="host" data-evidence-sample="count">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+          <span class="badge badge-count badge--brand">8</span>
+        </span>
+        <span class="host" data-evidence-sample="count-overflow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+          <span class="badge badge-count badge--attention">99+</span>
+        </span>
+        <span class="avatar-host" data-evidence-sample="avatar">
+          林
+          <span class="badge badge-dot badge--success badge--avatar" aria-label="在线"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

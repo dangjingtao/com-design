@@ -7,16 +7,40 @@
   "kitType": "mobile",
   "components": [
     { "slug": "button", "name": "Button", "category": "actions-forms", "contract": "components/button.json", "preview": "preview/component-button.html" },
+    { "slug": "icon-button", "name": "Icon Button", "category": "actions-forms", "contract": "components/icon-button.json", "preview": "preview/component-icon-button.html" },
     { "slug": "input", "name": "Input / Text Field", "category": "actions-forms", "contract": "components/input.json", "preview": "preview/component-input.html" },
+    { "slug": "textarea", "name": "Textarea", "category": "actions-forms", "contract": "components/textarea.json", "preview": "preview/component-textarea.html" },
+    { "slug": "select", "name": "Select / Picker Trigger", "category": "actions-forms", "contract": "components/select.json", "preview": "preview/component-select.html" },
     { "slug": "checkbox", "name": "Checkbox", "category": "actions-forms", "contract": "components/checkbox.json", "preview": "preview/component-checkbox.html" },
     { "slug": "radio", "name": "Radio", "category": "actions-forms", "contract": "components/radio.json", "preview": "preview/component-radio.html" },
     { "slug": "switch", "name": "Switch", "category": "actions-forms", "contract": "components/switch.json", "preview": "preview/component-switch.html" },
+
     { "slug": "list-item", "name": "List Item", "category": "navigation-information", "contract": "components/list-item.json", "preview": "preview/component-list-item.html" },
+    { "slug": "tabs", "name": "Tabs", "category": "navigation-information", "contract": "components/tabs.json", "preview": "preview/component-tabs.html" },
+    { "slug": "segmented-control", "name": "Segmented Control", "category": "navigation-information", "contract": "components/segmented-control.json", "preview": "preview/component-segmented-control.html" },
+    { "slug": "top-app-bar", "name": "Top App Bar", "category": "navigation-information", "contract": "components/top-app-bar.json", "preview": "preview/component-top-app-bar.html" },
+    { "slug": "bottom-navigation", "name": "Bottom Navigation", "category": "navigation-information", "contract": "components/bottom-navigation.json", "preview": "preview/component-bottom-navigation.html" },
+    { "slug": "section", "name": "Section", "category": "navigation-information", "contract": "components/section.json", "preview": "preview/component-section.html" },
+    { "slug": "divider", "name": "Divider", "category": "navigation-information", "contract": "components/divider.json", "preview": "preview/component-divider.html" },
     { "slug": "card", "name": "Card", "category": "navigation-information", "contract": "components/card.json", "preview": "preview/component-card.html" },
     { "slug": "tag", "name": "Tag", "category": "navigation-information", "contract": "components/tag.json", "preview": "preview/component-tag.html" },
-    { "slug": "bottom-navigation", "name": "Bottom Navigation", "category": "navigation-information", "contract": "components/bottom-navigation.json", "preview": "preview/component-bottom-navigation.html" },
-    { "slug": "dialog", "name": "Dialog", "category": "feedback-overlay-progress", "contract": "components/dialog.json", "preview": "preview/component-dialog.html" },
+    { "slug": "badge", "name": "Badge", "category": "navigation-information", "contract": "components/badge.json", "preview": "preview/component-badge.html" },
+    { "slug": "avatar", "name": "Avatar", "category": "navigation-information", "contract": "components/avatar.json", "preview": "preview/component-avatar.html" },
+
+    { "slug": "toast", "name": "Toast", "category": "feedback-overlay-progress", "contract": "components/toast.json", "preview": "preview/component-toast.html" },
+    { "slug": "snackbar", "name": "Snackbar", "category": "feedback-overlay-progress", "contract": "components/snackbar.json", "preview": "preview/component-snackbar.html" },
     { "slug": "alert", "name": "Alert / Inline Banner", "category": "feedback-overlay-progress", "contract": "components/alert.json", "preview": "preview/component-alert.html" },
-    { "slug": "toast", "name": "Toast", "category": "feedback-overlay-progress", "contract": "components/toast.json", "preview": "preview/component-toast.html" }
+    { "slug": "dialog", "name": "Dialog", "category": "feedback-overlay-progress", "contract": "components/dialog.json", "preview": "preview/component-dialog.html" },
+    { "slug": "bottom-sheet", "name": "Bottom Sheet", "category": "feedback-overlay-progress", "contract": "components/bottom-sheet.json", "preview": "preview/component-bottom-sheet.html" },
+    { "slug": "loading-indicator", "name": "Loading Indicator", "category": "feedback-overlay-progress", "contract": "components/loading-indicator.json", "preview": "preview/component-loading-indicator.html" },
+    { "slug": "skeleton", "name": "Skeleton", "category": "feedback-overlay-progress", "contract": "components/skeleton.json", "preview": "preview/component-skeleton.html" },
+    { "slug": "empty-state", "name": "Empty State", "category": "feedback-overlay-progress", "contract": "components/empty-state.json", "preview": "preview/component-empty-state.html" },
+    { "slug": "progress-indicator", "name": "Progress Indicator", "category": "feedback-overlay-progress", "contract": "components/progress-indicator.json", "preview": "preview/component-progress-indicator.html" },
+    { "slug": "stepper", "name": "Stepper", "category": "feedback-overlay-progress", "contract": "components/stepper.json", "preview": "preview/component-stepper.html" },
+    { "slug": "timeline", "name": "Timeline", "category": "feedback-overlay-progress", "contract": "components/timeline.json", "preview": "preview/component-timeline.html" },
+
+    { "slug": "search-field", "name": "Search Field", "category": "search-menu", "contract": "components/search-field.json", "preview": "preview/component-search-field.html" },
+    { "slug": "menu", "name": "Menu", "category": "search-menu", "contract": "components/menu.json", "preview": "preview/component-menu.html" },
+    { "slug": "menu-item", "name": "Menu Item", "category": "search-menu", "contract": "components/menu-item.json", "preview": "preview/component-menu-item.html" }
   ]
 }

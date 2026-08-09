@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Top App Bar · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); display: flex; flex-direction: column; gap: var(--space-16); }
+  .phone-surface { width: 390px; background: var(--color-surface); border-radius: var(--radius-container); overflow: hidden; }
+
+  /* @component-css-start */
+  .app-bar { display: flex; align-items: center; gap: var(--space-12); min-height: var(--size-control-height-lg); padding: 0 var(--space-16); background: var(--color-surface); }
+  .app-bar.is-scrolled { border-bottom: 1px solid var(--color-border-subtle); }
+  .app-bar__title { flex: 1 1 auto; min-width: 0; margin: 0; font: var(--type-heading); color: var(--color-text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .app-bar__actions { display: flex; align-items: center; gap: var(--space-4); flex-shrink: 0; }
+  .app-bar__action { position: relative; display: inline-flex; align-items: center; justify-content: center; width: var(--size-control-height); height: var(--size-control-height); padding: 0; border: none; background: transparent; color: var(--color-text-secondary); border-radius: var(--radius-control); cursor: pointer; transition: background .15s; flex-shrink: 0; }
+  .app-bar__action:hover { background: var(--color-surface-pressed); }
+  .app-bar__action:active { background: var(--color-surface-pressed); }
+  .app-bar__action svg { width: var(--size-icon-lg); height: var(--size-icon-lg); display: block; }
+  .app-bar__dot { position: absolute; top: var(--space-8); right: var(--space-8); width: var(--space-8); height: var(--space-8); border-radius: var(--radius-pill); background: var(--color-danger); border: 2px solid var(--color-surface); }
+  /* @component-css-end */
+</style>
+</head>
+<body>
+  <div class="phone-surface">
+    <header class="app-bar" data-evidence-sample="title-only">
+      <h1 class="app-bar__title">设置</h1>
+    </header>
+  </div>
+
+  <div class="phone-surface">
+    <header class="app-bar" data-evidence-sample="with-actions">
+      <h1 class="app-bar__title">工作台</h1>
+      <div class="app-bar__actions">
+        <button class="app-bar__action" aria-label="搜索">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+        <button class="app-bar__action" aria-label="通知">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span class="app-bar__dot" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+  </div>
+
+  <div class="phone-surface">
+    <header class="app-bar is-scrolled" data-evidence-sample="scrolled">
+      <button class="app-bar__action" aria-label="返回">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      </button>
+      <h1 class="app-bar__title">消息设置</h1>
+      <div class="app-bar__actions">
+        <button class="app-bar__action" aria-label="更多">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+        </button>
+      </div>
+    </header>
+  </div>
+</body>
+</html>
