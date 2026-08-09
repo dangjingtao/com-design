@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 2,
+  "slug": "dialog",
+  "name": "Dialog",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["feedback-overlay", "modal", "blocking-decision"],
+  "variantDimensions": {
+    "type": ["default", "destructive-confirmation", "decision"],
+    "state": ["open"]
+  },
+  "representativeVariants": [
+    { "type": "decision", "title": "保存修改?", "body": "你对通知设置做了更改,是否保存后退出?", "confirm": "保存", "cancel": "不保存" },
+    { "type": "default", "title": "同步企业数据", "body": "将从服务器拉取最新的组织架构与权限设置,过程中部分功能可能短暂不可用。", "confirm": "开始同步", "cancel": "取消" },
+    { "type": "destructive-confirmation", "title": "删除该审批流程?", "body": "删除后不可恢复,进行中的 3 个审批实例将被中止。", "confirm": "确认删除", "cancel": "取消" }
+  ],
+  "anatomy": ["scrim", "container", "icon?", "title", "body", "supportingContent?", "actions"],
+  "traits": {
+    "scrim": "var(--color-scrim)",
+    "background": "var(--color-surface)",
+    "radius": "var(--radius-overlay)",
+    "padding": "var(--space-16)",
+    "width": "min(320px, calc(100% - 48px))",
+    "elevation": "var(--shadow-2)",
+    "titleFont": "var(--type-heading)",
+    "bodyFont": "var(--type-body)",
+    "gap": "var(--space-8)",
+    "actionsGap": "var(--space-8)",
+    "iconSize": "var(--size-icon-lg)",
+    "primaryButton": "var(--color-primary)",
+    "destructiveButton": "var(--color-destructive)"
+  },
+  "structurePatterns": [
+    "scrim covers full viewport at 52% opacity; centered container with 16px viewport inset",
+    "vertical stack: optional icon, title, body, supporting content, action row",
+    "one primary action + one cancel; destructive confirmation uses destructive button, cancel is never danger",
+    "actions stack vertically on narrow widths; arrange horizontally when labels fit"
+  ],
+  "usageHints": [
+    "use for short blocking decisions requiring focus; not for long forms",
+    "at most one blocking modal at a time — never stack dialogs",
+    "scrim and system dismiss follow the same data-loss rule",
+    "focus must enter the modal and return to the trigger on close"
+  ],
+  "doNotInvent": [
+    "no close-X button as the only escape for destructive actions",
+    "no gradient or heavy chrome on the container",
+    "no success-checkmark dialog for ordinary operations (use Toast)"
+  ],
+  "unknowns": ["exact max-height for long supporting content derived from viewport policy"]
+}

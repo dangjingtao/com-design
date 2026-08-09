@@ -1,0 +1,22 @@
+{
+  "name": "@com-design/penpot-sync",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Compile com-design source tokens into a Penpot manifest and sync via MCP",
+  "bin": {
+    "com-design-build": "./bin/build.mjs",
+    "com-design-sync": "./bin/sync.mjs"
+  },
+  "scripts": {
+    "build": "node bin/build.mjs",
+    "sync": "node bin/sync.mjs",
+    "sync:dry-run": "node bin/sync.mjs --dry-run"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

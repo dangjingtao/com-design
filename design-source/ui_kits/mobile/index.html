@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Com Workbench · 移动工作台</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<link rel="stylesheet" href="../../components.css">
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-family-base);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .uikit-shell {
+    width: 100%;
+    max-width: 1184px;
+    margin: 0 auto;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-24) var(--space-16) var(--space-32);
+    gap: var(--space-20);
+  }
+  .uikit-main, .uikit-toolbar { min-width: 0; }
+  .uikit-truncate { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .uikit-nowrap { white-space: nowrap; flex-shrink: 0; }
+  .uikit-responsive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: var(--space-16);
+    min-width: 0;
+    width: 100%;
+  }
+  [data-component] { min-width: 0; max-width: 100%; }
+
+  .stage-head { text-align: center; display: flex; flex-direction: column; gap: var(--space-8); align-items: center; }
+  .stage-head .com-body-small { color: var(--color-text-secondary); max-width: 460px; margin: 0; }
+
+  .theme-toggle {
+    display: inline-flex; align-items: center; gap: var(--space-8);
+    height: var(--size-control-height); padding: 0 var(--space-12);
+    border-radius: var(--radius-pill); border: 1px solid var(--color-border-subtle);
+    background: var(--color-surface); color: var(--color-text-primary);
+    font: var(--type-label); cursor: pointer;
+  }
+  .theme-toggle svg { width: var(--size-icon-md); height: var(--size-icon-md); stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .theme-toggle:hover { background: var(--color-surface-pressed); }
+
+  /* Phone frame */
+  .phone-frame {
+    position: relative;
+    width: 390px;
+    height: 780px;
+    border-radius: 44px;
+    background: var(--color-surface-inverse);
+    padding: 10px;
+    box-shadow: var(--shadow-2);
+  }
+  .phone-screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 36px;
+    overflow: hidden;
+    background: var(--color-background);
+    display: flex;
+    flex-direction: column;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 26px; background: var(--color-surface-inverse);
+    border-radius: 0 0 18px 18px; z-index: 30;
+  }
+
+  /* Status bar */
+  .status-bar {
+    flex: 0 0 auto; height: 44px; padding: 0 var(--space-20);
+    display: flex; align-items: center; justify-content: space-between;
+    font: var(--type-label-small); color: var(--color-text-primary);
+    padding-top: var(--space-8);
+  }
+  .status-bar .sb-icons { display: flex; align-items: center; gap: var(--space-8); }
+  .status-bar svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* App bar */
+  .app-bar {
+    flex: 0 0 auto; padding: var(--space-8) var(--space-16) var(--space-12);
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-12);
+  }
+  .app-bar .com-heading { margin: 0; }
+  .app-bar-actions { display: flex; align-items: center; gap: var(--space-4); }
+  .icon-btn {
+    width: var(--size-control-height); height: var(--size-control-height); border-radius: var(--radius-control);
+    border: none; background: transparent; color: var(--color-text-secondary);
+    display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+    position: relative;
+  }
+  .icon-btn:hover { background: var(--color-surface-pressed); }
+  .icon-btn svg { width: var(--size-icon-md); height: var(--size-icon-md); stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .icon-btn .dot { position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; border-radius: var(--radius-pill); background: var(--color-danger); border: 2px solid var(--color-surface); }
+
+  /* Scroll body */
+  .screen-body {
+    flex: 1 1 auto; overflow-y: auto; padding: 0 var(--space-16) calc(56px + var(--space-24));
+    display: flex; flex-direction: column; gap: var(--space-16);
+  }
+  .screen-body::-webkit-scrollbar { width: 0; }
+
+  .greet .com-title { margin: 0 0 var(--space-4); }
+  .greet .com-body-small { margin: 0; color: var(--color-text-secondary); }
+
+  /* Stats grid inside card */
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: var(--space-8); }
+  .stat { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .stat .num { font: var(--type-title); color: var(--color-text-primary); font-variant-numeric: tabular-nums; }
+  .stat .lbl { font: var(--type-caption); color: var(--color-text-tertiary); }
+  .stat + .stat { border-left: 1px solid var(--color-border-subtle); padding-left: var(--space-12); }
+
+  /* Page-level composition: storage usage progress bar */
+  .uikit-storage-progress { display: flex; flex-direction: column; gap: var(--space-8); }
+  .uikit-progress-meta { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-8); }
+  .uikit-progress-meta .val { font: var(--type-heading-small); color: var(--color-accent-strong); font-variant-numeric: tabular-nums; }
+  .uikit-progress-meta .cap { font: var(--type-caption); color: var(--color-text-tertiary); }
+  .uikit-progress-track { height: 8px; border-radius: var(--radius-pill); background: var(--color-accent-subtle); overflow: hidden; }
+  .uikit-progress-fill { height: 100%; border-radius: var(--radius-pill); background: var(--color-accent); }
+
+  /* Page-level composition: tag wrapping row */
+  .uikit-tag-row { display: flex; flex-wrap: wrap; gap: var(--space-8); }
+
+  /* Action row */
+  .action-row { display: flex; align-items: center; gap: var(--space-8); }
+  .action-row .btn { flex: 0 0 auto; }
+  .action-row .spacer { flex: 1 1 auto; }
+
+  /* Status row */
+  .status-line { display: flex; align-items: center; gap: var(--space-12); flex-wrap: wrap; }
+  .status-pill { display: inline-flex; align-items: center; gap: var(--space-6); font: var(--type-label-small); }
+  .status-pill svg, .status-pill .lucide { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .uikit-dot { width: 8px; height: 8px; border-radius: var(--radius-pill); background: currentColor; display: inline-block; flex: 0 0 auto; }
+  .st-success { color: var(--color-success-text); }
+  .st-warning { color: var(--color-warning-text); }
+  .st-danger { color: var(--color-danger-text); }
+
+  /* List group */
+  .list-group { display: flex; flex-direction: column; gap: var(--space-16); }
+  .list-group-title { font: var(--type-label-small); color: var(--color-text-tertiary); padding: 0 var(--space-12); text-transform: none; }
+  .list-card { border-radius: var(--radius-container); overflow: hidden; background: var(--color-surface); }
+  .list-card .li:first-child { border-radius: var(--radius-container) var(--radius-container) 0 0; }
+  .list-card .li:last-child { border-radius: 0 0 var(--radius-container) var(--radius-container); }
+
+  /* Avatar */
+  .uikit-avatar {
+    width: 64px; height: 64px; border-radius: var(--radius-pill);
+    background: var(--color-primary-container); color: var(--color-on-primary-container);
+    display: inline-flex; align-items: center; justify-content: center;
+    font: var(--type-title); flex: 0 0 auto;
+  }
+  .profile-head { display: flex; flex-direction: column; align-items: center; gap: var(--space-12); padding: var(--space-8) 0 var(--space-4); }
+  .profile-head .com-heading { margin: 0; }
+  .profile-head .com-body-small { margin: 0; color: var(--color-text-secondary); }
+
+  /* Toggle row trailing switch (visual only, page-level uikit class built from tokens) */
+  .uikit-switch { width: 40px; height: 24px; border-radius: var(--radius-pill); background: var(--color-border); position: relative; flex: 0 0 auto; transition: background-color .15s; }
+  .uikit-switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: var(--radius-pill); background: #ffffff; transition: transform .15s; }
+  .uikit-switch.on { background: var(--color-primary); }
+  .uikit-switch.on::after { transform: translateX(16px); }
+
+  /* Bottom nav pinned inside phone */
+  .phone-nav { position: absolute; left: 0; right: 0; bottom: 0; z-index: 20; }
+  .home-indicator {
+    position: absolute; left: 50%; transform: translateX(-50%); bottom: 6px;
+    width: 134px; height: 5px; border-radius: var(--radius-pill);
+    background: var(--color-text-primary); opacity: .55; z-index: 25;
+  }
+
+  /* Screen transitions */
+  .screen-fade { animation: fade .22s cubic-bezier(.3,0,0,1); }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .screen-fade { animation: none; } }
+
+  /* Inline icon sizing guard: every decorative SVG inside components is an icon,
+     never a full-bleed illustration. Specific containers (.icon-btn, .status-bar,
+     .theme-toggle, .bn-icon) override with their own size. */
+  .btn svg,
+  .li-trail svg,
+  .li-leading svg,
+  .uikit-switch svg,
+  .uikit-avatar svg,
+  .status-pill svg {
+    width: var(--size-icon-md);
+    height: var(--size-icon-md);
+    flex: 0 0 auto;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .bn-icon svg { width: var(--size-icon-lg); height: var(--size-icon-lg); }
+
+  @media (max-width: 900px) {
+    .uikit-responsive-grid { grid-template-columns: minmax(0,1fr); }
+  }
+  @media (max-width: 640px) {
+    .uikit-shell { padding: var(--space-16) var(--space-8) var(--space-24); }
+    .uikit-toolbar { flex-direction: column; align-items: stretch; }
+  }
+
+  /* Interactive pressed states (in addition to components.css :hover) */
+  .btn:active:not(:disabled) { transform: scale(0.985); }
+  .btn.primary:active:not(:disabled) { background: var(--color-primary-hover); }
+  .btn.secondary:active:not(:disabled) { background: var(--color-secondary-hover); }
+  .btn.tertiary:active:not(:disabled) { background: var(--color-surface-pressed); }
+  .btn.destructive:active:not(:disabled) { background: var(--color-destructive-hover); }
+  .icon-btn:active { background: var(--color-surface-pressed); }
+  .theme-toggle:active { background: var(--color-surface-pressed); }
+
+  /* Layout guards (defined; structural wrapper usage around settings list) */
+  .uikit-table-wrap { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
+  .uikit-action-cell { display: flex; align-items: center; gap: 8px; min-width: 0; max-width: 160px; overflow: hidden; }
+  .uikit-action { min-width: 0; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="uikit-shell" data-layout-guard="uikit-v1">
+  <div class="stage-head">
+    <h1 class="com-title">Com Workbench</h1>
+    <p class="com-body-small">公司移动工作台设计系统展示,三个真实业务场景共用同一套组件契约。</p>
+  </div>
+  <div class="uikit-toolbar">
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换主题">
+      <i data-lucide="moon" aria-hidden="true"></i>
+      <span id="themeLabel">深色模式</span>
+    </button>
+  </div>
+  <div id="root" class="uikit-main"></div>
+</div>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+// Lucide icons — rendered as <i data-lucide="..."> and hydrated by lucide.createIcons()
+// after each render. This keeps all icons consistent (24x24 source grid, 2px outline,
+// round caps) per the com-design iconography contract, without hand-written SVG.
+function Icon({ name, className }) {
+  return <i data-lucide={name} className={className} aria-hidden="true"></i>;
+}
+
+function useLucide() {
+  useEffect(() => {
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      window.lucide.createIcons();
+    }
+  });
+}
+
+function StatusBar() {
+  return (
+    <div className="status-bar">
+      <span className="uikit-nowrap">9:41</span>
+      <div className="sb-icons uikit-nowrap">
+        <Icon name="signal"/>
+        <Icon name="wifi"/>
+        <Icon name="battery-full"/>
+      </div>
+    </div>
+  );
+}
+
+function HomeScreen() {
+  useLucide();
+  return (
+    <div className="screen-body screen-fade">
+      <div className="greet">
+        <h2 className="com-title">上午好,林晓</h2>
+        <p className="com-body-small">今天有 3 项待办需要在 18:00 前完成。</p>
+      </div>
+
+      <div className="uikit-tag-row">
+        <span className="tag tag-success" data-component="tag">已完成</span>
+        <span className="tag tag-warning" data-component="tag">待审核</span>
+        <span className="tag tag-info" data-component="tag">新功能</span>
+      </div>
+
+      <div className="card" data-component="card">
+        <div className="card__header">
+          <h3 className="card__title">今日概览</h3>
+          <span className="tag tag-brand">8月9日</span>
+        </div>
+        <div className="stats">
+          <div className="stat"><span className="num">12</span><span className="lbl">待处理</span></div>
+          <div className="stat"><span className="num">3</span><span className="lbl">今日到期</span></div>
+          <div className="stat"><span className="num">96%</span><span className="lbl">完成率</span></div>
+        </div>
+      </div>
+
+      <div className="card outlined" data-component="card">
+        <div className="card__header">
+          <h3 className="card__title">存储空间</h3>
+          <a className="card__action uikit-nowrap" href="#" onClick={e=>e.preventDefault()}>管理</a>
+        </div>
+        <div className="uikit-storage-progress">
+          <div className="uikit-progress-meta">
+            <span className="cap">已使用 87 GB,共 128 GB</span>
+            <span className="val">68%</span>
+          </div>
+          <div className="uikit-progress-track"><div className="uikit-progress-fill" style={{width:'68%'}}></div></div>
+        </div>
+      </div>
+
+      <div className="card" data-component="card">
+        <div className="card__header">
+          <h3 className="card__title">团队动态</h3>
+          <span className="tag tag-neutral uikit-nowrap">3 条更新</span>
+        </div>
+        <p className="card__body">张维更新了《移动工作台设计规范 v1.0.0-rc.2》,李航提交了订单 COM-20260809-8821 的审核。</p>
+        <div className="status-line">
+          <span className="status-pill st-success"><Icon name="check-circle-2"/> 已完成</span>
+          <span className="status-pill st-warning"><span className="uikit-dot"></span> 待审核</span>
+          <span className="status-pill st-danger"><span className="uikit-dot"></span> 1 项逾期</span>
+        </div>
+      </div>
+
+      <div className="action-row">
+        <button className="btn primary" data-component="button" type="button"><Icon name="plus"/>新建任务</button>
+        <button className="btn secondary" data-component="button" type="button">导入</button>
+        <span className="spacer"></span>
+        <button className="btn tertiary" data-component="button" type="button">筛选</button>
+      </div>
+    </div>
+  );
+}
+
+function ListScreen() {
+  useLucide();
+  return (
+    <div className="screen-body screen-fade">
+      <div className="greet">
+        <h2 className="com-heading">设置</h2>
+        <p className="com-body-small">管理账号、通知与企业信息。</p>
+      </div>
+
+      <label className="field" data-component="input">
+        <span className="field-label uikit-truncate">搜索设置</span>
+        <span className="control">
+          <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-text-tertiary)',marginRight:'var(--space-8)'}}><Icon name="search"/></span>
+          <input type="text" placeholder="输入关键词,如“通知”" />
+        </span>
+      </label>
+
+      <div className="uikit-table-wrap">
+      <div className="list-group">
+        <div className="list-card" data-component="list-item">
+          <div className="li">
+            <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-text-secondary)'}}><Icon name="shield"/></span>
+            <div className="li-content">
+              <span className="li-title">账号与安全</span>
+              <span className="li-desc">密码、两步验证、登录设备</span>
+            </div>
+            <span className="li-trail"><Icon name="chevron-right"/></span>
+          </div>
+          <div className="li is-selected">
+            <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-primary)'}}><Icon name="bell"/></span>
+            <div className="li-content">
+              <span className="li-title">消息通知</span>
+              <span className="li-desc">推送、免打扰时段已开启</span>
+            </div>
+            <span className="li-trail"><Icon name="check"/></span>
+          </div>
+          <div className="li is-pressed">
+            <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-text-secondary)'}}><Icon name="cloud"/></span>
+            <div className="li-content">
+              <span className="li-title">存储空间</span>
+              <span className="li-desc">已使用 87 GB,共 128 GB</span>
+            </div>
+            <span className="li-meta uikit-nowrap">68%</span>
+            <span className="li-trail"><Icon name="chevron-right"/></span>
+          </div>
+        </div>
+
+        <div className="list-group-title">关于</div>
+        <div className="list-card" data-component="list-item">
+          <div className="li">
+            <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-text-secondary)'}}><Icon name="settings-2"/></span>
+            <div className="li-content">
+              <span className="li-title">当前版本</span>
+              <span className="li-desc">Com Design Mobile RC2</span>
+            </div>
+            <span className="li-meta uikit-nowrap">1.0.0-rc.2</span>
+          </div>
+          <div className="li is-disabled">
+            <span className="uikit-nowrap" style={{display:'inline-flex'}}><Icon name="users"/></span>
+            <div className="li-content">
+              <span className="li-title">企业管理后台</span>
+              <span className="li-desc">当前账号无访问权限</span>
+            </div>
+            <span className="tag tag-neutral uikit-nowrap">未开通</span>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <button className="btn primary block" data-component="button" type="button" disabled>同步企业数据</button>
+    </div>
+  );
+}
+
+function ProfileScreen() {
+  const [push, setPush] = useState(true);
+  const [compact, setCompact] = useState(false);
+  useLucide();
+  return (
+    <div className="screen-body screen-fade">
+      <div className="profile-head">
+        <span className="uikit-avatar" aria-hidden="true">LX</span>
+        <h2 className="com-heading">林晓</h2>
+        <p className="com-body-small">产品设计中心 · 工号 COM-0217</p>
+        <div className="uikit-tag-row" style={{justifyContent:'center'}}>
+          <span className="tag tag-brand" data-component="tag">设计师</span>
+          <span className="tag tag-info" data-component="tag">Beta 测试</span>
+          <span className="tag tag-success" data-component="tag">已认证</span>
+        </div>
+      </div>
+
+      <div className="list-group">
+        <div className="list-group-title">偏好设置</div>
+        <div className="list-card" data-component="list-item">
+          <div className="li">
+            <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-text-secondary)'}}><Icon name="bell"/></span>
+            <div className="li-content">
+              <span className="li-title">推送通知</span>
+              <span className="li-desc">审核结果与任务提醒</span>
+            </div>
+            <span className="li-trail">
+              <button className={"uikit-switch " + (push ? "on" : "")} onClick={()=>setPush(v=>!v)} aria-pressed={push} aria-label="推送通知"></button>
+            </span>
+          </div>
+          <div className="li">
+            <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-text-secondary)'}}><Icon name="settings-2"/></span>
+            <div className="li-content">
+              <span className="li-title">紧凑模式</span>
+              <span className="li-desc">更短的控件高度与更密的间距</span>
+            </div>
+            <span className="li-trail">
+              <button className={"uikit-switch " + (compact ? "on" : "")} onClick={()=>setCompact(v=>!v)} aria-pressed={compact} aria-label="紧凑模式"></button>
+            </span>
+          </div>
+          <div className="li">
+            <span className="uikit-nowrap" style={{display:'inline-flex',color:'var(--color-text-secondary)'}}><Icon name="user"/></span>
+            <div className="li-content">
+              <span className="li-title">个人资料</span>
+              <span className="li-desc">头像、姓名、联系方式</span>
+            </div>
+            <span className="li-meta uikit-nowrap">未完善</span>
+            <span className="li-trail"><Icon name="chevron-right"/></span>
+          </div>
+        </div>
+      </div>
+
+      <div className="action-row" style={{flexDirection:'column',alignItems:'stretch',gap:'var(--space-8)'}}>
+        <button className="btn primary block" data-component="button" type="button"><Icon name="user-round"/>切换账号</button>
+        <button className="btn destructive block" data-component="button" type="button"><Icon name="log-out"/>退出登录</button>
+      </div>
+    </div>
+  );
+}
+
+function AppBar({ title }) {
+  return (
+    <div className="app-bar">
+      <h1 className="com-heading uikit-truncate">{title}</h1>
+      <div className="app-bar-actions">
+        <button className="icon-btn" type="button" aria-label="搜索"><Icon name="search"/></button>
+        <button className="icon-btn" type="button" aria-label="通知">
+          <Icon name="bell"/><span className="dot" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function BottomNav({ active, onChange }) {
+  useLucide();
+  const item = (key, label, iconName, badge) => (
+    <button
+      type="button"
+      className={"bn-item" + (active === key ? " is-active" : "")}
+      onClick={() => onChange(key)}
+      aria-current={active === key ? "page" : undefined}
+    >
+      <span className="bn-icon">
+        <Icon name={iconName}/>
+        {badge === "count" && <span className="bn-badge bn-badge-count">8</span>}
+        {badge === "dot" && <span className="bn-badge bn-badge-dot"></span>}
+      </span>
+      <span className="bn-label uikit-truncate">{label}</span>
+    </button>
+  );
+  return (
+    <nav className="bottom-nav phone-nav" data-component="bottom-navigation" aria-label="主导航">
+      {item("home", "首页", "house")}
+      {item("discover", "发现", "compass")}
+      {item("messages", "消息", "message-circle", "count")}
+      {item("me", "我的", "user", "dot")}
+    </nav>
+  );
+}
+
+function App() {
+  const [tab, setTab] = useState("home");
+  const [dark, setDark] = useState(false);
+  useLucide();
+
+  useEffect(() => {
+    const frame = document.getElementById("phoneFrame");
+    if (frame) frame.classList.toggle("dark", dark);
+    const lbl = document.getElementById("themeLabel");
+    if (lbl) lbl.textContent = dark ? "浅色模式" : "深色模式";
+  }, [dark]);
+
+  const titles = { home: "工作台", messages: "消息设置", me: "我的" };
+  const screen = tab === "home" ? <HomeScreen/> : tab === "messages" ? <ListScreen/> : tab === "me" ? <ProfileScreen/> : <HomeScreen/>;
+
+  return (
+    <div className="phone-frame" id="phoneFrame">
+      <div className="phone-notch" aria-hidden="true"></div>
+      <div className="phone-screen">
+        <StatusBar/>
+        <AppBar title={titles[tab] || "工作台"}/>
+        {screen}
+        <BottomNav active={tab} onChange={setTab}/>
+        <div className="home-indicator" aria-hidden="true"></div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+
+document.getElementById("themeToggle").addEventListener("click", () => {
+  const frame = document.getElementById("phoneFrame");
+  const isDark = frame.classList.toggle("dark");
+  document.getElementById("themeLabel").textContent = isDark ? "浅色模式" : "深色模式";
+});
+</script>
+</body>
+</html>

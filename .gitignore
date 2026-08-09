@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Build output
+penpot/build/
+
+# Local env
+penpot/.env
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/

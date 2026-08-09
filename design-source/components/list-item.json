@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 2,
+  "slug": "list-item",
+  "name": "List Item",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["navigation-information", "information-row", "settings-row"],
+  "variantDimensions": {
+    "variant": ["static", "actionable", "selectable"],
+    "state": ["default", "pressed", "selected", "disabled"]
+  },
+  "representativeVariants": [
+    {
+      "variant": "actionable",
+      "state": "default",
+      "title": "账号与安全",
+      "description": "密码、两步验证、登录设备",
+      "metadata": "",
+      "hasDisclosure": true
+    },
+    {
+      "variant": "actionable",
+      "state": "pressed",
+      "title": "消息通知",
+      "description": "管理推送与免打扰时段",
+      "hasDisclosure": true
+    },
+    {
+      "variant": "static",
+      "state": "default",
+      "title": "当前版本",
+      "metadata": "1.0.0-rc.2"
+    },
+    {
+      "variant": "selectable",
+      "state": "selected",
+      "title": "紧凑模式",
+      "description": "更短的控件高度与更密的间距"
+    },
+    {
+      "variant": "actionable",
+      "state": "disabled",
+      "title": "企业管理后台",
+      "description": "当前账号无访问权限"
+    }
+  ],
+  "anatomy": ["container", "leading?", "content", "title", "description?", "metadata?", "trailing?"],
+  "traits": {
+    "minHeight": "48px",
+    "paddingHorizontal": "12px",
+    "paddingVertical": "8px",
+    "gap": "8px",
+    "background": "var(--color-surface)",
+    "pressedBackground": "var(--color-surface-pressed)",
+    "selectedBackground": "var(--color-surface-selected)",
+    "titleFont": "var(--type-body)",
+    "titleEmphasisFont": "var(--type-heading-small)",
+    "descriptionFont": "var(--type-body-small)",
+    "metadataFont": "var(--type-caption)",
+    "titleColor": "var(--color-text-primary)",
+    "descriptionColor": "var(--color-text-secondary)",
+    "metadataColor": "var(--color-text-tertiary)",
+    "disabledColor": "var(--color-text-disabled)",
+    "disclosureSize": "var(--size-icon-md)"
+  },
+  "structurePatterns": [
+    "horizontal flex: leading | content (grows) | metadata + trailing",
+    "content stacks title over description with 2px internal gap",
+    "actionable shows chevron disclosure; selectable shows check",
+    "divider between items is inset to content start (12px), handled by Divider"
+  ],
+  "usageHints": [
+    "title single-line ellipsis by default; description max two lines",
+    "at most three information levels before restructuring",
+    "whole-row action must not overlap trailing action hit areas"
+  ],
+  "doNotInvent": [
+    "no default shadow on list item",
+    "no card-within-card nesting",
+    "no business-state-specific color variants"
+  ],
+  "unknowns": ["leading avatar/icon exact background pairing derived from Avatar component"]
+}

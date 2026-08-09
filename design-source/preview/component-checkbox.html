@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Checkbox · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  /* Page scaffold — NOT extracted */
+  body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); color: var(--color-foreground); }
+  .specimen { display: flex; flex-direction: column; gap: var(--space-16); max-width: 390px; }
+  .stage { display: flex; flex-direction: column; gap: var(--space-16); }
+  .rail { background: var(--color-surface); border-radius: var(--radius-container); padding: var(--space-16); display: flex; flex-direction: column; gap: var(--space-16); }
+  .story { display: flex; flex-direction: column; gap: var(--space-8); }
+  .story-label { font: var(--type-label-small); color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: .04em; }
+  .divider { border: none; border-top: 1px solid var(--color-border-subtle); margin: 0; }
+
+  /* @component-css-start */
+  .checkbox { display: inline-flex; align-items: flex-start; gap: var(--space-8); cursor: pointer; user-select: none; }
+  .checkbox input { position: absolute; width: 0; height: 0; opacity: 0; margin: 0; }
+  .checkbox-indicator { flex-shrink: 0; width: 20px; height: 20px; border-radius: var(--radius-xs); border: var(--com-border-control) solid var(--color-border); background: var(--color-surface); display: inline-flex; align-items: center; justify-content: center; color: transparent; transition: background .15s, border-color .15s, color .15s; }
+  .checkbox-mark { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; fill: none; display: block; }
+  .checkbox-text { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+  .checkbox-label { font: var(--type-body); color: var(--color-text-primary); }
+  .checkbox-helper { font: var(--type-body-small); color: var(--color-text-secondary); }
+  .checkbox.is-checked .checkbox-indicator, .checkbox.is-indeterminate .checkbox-indicator { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-text-inverse); }
+  .checkbox.is-disabled { cursor: not-allowed; }
+  .checkbox.is-disabled .checkbox-indicator { background: var(--color-surface-subtle); border-color: var(--color-border-subtle); color: var(--color-text-disabled); }
+  .checkbox.is-disabled .checkbox-label { color: var(--color-text-disabled); }
+  .checkbox.is-checked.is-disabled .checkbox-indicator { background: var(--color-disabled); border-color: var(--color-disabled); }
+  .checkbox:not(.is-checked):not(.is-indeterminate):not(.is-disabled):active .checkbox-indicator { background: var(--color-surface-pressed); }
+  /* @component-css-end */
+</style>
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="mark-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="mark-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+</svg>
+<div class="specimen">
+  <div class="stage">
+    <div class="rail">
+      <div class="story">
+        <span class="story-label">复选状态</span>
+        <label class="checkbox" data-evidence-sample="unchecked">
+          <input type="checkbox">
+          <span class="checkbox-indicator"><svg class="checkbox-mark"><use href="#mark-check"></use></svg></span>
+          <span class="checkbox-text"><span class="checkbox-label">订阅产品更新邮件</span></span>
+        </label>
+        <label class="checkbox is-checked" data-evidence-sample="checked">
+          <input type="checkbox" checked>
+          <span class="checkbox-indicator"><svg class="checkbox-mark"><use href="#mark-check"></use></svg></span>
+          <span class="checkbox-text"><span class="checkbox-label">接收安全提醒</span></span>
+        </label>
+        <label class="checkbox is-indeterminate" data-evidence-sample="indeterminate">
+          <input type="checkbox" checked>
+          <span class="checkbox-indicator"><svg class="checkbox-mark"><use href="#mark-minus"></use></svg></span>
+          <span class="checkbox-text"><span class="checkbox-label">部分子项已选中</span></span>
+        </label>
+      </div>
+      <hr class="divider">
+      <div class="story">
+        <span class="story-label">禁用</span>
+        <label class="checkbox is-disabled" data-evidence-sample="disabled-unchecked">
+          <input type="checkbox" disabled>
+          <span class="checkbox-indicator"><svg class="checkbox-mark"><use href="#mark-check"></use></svg></span>
+          <span class="checkbox-text"><span class="checkbox-label">暂不可用的选项</span></span>
+        </label>
+        <label class="checkbox is-checked is-disabled" data-evidence-sample="disabled-checked">
+          <input type="checkbox" checked disabled>
+          <span class="checkbox-indicator"><svg class="checkbox-mark"><use href="#mark-check"></use></svg></span>
+          <span class="checkbox-text"><span class="checkbox-label">已强制启用的设置</span></span>
+        </label>
+      </div>
+      <hr class="divider">
+      <div class="story">
+        <span class="story-label">带辅助说明</span>
+        <label class="checkbox is-checked" data-evidence-sample="with-helper">
+          <input type="checkbox" checked>
+          <span class="checkbox-indicator"><svg class="checkbox-mark"><use href="#mark-check"></use></svg></span>
+          <span class="checkbox-text">
+            <span class="checkbox-label">接收站内信通知</span>
+            <span class="checkbox-helper">审核结果与任务提醒将通过此渠道发送</span>
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

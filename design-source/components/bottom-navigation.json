@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 2,
+  "slug": "bottom-navigation",
+  "name": "Bottom Navigation",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["navigation-information", "top-level-destination", "tab-bar"],
+  "variantDimensions": {
+    "state": ["active", "inactive", "pressed"],
+    "badge": ["none", "dot", "count"]
+  },
+  "representativeVariants": [
+    { "label": "首页", "active": true, "icon": "home" },
+    { "label": "发现", "active": false, "icon": "compass" },
+    { "label": "消息", "active": false, "icon": "bell", "badge": "count", "count": "8" },
+    { "label": "我的", "active": false, "icon": "user", "badge": "dot" }
+  ],
+  "anatomy": ["container", "destinationItem", "icon", "label", "badge?"],
+  "traits": {
+    "contentMinHeight": "56px",
+    "iconSize": "var(--size-icon-lg)",
+    "background": "var(--color-surface)",
+    "topDivider": "1px solid var(--color-border-subtle)",
+    "labelFont": "var(--type-label-small)",
+    "activeColor": "var(--color-text-brand)",
+    "inactiveColor": "var(--color-text-tertiary)",
+    "pressedBackground": "var(--color-surface-pressed)",
+    "itemGap": "4px",
+    "badgeDotSize": "8px",
+    "badgeCountMinSize": "18px",
+    "badgeBackground": "var(--color-danger)",
+    "badgeColor": "var(--color-text-inverse)"
+  },
+  "structurePatterns": [
+    "horizontal flex container, each destination is a vertical flex (icon over label)",
+    "3 to 5 destinations distributed with equal width",
+    "count badge shows 1-99, then 99+; dot badge for unread without count",
+    "container has a top hairline divider; platform safe area is owned by the platform layer"
+  ],
+  "usageHints": [
+    "Brand (Electric Indigo) is the active identity; Accent Cyan is reserved for local emphasis",
+    "labels stay visible and single-line in V1",
+    "badge must not obscure the icon silhouette",
+    "56px is the content band excluding safe area"
+  ],
+  "doNotInvent": [
+    "no floating pill navigation as the V1 default",
+    "no default shadow (hairline divider is the boundary)",
+    "no accent-cyan active state"
+  ],
+  "unknowns": ["haptic/animation selection timing defined by motion contract, not visualized here"]
+}

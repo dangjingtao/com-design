@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toast · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+/* Page scaffold — NOT extracted */
+body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); color: var(--color-text-primary); display: flex; justify-content: center; }
+.specimen { width: 100%; max-width: 390px; display: flex; flex-direction: column; gap: var(--space-12); }
+.story { display: flex; flex-direction: column; gap: var(--space-8); }
+.story-label { font: var(--type-label-small); color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; }
+.caption { font: var(--type-caption); color: var(--color-text-tertiary); }
+.device { position: relative; width: 390px; height: 360px; background: var(--color-background); border: var(--com-border-control) solid var(--color-border-subtle); border-radius: var(--radius-lg); overflow: hidden; flex-shrink: 0; }
+.toast-stack { position: absolute; bottom: var(--space-16); left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 var(--space-16); }
+
+/* @component-css-start */
+/* Component definitions — extracted to components.css by deterministic script */
+.toast { display: inline-flex; align-items: center; gap: var(--space-8); max-width: min(360px, 100%); padding: var(--space-8) var(--space-12); background: var(--color-surface-inverse); color: var(--color-text-inverse); border-radius: var(--radius-control); box-shadow: var(--shadow-1); }
+.toast-icon { width: var(--size-icon-md); height: var(--size-icon-md); flex-shrink: 0; display: inline-flex; }
+.toast-message { font: var(--type-body-small); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.toast-action { appearance: none; border: none; background: transparent; padding: 0; font: var(--type-label); color: var(--color-accent); white-space: nowrap; cursor: pointer; flex-shrink: 0; border-radius: var(--radius-xs); }
+.toast-action:hover { filter: brightness(1.15); }
+.toast-action:focus-visible { outline: var(--com-border-focus) solid var(--color-accent); outline-offset: var(--space-2); }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="story">
+    <span class="story-label">Toast 轻提示</span>
+    <p class="caption">同一时刻仅展示一条</p>
+    <div class="device">
+      <div class="toast-stack">
+        <div class="toast" role="status" data-evidence-sample="success">
+          <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg>
+          <span class="toast-message">已保存到草稿箱</span>
+        </div>
+        <div class="toast" role="status" data-evidence-sample="info">
+          <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.5h.01"/></svg>
+          <span class="toast-message">有 3 条新消息</span>
+        </div>
+        <div class="toast" role="status" data-evidence-sample="warning">
+          <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 4.3 2.6 17.5A2 2 0 0 0 4.3 20.5h15.4a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 16.5h.01"/></svg>
+          <span class="toast-message">网络较慢,正在重试…</span>
+        </div>
+        <div class="toast" role="alert" data-evidence-sample="danger-action">
+          <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/></svg>
+          <span class="toast-message">提交失败,请稍后再试</span>
+          <button class="toast-action" type="button">重试</button>
+        </div>
+        <div class="toast" role="status" data-evidence-sample="neutral">
+          <span class="toast-message">已复制到剪贴板</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

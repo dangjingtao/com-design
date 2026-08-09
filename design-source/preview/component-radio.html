@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Radio · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  /* Page scaffold — NOT extracted */
+  body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); color: var(--color-foreground); }
+  .specimen { display: flex; flex-direction: column; gap: var(--space-16); max-width: 390px; }
+  .stage { display: flex; flex-direction: column; gap: var(--space-16); }
+  .story { display: flex; flex-direction: column; gap: var(--space-8); }
+  .story-label { font: var(--type-label-small); color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: .04em; }
+  .rail { display: flex; flex-direction: column; gap: var(--space-12); padding: var(--space-12); background: var(--color-surface); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-container); }
+  .divider { border: none; border-top: 1px solid var(--color-border-subtle); margin: var(--space-4) 0; }
+
+  /* @component-css-start */
+  .radio-group { display: flex; flex-direction: column; gap: var(--space-12); }
+  .radio { display: flex; align-items: flex-start; gap: var(--space-8); cursor: pointer; }
+  .radio input { position: absolute; width: 0; height: 0; opacity: 0; margin: 0; }
+  .radio-outer { flex-shrink: 0; width: 20px; height: 20px; margin-top: 2px; border: var(--com-border-control) solid var(--color-border); border-radius: var(--radius-pill); background: var(--color-surface); display: flex; align-items: center; justify-content: center; transition: border-color .15s, background .15s; }
+  .radio-dot { width: 8px; height: 8px; border-radius: var(--radius-pill); background: var(--color-primary); opacity: 0; transform: scale(.6); transition: opacity .15s, transform .15s; }
+  .radio-text { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+  .radio-label { font: var(--type-body); color: var(--color-text-primary); }
+  .radio-helper { font: var(--type-body-small); color: var(--color-text-secondary); }
+  .radio input:checked + .radio-outer { border-color: var(--color-primary); }
+  .radio input:checked + .radio-outer .radio-dot { opacity: 1; transform: scale(1); }
+  .radio:active .radio-outer { background: var(--color-surface-pressed); }
+  .radio.is-disabled { cursor: not-allowed; }
+  .radio.is-disabled .radio-outer { border-color: var(--color-border-subtle); background: var(--color-surface); }
+  .radio.is-disabled .radio-label, .radio.is-disabled .radio-helper { color: var(--color-text-disabled); }
+  .radio.is-disabled input:checked + .radio-outer { border-color: var(--color-text-disabled); }
+  .radio.is-disabled input:checked + .radio-outer .radio-dot { background: var(--color-text-disabled); opacity: 1; transform: scale(1); }
+  /* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">单选组(密度)</span>
+      <div class="rail" role="radiogroup">
+        <label class="radio" data-evidence-sample="selected">
+          <input type="radio" name="density" value="compact" checked>
+          <span class="radio-outer"><span class="radio-dot"></span></span>
+          <span class="radio-text">
+            <span class="radio-label">紧凑模式</span>
+            <span class="radio-helper">更短的控件高度与更密的间距</span>
+          </span>
+        </label>
+        <label class="radio" data-evidence-sample="unselected">
+          <input type="radio" name="density" value="comfortable">
+          <span class="radio-outer"><span class="radio-dot"></span></span>
+          <span class="radio-text">
+            <span class="radio-label">舒适模式</span>
+            <span class="radio-helper">更大的点击区域与留白</span>
+          </span>
+        </label>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="story">
+      <span class="story-label">禁用状态</span>
+      <div class="rail" role="radiogroup">
+        <label class="radio is-disabled" data-evidence-sample="disabled-selected">
+          <input type="radio" name="locked" value="default" checked disabled>
+          <span class="radio-outer"><span class="radio-dot"></span></span>
+          <span class="radio-text">
+            <span class="radio-label">系统默认</span>
+            <span class="radio-helper">已由管理员锁定</span>
+          </span>
+        </label>
+        <label class="radio is-disabled" data-evidence-sample="disabled-unselected">
+          <input type="radio" name="locked" value="unsupported" disabled>
+          <span class="radio-outer"><span class="radio-dot"></span></span>
+          <span class="radio-text">
+            <span class="radio-label">暂不支持的选项</span>
+          </span>
+        </label>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="story">
+      <span class="story-label">纯文字选项</span>
+      <div class="rail" role="radiogroup">
+        <label class="radio" data-evidence-sample="plain">
+          <input type="radio" name="mode" value="auto" checked>
+          <span class="radio-outer"><span class="radio-dot"></span></span>
+          <span class="radio-text"><span class="radio-label">自动</span></span>
+        </label>
+        <label class="radio" data-evidence-sample="plain">
+          <input type="radio" name="mode" value="manual">
+          <span class="radio-outer"><span class="radio-dot"></span></span>
+          <span class="radio-text"><span class="radio-label">手动</span></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

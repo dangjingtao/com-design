@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "library": "com-design",
+  "version": "1.0.0-rc.2",
+  "productType": "company-mobile-core",
+  "language": "zh",
+  "kitType": "mobile",
+  "components": [
+    { "slug": "button", "name": "Button", "category": "actions-forms", "contract": "components/button.json", "preview": "preview/component-button.html" },
+    { "slug": "input", "name": "Input / Text Field", "category": "actions-forms", "contract": "components/input.json", "preview": "preview/component-input.html" },
+    { "slug": "checkbox", "name": "Checkbox", "category": "actions-forms", "contract": "components/checkbox.json", "preview": "preview/component-checkbox.html" },
+    { "slug": "radio", "name": "Radio", "category": "actions-forms", "contract": "components/radio.json", "preview": "preview/component-radio.html" },
+    { "slug": "switch", "name": "Switch", "category": "actions-forms", "contract": "components/switch.json", "preview": "preview/component-switch.html" },
+    { "slug": "list-item", "name": "List Item", "category": "navigation-information", "contract": "components/list-item.json", "preview": "preview/component-list-item.html" },
+    { "slug": "card", "name": "Card", "category": "navigation-information", "contract": "components/card.json", "preview": "preview/component-card.html" },
+    { "slug": "tag", "name": "Tag", "category": "navigation-information", "contract": "components/tag.json", "preview": "preview/component-tag.html" },
+    { "slug": "bottom-navigation", "name": "Bottom Navigation", "category": "navigation-information", "contract": "components/bottom-navigation.json", "preview": "preview/component-bottom-navigation.html" },
+    { "slug": "dialog", "name": "Dialog", "category": "feedback-overlay-progress", "contract": "components/dialog.json", "preview": "preview/component-dialog.html" },
+    { "slug": "alert", "name": "Alert / Inline Banner", "category": "feedback-overlay-progress", "contract": "components/alert.json", "preview": "preview/component-alert.html" },
+    { "slug": "toast", "name": "Toast", "category": "feedback-overlay-progress", "contract": "components/toast.json", "preview": "preview/component-toast.html" }
+  ]
+}
