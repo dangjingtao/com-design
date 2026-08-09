@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "slug": "toast",
+  "name": "Toast",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["feedback-overlay", "transient-feedback", "snackbar"],
+  "variantDimensions": {
+    "statusShape": ["neutral", "info", "success", "warning", "danger"],
+    "withAction": ["no-action", "one-action"]
+  },
+  "representativeVariants": [
+    { "statusShape": "success", "message": "已保存到草稿箱" },
+    { "statusShape": "info", "message": "有 3 条新消息" },
+    { "statusShape": "warning", "message": "网络较慢,正在重试…" },
+    { "statusShape": "danger", "message": "提交失败,请稍后再试", "action": "重试" },
+    { "statusShape": "neutral", "message": "已复制到剪贴板" }
+  ],
+  "anatomy": ["container", "statusIcon?", "message", "action?"],
+  "traits": {
+    "background": "var(--color-surface-inverse)",
+    "text": "var(--color-text-inverse)",
+    "radius": "var(--radius-control)",
+    "paddingHorizontal": "var(--space-12)",
+    "paddingVertical": "var(--space-8)",
+    "contentInsetFromViewport": "var(--space-16)",
+    "gap": "var(--space-8)",
+    "iconSize": "var(--size-icon-md)",
+    "messageFont": "var(--type-body-small)",
+    "actionFont": "var(--type-label)",
+    "actionColor": "var(--color-accent)",
+    "elevation": "var(--shadow-1)",
+    "maxWidth": "min(360px, calc(100% - 32px))"
+  },
+  "structurePatterns": [
+    "floating pill at bottom of viewport above bottom nav/CTA, with 16px inset",
+    "horizontal: optional status icon + single-line message + optional action",
+    "dark inverse surface; status meaning carried by icon shape + message (not low-contrast chroma foreground)",
+    "when an action exists it uses accent cyan (snackbar-style recovery action)"
+  ],
+  "usageHints": [
+    "transient non-action feedback: no action for plain Toast; one recovery action = Snackbar variant",
+    "never use for field validation (that belongs inline under the field)",
+    "merge or replace bursts instead of stacking a message wall",
+    "critical information must not depend on auto-dismiss",
+    "placement avoids keyboard, safe area, bottom navigation and CTA"
+  ],
+  "doNotInvent": [
+    "no primary-filled action button inside toast",
+    "no stacking multiple toasts",
+    "no long multi-line messages"
+  ],
+  "unknowns": ["auto-dismiss duration handled by motion/platform layer"]
+}

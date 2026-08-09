@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "slug": "switch",
+  "name": "Switch",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["actions-forms", "binary-toggle", "immediate-setting"],
+  "variantDimensions": {
+    "state": ["off", "on", "disabled-off", "disabled-on"]
+  },
+  "representativeVariants": [
+    { "state": "on", "label": "推送通知", "helper": "审核结果与任务提醒" },
+    { "state": "off", "label": "邮件摘要", "helper": "每周一上午发送汇总" },
+    { "state": "disabled-on", "label": "企业安全策略", "helper": "由管理员强制开启" },
+    { "state": "disabled-off", "label": "Beta 实验功能", "helper": "当前账号暂不可用" }
+  ],
+  "anatomy": ["track", "thumb", "externalLabel?"],
+  "traits": {
+    "trackWidth": "44px",
+    "trackHeight": "24px",
+    "thumbSize": "20px",
+    "radius": "var(--radius-pill)",
+    "off": { "track": "var(--color-surface-subtle)", "trackBorder": "var(--color-border)", "thumb": "var(--color-surface)", "label": "var(--color-text-primary)" },
+    "on": { "track": "var(--color-primary)", "trackBorder": "var(--color-primary)", "thumb": "var(--color-surface)", "label": "var(--color-text-primary)" },
+    "pressed": { "feedback": "subtle surface" },
+    "disabledOff": { "track": "var(--color-surface-subtle)", "trackBorder": "var(--color-border-subtle)", "label": "var(--color-text-disabled)" },
+    "disabledOn": { "track": "var(--color-disabled)", "trackBorder": "var(--color-disabled)", "label": "var(--color-text-disabled)" },
+    "labelFont": "var(--type-body)",
+    "helperFont": "var(--type-body-small)",
+    "thumbTravel": "18px"
+  },
+  "structurePatterns": [
+    "list row: label + helper text block on the left, switch track on the right (trailing)",
+    "track 44x24 pill; 20px thumb with 2px inset, travels 18px when toggled",
+    "whole row is the hit target; switch track is the visual affordance",
+    "no ON/OFF text inside the track"
+  ],
+  "usageHints": [
+    "use for immediately applied binary settings, not for form submission choices",
+    "disabled styling must still preserve on/off distinction",
+    "external label shares hit target when possible"
+  ],
+  "doNotInvent": [
+    "no label text inside the track",
+    "no brand gradient track",
+    "no icon inside the thumb by default"
+  ],
+  "unknowns": ["comfortable density uses 48x28 track / 24 thumb, not shown in compact preview"]
+}

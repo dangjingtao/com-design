@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 2,
+  "slug": "card",
+  "name": "Card",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["navigation-information", "content-container", "surface-grouping"],
+  "variantDimensions": {
+    "variant": ["default", "outlined", "interactive"],
+    "state": ["default", "pressed"]
+  },
+  "representativeVariants": [
+    { "variant": "default", "title": "今日概览", "body": "12 个待处理事项,3 项需要在今天完成。" },
+    { "variant": "outlined", "title": "存储空间", "body": "已使用 68%,共 128 GB。" },
+    { "variant": "interactive", "state": "pressed", "title": "团队动态", "body": "林晓刚刚更新了设计规范。" }
+  ],
+  "anatomy": ["container", "header?", "content", "title", "body", "footer?", "action?"],
+  "traits": {
+    "background": "var(--color-surface)",
+    "radius": "var(--radius-container)",
+    "padding": "12px",
+    "gap": "8px",
+    "outlinedBorder": "1px solid var(--color-border-subtle)",
+    "pressedBackground": "var(--color-surface-pressed)",
+    "titleFont": "var(--type-heading-small)",
+    "bodyFont": "var(--type-body-small)",
+    "titleColor": "var(--color-text-primary)",
+    "bodyColor": "var(--color-text-secondary)"
+  },
+  "structurePatterns": [
+    "vertical stack: header (title + optional action) -> body -> footer",
+    "outlined variant adds 1px subtle border; default is borderless",
+    "interactive variant shows pressed surface on tap, no shadow by default"
+  ],
+  "usageHints": [
+    "prefer Section grouping before wrapping content in Card",
+    "border is optional, only when containment needs reinforcement",
+    "do not nest cards inside cards",
+    "whole-card action must not compete with multiple equal-priority inner actions"
+  ],
+  "doNotInvent": [
+    "no default shadow (flat-first; elevation only for floating/modal overlays)",
+    "no gradient backgrounds",
+    "no accent-cyan border"
+  ],
+  "unknowns": ["header-to-body gap not separately tokenized; uses internalGap 8px"]
+}

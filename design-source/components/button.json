@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 2,
+  "slug": "button",
+  "name": "Button",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["actions-forms", "action-trigger", "form-submit"],
+  "variantDimensions": {
+    "hierarchy": ["primary", "secondary", "tertiary", "destructive"],
+    "size": ["compact", "large"],
+    "state": ["default", "pressed", "disabled"]
+  },
+  "representativeVariants": [
+    { "hierarchy": "primary", "size": "compact", "state": "default", "label": "确认提交" },
+    { "hierarchy": "primary", "size": "compact", "state": "pressed", "label": "确认提交" },
+    { "hierarchy": "secondary", "size": "compact", "state": "default", "label": "次要操作" },
+    { "hierarchy": "tertiary", "size": "compact", "state": "default", "label": "文字按钮" },
+    { "hierarchy": "destructive", "size": "compact", "state": "default", "label": "删除" },
+    { "hierarchy": "primary", "size": "large", "state": "default", "label": "大号主按钮" },
+    { "hierarchy": "primary", "size": "compact", "state": "disabled", "label": "不可用" }
+  ],
+  "anatomy": ["container", "label", "leadingIcon?", "trailingIcon?"],
+  "traits": {
+    "compactHeight": "40px",
+    "largeHeight": "48px",
+    "paddingHorizontal": "12px",
+    "radius": "var(--radius-control)",
+    "font": "var(--type-label)",
+    "primary": {
+      "background": "var(--color-primary)",
+      "color": "var(--color-on-primary)",
+      "pressedBackground": "var(--color-primary-hover)"
+    },
+    "secondary": {
+      "background": "var(--color-secondary)",
+      "color": "var(--color-text-brand)",
+      "pressedBackground": "var(--color-secondary-hover)"
+    },
+    "tertiary": {
+      "background": "transparent",
+      "color": "var(--color-text-brand)",
+      "pressedBackground": "var(--color-surface-pressed)"
+    },
+    "destructive": {
+      "background": "var(--color-destructive)",
+      "color": "var(--color-on-primary)",
+      "pressedBackground": "var(--color-destructive-hover)"
+    },
+    "disabled": {
+      "background": "var(--color-disabled)",
+      "color": "var(--color-text-disabled)"
+    }
+  },
+  "structurePatterns": [
+    "horizontal flex with 8px gap; label single-line; centered content",
+    "full-width in mobile forms (.block modifier stretches to 100%)",
+    "icon-only buttons keep square hit area ≥ size-control-height"
+  ],
+  "usageHints": [
+    "Primary appears once per view for the highest-priority action",
+    "Tertiary has no background/border and uses brand text color",
+    "Destructive reserved for irreversible actions",
+    "Visual height differs from platform hit target (iOS 44 / Android 48)"
+  ],
+  "doNotInvent": [
+    "no gradient or glow on primary (flat-first)",
+    "no default shadow on button",
+    "no accent-cyan primary color"
+  ],
+  "unknowns": ["exact loading-spinner-in-button spacing not specified in RC2"]
+}

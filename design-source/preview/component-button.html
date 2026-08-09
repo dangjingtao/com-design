@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Button · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+/* Page scaffold — NOT extracted */
+body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); color: var(--color-text-primary); display: flex; justify-content: center; }
+.specimen { width: 100%; max-width: 390px; display: flex; flex-direction: column; gap: var(--space-16); }
+.header { display: flex; flex-direction: column; gap: var(--space-4); }
+.header h1 { margin: 0; font: var(--type-heading-small); color: var(--color-text-primary); }
+.header p { margin: 0; font: var(--type-body-small); color: var(--color-text-secondary); }
+.stage { display: flex; flex-direction: column; gap: var(--space-12); padding: var(--space-16); background: var(--color-surface); border: var(--com-border-control) solid var(--color-border-subtle); border-radius: var(--radius-container); }
+.story { display: flex; flex-direction: column; gap: var(--space-8); }
+.story-label { font: var(--type-label-small); color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; }
+.rail { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-8); }
+.rail.block { flex-direction: column; align-items: stretch; }
+.divider { border: 0; border-top: var(--com-border-control) solid var(--color-border-subtle); margin: 0; }
+
+/* @component-css-start */
+/* Component definitions — extracted to components.css by deterministic script */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 40px; min-width: 40px; padding: 0 var(--space-12); border: var(--com-border-control) solid transparent; border-radius: var(--radius-control); font: var(--type-label); white-space: nowrap; cursor: pointer; transition: background-color .15s, border-color .15s; }
+.btn:focus-visible { outline: var(--com-border-focus) solid var(--color-border-focused); outline-offset: var(--space-2); }
+.btn.primary { background: var(--color-primary); color: var(--color-on-primary); }
+.btn.primary:hover { background: var(--color-primary-hover); }
+.btn.primary.is-pressed { background: var(--color-primary-hover); }
+.btn.secondary { background: var(--color-secondary); color: var(--color-text-brand); }
+.btn.secondary:hover { background: var(--color-secondary-hover); }
+.btn.tertiary { background: transparent; color: var(--color-text-brand); }
+.btn.tertiary:hover { background: var(--color-surface-pressed); }
+.btn.destructive { background: var(--color-destructive); color: var(--color-on-primary); }
+.btn.destructive:hover { background: var(--color-destructive-hover); }
+.btn.large { height: 48px; min-width: 48px; }
+.btn.block { width: 100%; }
+.btn:disabled, .btn.disabled { background: var(--color-disabled); color: var(--color-text-disabled); cursor: not-allowed; }
+.btn:disabled:hover, .btn.disabled:hover { background: var(--color-disabled); }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="header">
+    <h1>Button 按钮</h1>
+    <p>紧凑 40px / 大号 48px，扁平无阴影，品牌靛蓝主色。</p>
+  </div>
+
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">层级（紧凑 40px）</span>
+      <div class="rail">
+        <button class="btn primary" data-evidence-sample="primary-compact-default">确认提交</button>
+        <button class="btn primary is-pressed" data-evidence-sample="primary-compact-pressed">确认提交</button>
+        <button class="btn secondary" data-evidence-sample="secondary-compact-default">次要操作</button>
+        <button class="btn tertiary" data-evidence-sample="tertiary-compact-default">文字按钮</button>
+        <button class="btn destructive" data-evidence-sample="destructive-compact-default">删除</button>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="story">
+      <span class="story-label">尺寸与状态</span>
+      <div class="rail">
+        <button class="btn primary large" data-evidence-sample="primary-large-default">大号主按钮</button>
+        <button class="btn primary" disabled data-evidence-sample="primary-compact-disabled">不可用</button>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="story">
+      <span class="story-label">移动表单 · 通栏</span>
+      <div class="rail block">
+        <button class="btn primary large block" data-evidence-sample="primary-large-block">确认提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

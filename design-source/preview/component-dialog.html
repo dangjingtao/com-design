@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dialog · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); }
+  .specimen { display: flex; flex-direction: column; gap: var(--space-16); }
+  .stage { display: flex; flex-wrap: wrap; gap: var(--space-16); }
+  .story { display: flex; flex-direction: column; gap: var(--space-8); }
+  .story-label { font: var(--type-label-small); color: var(--color-text-tertiary); }
+  .device { position: relative; width: 390px; height: 280px; border-radius: var(--radius-lg); background: var(--color-background); overflow: hidden; border: 1px solid var(--color-border-subtle); }
+
+  /* @component-css-start */
+  .dialog-scrim { position: absolute; inset: 0; padding: var(--space-16); background: var(--color-scrim); display: flex; align-items: center; justify-content: center; }
+  .dialog { box-sizing: border-box; background: var(--color-surface); border-radius: var(--radius-overlay); padding: var(--space-16); width: min(320px,100%); box-shadow: var(--shadow-2); display: flex; flex-direction: column; gap: var(--space-8); }
+  .dialog__icon { width: var(--size-icon-lg); height: var(--size-icon-lg); color: var(--color-danger-text); }
+  .dialog__title { margin: 0; font: var(--type-heading); color: var(--color-text-primary); }
+  .dialog__body { margin: 0; font: var(--type-body); color: var(--color-text-secondary); }
+  .dialog__actions { display: flex; justify-content: flex-end; gap: var(--space-8); }
+  .dialog__btn { height: 40px; padding: 0 var(--space-16); border: none; border-radius: var(--radius-control); font: var(--type-label); white-space: nowrap; cursor: pointer; transition: background .15s, border-color .15s; }
+  .dialog__btn--secondary { background: transparent; color: var(--color-text-brand); }
+  .dialog__btn--secondary:hover { background: var(--color-primary-container); }
+  .dialog__btn--primary { background: var(--color-primary); color: var(--color-on-primary); }
+  .dialog__btn--primary:hover { background: var(--color-primary-hover); }
+  .dialog__btn--destructive { background: var(--color-destructive); color: var(--color-text-inverse); }
+  .dialog__btn--destructive:hover { background: var(--color-destructive-hover); }
+  /* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">决策弹窗</span>
+      <div class="device">
+        <div class="dialog-scrim" data-evidence-sample="decision">
+          <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-decision-title">
+            <h3 class="dialog__title" id="dlg-decision-title">保存修改?</h3>
+            <p class="dialog__body">你对通知设置做了更改,是否保存后退出?</p>
+            <div class="dialog__actions">
+              <button class="dialog__btn dialog__btn--secondary" type="button">不保存</button>
+              <button class="dialog__btn dialog__btn--primary" type="button">保存</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="story">
+      <span class="story-label">信息确认</span>
+      <div class="device">
+        <div class="dialog-scrim" data-evidence-sample="info">
+          <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-info-title">
+            <h3 class="dialog__title" id="dlg-info-title">同步企业数据</h3>
+            <p class="dialog__body">将从服务器拉取最新的组织架构与权限设置,过程中部分功能可能短暂不可用。</p>
+            <div class="dialog__actions">
+              <button class="dialog__btn dialog__btn--secondary" type="button">取消</button>
+              <button class="dialog__btn dialog__btn--primary" type="button">开始同步</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="story">
+      <span class="story-label">危险确认</span>
+      <div class="device">
+        <div class="dialog-scrim" data-evidence-sample="destructive">
+          <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-danger-title">
+            <svg class="dialog__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <h3 class="dialog__title" id="dlg-danger-title">删除该审批流程?</h3>
+            <p class="dialog__body">删除后不可恢复,进行中的 3 个审批实例将被中止。</p>
+            <div class="dialog__actions">
+              <button class="dialog__btn dialog__btn--secondary" type="button">取消</button>
+              <button class="dialog__btn dialog__btn--destructive" type="button">确认删除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

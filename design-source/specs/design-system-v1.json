@@ -1,0 +1,89 @@
+{
+  "$schema": "https://com-design.local/schemas/design-system-manifest-v1.schema.json",
+  "$metadata": {
+    "name": "Com Design Mobile",
+    "version": "1.0.0-rc.2",
+    "status": "release-candidate",
+    "scope": "company-mobile-core",
+    "canonicalEntrypoint": true
+  },
+  "systemModel": {
+    "layers": ["primitive", "semantic", "component", "pattern"],
+    "axes": {
+      "theme": {"default":"light", "supported":["light","dark"]},
+      "density": {"default":"compact", "supported":["compact","comfortable"]},
+      "platform": {"supported":["ios","android"]},
+      "motion": {"default":"standard", "supported":["standard","reduced"]}
+    },
+    "resolutionOrder": ["foundation", "theme", "density", "platform", "motion", "component", "pattern", "product-extension"]
+  },
+  "sources": {
+    "foundation": "../tokens/tokens.json",
+    "themeDark": "../tokens/theme-dark.json",
+    "motion": "../tokens/motion.json",
+    "componentSchema": "../schemas/component-contract-v1.schema.json",
+    "themeOverlaySchema": "../schemas/theme-overlay-v1.schema.json",
+    "motionSchema": "../schemas/motion-modes-v1.schema.json",
+    "patternSchema": "../schemas/pattern-contract-v1.schema.json",
+    "iconographySchema": "../schemas/iconography-contract-v1.schema.json",
+    "iconography": "./iconography.json",
+    "actionsForms": "./actions-forms.json",
+    "navigationInformation": "./navigation-information.json",
+    "feedbackOverlayProgress": "./feedback-overlay-progress.json",
+    "searchMenu": "./search-menu.json",
+    "corePatterns": "./core-patterns.json"
+  },
+  "componentCatalog": {
+    "actionsForms": ["button","iconButton","input","textarea","select","checkbox","radio","switch"],
+    "navigationInformation": ["listItem","tabs","segmentedControl","topAppBar","bottomNavigation","section","divider","card","tag","badge","avatar"],
+    "feedbackOverlayProgress": ["toast","snackbar","alert","dialog","bottomSheet","loadingIndicator","skeleton","emptyState","progressIndicator","stepper","timeline"],
+    "searchMenu": ["searchField","menu","menuItem"]
+  },
+  "corePatterns": ["statusComposition","searchPattern"],
+  "legacyEmbeddedPatternEntries": {
+    "feedback-overlay-progress.json": ["statusComposition"],
+    "search-menu.json": ["searchPattern"],
+    "policy": "These phase-contract entries are compatibility copies from pre-release authoring. Canonical pattern definitions come from core-patterns.json and must not be counted as Core Components."
+  },
+  "counts": {
+    "coreComponents": 33,
+    "corePatterns": 2
+  },
+  "themeResolution": {
+    "logicalNamespace": "semantic.light",
+    "sharedNamespace": "semantic.shared",
+    "sharedNamespacePolicy": "theme-independent shared semantics such as icon and loading-indicator visual sizes resolve before the active theme and are not patched by theme overlays",
+    "light": "use foundation semantic values unchanged",
+    "dark": "merge primitiveExtensions from theme-dark.json, then apply patches to the logical semantic namespace before component tokenRef resolution",
+    "contractShortRefs": "resolve after active theme overlay; absolute semantic.shared.* refs bypass theme patching by design"
+  },
+  "modeResolution": {
+    "density": "resolve modeRef density.* against modes.density.<active>",
+    "platform": "resolve modeRef platform.* against modes.platform.<active>",
+    "motion": "resolve motion mode from tokens/motion.json against modes.motion.<active>"
+  },
+  "governance": {
+    "componentToPrimitiveReference": "forbidden",
+    "productExtensionMayMutateCore": false,
+    "colorOnlyCriticalState": false,
+    "defaultInformationShadow": false,
+    "blockingModalStackDepth": 1,
+    "deprecationRequiredBeforeRemoval": true,
+    "unusedTokenCreation": "forbidden-by-default",
+    "literalGeometryPolicy": "retain literals only when no stable cross-component semantic role has emerged"
+  },
+  "releaseGates": {
+    "themeLightDarkMapped": true,
+    "densityCompactComfortableMapped": true,
+    "platformTouchTargetsMapped": true,
+    "motionStandardReducedMapped": true,
+    "iconographyContractMapped": true,
+    "sharedIconScaleMapped": true,
+    "componentCatalogDeclared": true,
+    "patternsSeparatedCanonically": true,
+    "humanReadableAssemblyRequired": true,
+    "penpotSyncPolicyRequired": true,
+    "contrastAuditRequired": true,
+    "independentReviewRequiredBeforeStableRelease": true
+  }
+}

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>List Item · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:12px;background:var(--color-background);font-family:var(--font-family-base);color:var(--color-text-primary)}
+  .specimen{display:flex;flex-direction:column;gap:12px;max-width:390px;margin:0 auto}
+  .story{display:flex;flex-direction:column;gap:8px}
+  .story-label{font:var(--type-label-small);color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.04em;padding:0 4px}
+  .rail{display:flex;flex-direction:column}
+  .list{background:var(--color-surface);border-radius:var(--radius-container);overflow:hidden}
+
+  /* @component-css-start */
+  .li{display:flex;align-items:center;gap:8px;min-height:48px;padding:8px 12px;background:var(--color-surface);position:relative}
+  .li + .li::before{content:"";position:absolute;top:0;left:12px;right:0;height:1px;background:var(--color-border-subtle)}
+  .li.is-pressed{background:var(--color-surface-pressed)}
+  .li.is-selected{background:var(--color-surface-selected)}
+  .li.is-disabled{color:var(--color-text-disabled);cursor:not-allowed}
+  .li-content{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+  .li-title{font:var(--type-body);color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .li.is-selected .li-title{font:var(--type-heading-small);color:var(--color-text-primary)}
+  .li-desc{font:var(--type-body-small);color:var(--color-text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .li-meta{font:var(--type-caption);color:var(--color-text-tertiary);white-space:nowrap}
+  .li.is-disabled .li-title,.li.is-disabled .li-desc,.li.is-disabled .li-meta{color:var(--color-text-disabled)}
+  .li-trail{flex:0 0 auto;display:flex;align-items:center;color:var(--color-text-tertiary)}
+  .li.is-selected .li-trail{color:var(--color-primary)}
+  .li svg{width:var(--size-icon-md);height:var(--size-icon-md);display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  /* @component-css-end */
+</style>
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+</svg>
+<div class="specimen">
+  <div class="story">
+    <span class="story-label">设置列表</span>
+    <div class="rail">
+      <div class="list">
+        <div class="li">
+          <div class="li-content"><span class="li-title">账号与安全</span><span class="li-desc">密码、两步验证、登录设备</span></div>
+          <span class="li-trail"><svg><use href="#i-chevron"/></svg></span>
+        </div>
+        <div class="li is-pressed">
+          <div class="li-content"><span class="li-title">消息通知</span><span class="li-desc">管理推送与免打扰时段</span></div>
+          <span class="li-trail"><svg><use href="#i-chevron"/></svg></span>
+        </div>
+        <div class="li">
+          <div class="li-content"><span class="li-title">当前版本</span></div>
+          <span class="li-trail li-meta">1.0.0-rc.2</span>
+        </div>
+        <div class="li is-selected">
+          <div class="li-content"><span class="li-title">紧凑模式</span><span class="li-desc">更短的控件高度与更密的间距</span></div>
+          <span class="li-trail"><svg><use href="#i-check"/></svg></span>
+        </div>
+        <div class="li is-disabled">
+          <div class="li-content"><span class="li-title">企业管理后台</span><span class="li-desc">当前账号无访问权限</span></div>
+          <span class="li-trail"><svg><use href="#i-chevron"/></svg></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

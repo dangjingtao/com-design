@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 2,
+  "slug": "tag",
+  "name": "Tag",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["navigation-information", "classification-label", "status-chip"],
+  "variantDimensions": {
+    "tone": ["neutral", "brand", "success", "warning", "danger", "info"],
+    "interactive": ["non-interactive", "dismissible"],
+    "state": ["default", "pressed"]
+  },
+  "representativeVariants": [
+    { "tone": "neutral", "label": "默认" },
+    { "tone": "brand", "label": "品牌" },
+    { "tone": "success", "label": "已完成" },
+    { "tone": "warning", "label": "待审核" },
+    { "tone": "danger", "label": "已驳回" },
+    { "tone": "info", "label": "新功能" }
+  ],
+  "anatomy": ["container", "leadingIcon?", "label", "dismissAction?"],
+  "traits": {
+    "paddingHorizontal": "8px",
+    "paddingVertical": "2px",
+    "radius": "var(--radius-pill)",
+    "font": "var(--type-label-small)",
+    "iconSize": "var(--size-icon-sm)",
+    "gap": "4px",
+    "neutral": { "background": "var(--color-surface-subtle)", "color": "var(--color-text-secondary)" },
+    "brand": { "background": "var(--color-surface-selected)", "color": "var(--color-text-brand)" },
+    "success": { "background": "var(--color-success-bg)", "color": "var(--color-success-text)" },
+    "warning": { "background": "var(--color-warning-bg)", "color": "var(--color-warning-text)" },
+    "danger": { "background": "var(--color-danger-bg)", "color": "var(--color-danger-text)" },
+    "info": { "background": "var(--color-info-bg)", "color": "var(--color-info-text)" }
+  },
+  "structurePatterns": [
+    "inline-flex pill with 8px horizontal padding and 12px line box",
+    "leading/dismiss icons at 16px, label in label-small type",
+    "tinted background + darker foreground pair per tone (no outline)"
+  ],
+  "usageHints": [
+    "use for classification or short status, not primary actions",
+    "non-interactive tags must not visually mimic primary buttons",
+    "dismissible tags expose role/state and keep platform hit target"
+  ],
+  "doNotInvent": [
+    "Accent Cyan is not a fifth status family",
+    "no large/elevated tag variants",
+    "no outlined tag as default (tinted is V1)"
+  ],
+  "unknowns": ["dismiss hit target padding follows platform minimum"]
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tag · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin:0; padding:12px; background:var(--color-background); font-family:var(--font-family-base); color:var(--color-text-primary); }
+.specimen { display:flex; flex-direction:column; gap:12px; }
+.stage { display:flex; flex-direction:column; gap:8px; }
+.story { display:flex; flex-direction:column; gap:6px; }
+.story-label { font:var(--type-caption); color:var(--color-text-tertiary); }
+.rail { display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:var(--color-surface); border-radius:var(--radius-container); padding:12px; }
+
+/* @component-css-start */
+.tag { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:var(--radius-pill); font:var(--type-label-small); white-space:nowrap; line-height:16px; min-width:20px; border:none; outline:none; box-shadow:none; }
+.tag svg { width:16px; height:16px; flex-shrink:0; display:block; }
+.tag-neutral { background:var(--color-surface-subtle); color:var(--color-text-secondary); }
+.tag-brand { background:var(--color-surface-selected); color:var(--color-text-brand); }
+.tag-success { background:var(--color-success-bg); color:var(--color-success-text); }
+.tag-warning { background:var(--color-warning-bg); color:var(--color-warning-text); }
+.tag-danger { background:var(--color-danger-bg); color:var(--color-danger-text); }
+.tag-info { background:var(--color-info-bg); color:var(--color-info-text); }
+.tag-dismiss { cursor:pointer; }
+.tag-dismiss:hover { filter:brightness(0.96); }
+.tag-close { width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; margin-left:2px; border:none; background:transparent; padding:0; cursor:pointer; color:currentColor; opacity:0.72; border-radius:var(--radius-pill); }
+.tag-close:hover { opacity:1; background:rgba(0,0,0,0.06); }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">语义标签</span>
+      <div class="rail">
+        <span class="tag tag-neutral" data-evidence-sample="neutral">默认</span>
+        <span class="tag tag-brand" data-evidence-sample="brand">品牌</span>
+        <span class="tag tag-success" data-evidence-sample="success">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.2l2.8 2.8 6.2-6.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          已完成
+        </span>
+        <span class="tag tag-warning" data-evidence-sample="warning">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="5.4" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.4M8 10.6v.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          待审核
+        </span>
+        <span class="tag tag-danger" data-evidence-sample="danger">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="5.4" stroke="currentColor" stroke-width="1.4"/><path d="M5.6 5.6l4.8 4.8M10.4 5.6l-4.8 4.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          已驳回
+        </span>
+        <span class="tag tag-info" data-evidence-sample="info">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.6l1.5 3.1 3.4.5-2.5 2.4.6 3.4L8 10.4 4.9 12l.6-3.4L3 6.2l3.4-.5L8 2.6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+          新功能
+        </span>
+      </div>
+    </div>
+    <div class="story">
+      <span class="story-label">可关闭</span>
+      <div class="rail">
+        <span class="tag tag-brand tag-dismiss" data-evidence-sample="dismissible">
+          品牌
+          <button class="tag-close" type="button" aria-label="移除">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

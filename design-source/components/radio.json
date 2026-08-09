@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "slug": "radio",
+  "name": "Radio",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": ["actions-forms", "selection-control", "single-choice"],
+  "variantDimensions": {
+    "state": ["unselected", "selected", "disabled-unselected", "disabled-selected"]
+  },
+  "representativeVariants": [
+    { "state": "selected", "label": "紧凑模式", "helper": "更短的控件高度与更密的间距" },
+    { "state": "unselected", "label": "舒适模式", "helper": "更大的点击区域与留白" },
+    { "state": "disabled-selected", "label": "系统默认(已由管理员锁定)" },
+    { "state": "disabled-unselected", "label": "暂不支持的选项" }
+  ],
+  "anatomy": ["outer", "innerDot?", "label?", "helper?"],
+  "traits": {
+    "outerSize": "20px",
+    "innerDotSize": "8px",
+    "borderWidth": "1px",
+    "radius": "var(--radius-pill)",
+    "unselected": { "background": "var(--color-surface)", "border": "var(--color-border)", "label": "var(--color-text-primary)" },
+    "selected": { "border": "var(--color-primary)", "dot": "var(--color-primary)", "label": "var(--color-text-primary)" },
+    "pressed": { "feedback": "var(--color-surface-pressed)" },
+    "disabledUnselected": { "border": "var(--color-border-subtle)", "label": "var(--color-text-disabled)" },
+    "disabledSelected": { "border": "var(--color-text-disabled)", "dot": "var(--color-text-disabled)", "label": "var(--color-text-disabled)" },
+    "labelFont": "var(--type-body)",
+    "helperFont": "var(--type-body-small)",
+    "gap": "var(--space-8)"
+  },
+  "structurePatterns": [
+    "horizontal flex: 20px outer circle with centered 8px dot + label/helper",
+    "selected shows an 8px primary-colored inner dot inside a primary ring",
+    "options arranged in a vertical radio group with 12px spacing",
+    "outer and label share hit target"
+  ],
+  "usageHints": [
+    "use only for mutually exclusive single selection within a group",
+    "tapping an already-selected radio normally does not clear selection",
+    "group must expose single-selection semantics for accessibility"
+  ],
+  "doNotInvent": [
+    "no square radio (always circular)",
+    "no brand gradient ring",
+    "no multi-select semantics"
+  ],
+  "unknowns": ["group error presentation follows field helper conventions"]
+}

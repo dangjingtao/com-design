@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "screensGenerated": 3,
+  "coreComponentsUsed": ["button", "input", "list-item", "card", "tag", "bottom-navigation"],
+  "supportComponentsUsed": [],
+  "previewClassReuseRate": 0.8,
+  "hasProductContext": true,
+  "inventedComponents": [],
+  "renderedFromEvidence": [],
+  "interactiveStatesRendered": true,
+  "primaryActionPerScreen": true,
+  "warnings": []
+}

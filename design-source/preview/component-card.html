@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: var(--space-12); background: var(--color-background); font-family: var(--font-family-base); }
+  .card-list { display: flex; flex-direction: column; gap: var(--space-16); }
+
+  /* @component-css-start */
+  .card { background: var(--color-surface); border-radius: var(--radius-container); padding: var(--space-12); display: flex; flex-direction: column; gap: var(--space-8); }
+  .card.outlined { border: 1px solid var(--color-border-subtle); }
+  .card.is-pressed { background: var(--color-surface-pressed); }
+  .card__header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-8); }
+  .card__title { font: var(--type-heading-small); color: var(--color-text-primary); margin: 0; }
+  .card__body { font: var(--type-body-small); color: var(--color-text-secondary); margin: 0; }
+  .card__action { font: var(--type-label-small); color: var(--color-text-brand); text-decoration: none; white-space: nowrap; }
+  /* @component-css-end */
+</style>
+</head>
+<body>
+<div class="card-list">
+  <div class="card" data-variant="default">
+    <h3 class="card__title">今日概览</h3>
+    <p class="card__body">12 个待处理事项,3 项需要在今天完成。</p>
+  </div>
+  <div class="card outlined" data-variant="outlined">
+    <h3 class="card__title">存储空间</h3>
+    <p class="card__body">已使用 68%,共 128 GB。</p>
+  </div>
+  <div class="card is-pressed" data-variant="interactive" data-state="pressed">
+    <div class="card__header">
+      <h3 class="card__title">团队动态</h3>
+      <a class="card__action" href="#">查看详情</a>
+    </div>
+    <p class="card__body">林晓刚刚更新了设计规范。</p>
+  </div>
+</div>
+</body>
+</html>
