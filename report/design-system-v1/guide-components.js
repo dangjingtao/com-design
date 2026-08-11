@@ -21,8 +21,14 @@ const componentUi = {
   traits: document.querySelector('#inspector-traits'),
   stage: document.querySelector('#component-canvas-stage'),
   holder: document.querySelector('#phone-holder'),
-  artboard: document.querySelector('#phone-artboard')
+  artboard: document.querySelector('#phone-artboard'),
+  canvasLabel: document.querySelector('.canvas-label')
 };
+
+const IPHONE_VIEWPORT_WIDTH = 390;
+const IPHONE_VIEWPORT_HEIGHT = 844;
+const IPHONE_FRAME_WIDTH = 404;
+const IPHONE_FRAME_HEIGHT = 858;
 
 let guideComponents = [];
 let selectedComponentSlug = 'button';
@@ -133,7 +139,7 @@ async function selectGuideComponent(slug, updateHash = true, shouldScroll = true
   const previewPath = `./design-source/preview/component-${slug}.html`;
   const contractPath = `./design-source/components/${slug}.json`;
   componentUi.preview.src = previewPath;
-  componentUi.preview.title = `${item.name} · 390 × 844 标准移动端画布`;
+  componentUi.preview.title = `${item.name} · iPhone 390 × 844 仿真画布`;
   componentUi.previewLink.href = previewPath;
   componentUi.contractLink.href = contractPath;
 
@@ -215,6 +221,9 @@ function normalizePreviewCanvas(){
     doc.documentElement.classList.add('human-guide-embedded');
     doc.body?.classList.add('human-guide-embedded-body');
 
+    const rootPhone = doc.body?.querySelector(':scope > .phone');
+    if(rootPhone) doc.body?.classList.add('human-guide-has-phone');
+
     const style = doc.createElement('style');
     style.id = 'human-guide-canvas-normalize';
     style.textContent = `
@@ -242,7 +251,10 @@ function normalizePreviewCanvas(){
         max-width:none!important;
         min-height:844px!important;
         margin:0!important;
-        padding:24px!important;
+        padding:56px 24px 28px!important;
+      }
+      body.human-guide-has-phone .specimen{
+        padding:0!important;
       }
       .phone{
         box-sizing:border-box!important;
@@ -277,7 +289,6 @@ function normalizePreviewCanvas(){
     `;
     doc.head.appendChild(style);
 
-    const rootPhone = doc.body?.querySelector(':scope > .phone');
     if(rootPhone){
       doc.body.style.width = '390px';
       doc.body.style.minHeight = '844px';
@@ -289,12 +300,12 @@ function normalizePreviewCanvas(){
 
 function resizePhoneArtboard(){
   if(!componentUi.stage || !componentUi.holder || !componentUi.artboard) return;
-  const available = Math.max(260, componentUi.stage.clientWidth - 40);
-  const scale = Math.min(1, available / 390);
+  const available = Math.max(280, componentUi.stage.clientWidth - 40);
+  const scale = Math.min(1, available / IPHONE_FRAME_WIDTH);
   componentUi.artboard.style.transform = `scale(${scale})`;
-  componentUi.holder.style.width = `${390 * scale}px`;
-  componentUi.holder.style.height = `${844 * scale}px`;
-  componentUi.stage.style.minHeight = `${844 * scale + 96}px`;
+  componentUi.holder.style.width = `${IPHONE_FRAME_WIDTH * scale}px`;
+  componentUi.holder.style.height = `${IPHONE_FRAME_HEIGHT * scale}px`;
+  componentUi.stage.style.minHeight = `${IPHONE_FRAME_HEIGHT * scale + 108}px`;
 }
 
 componentUi.preview?.addEventListener('load', normalizePreviewCanvas);
@@ -307,6 +318,7 @@ window.addEventListener('hashchange', () => {
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
+  if(componentUi.canvasLabel) componentUi.canvasLabel.textContent = 'iPhone · 390 × 844';
   resizePhoneArtboard();
   await initComponentWorkspace();
   resizePhoneArtboard();
