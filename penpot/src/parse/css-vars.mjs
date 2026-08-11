@@ -64,22 +64,24 @@ export function resolveValue(value, table, resolving = new Set()) {
 }
 
 /**
- * 把 root/dark 两张表解析成具体值，并以 dark 覆盖 root 中同名变量，
- * 输出带 theme 标记的扁平清单。
+ * 把 root/dark 两张表解析成具体值，并以 dark 覆盖 root 中同名变量。
+ * dark 主题不仅解析 .dark 中直接声明的 token，也会重新解析 root alias，
+ * 因此 color-background -> com-surface-page -> neutral 等引用链能正确继承暗色覆盖。
  *
  * @param {{ root: Record<string,string>, dark: Record<string,string> }} parsed
  * @returns {Array<{ name: string, light: string, dark?: string }>}
  */
 export function buildResolvedTable(parsed) {
   const names = new Set([...Object.keys(parsed.root), ...Object.keys(parsed.dark)]);
+  const darkTable = { ...parsed.root, ...parsed.dark };
   const out = [];
   for (const name of names) {
     const lightRaw = parsed.root[name];
     const darkRaw = parsed.dark[name];
     const light = lightRaw !== undefined ? resolveValue(lightRaw, parsed.root) : undefined;
-    const dark = darkRaw !== undefined
-      ? resolveValue(darkRaw, { ...parsed.root, ...parsed.dark })
-      : undefined;
+    // 如果 alias 本身没有在 .dark 重写，也要用 dark table 重算它引用的 primitive/semantic。
+    const darkSource = darkRaw !== undefined ? darkRaw : lightRaw;
+    const dark = darkSource !== undefined ? resolveValue(darkSource, darkTable) : undefined;
     out.push({ name, light, dark });
   }
   return out;
