@@ -57,13 +57,39 @@ const previewLink = document.querySelector('#preview-link');
 const contractLink = document.querySelector('#contract-link');
 const sourcePath = document.querySelector('#source-path');
 const toolbarTitle = document.querySelector('#preview-toolbar-title');
+const specTitle = document.querySelector('#spec-title');
+const contractMeta = document.querySelector('#contract-meta');
+const specAnatomy = document.querySelector('#spec-anatomy');
+const specVariants = document.querySelector('#spec-variants');
+const specTraits = document.querySelector('#spec-traits');
+const specPatterns = document.querySelector('#spec-patterns');
+const specUsage = document.querySelector('#spec-usage');
+const specDont = document.querySelector('#spec-dont');
+const specExamples = document.querySelector('#spec-examples');
+const specUnknowns = document.querySelector('#spec-unknowns');
 
 let activeCategory = 'all';
 let selectedSlug = getInitialSlug();
+let contractRequest = 0;
 
 function getInitialSlug(){
   const hash = decodeURIComponent(location.hash.replace(/^#/,''));
   return components.some(item => item.slug === hash) ? hash : 'button';
+}
+
+function escapeHtml(value){
+  return String(value)
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'",'&#039;');
+}
+
+function displayValue(value){
+  if(Array.isArray(value)) return value.join(' · ');
+  if(value && typeof value === 'object') return JSON.stringify(value);
+  return String(value ?? '—');
 }
 
 function matches(item){
@@ -93,6 +119,95 @@ function renderGrid(){
   });
 }
 
+function setSpecLoading(){
+  contractMeta.innerHTML = '<span class="meta-pill">Loading contract…</span>';
+  specAnatomy.innerHTML = '<span class="spec-loading">加载中…</span>';
+  specVariants.innerHTML = '<span class="spec-loading">加载中…</span>';
+  specTraits.innerHTML = '<span class="spec-loading">加载中…</span>';
+  specPatterns.innerHTML = '<li class="spec-loading">加载中…</li>';
+  specUsage.innerHTML = '<li class="spec-loading">加载中…</li>';
+  specDont.innerHTML = '<li class="spec-loading">加载中…</li>';
+  specExamples.innerHTML = '<span class="spec-loading">加载中…</span>';
+  specUnknowns.innerHTML = '<span class="spec-loading">加载中…</span>';
+}
+
+async function loadContract(item){
+  const requestId = ++contractRequest;
+  setSpecLoading();
+  try{
+    const response = await fetch(`./design-source/components/${item.slug}.json`, {cache:'no-cache'});
+    if(!response.ok) throw new Error(`HTTP ${response.status}`);
+    const contract = await response.json();
+    if(requestId !== contractRequest) return;
+    renderContract(contract);
+  }catch(error){
+    if(requestId !== contractRequest) return;
+    const message = `Contract 加载失败：${error.message}`;
+    contractMeta.innerHTML = '<span class="meta-pill error">Contract unavailable</span>';
+    [specAnatomy,specVariants,specTraits,specExamples,specUnknowns].forEach(node => {
+      node.innerHTML = `<span class="spec-error">${escapeHtml(message)}</span>`;
+    });
+    [specPatterns,specUsage,specDont].forEach(node => {
+      node.innerHTML = `<li class="spec-error">${escapeHtml(message)}</li>`;
+    });
+  }
+}
+
+function renderContract(contract){
+  const semantic = Array.isArray(contract.semanticTypeCandidates) ? contract.semanticTypeCandidates : [];
+  contractMeta.innerHTML = [
+    `<span class="meta-pill strong">Schema v${escapeHtml(contract.schemaVersion ?? '—')}</span>`,
+    `<span class="meta-pill">${escapeHtml(contract.sourceKind ?? 'contract')}</span>`,
+    `<span class="meta-pill confidence">Confidence · ${escapeHtml(contract.confidence ?? '—')}</span>`,
+    ...semantic.slice(0,3).map(item => `<span class="meta-pill semantic">${escapeHtml(item)}</span>`)
+  ].join('');
+
+  const anatomy = Array.isArray(contract.anatomy) ? contract.anatomy : [];
+  specAnatomy.innerHTML = anatomy.length
+    ? anatomy.map((part,index) => `<span class="anatomy-chip"><b>${String(index + 1).padStart(2,'0')}</b>${escapeHtml(part)}</span>`).join('')
+    : '<span class="empty-spec">当前 Contract 未声明 anatomy。</span>';
+
+  const dimensions = contract.variantDimensions && typeof contract.variantDimensions === 'object'
+    ? Object.entries(contract.variantDimensions)
+    : [];
+  specVariants.innerHTML = dimensions.length
+    ? dimensions.map(([dimension,values]) => {
+        const list = Array.isArray(values) ? values : [values];
+        return `<div class="variant-row"><b>${escapeHtml(dimension)}</b><div>${list.map(value => `<span>${escapeHtml(displayValue(value))}</span>`).join('')}</div></div>`;
+      }).join('')
+    : '<span class="empty-spec">该组件没有独立的 variant dimension。</span>';
+
+  const traits = contract.traits && typeof contract.traits === 'object' ? Object.entries(contract.traits) : [];
+  specTraits.innerHTML = traits.length
+    ? traits.map(([key,value]) => `<div class="trait-row"><b>${escapeHtml(key)}</b><code>${escapeHtml(displayValue(value))}</code></div>`).join('')
+    : '<span class="empty-spec">当前 Contract 未声明 traits。</span>';
+
+  renderList(specPatterns, contract.structurePatterns, '当前 Contract 未声明结构规则。');
+  renderList(specUsage, contract.usageHints, '当前 Contract 未声明额外使用原则。');
+  renderList(specDont, contract.doNotInvent, '当前 Contract 未声明额外禁止项。');
+
+  const examples = Array.isArray(contract.representativeVariants) ? contract.representativeVariants : [];
+  specExamples.innerHTML = examples.length
+    ? examples.map((example,index) => {
+        const entries = Object.entries(example || {});
+        const lead = example.variant || example.state || example.label || example.title || `Example ${String(index + 1).padStart(2,'0')}`;
+        return `<article class="example-card"><header><span>${String(index + 1).padStart(2,'0')}</span><b>${escapeHtml(lead)}</b></header><dl>${entries.map(([key,value]) => `<div><dt>${escapeHtml(key)}</dt><dd>${escapeHtml(displayValue(value))}</dd></div>`).join('')}</dl></article>`;
+      }).join('')
+    : '<span class="empty-spec">当前 Contract 未提供代表性配置。</span>';
+
+  const unknowns = Array.isArray(contract.unknowns) ? contract.unknowns : [];
+  specUnknowns.innerHTML = unknowns.length
+    ? `<ul class="spec-list open">${unknowns.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+    : '<div class="resolved-note"><span>✓</span><p><b>当前无未决项</b><small>Contract 的 unknowns 为空；后续出现真实跨产品问题时再进入这里。</small></p></div>';
+}
+
+function renderList(node, items, fallback){
+  const list = Array.isArray(items) ? items : [];
+  node.innerHTML = list.length
+    ? list.map(item => `<li>${escapeHtml(item)}</li>`).join('')
+    : `<li class="empty-spec">${escapeHtml(fallback)}</li>`;
+}
+
 function selectComponent(slug, scrollToViewer = false){
   const item = components.find(entry => entry.slug === slug);
   if(!item) return;
@@ -103,6 +218,7 @@ function selectComponent(slug, scrollToViewer = false){
   title.textContent = item.name;
   category.textContent = categoryLabels[item.category].toUpperCase();
   description.textContent = `${item.zh} · ${item.desc}`;
+  specTitle.textContent = `${item.name} 设计规范`;
   preview.src = previewPath;
   preview.title = `${item.name} 组件真实预览`;
   previewLink.href = previewPath;
@@ -114,6 +230,7 @@ function selectComponent(slug, scrollToViewer = false){
     history.replaceState(null,'',`#${slug}`);
   }
   renderGrid();
+  loadContract(item);
   if(scrollToViewer){
     viewer.scrollIntoView({behavior:'smooth',block:'start'});
   }
