@@ -115,22 +115,24 @@ jobs:
               '<span><b>5 Targets</b>工程、设计工具与 Agent 输出</span>'
           )
 
-          mcp_card = '''
-          <article class="delivery-card">
-            <small>Agent Interface · MCP</small>
-            <h3>Com Design MCP</h3>
-            <p>面向 Codex、Claude、OpenCode 等 MCP Host 的只读设计系统接口。组件契约、Preview、Token 与 design.md 均来自本次同源构建。</p>
-            <a class="delivery-file" href="./downloads/com-design-mcp.zip" download>下载 MCP Package ↓</a>
-            <div class="delivery-links">
-              <a href="./downloads/mcp/README.md" target="_blank" rel="noopener">使用说明</a>
-              <a href="./downloads/mcp/data/mcp-manifest.json" target="_blank" rel="noopener">Source Manifest</a>
-            </div>
-          </article>
-'''
-          traceability = '''          <article class="delivery-card">
-            <small>Traceability · Build Record</small>'''
+          mcp_card = '\n'.join([
+              '          <article class="delivery-card">',
+              '            <small>Agent Interface · MCP</small>',
+              '            <h3>Com Design MCP</h3>',
+              '            <p>面向 Codex、Claude、OpenCode 等 MCP Host 的只读设计系统接口。组件契约、Preview、Token 与 design.md 均来自本次同源构建。</p>',
+              '            <a class="delivery-file" href="./downloads/com-design-mcp.zip" download>下载 MCP Package ↓</a>',
+              '            <div class="delivery-links">',
+              '              <a href="./downloads/mcp/README.md" target="_blank" rel="noopener">使用说明</a>',
+              '              <a href="./downloads/mcp/data/mcp-manifest.json" target="_blank" rel="noopener">Source Manifest</a>',
+              '            </div>',
+              '          </article>',
+          ])
+          traceability = '\n'.join([
+              '          <article class="delivery-card">',
+              '            <small>Traceability · Build Record</small>',
+          ])
           if 'downloads/com-design-mcp.zip' not in html:
-              html = html.replace(traceability, mcp_card + '\n' + traceability)
+              html = html.replace(traceability, mcp_card + '\n\n' + traceability)
 
           html = html.replace(
               '<b>同源：</b>Human Docs / Penpot / Tailwind / NativeWind / RN 都不互相反写。',
