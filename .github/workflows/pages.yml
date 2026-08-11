@@ -45,6 +45,11 @@ jobs:
           cp -R design-source/components _site/design-source/components
           cp -R design-source/preview _site/design-source/preview
 
+          # Append Human Guide-only iframe compatibility rules after the main workspace script.
+          # This keeps Core Preview pages untouched while fixing multi-scene evidence layouts in the simulator.
+          printf '\n' >> _site/guide-components.js
+          cat report/design-system-v1/guide-preview-adapter.js >> _site/guide-components.js
+
           # Every deployment must reference fresh Human Guide CSS/JS.
           # GitHub Pages/browser caches otherwise make different revisions appear mixed together.
           BUILD_ID="${GITHUB_SHA::12}"
