@@ -55,7 +55,6 @@ jobs:
           cat report/design-system-v1/foundation-flat-guard.css >> _site/foundation.css
 
           # Every deployment references revisioned Human Guide assets.
-          # Foundation is rendered from the copied design-source/colors_and_type.css at runtime.
           BUILD_ID="${GITHUB_SHA::12}"
           python3 - "$BUILD_ID" <<'PY'
           from pathlib import Path
@@ -79,11 +78,13 @@ jobs:
           html = html.replace(
               '</head>',
               f'  <link rel="stylesheet" href="./foundation.css?v={build}">\n'
+              f'  <link rel="stylesheet" href="./mobile-nav.css?v={build}">\n'
               f'  <meta name="com-design-build" content="{build}">\n</head>'
           )
           html = html.replace(
               '</body>',
-              f'  <script src="./foundation.js?v={build}"></script>\n</body>'
+              f'  <script src="./foundation.js?v={build}"></script>\n'
+              f'  <script src="./mobile-nav.js?v={build}"></script>\n</body>'
           )
           page.write_text(html, encoding='utf-8')
           PY
