@@ -1,0 +1,18 @@
+{
+  "name": "@com-design/build",
+  "version": "1.0.0-rc.2",
+  "private": true,
+  "type": "module",
+  "description": "Com Design multi-target build pipeline",
+  "scripts": {
+    "validate": "node tooling/bin/validate.mjs",
+    "test": "node --test tooling/test/*.test.mjs",
+    "build:engineering": "node tooling/bin/build.mjs",
+    "build:penpot": "node penpot/bin/build.mjs",
+    "build:all": "node tooling/bin/build-all.mjs",
+    "build": "npm run build:all"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
