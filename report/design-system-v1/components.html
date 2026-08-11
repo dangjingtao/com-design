@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Components — Com Design Mobile</title>
+  <meta name="description" content="Com Design Mobile 33 个 Core Components 人类可读展示与真实 Preview。">
+  <link rel="stylesheet" href="./components.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./index.html" aria-label="返回 Com Design Human Guide">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span><b>Com Design</b><small>Mobile · Human Guide</small></span>
+    </a>
+    <nav class="topnav" aria-label="页面导航">
+      <a href="./index.html">Overview</a>
+      <a class="active" href="./components.html">Components</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">CORE LIBRARY · 1.0.0-rc.2</p>
+        <h1>33 个组件，<br>一套共同语言。</h1>
+        <p>这里展示 Com Design Mobile 当前全部 Core Components。点击任意组件，下方直接加载 <code>design-source/preview</code> 中的真实 specimen；Human Docs 不复制、不重画另一套视觉真相。</p>
+      </div>
+      <div class="hero-stats" aria-label="组件统计">
+        <div><b>33</b><span>Core Components</span></div>
+        <div><b>4</b><span>Categories</span></div>
+        <div><b>1</b><span>Source of Truth</span></div>
+      </div>
+    </section>
+
+    <section class="catalogue" aria-labelledby="catalogue-title">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">CATALOGUE</p>
+          <h2 id="catalogue-title">组件目录</h2>
+          <p>先按名字找到组件，再看真实状态与场景。组件数量不是目标，稳定的角色边界才是。</p>
+        </div>
+        <label class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="component-search" type="search" placeholder="搜索 Button、Dialog、搜索框…" autocomplete="off">
+        </label>
+      </div>
+
+      <div class="filters" id="category-filters" aria-label="组件分类筛选">
+        <button class="filter is-active" data-category="all" type="button">全部 <span>33</span></button>
+        <button class="filter" data-category="actions-forms" type="button">Actions & Forms <span>8</span></button>
+        <button class="filter" data-category="navigation-information" type="button">Navigation & Information <span>11</span></button>
+        <button class="filter" data-category="feedback-overlay-progress" type="button">Feedback / Overlay / Progress <span>11</span></button>
+        <button class="filter" data-category="search-menu" type="button">Search & Menu <span>3</span></button>
+      </div>
+
+      <div class="component-grid" id="component-grid" aria-live="polite"></div>
+      <p class="empty-result" id="empty-result" hidden>没有匹配的 Core Component。</p>
+    </section>
+
+    <section class="viewer" id="viewer" aria-labelledby="viewer-title">
+      <div class="viewer-head">
+        <div>
+          <p class="section-kicker" id="viewer-category">ACTIONS & FORMS</p>
+          <h2 id="viewer-title">Button</h2>
+          <p id="viewer-description">主操作与动作层级。紧凑、扁平，视觉尺寸与触摸区域分离。</p>
+        </div>
+        <div class="viewer-actions">
+          <a id="preview-link" class="action-link" href="./design-source/preview/component-button.html" target="_blank" rel="noopener">打开 Preview ↗</a>
+          <a id="contract-link" class="action-link secondary" href="./design-source/components/button.json" target="_blank" rel="noopener">Contract JSON ↗</a>
+        </div>
+      </div>
+
+      <div class="source-note">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Live specimen from <code id="source-path">design-source/preview/component-button.html</code></span>
+      </div>
+
+      <div class="preview-shell">
+        <div class="preview-toolbar" aria-hidden="true">
+          <span></span><span></span><span></span>
+          <b id="preview-toolbar-title">Button · Com Design</b>
+        </div>
+        <iframe
+          id="component-preview"
+          title="Button 组件真实预览"
+          src="./design-source/preview/component-button.html"
+          loading="eager">
+        </iframe>
+      </div>
+    </section>
+
+    <section class="boundary">
+      <div>
+        <p class="section-kicker">BOUNDARY</p>
+        <h2>展示什么，也要说明不展示什么。</h2>
+      </div>
+      <div class="boundary-grid">
+        <article><b>Core</b><p>33 个组件属于公司级稳定候选能力。产品可以消费、组合，但不能因为某个业务页面临时改写 Core API。</p></article>
+        <article><b>Pattern</b><p>表单、搜索、反馈、导航等跨组件行为属于 Pattern，不应该为了“看起来完整”硬塞成新组件。</p></article>
+        <article><b>Product Extension</b><p>活动卡片、行业状态、业务金刚区等保留在产品层。真实跨产品复用出现后，再评估是否进入 Core。</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Com Design Mobile · Human Guide</span>
+    <span>Source of truth: <code>design-source/</code></span>
+  </footer>
+
+  <script src="./components.js"></script>
+</body>
+</html>
