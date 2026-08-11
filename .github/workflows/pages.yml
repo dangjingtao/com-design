@@ -6,6 +6,10 @@ on:
       - dev
     paths:
       - "report/design-system-v1/**"
+      - "design-source/colors_and_type.css"
+      - "design-source/components.css"
+      - "design-source/components/**"
+      - "design-source/preview/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -34,10 +38,23 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6
 
+      - name: Assemble Human Docs site
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site/design-source
+          cp -R report/design-system-v1/. _site/
+          cp design-source/colors_and_type.css _site/design-source/colors_and_type.css
+          cp design-source/components.css _site/design-source/components.css
+          cp -R design-source/components _site/design-source/components
+          cp -R design-source/preview _site/design-source/preview
+          touch _site/.nojekyll
+
       - name: Upload Human Guide
         uses: actions/upload-pages-artifact@v5
         with:
-          path: report/design-system-v1
+          path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment
