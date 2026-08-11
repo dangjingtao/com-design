@@ -1,15 +1,11 @@
 @charset "UTF-8";
 
 .delivery-strip{padding:34px 0 42px;background:#fff;border-bottom:1px solid var(--line)}
-.delivery-head{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,.55fr);gap:44px;align-items:end;margin-bottom:24px}
+.delivery-head{display:block;margin-bottom:24px}
 .delivery-kicker{margin:0 0 9px;color:var(--brand-600);font-size:10px;font-weight:760;letter-spacing:.1em;text-transform:uppercase}
 .delivery-head h2{max-width:760px;margin:0;font-size:27px;line-height:1.28;letter-spacing:-.025em}
-.delivery-head p{margin:12px 0 0;max-width:780px;color:var(--n600);font-size:13px;line-height:1.7}
-.delivery-proof{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.delivery-proof span{padding:12px 0;color:var(--muted);font-size:10px;line-height:1.45}
-.delivery-proof span:nth-child(odd){padding-right:16px;border-right:1px solid var(--line)}
-.delivery-proof span:nth-child(even){padding-left:16px}
-.delivery-proof b{display:block;color:var(--text);font-size:14px;font-weight:650}
+.delivery-head p{margin:12px 0 0;max-width:900px;color:var(--n600);font-size:13px;line-height:1.7}
+.delivery-proof{display:none!important}
 .delivery-grid{display:grid;grid-template-columns:1.25fr 1fr 1fr;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
 .delivery-card{min-width:0;padding:21px 22px 20px;border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:flex-start}
 .delivery-card:last-child{border-right:0}
@@ -28,8 +24,6 @@
 .delivery-foot b{color:var(--n700);font-weight:650}
 
 @media(max-width:900px){
-  .delivery-head{grid-template-columns:1fr;gap:20px}
-  .delivery-proof{max-width:520px}
   .delivery-grid{grid-template-columns:1fr}
   .delivery-card{border-right:0;border-bottom:1px solid var(--line)}
   .delivery-card:last-child{border-bottom:0}
@@ -37,8 +31,5 @@
 @media(max-width:720px){
   .delivery-strip{padding:28px 0 34px}
   .delivery-head h2{font-size:23px}
-  .delivery-proof{grid-template-columns:1fr}
-  .delivery-proof span,.delivery-proof span:nth-child(odd),.delivery-proof span:nth-child(even){padding:10px 0;border-right:0;border-bottom:1px solid var(--line)}
-  .delivery-proof span:last-child{border-bottom:0}
   .delivery-foot{display:grid}
 }
