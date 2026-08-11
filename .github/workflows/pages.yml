@@ -50,8 +50,8 @@ jobs:
           printf '\n' >> _site/guide-components.js
           cat report/design-system-v1/guide-preview-adapter.js >> _site/guide-components.js
 
-          # Every deployment must reference fresh Human Guide CSS/JS.
-          # GitHub Pages/browser caches otherwise make different revisions appear mixed together.
+          # Every deployment references revisioned Human Guide assets.
+          # Foundation is rendered from the copied design-source/colors_and_type.css at runtime.
           BUILD_ID="${GITHUB_SHA::12}"
           python3 - "$BUILD_ID" <<'PY'
           from pathlib import Path
@@ -74,7 +74,12 @@ jobs:
           )
           html = html.replace(
               '</head>',
+              f'  <link rel="stylesheet" href="./foundation.css?v={build}">\n'
               f'  <meta name="com-design-build" content="{build}">\n</head>'
+          )
+          html = html.replace(
+              '</body>',
+              f'  <script src="./foundation.js?v={build}"></script>\n</body>'
           )
           page.write_text(html, encoding='utf-8')
           PY
