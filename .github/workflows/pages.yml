@@ -10,6 +10,10 @@ on:
       - "design-source/components.css"
       - "design-source/components/**"
       - "design-source/preview/**"
+      - "tooling/**"
+      - "penpot/src/**"
+      - "penpot/bin/build.mjs"
+      - "package.json"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -30,6 +34,17 @@ jobs:
       - name: Checkout dev
         uses: actions/checkout@v6
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build engineering delivery assets
+        run: |
+          npm test
+          npm run build:engineering
+          npm run build:penpot
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6
 
@@ -39,11 +54,23 @@ jobs:
           set -euo pipefail
           rm -rf _site
           mkdir -p _site/design-source
+          mkdir -p _site/downloads
           cp -R report/design-system-v1/. _site/
           cp design-source/colors_and_type.css _site/design-source/colors_and_type.css
           cp design-source/components.css _site/design-source/components.css
           cp -R design-source/components _site/design-source/components
           cp -R design-source/preview _site/design-source/preview
+
+          # Publish engineering outputs built from the same design-source revision.
+          cp -R dist/tailwind _site/downloads/tailwind
+          cp -R dist/nativewind _site/downloads/nativewind
+          cp -R dist/react-native _site/downloads/react-native
+          cp dist/build-manifest.json _site/downloads/build-manifest.json
+          cp penpot/build/manifest.json _site/downloads/penpot-manifest.json
+          (
+            cd dist
+            zip -qr ../_site/downloads/com-design-engineering.zip tailwind nativewind react-native build-manifest.json
+          )
 
           # Append Human Guide-only iframe compatibility rules after the main workspace script.
           # This keeps Core Preview pages untouched while fixing multi-scene evidence layouts in the simulator.
@@ -66,6 +93,10 @@ jobs:
           html = html.replace(
               'href="./guide-components.css"',
               f'href="./guide-components.css?v={build}"'
+          )
+          html = html.replace(
+              'href="./delivery.css"',
+              f'href="./delivery.css?v={build}"'
           )
           html = html.replace(
               'src="./guide-components.js"',
