@@ -7,22 +7,33 @@
   <meta name="description" content="Com Design Mobile 1.0.0-rc.2 面向设计、产品与研发的人类可读设计系统文档">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./culture.css">
+  <link rel="stylesheet" href="./guide-components.css">
 </head>
 <body>
 <div class="page">
   <aside class="rail">
     <div class="rail-brand"><strong>Com Design Mobile</strong><span>Human Guide · 1.0.0-rc.2</span></div>
-    <nav>
+
+    <nav class="rail-primary">
       <a href="#overview">概览</a>
       <a href="#principles">设计原则</a>
       <a href="#foundations">视觉基础</a>
       <a href="#patterns">设计模式</a>
-      <a href="#catalogue">组件目录</a>
+      <a href="#catalogue">组件</a>
+    </nav>
+
+    <div class="rail-components">
+      <div class="rail-components-title"><span>Core Components</span><b>33</b></div>
+      <div id="rail-component-groups"><span class="inspector-empty">正在读取组件目录…</span></div>
+    </div>
+
+    <nav class="rail-secondary">
       <a href="#adoption">采用验证</a>
       <a href="#system">系统边界</a>
       <a href="#next">下一步</a>
     </nav>
-    <p class="rail-note">唯一真相源<br><b>design-source/</b><br>组件契约 / CSS / Preview<br><br>本页负责解释，不另造一套规则。</p>
+
+    <p class="rail-note">唯一真相源<br><b>design-source/</b><br>组件契约 / CSS / Preview<br><br>左侧组件树与右侧画布均直接读取真相源。</p>
   </aside>
 
   <main>
@@ -53,7 +64,7 @@
         <div class="one-line"><b>一句话：</b>冷静但不沉重，年轻但不轻浮，紧凑但不拥挤。</div>
 
         <div class="reader-grid">
-          <article><b>设计师</b><p>先看 Foundation 与 Pattern，再从组件目录确认具体控件边界。</p></article>
+          <article><b>设计师</b><p>先看 Foundation 与 Pattern，再从左侧组件树确认具体控件边界。</p></article>
           <article><b>产品</b><p>先确认交互属于导航、反馈、输入还是业务扩展，不用视觉相似代替语义判断。</p></article>
           <article><b>研发</b><p>实现以 design-source 的契约与变量为准；本文档用于理解设计意图，不替代机器真相。</p></article>
         </div>
@@ -105,16 +116,68 @@
       </div>
     </section>
 
-    <section id="catalogue" class="section alt">
+    <section id="catalogue" class="section alt component-section">
       <div class="wrap">
-        <div class="section-title"><span>04</span><div><h2>组件目录 Component Catalogue</h2><p>V1 Core 共 33 个组件。这里先解决“该找哪个组件”，具体状态、结构与限制以对应契约和 Preview 为准。</p></div></div>
+        <div class="section-title"><span>04</span><div><h2>组件 Components</h2><p>左侧按 Pattern / 能力域组织全部 33 个 Core Component；点击组件后，在标准移动端画布中查看真实 Preview，并在右侧读取对应 Contract。</p></div></div>
 
-        <div class="catalogue-group"><header><div><h3>Actions & Forms</h3><p>动作、输入、选择与即时设置。</p></div><span>8</span></header><div class="chips"><a>Button</a><a>Icon Button</a><a>Input / Text Field</a><a>Textarea</a><a>Select / Picker Trigger</a><a>Checkbox</a><a>Radio</a><a>Switch</a></div></div>
-        <div class="catalogue-group"><header><div><h3>Navigation & Information</h3><p>页面结构、层级、导航和信息展示。</p></div><span>11</span></header><div class="chips"><a>List Item</a><a>Tabs</a><a>Segmented Control</a><a>Top App Bar</a><a>Bottom Navigation</a><a>Section</a><a>Divider</a><a>Card</a><a>Tag</a><a>Badge</a><a>Avatar</a></div></div>
-        <div class="catalogue-group"><header><div><h3>Feedback / Overlay / Progress</h3><p>状态反馈、遮罩层、等待与进度。</p></div><span>11</span></header><div class="chips"><a>Toast</a><a>Snackbar</a><a>Alert / Inline Banner</a><a>Dialog</a><a>Bottom Sheet</a><a>Loading Indicator</a><a>Skeleton</a><a>Empty State</a><a>Progress Indicator</a><a>Stepper</a><a>Timeline</a></div></div>
-        <div class="catalogue-group"><header><div><h3>Search & Menu</h3><p>搜索上下文与临时动作集合。</p></div><span>3</span></header><div class="chips"><a>Search Field</a><a>Menu</a><a>Menu Item</a></div></div>
+        <div class="component-studio">
+          <div class="canvas-column">
+            <div class="component-toolbar">
+              <div class="component-identity">
+                <small id="studio-category">Actions & Forms</small>
+                <h3 id="studio-title">Button</h3>
+                <p id="studio-description">正在读取组件 Contract…</p>
+              </div>
+              <div class="component-actions">
+                <a id="studio-preview-link" href="./design-source/preview/component-button.html" target="_blank" rel="noopener">Preview ↗</a>
+                <a id="studio-contract-link" href="./design-source/components/button.json" target="_blank" rel="noopener">Contract ↗</a>
+              </div>
+            </div>
 
-        <div class="scope-note"><b>不为了“组件数量完整”而扩 Core。</b>Carousel、FAB、Data Table、Rich Text Editor、Navigation Rail 等，需要真实跨产品复用需求证明后再进入公司级 Core。</div>
+            <div class="canvas-stage" id="component-canvas-stage">
+              <div class="canvas-label">Standard Mobile Canvas · 390 × 844</div>
+              <div class="phone-holder" id="phone-holder">
+                <div class="phone-artboard" id="phone-artboard">
+                  <iframe id="guide-component-preview" src="./design-source/preview/component-button.html" title="Button · 390 × 844 标准移动端画布"></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="component-inspector" aria-label="组件设计规范">
+            <div class="inspector-head">
+              <small>Human Spec · Live Contract</small>
+              <h3 id="inspector-title">Button</h3>
+              <p id="inspector-description">正在读取结构化设计规范…</p>
+              <div class="inspector-meta" id="inspector-meta"><span>Loading contract…</span></div>
+            </div>
+
+            <section class="inspector-section">
+              <h4><span>01</span>Anatomy · 结构</h4>
+              <div class="inspector-chips" id="inspector-anatomy"><span>加载中…</span></div>
+            </section>
+
+            <section class="inspector-section">
+              <h4><span>02</span>Variants · 变体</h4>
+              <div class="variant-block" id="inspector-variants"><span class="inspector-empty">加载中…</span></div>
+            </section>
+
+            <section class="inspector-section">
+              <h4><span>03</span>Usage · 使用原则</h4>
+              <ul class="inspector-list" id="inspector-usage"><li>加载中…</li></ul>
+            </section>
+
+            <section class="inspector-section">
+              <h4><span>04</span>Do not · 禁止发明</h4>
+              <ul class="inspector-list dont" id="inspector-dont"><li>加载中…</li></ul>
+            </section>
+
+            <section class="inspector-section">
+              <h4><span>05</span>Traits · 参数</h4>
+              <div class="trait-list" id="inspector-traits"><span class="inspector-empty">加载中…</span></div>
+            </section>
+          </aside>
+        </div>
       </div>
     </section>
 
@@ -148,7 +211,7 @@
         <div class="section-title"><span>07</span><div><h2>Human Docs 下一步</h2><p>从“一张完整概览”继续长成真正可查阅的规范。</p></div></div>
         <div class="next-grid">
           <article><span>Now</span><h3>Foundation 深化</h3><p>补充 Color / Typography / Spacing / Radius / Elevation / Iconography 的使用规则与 Do / Don't。</p></article>
-          <article><span>Next</span><h3>组件单页</h3><p>统一 Anatomy → Variants → States → Usage → Behavior → Accessibility → Platform Notes 模板。</p></article>
+          <article><span>Now</span><h3>组件工作区</h3><p>33 个组件已统一进入左侧树 + 标准手机画布 + Live Contract 浏览模式。</p></article>
           <article><span>Next</span><h3>Pattern 单页</h3><p>把表单、导航、反馈、搜索、状态等高频组合从“原则”扩成可复用决策指南。</p></article>
           <article><span>Later</span><h3>更多 Adoption</h3><p>积累第二、第三个产品案例，验证哪些规则真正跨产品稳定。</p></article>
         </div>
@@ -157,5 +220,6 @@
     </section>
   </main>
 </div>
+<script src="./guide-components.js"></script>
 </body>
 </html>
