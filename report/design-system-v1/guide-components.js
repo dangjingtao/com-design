@@ -30,6 +30,7 @@ const componentUi = {
 let guideComponents = [];
 let selectedComponentSlug = 'button';
 let contractRequestId = 0;
+const collapsedGroups = new Set();
 
 function escapeGuideHtml(value){
   return String(value ?? '')
@@ -59,7 +60,6 @@ async function initComponentWorkspace(){
     if(!response.ok) throw new Error(`HTTP ${response.status}`);
     const manifest = await response.json();
     guideComponents = Array.isArray(manifest.components) ? manifest.components : [];
-    renderComponentRail();
 
     const hashSlug = slugFromHash();
     if(hashSlug && guideComponents.some(item => item.slug === hashSlug)){
@@ -67,6 +67,8 @@ async function initComponentWorkspace(){
     }else if(!guideComponents.some(item => item.slug === selectedComponentSlug) && guideComponents.length){
       selectedComponentSlug = guideComponents[0].slug;
     }
+
+    renderComponentRail();
     selectGuideComponent(selectedComponentSlug, Boolean(hashSlug), false);
   }catch(error){
     componentUi.railGroups.innerHTML = `<p class="inspector-empty">组件清单加载失败：${escapeGuideHtml(error.message)}</p>`;
@@ -77,18 +79,36 @@ async function initComponentWorkspace(){
 function renderComponentRail(){
   componentUi.railGroups.innerHTML = componentCategoryConfig.map(group => {
     const items = guideComponents.filter(item => item.category === group.key);
+    const collapsed = collapsedGroups.has(group.key);
     return `
-      <div class="rail-component-group" data-category="${group.key}">
-        <div class="rail-group-title"><span>${group.label}</span><small>${items.length}</small></div>
+      <div class="rail-component-group${collapsed ? ' is-collapsed' : ''}" data-category="${group.key}">
+        <button class="rail-group-title" type="button" data-group="${group.key}" aria-expanded="${!collapsed}">
+          <span>${group.label}</span><small>${items.length}</small><i aria-hidden="true">⌄</i>
+        </button>
         <div class="rail-group-items">
-          ${items.map(item => `<button class="rail-component" type="button" data-slug="${item.slug}">${escapeGuideHtml(item.name)}</button>`).join('')}
+          ${items.map(item => `<button class="rail-component${item.slug === selectedComponentSlug ? ' is-active' : ''}" type="button" data-slug="${item.slug}">${escapeGuideHtml(item.name)}</button>`).join('')}
         </div>
       </div>`;
   }).join('');
 
+  componentUi.railGroups.querySelectorAll('.rail-group-title').forEach(button => {
+    button.addEventListener('click', () => toggleComponentGroup(button.dataset.group));
+  });
   componentUi.railGroups.querySelectorAll('.rail-component').forEach(button => {
     button.addEventListener('click', () => selectGuideComponent(button.dataset.slug, true, true));
   });
+}
+
+function toggleComponentGroup(groupKey){
+  const selected = guideComponents.find(item => item.slug === selectedComponentSlug);
+  if(selected?.category === groupKey && !collapsedGroups.has(groupKey)) return;
+  if(collapsedGroups.has(groupKey)) collapsedGroups.delete(groupKey);
+  else collapsedGroups.add(groupKey);
+  renderComponentRail();
+}
+
+function ensureSelectedGroupExpanded(item){
+  if(collapsedGroups.delete(item.category)) renderComponentRail();
 }
 
 function groupLabel(category){
@@ -113,6 +133,7 @@ async function selectGuideComponent(slug, updateHash = true, shouldScroll = true
   const item = guideComponents.find(component => component.slug === slug);
   if(!item) return;
   selectedComponentSlug = slug;
+  ensureSelectedGroupExpanded(item);
 
   componentUi.railGroups.querySelectorAll('.rail-component').forEach(button => {
     button.classList.toggle('is-active', button.dataset.slug === slug);
@@ -235,7 +256,6 @@ function normalizePreviewCanvas(){
         margin:0!important;
         padding:24px!important;
       }
-      /* A real full-page specimen becomes the Human Guide phone canvas itself. */
       .phone{
         box-sizing:border-box!important;
         width:390px!important;
@@ -254,8 +274,6 @@ function normalizePreviewCanvas(){
         top:auto!important;
         bottom:auto!important;
       }
-      /* Evidence-page scene boxes are not nested phones: keep their authored height,
-         but remove the fake device chrome so the outer 390x844 artboard is the only shell. */
       .device{
         box-sizing:border-box!important;
         width:100%!important;
@@ -273,7 +291,6 @@ function normalizePreviewCanvas(){
 
     const rootPhone = doc.body?.querySelector(':scope > .phone');
     if(rootPhone){
-      // Full-page previews already own their internal spacing. Do not wrap them in specimen padding.
       doc.body.style.width = '390px';
       doc.body.style.minHeight = '844px';
     }
