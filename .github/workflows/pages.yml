@@ -81,7 +81,7 @@ jobs:
           printf '\n' >> _site/foundation.css
           cat report/design-system-v1/foundation-flat-guard.css >> _site/foundation.css
 
-          # Every deployment references revisioned Human Guide assets and exposes the generated MCP package.
+          # Every deployment references revisioned Human Guide assets.
           BUILD_ID="${GITHUB_SHA::12}"
           python3 - "$BUILD_ID" <<'PY'
           from pathlib import Path
@@ -107,42 +107,9 @@ jobs:
               ''
           )
           html = html.replace(
-              'Tailwind、NativeWind、React Native Tokens 与 Penpot Manifest。',
-              'Tailwind、NativeWind、React Native Tokens、Penpot Manifest 与 Agent 可调用的 MCP。'
-          )
-          html = html.replace(
-              '<span><b>4 Targets</b>工程与设计工具输出</span>',
-              '<span><b>5 Targets</b>工程、设计工具与 Agent 输出</span>'
-          )
-
-          mcp_card = '\n'.join([
-              '          <article class="delivery-card">',
-              '            <small>Agent Interface · MCP</small>',
-              '            <h3>Com Design MCP</h3>',
-              '            <p>面向 Codex、Claude、OpenCode 等 MCP Host 的只读设计系统接口。组件契约、Preview、Token 与 design.md 均来自本次同源构建。</p>',
-              '            <a class="delivery-file" href="./downloads/com-design-mcp.zip" download>下载 MCP Package ↓</a>',
-              '            <div class="delivery-links">',
-              '              <a href="./downloads/mcp/README.md" target="_blank" rel="noopener">使用说明</a>',
-              '              <a href="./downloads/mcp/data/mcp-manifest.json" target="_blank" rel="noopener">Source Manifest</a>',
-              '            </div>',
-              '          </article>',
-          ])
-          traceability = '\n'.join([
-              '          <article class="delivery-card">',
-              '            <small>Traceability · Build Record</small>',
-          ])
-          if 'downloads/com-design-mcp.zip' not in html:
-              html = html.replace(traceability, mcp_card + '\n\n' + traceability)
-
-          html = html.replace(
-              '<b>同源：</b>Human Docs / Penpot / Tailwind / NativeWind / RN 都不互相反写。',
-              '<b>同源：</b>Human Docs / Penpot / Tailwind / NativeWind / RN / MCP 都不互相反写。'
-          )
-          html = html.replace(
               '</head>',
               f'  <link rel="stylesheet" href="./foundation.css?v={build}">\n'
               f'  <link rel="stylesheet" href="./mobile-nav.css?v={build}">\n'
-              f'  <style>.delivery-grid{{grid-template-columns:1.2fr 1fr 1fr 1fr}}@media(max-width:1100px){{.delivery-grid{{grid-template-columns:1fr 1fr}}}}@media(max-width:900px){{.delivery-grid{{grid-template-columns:1fr}}}}</style>\n'
               f'  <meta name="com-design-build" content="{build}">\n</head>'
           )
           html = html.replace(
