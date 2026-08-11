@@ -4,9 +4,8 @@ on:
   push:
     branches: [dev]
     paths:
-      - 'design-source/colors_and_type.css'
-      - 'design-source/components/**'
-      - 'design-source/specs/**'
+      - 'design.md'
+      - 'design-source/**'
       - 'tooling/**'
       - 'penpot/src/**'
       - 'penpot/bin/build.mjs'
@@ -14,9 +13,8 @@ on:
       - '.github/workflows/design-system-build.yml'
   pull_request:
     paths:
-      - 'design-source/colors_and_type.css'
-      - 'design-source/components/**'
-      - 'design-source/specs/**'
+      - 'design.md'
+      - 'design-source/**'
       - 'tooling/**'
       - 'penpot/src/**'
       - 'penpot/bin/build.mjs'
