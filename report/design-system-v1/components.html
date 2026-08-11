@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Components — Com Design Mobile</title>
-  <meta name="description" content="Com Design Mobile 33 个 Core Components 人类可读展示与真实 Preview。">
+  <meta name="description" content="Com Design Mobile 33 个 Core Components 人类可读展示、真实 Preview 与结构化设计规范。">
   <link rel="stylesheet" href="./components.css">
 </head>
 <body>
@@ -24,7 +24,7 @@
       <div class="hero-copy">
         <p class="eyebrow">CORE LIBRARY · 1.0.0-rc.2</p>
         <h1>33 个组件，<br>一套共同语言。</h1>
-        <p>这里展示 Com Design Mobile 当前全部 Core Components。点击任意组件，下方直接加载 <code>design-source/preview</code> 中的真实 specimen；Human Docs 不复制、不重画另一套视觉真相。</p>
+        <p>这里展示 Com Design Mobile 当前全部 Core Components。点击任意组件，下方直接加载 <code>design-source/preview</code> 中的真实 specimen，并从同一份 Contract JSON 自动生成人类可读规范。</p>
       </div>
       <div class="hero-stats" aria-label="组件统计">
         <div><b>33</b><span>Core Components</span></div>
@@ -38,7 +38,7 @@
         <div>
           <p class="section-kicker">CATALOGUE</p>
           <h2 id="catalogue-title">组件目录</h2>
-          <p>先按名字找到组件，再看真实状态与场景。组件数量不是目标，稳定的角色边界才是。</p>
+          <p>先按名字找到组件，再看真实状态、结构和使用边界。组件数量不是目标，稳定的角色边界才是。</p>
         </div>
         <label class="search-box">
           <span aria-hidden="true">⌕</span>
@@ -88,6 +88,61 @@
           loading="eager">
         </iframe>
       </div>
+
+      <section class="human-spec" aria-labelledby="spec-title">
+        <div class="spec-heading">
+          <div>
+            <p class="section-kicker">HUMAN SPEC</p>
+            <h2 id="spec-title">设计规范</h2>
+            <p>以下内容实时读取当前组件的结构化 Contract。Human Docs 负责解释与组织，不复制另一套组件真相。</p>
+          </div>
+          <div class="contract-meta" id="contract-meta" aria-live="polite">
+            <span class="meta-pill">Loading contract…</span>
+          </div>
+        </div>
+
+        <div class="spec-grid">
+          <article class="spec-card anatomy-card">
+            <header><span>01</span><h3>Anatomy · 结构</h3></header>
+            <div class="anatomy-list" id="spec-anatomy"><span class="spec-loading">加载中…</span></div>
+          </article>
+
+          <article class="spec-card variants-card">
+            <header><span>02</span><h3>Variants · 变体与状态</h3></header>
+            <div id="spec-variants"><span class="spec-loading">加载中…</span></div>
+          </article>
+
+          <article class="spec-card traits-card wide">
+            <header><span>03</span><h3>Traits · 核心参数</h3></header>
+            <div class="traits-table" id="spec-traits"><span class="spec-loading">加载中…</span></div>
+          </article>
+
+          <article class="spec-card patterns-card wide">
+            <header><span>04</span><h3>Structure · 结构规则</h3></header>
+            <ul class="spec-list" id="spec-patterns"><li class="spec-loading">加载中…</li></ul>
+          </article>
+
+          <article class="spec-card usage-card">
+            <header><span>05</span><h3>Usage · 使用原则</h3></header>
+            <ul class="spec-list positive" id="spec-usage"><li class="spec-loading">加载中…</li></ul>
+          </article>
+
+          <article class="spec-card dont-card">
+            <header><span>06</span><h3>Do not · 禁止发明</h3></header>
+            <ul class="spec-list negative" id="spec-dont"><li class="spec-loading">加载中…</li></ul>
+          </article>
+
+          <article class="spec-card examples-card wide">
+            <header><span>07</span><h3>Representative · 代表性配置</h3></header>
+            <div class="example-grid" id="spec-examples"><span class="spec-loading">加载中…</span></div>
+          </article>
+
+          <article class="spec-card unknown-card wide">
+            <header><span>08</span><h3>Open Questions · 未决项</h3></header>
+            <div id="spec-unknowns"><span class="spec-loading">加载中…</span></div>
+          </article>
+        </div>
+      </section>
     </section>
 
     <section class="boundary">
