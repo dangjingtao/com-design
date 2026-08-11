@@ -17,20 +17,15 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  actions: read
 
 concurrency:
-  group: github-pages
+  group: github-pages-dev
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    name: Publish Human Guide
+  build:
+    name: Build Human Guide
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
       - name: Checkout dev
         uses: actions/checkout@v6
@@ -51,11 +46,19 @@ jobs:
           cp -R design-source/preview _site/design-source/preview
           touch _site/.nojekyll
 
-      - name: Upload Human Guide
+      - name: Upload Human Guide artifact
         uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
+  deploy:
+    name: Publish Human Guide
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages-dev
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
