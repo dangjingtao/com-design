@@ -8,14 +8,11 @@ const componentCategoryConfig = [
 const componentUi = {
   railGroups: document.querySelector('#rail-component-groups'),
   section: document.querySelector('#catalogue'),
-  category: document.querySelector('#studio-category'),
-  title: document.querySelector('#studio-title'),
-  description: document.querySelector('#studio-description'),
+  title: document.querySelector('#inspector-title'),
+  description: document.querySelector('#inspector-description'),
   preview: document.querySelector('#guide-component-preview'),
   previewLink: document.querySelector('#studio-preview-link'),
   contractLink: document.querySelector('#studio-contract-link'),
-  inspectorTitle: document.querySelector('#inspector-title'),
-  inspectorDescription: document.querySelector('#inspector-description'),
   meta: document.querySelector('#inspector-meta'),
   anatomy: document.querySelector('#inspector-anatomy'),
   variants: document.querySelector('#inspector-variants'),
@@ -111,16 +108,9 @@ function ensureSelectedGroupExpanded(item){
   if(collapsedGroups.delete(item.category)) renderComponentRail();
 }
 
-function groupLabel(category){
-  return componentCategoryConfig.find(group => group.key === category)?.label || category;
-}
-
 function setInspectorLoading(item){
-  componentUi.category.textContent = groupLabel(item.category);
   componentUi.title.textContent = item.name;
-  componentUi.description.textContent = '正在读取组件 Contract…';
-  componentUi.inspectorTitle.textContent = item.name;
-  componentUi.inspectorDescription.textContent = '正在读取结构化设计规范…';
+  componentUi.description.textContent = '正在读取结构化设计规范…';
   componentUi.meta.innerHTML = '<span>Loading contract…</span>';
   componentUi.anatomy.innerHTML = '<span class="inspector-empty">加载中…</span>';
   componentUi.variants.innerHTML = '<span class="inspector-empty">加载中…</span>';
@@ -166,8 +156,7 @@ async function loadGuideContract(item, contractPath){
     renderGuideContract(item, contract);
   }catch(error){
     if(requestId !== contractRequestId) return;
-    componentUi.description.textContent = 'Contract 暂时不可读取。';
-    componentUi.inspectorDescription.textContent = `Contract 加载失败：${error.message}`;
+    componentUi.description.textContent = `Contract 加载失败：${error.message}`;
     [componentUi.anatomy,componentUi.variants,componentUi.traits].forEach(node => node.innerHTML = '<span class="inspector-empty">Contract unavailable</span>');
     [componentUi.usage,componentUi.dont].forEach(node => node.innerHTML = '<li>Contract unavailable</li>');
   }
@@ -177,9 +166,8 @@ function renderGuideContract(item, contract){
   const usageHints = Array.isArray(contract.usageHints) ? contract.usageHints : [];
   const patterns = Array.isArray(contract.structurePatterns) ? contract.structurePatterns : [];
   const description = usageHints[0] || patterns[0] || 'Com Design Core Component';
+  componentUi.title.textContent = contract.name || item.name;
   componentUi.description.textContent = description;
-  componentUi.inspectorTitle.textContent = contract.name || item.name;
-  componentUi.inspectorDescription.textContent = description;
 
   const semantic = Array.isArray(contract.semanticTypeCandidates) ? contract.semanticTypeCandidates : [];
   componentUi.meta.innerHTML = [
