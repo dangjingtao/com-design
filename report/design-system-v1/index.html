@@ -57,48 +57,51 @@
     <section id="delivery" class="delivery-strip" aria-labelledby="delivery-title">
       <div class="wrap">
         <div class="delivery-head">
-          <div>
-            <p class="delivery-kicker">Engineering Delivery · Generated from source</p>
-            <h2 id="delivery-title">设计规范不止被阅读，也可以被直接消费。</h2>
-            <p>Com Design 已将同一份 <b>design-source</b> 编译为 Tailwind、NativeWind、React Native Tokens 与 Penpot Manifest。设计变更进入构建链后，工程配置随之生成，并由 CI 验证其一致性；人类报告仍作为独立验收依据保留。</p>
-          </div>
-          <div class="delivery-proof" aria-label="工程构建能力摘要">
-            <span><b>1 Source</b>单一设计真相源</span>
-            <span><b>4 Targets</b>工程与设计工具输出</span>
-            <span><b>CI Verified</b>自动构建与一致性校验</span>
-            <span><b>Report Retained</b>验收报告独立留存</span>
-          </div>
+          <p class="delivery-kicker">Engineering Delivery</p>
+          <h2 id="delivery-title">从同一真相源，直接交付。</h2>
+          <p>Tailwind、NativeWind、React Native、Penpot 与 MCP 均随 <b>design-source</b> 同步构建。</p>
         </div>
 
         <div class="delivery-grid">
           <article class="delivery-card primary">
-            <small>Recommended · Engineering Kit</small>
-            <h3>一次取得工程侧完整适配层</h3>
-            <p>包含 Tailwind preset、NativeWind preset、主题变量、React Native tokens 与构建清单。适合研发直接接入或作为项目初始化基线。</p>
+            <small>Engineering Kit</small>
+            <h3>Engineering Kit</h3>
+            <p>Tailwind、NativeWind 与 React Native 适配层。</p>
             <a class="delivery-file" href="./downloads/com-design-engineering.zip" download>下载 Engineering Kit ↓</a>
             <div class="delivery-links">
-              <a href="./downloads/tailwind/preset.cjs" download>Tailwind preset</a>
-              <a href="./downloads/nativewind/preset.cjs" download>NativeWind preset</a>
-              <a href="./downloads/react-native/tokens.ts" download>RN tokens</a>
+              <a href="./downloads/tailwind/preset.cjs" download>Tailwind</a>
+              <a href="./downloads/nativewind/preset.cjs" download>NativeWind</a>
+              <a href="./downloads/react-native/tokens.ts" download>RN Tokens</a>
             </div>
           </article>
 
           <article class="delivery-card">
-            <small>Design Tool · Penpot</small>
+            <small>Penpot</small>
             <h3>Penpot Manifest</h3>
-            <p>与工程配置由同一来源生成，用于设计工具同步。设计侧与研发侧不再各自维护一份近似但不同的 token 表。</p>
+            <p>用于 Penpot 同步的设计系统 Manifest。</p>
             <a class="delivery-file" href="./downloads/penpot-manifest.json" download>下载 Penpot Manifest ↓</a>
           </article>
 
           <article class="delivery-card">
-            <small>Traceability · Build Record</small>
+            <small>MCP</small>
+            <h3>Com Design MCP</h3>
+            <p>供 Agent 查询组件、Token、Preview 与 design.md。</p>
+            <a class="delivery-file" href="./downloads/com-design-mcp.zip" download>下载 MCP Package ↓</a>
+            <div class="delivery-links">
+              <a href="./downloads/mcp/README.md" target="_blank" rel="noopener">使用说明</a>
+              <a href="./downloads/mcp/data/mcp-manifest.json" target="_blank" rel="noopener">Manifest</a>
+            </div>
+          </article>
+
+          <article class="delivery-card">
+            <small>Build Record</small>
             <h3>Build Manifest</h3>
-            <p>保留本次构建的目标与来源信息。它不替代规范，但让“这份配置从哪里来、由什么生成”能够被追溯。</p>
+            <p>记录本次构建的来源、版本与目标。</p>
             <a class="delivery-file" href="./downloads/build-manifest.json" download>下载 Build Manifest ↓</a>
           </article>
         </div>
 
-        <div class="delivery-foot"><span><b>同源：</b>Human Docs / Penpot / Tailwind / NativeWind / RN 都不互相反写。</span><span>下载文件随 Human Docs 发布重新构建，不依赖手工拷贝。</span></div>
+        <div class="delivery-foot"><span>全部下载随 <b>design-source</b> 同步构建。</span></div>
       </div>
     </section>
 
