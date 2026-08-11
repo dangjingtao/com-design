@@ -1,7 +1,100 @@
 /* Report-only cultural expression layer.
-   Uses existing Com Design palette to make the human-facing artifact feel younger,
-   more energetic and more technological. This file is NOT a token source. */
-.hero{position:relative;overflow:hidden;isolation:isolate}.hero::before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,#5B5EF7 0 38%,#16BFD3 38% 64%,#21B66F 64% 78%,#F3A21B 78% 91%,#D63E50 91% 100%);z-index:2}.hero::after{content:"";position:absolute;z-index:-1;width:92px;height:92px;right:8%;top:54px;border-radius:26px;background:#F0F1FF;box-shadow:70px 56px 0 #E9FCFF,-34px 110px 0 #DDF8EA,78px 148px 0 #FFF2D6;transform:rotate(11deg);opacity:.86}.hero .wrap{position:relative;z-index:1}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:5px 9px 5px 8px;border-radius:999px;background:#F0F1FF}.eyebrow::before{content:"";width:7px;height:7px;border-radius:999px;background:#16BFD3;box-shadow:11px 0 0 #21B66F;margin-right:10px}.hero h1{max-width:760px}.hero h1::after{content:"";display:block;width:76px;height:6px;margin-top:18px;border-radius:999px;background:#5B5EF7;box-shadow:84px 0 0 #16BFD3,126px 0 0 #21B66F}.facts span{position:relative;overflow:hidden}.facts span::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:#5B5EF7}.facts span:nth-child(2){background:#F8FEFF}.facts span:nth-child(2)::before{background:#16BFD3}.facts span:nth-child(3){background:#FAFEFC}.facts span:nth-child(3)::before{background:#21B66F}.facts span:nth-child(4){background:#FFFCF6}.facts span:nth-child(4)::before{background:#F3A21B}.truth-callout{border-left-color:#16BFD3;background:linear-gradient(90deg,#F0F1FF 0%,#F7F8FC 58%,#E9FCFF 100%)}#principles .character-grid article{position:relative;overflow:hidden}#principles .character-grid article::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:#5B5EF7}#principles .character-grid article:nth-child(2)::before{background:#16BFD3}#principles .character-grid article:nth-child(3)::before{background:#21B66F}#principles .character-grid article:nth-child(4)::before{background:#F3A21B}#principles .character-grid article:nth-child(1){background:#FCFCFF}#principles .character-grid article:nth-child(2){background:#FBFEFF}#principles .character-grid article:nth-child(3){background:#FBFEFC}#principles .character-grid article:nth-child(4){background:#FFFEFA}#principles .one-line{display:inline-block;padding:9px 12px;border-radius:8px;background:#F0F1FF;color:#394156}.adoption-card{position:relative;overflow:hidden}.adoption-card::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:#21B66F}.next-grid article{transition:border-color .15s ease,transform .15s ease}.next-grid article:hover{border-color:#C9CDFF;transform:translateY(-1px)}
+   Uses existing Com Design palette and layout rules only.
+   This file is presentation-only and is NOT a token source. */
+
+/* Hero — editorial, flat, restrained. */
+.hero{position:relative;overflow:hidden;isolation:isolate;padding:96px 0 72px}
+.hero::before{content:"";position:absolute;left:0;top:0;width:88px;height:3px;background:#5B5EF7}
+.hero::after{content:"";position:absolute;z-index:-1;width:176px;height:176px;right:7%;top:82px;border:1px solid #E2E6F0;border-radius:32px;background:#F7F8FC;transform:rotate(7deg)}
+.hero .wrap{position:relative;z-index:1}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;padding:0;border-radius:0;background:transparent}
+.eyebrow::before{content:"";width:18px;height:2px;background:#5B5EF7}
+.hero h1{max-width:720px;font-size:58px;letter-spacing:-.045em}
+.hero h1::after{content:"";display:block;width:54px;height:4px;margin-top:22px;background:#5B5EF7;box-shadow:62px 0 0 #16BFD3}
+.hero-copy{max-width:740px;margin-top:22px;margin-bottom:32px;font-size:17px;line-height:1.72}
+
+/* Metrics are a compact information row, not four decorative cards. */
+.facts{gap:0;max-width:920px;border-top:1px solid #E2E6F0;border-bottom:1px solid #E2E6F0}
+.facts span{min-height:82px;padding:16px 18px;border:0;border-right:1px solid #E2E6F0;border-radius:0;background:transparent}
+.facts span:last-child{border-right:0}
+.facts span::before{display:none}
+.facts span:nth-child(2),.facts span:nth-child(3),.facts span:nth-child(4){background:transparent}
+.facts b{margin-bottom:3px;font-size:22px;letter-spacing:-.02em}
+.truth-callout{position:relative;margin-top:17px;max-width:920px;padding:0 0 0 18px;border:0;background:transparent;color:#687288;font-size:12px;line-height:1.65}
+.truth-callout::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;border-radius:999px;background:#21B66F}
+.truth-callout b{color:#394156}
+
+/* First sections — hierarchy before decoration. */
+#principles,#foundations{scroll-margin-top:20px}
+#principles .section-title,#foundations .section-title{margin-bottom:30px}
+#principles .section-title>span,#foundations .section-title>span{display:flex;width:30px;height:30px;padding:0;align-items:center;justify-content:center;border:1px solid #E2E6F0;border-radius:8px;background:#fff;color:#494CE0}
+#principles .section-title,#foundations .section-title{grid-template-columns:30px 1fr;gap:14px}
+
+/* Principles — one coherent surface with very light semantic rhythm. */
+#principles .character-grid{border:1px solid #E2E6F0;border-radius:14px;overflow:hidden;background:#fff}
+#principles .character-grid article{position:relative;overflow:hidden;padding:27px 24px 28px;border-right:1px solid #E2E6F0;background:#fff}
+#principles .character-grid article::before{content:"";position:absolute;inset:0 0 auto;height:2px;background:#5B5EF7}
+#principles .character-grid article:nth-child(2)::before{background:#16BFD3}
+#principles .character-grid article:nth-child(3)::before{background:#21B66F}
+#principles .character-grid article:nth-child(4)::before{background:#F3A21B}
+#principles .character-grid article:nth-child(1){background:#FCFCFF}
+#principles .character-grid article:nth-child(2){background:#FCFEFF}
+#principles .character-grid article:nth-child(3){background:#FCFEFD}
+#principles .character-grid article:nth-child(4){background:#FFFEFC}
+#principles .character-grid h3{margin-bottom:10px}
+#principles .character-grid small{margin-top:18px}
+#principles .one-line{display:block;margin-top:18px;padding:2px 0 2px 14px;border-left:2px solid #5B5EF7;background:transparent;color:#394156}
+#principles .reader-grid{gap:0;margin-top:28px;border-top:1px solid #E2E6F0}
+#principles .reader-grid article{padding:18px 20px 0;border:0;border-right:1px solid #E2E6F0;border-radius:0;background:transparent}
+#principles .reader-grid article:last-child{border-right:0}
+
+/* Foundations — keep the system feeling technical without becoming dashboard-like. */
+#foundations .spec-block{padding:32px 0;gap:52px}
+#foundations .spec-block:first-of-type{border-top:0;padding-top:6px}
+#foundations .spec-copy h3{font-size:19px}
+#foundations .palette{gap:8px}
+#foundations .color-row{min-height:42px}
+#foundations .color-row i{border-radius:7px}
+#foundations .foundation-grid{border:1px solid #E2E6F0;border-radius:14px;overflow:hidden;background:#F7F8FC}
+#foundations .foundation-grid article{padding:24px 22px;border-right:1px solid #E2E6F0;background:#fff}
+#foundations .foundation-grid article:nth-child(2),#foundations .foundation-grid article:nth-child(4){background:#FCFCFF}
+
+/* Later report accents stay minimal. */
+.adoption-card{position:relative;overflow:hidden}
+.adoption-card::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:#21B66F}
+.next-grid article{transition:border-color .15s ease,transform .15s ease}
+.next-grid article:hover{border-color:#C9CDFF;transform:translateY(-1px)}
+
 /* Rail interaction clarity: hover must never look like a second selected component. */
-.rail-component:hover:not(.is-active){background:transparent!important;color:var(--brand-600)!important}.rail-component:focus-visible{outline:2px solid #C9CDFF;outline-offset:1px}.rail-component.is-active:hover{background:var(--brand-50)!important;color:var(--brand-600)!important}
-@media(max-width:1050px){.hero::after{right:3%;opacity:.5}}@media(max-width:720px){.hero::after{display:none}.hero h1::after{width:54px;box-shadow:62px 0 0 #16BFD3,96px 0 0 #21B66F}}
+.rail-component:hover:not(.is-active){background:transparent!important;color:var(--brand-600)!important}
+.rail-component:focus-visible{outline:2px solid #C9CDFF;outline-offset:1px}
+.rail-component.is-active:hover{background:var(--brand-50)!important;color:var(--brand-600)!important}
+
+@media(max-width:1180px){
+  .hero::after{right:3%;width:150px;height:150px;opacity:.72}
+  .hero-copy{max-width:680px}
+}
+@media(max-width:1050px){
+  .hero::after{right:5%;opacity:.56}
+}
+@media(max-width:720px){
+  .hero{padding:62px 0 48px}
+  .hero::after{display:none}
+  .hero h1{font-size:40px}
+  .hero h1::after{width:44px;height:3px;margin-top:17px;box-shadow:52px 0 0 #16BFD3}
+  .hero-copy{font-size:15px;margin-bottom:26px}
+  .facts{grid-template-columns:1fr 1fr}
+  .facts span{min-height:72px;border-bottom:1px solid #E2E6F0}
+  .facts span:nth-child(2n){border-right:0}
+  .facts span:nth-last-child(-n+2){border-bottom:0}
+  #principles .character-grid{grid-template-columns:1fr}
+  #principles .character-grid article{border-right:0;border-bottom:1px solid #E2E6F0}
+  #principles .character-grid article:last-child{border-bottom:0}
+  #principles .reader-grid{grid-template-columns:1fr}
+  #principles .reader-grid article{padding:16px 0;border-right:0;border-bottom:1px solid #E2E6F0}
+  #principles .reader-grid article:last-child{border-bottom:0}
+  #foundations .spec-block{gap:20px}
+  #foundations .foundation-grid{grid-template-columns:1fr}
+  #foundations .foundation-grid article{border-right:0;border-bottom:1px solid #E2E6F0}
+  #foundations .foundation-grid article:last-child{border-bottom:0}
+}
