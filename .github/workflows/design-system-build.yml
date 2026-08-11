@@ -46,3 +46,19 @@ jobs:
 
       - name: Verify acceptance report was not touched
         run: git diff --exit-code -- report/design-system-v1
+
+      - name: Upload engineering adapters
+        uses: actions/upload-artifact@v4
+        with:
+          name: com-design-engineering-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload Penpot manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: com-design-penpot-${{ github.sha }}
+          path: penpot/build/manifest.json
+          if-no-files-found: error
+          retention-days: 30
