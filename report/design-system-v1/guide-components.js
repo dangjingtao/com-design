@@ -22,13 +22,21 @@ const componentUi = {
   stage: document.querySelector('#component-canvas-stage'),
   holder: document.querySelector('#phone-holder'),
   artboard: document.querySelector('#phone-artboard'),
-  canvasLabel: document.querySelector('.canvas-label')
+  canvasLabel: document.querySelector('.canvas-label'),
+  actions: document.querySelector('.inspector-actions'),
+  qrToggle: null,
+  qrPopover: null,
+  qrImage: null,
+  qrTarget: null
 };
 
-const IPHONE_VIEWPORT_WIDTH = 390;
-const IPHONE_VIEWPORT_HEIGHT = 844;
-const IPHONE_FRAME_WIDTH = 404;
-const IPHONE_FRAME_HEIGHT = 858;
+const IPHONE_VIEWPORT_WIDTH = 393;
+const IPHONE_VIEWPORT_HEIGHT = 852;
+const IPHONE_SAFE_TOP = 59;
+const IPHONE_SAFE_BOTTOM = 34;
+const IPHONE_CONTENT_HEIGHT = IPHONE_VIEWPORT_HEIGHT - IPHONE_SAFE_TOP - IPHONE_SAFE_BOTTOM;
+const IPHONE_FRAME_WIDTH = 407;
+const IPHONE_FRAME_HEIGHT = 866;
 
 let guideComponents = [];
 let selectedComponentSlug = 'button';
@@ -54,6 +62,79 @@ function slugFromHash(){
   const raw = decodeURIComponent(location.hash.replace(/^#/,''));
   if(raw.startsWith('component-')) return raw.slice('component-'.length);
   return null;
+}
+
+function ensureSimulatorChrome(){
+  if(!componentUi.artboard || componentUi.artboard.querySelector('.iphone-status-bar')) return;
+
+  const statusBar = document.createElement('div');
+  statusBar.className = 'iphone-status-bar';
+  statusBar.setAttribute('aria-hidden','true');
+  statusBar.innerHTML = `
+    <span class="iphone-time">9:41</span>
+    <span class="dynamic-island"></span>
+    <span class="iphone-system-icons">
+      <svg viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="6" width="3" height="6" rx="1" fill="currentColor"/><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+      <svg viewBox="0 0 18 13" aria-hidden="true"><path d="M1 4.3C5.7.3 12.3.3 17 4.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 7.2c3-2.5 7-2.5 10 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 10.1c1.2-1 2.8-1 4 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="12" r="1" fill="currentColor"/></svg>
+      <svg class="battery" viewBox="0 0 28 13" aria-hidden="true"><rect x="1" y="1" width="23" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="3" y="3" width="18" height="7" rx="1.6" fill="currentColor"/><path d="M25.5 4.3v4.4c1.1-.3 1.5-1 1.5-2.2s-.4-1.9-1.5-2.2Z" fill="currentColor"/></svg>
+    </span>`;
+
+  const homeArea = document.createElement('div');
+  homeArea.className = 'iphone-home-area';
+  homeArea.setAttribute('aria-hidden','true');
+  homeArea.innerHTML = '<span class="iphone-home-indicator"></span>';
+
+  componentUi.artboard.appendChild(statusBar);
+  componentUi.artboard.appendChild(homeArea);
+}
+
+function ensureQrControl(){
+  if(!componentUi.actions || componentUi.actions.querySelector('#preview-qr-toggle')) return;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'qr-action-wrap';
+  wrap.innerHTML = `
+    <button id="preview-qr-toggle" type="button" aria-expanded="false" aria-controls="preview-qr-popover">QR</button>
+    <div class="preview-qr-popover" id="preview-qr-popover" hidden>
+      <img id="preview-qr-image" alt="当前组件 Preview 二维码" width="170" height="170" referrerpolicy="no-referrer">
+      <small>手机扫码打开当前组件 Preview</small>
+      <a id="preview-qr-target" href="#" target="_blank" rel="noopener">Preview URL</a>
+    </div>`;
+
+  componentUi.actions.insertBefore(wrap, componentUi.contractLink);
+  componentUi.qrToggle = wrap.querySelector('#preview-qr-toggle');
+  componentUi.qrPopover = wrap.querySelector('#preview-qr-popover');
+  componentUi.qrImage = wrap.querySelector('#preview-qr-image');
+  componentUi.qrTarget = wrap.querySelector('#preview-qr-target');
+
+  componentUi.qrToggle.addEventListener('click', event => {
+    event.stopPropagation();
+    const willOpen = componentUi.qrPopover.hidden;
+    componentUi.qrPopover.hidden = !willOpen;
+    componentUi.qrToggle.setAttribute('aria-expanded', String(willOpen));
+  });
+
+  componentUi.qrPopover.addEventListener('click', event => event.stopPropagation());
+  document.addEventListener('click', () => closeQrPopover());
+  document.addEventListener('keydown', event => {
+    if(event.key === 'Escape') closeQrPopover();
+  });
+}
+
+function closeQrPopover(){
+  if(!componentUi.qrPopover || componentUi.qrPopover.hidden) return;
+  componentUi.qrPopover.hidden = true;
+  componentUi.qrToggle?.setAttribute('aria-expanded','false');
+}
+
+function updatePreviewQr(previewPath){
+  if(!componentUi.qrImage || !componentUi.qrTarget) return;
+  const absoluteUrl = new URL(previewPath, window.location.href).href;
+  componentUi.qrTarget.href = absoluteUrl;
+  componentUi.qrTarget.textContent = new URL(absoluteUrl).pathname;
+  componentUi.qrTarget.title = absoluteUrl;
+  componentUi.qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=170x170&margin=0&data=${encodeURIComponent(absoluteUrl)}`;
+  closeQrPopover();
 }
 
 async function initComponentWorkspace(){
@@ -139,9 +220,10 @@ async function selectGuideComponent(slug, updateHash = true, shouldScroll = true
   const previewPath = `./design-source/preview/component-${slug}.html`;
   const contractPath = `./design-source/components/${slug}.json`;
   componentUi.preview.src = previewPath;
-  componentUi.preview.title = `${item.name} · iPhone 390 × 844 仿真画布`;
+  componentUi.preview.title = `${item.name} · iPhone 393 × 852 仿真画布`;
   componentUi.previewLink.href = previewPath;
   componentUi.contractLink.href = contractPath;
+  updatePreviewQr(previewPath);
 
   if(updateHash){
     history.replaceState(null,'',`#component-${slug}`);
@@ -227,17 +309,23 @@ function normalizePreviewCanvas(){
     const style = doc.createElement('style');
     style.id = 'human-guide-canvas-normalize';
     style.textContent = `
+      :root{
+        --human-guide-safe-top:${IPHONE_SAFE_TOP}px;
+        --human-guide-safe-bottom:${IPHONE_SAFE_BOTTOM}px;
+        --human-guide-content-height:${IPHONE_CONTENT_HEIGHT}px;
+      }
       html,body{
-        width:390px!important;
-        min-width:390px!important;
-        max-width:390px!important;
-        min-height:844px!important;
+        width:${IPHONE_VIEWPORT_WIDTH}px!important;
+        min-width:${IPHONE_VIEWPORT_WIDTH}px!important;
+        max-width:${IPHONE_VIEWPORT_WIDTH}px!important;
+        height:${IPHONE_VIEWPORT_HEIGHT}px!important;
+        min-height:${IPHONE_VIEWPORT_HEIGHT}px!important;
         box-sizing:border-box!important;
       }
       html{background:var(--color-background,#fff)!important;}
       body{
         margin:0!important;
-        padding:0!important;
+        padding:${IPHONE_SAFE_TOP}px 0 ${IPHONE_SAFE_BOTTOM}px!important;
         display:block!important;
         justify-content:initial!important;
         align-items:initial!important;
@@ -247,21 +335,22 @@ function normalizePreviewCanvas(){
       }
       .specimen{
         box-sizing:border-box!important;
-        width:390px!important;
+        width:${IPHONE_VIEWPORT_WIDTH}px!important;
         max-width:none!important;
-        min-height:844px!important;
+        min-height:${IPHONE_CONTENT_HEIGHT}px!important;
         margin:0!important;
-        padding:56px 24px 28px!important;
+        padding:16px 24px 20px!important;
       }
       body.human-guide-has-phone .specimen{
+        min-height:${IPHONE_CONTENT_HEIGHT}px!important;
         padding:0!important;
       }
       .phone{
         box-sizing:border-box!important;
-        width:390px!important;
-        max-width:390px!important;
-        height:844px!important;
-        min-height:844px!important;
+        width:${IPHONE_VIEWPORT_WIDTH}px!important;
+        max-width:${IPHONE_VIEWPORT_WIDTH}px!important;
+        height:${IPHONE_CONTENT_HEIGHT}px!important;
+        min-height:${IPHONE_CONTENT_HEIGHT}px!important;
         margin:0!important;
         border:0!important;
         border-radius:0!important;
@@ -289,10 +378,8 @@ function normalizePreviewCanvas(){
     `;
     doc.head.appendChild(style);
 
-    if(rootPhone){
-      doc.body.style.width = '390px';
-      doc.body.style.minHeight = '844px';
-    }
+    doc.body.style.width = `${IPHONE_VIEWPORT_WIDTH}px`;
+    doc.body.style.height = `${IPHONE_VIEWPORT_HEIGHT}px`;
   }catch(error){
     // Pages serves previews same-origin. If a local browser blocks iframe access, source Preview still works untouched.
   }
@@ -305,7 +392,7 @@ function resizePhoneArtboard(){
   componentUi.artboard.style.transform = `scale(${scale})`;
   componentUi.holder.style.width = `${IPHONE_FRAME_WIDTH * scale}px`;
   componentUi.holder.style.height = `${IPHONE_FRAME_HEIGHT * scale}px`;
-  componentUi.stage.style.minHeight = `${IPHONE_FRAME_HEIGHT * scale + 108}px`;
+  componentUi.stage.style.minHeight = `${IPHONE_FRAME_HEIGHT * scale + 116}px`;
 }
 
 componentUi.preview?.addEventListener('load', normalizePreviewCanvas);
@@ -318,7 +405,9 @@ window.addEventListener('hashchange', () => {
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
-  if(componentUi.canvasLabel) componentUi.canvasLabel.textContent = 'iPhone · 390 × 844';
+  ensureSimulatorChrome();
+  ensureQrControl();
+  if(componentUi.canvasLabel) componentUi.canvasLabel.textContent = 'iPhone 15 · 393 × 852';
   resizePhoneArtboard();
   await initComponentWorkspace();
   resizePhoneArtboard();
