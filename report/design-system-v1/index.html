@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Com Design Mobile — Human Design Guide</title>
+  <meta name="description" content="Com Design Mobile 1.0.0-rc.2 面向设计、产品与研发的人类可读设计系统文档">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./culture.css">
+</head>
+<body>
+<div class="page">
+  <aside class="rail">
+    <div class="rail-brand"><strong>Com Design Mobile</strong><span>Human Guide · 1.0.0-rc.2</span></div>
+    <nav>
+      <a href="#overview">概览</a>
+      <a href="#principles">设计原则</a>
+      <a href="#foundations">视觉基础</a>
+      <a href="#patterns">设计模式</a>
+      <a href="#catalogue">组件目录</a>
+      <a href="#adoption">采用验证</a>
+      <a href="#system">系统边界</a>
+      <a href="#next">下一步</a>
+    </nav>
+    <p class="rail-note">唯一真相源<br><b>design-source/</b><br>组件契约 / CSS / Preview<br><br>本页负责解释，不另造一套规则。</p>
+  </aside>
+
+  <main>
+    <header class="hero" id="overview">
+      <div class="wrap">
+        <p class="eyebrow">Design System V1 · Human Guide</p>
+        <h1>Com Design Mobile</h1>
+        <p class="hero-copy">公司级移动端设计系统的人类入口。它回答的不是“有哪些 token”，而是：<b>界面应该怎样组织、什么时候用哪个组件、哪些做法属于产品扩展、哪些规则不能被业务改写。</b></p>
+        <div class="facts">
+          <span><b>33</b>Core Components</span>
+          <span><b>4</b>Component Groups</span>
+          <span><b>1</b>Completed Adoption Pilot</span>
+          <span><b>iOS / Android</b>Mobile-first</span>
+        </div>
+        <div class="truth-callout"><b>当前状态：</b>V1 处于 <b>1.0.0-rc.2</b>。33 个核心组件已经进入结构化契约与独立 Preview；卡博士首批接入实验已完成。Human Docs 从本版本开始进入持续完善阶段。</div>
+      </div>
+    </header>
+
+    <section id="principles" class="section">
+      <div class="wrap">
+        <div class="section-title"><span>01</span><div><h2>设计原则</h2><p>先统一判断方式，再统一组件外观。</p></div></div>
+        <div class="character-grid">
+          <article><h3>清晰 Clear</h3><p>先建立信息层级，再考虑装饰。正文、辅助信息、动作、状态有稳定优先级。</p><small>结果：低噪声背景、有限高纯度色、明确标题层级。</small></article>
+          <article><h3>轻快 Light</h3><p>高信息密度不等于沉重。靠冷调 Neutral、留白和薄边界保持呼吸感。</p><small>结果：Flat-first；普通信息层不依赖阴影。</small></article>
+          <article><h3>高效 Efficient</h3><p>默认 Compact，但视觉尺寸与触摸命中区域分离，不用缩小可用性换密度。</p><small>结果：40px 常规控件；命中区域独立满足平台下限。</small></article>
+          <article><h3>年轻 Young</h3><p>年轻感来自 Electric Indigo 与局部 Cyan 的节奏，不靠霓虹、渐变和过度软化。</p><small>结果：Brand 主导身份，Accent 只做局部信号。</small></article>
+        </div>
+        <div class="one-line"><b>一句话：</b>冷静但不沉重，年轻但不轻浮，紧凑但不拥挤。</div>
+
+        <div class="reader-grid">
+          <article><b>设计师</b><p>先看 Foundation 与 Pattern，再从组件目录确认具体控件边界。</p></article>
+          <article><b>产品</b><p>先确认交互属于导航、反馈、输入还是业务扩展，不用视觉相似代替语义判断。</p></article>
+          <article><b>研发</b><p>实现以 design-source 的契约与变量为准；本文档用于理解设计意图，不替代机器真相。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="foundations" class="section alt">
+      <div class="wrap">
+        <div class="section-title"><span>02</span><div><h2>视觉基础 Foundations</h2><p>所有产品共同消费的视觉语法。</p></div></div>
+
+        <div class="spec-block">
+          <div class="spec-copy"><h3>Color</h3><p><b>Brand = Electric Indigo #5B5EF7</b>，用于主动作、核心选中和全局导航身份。<b>Accent = Cyan #16BFD3</b> 只做局部强调、进度、数据和受约束的产品 Pattern。</p></div>
+          <div class="palette">
+            <div class="color-row"><span>Brand</span><i style="--c:#F0F1FF"></i><i style="--c:#C9CDFF"></i><i style="--c:#7B7EF8"></i><i style="--c:#5B5EF7"></i><i style="--c:#393BBE"></i></div>
+            <div class="color-row"><span>Accent</span><i style="--c:#E9FCFF"></i><i style="--c:#CAF7FB"></i><i style="--c:#16BFD3"></i><i style="--c:#0E9FB3"></i></div>
+            <div class="color-row"><span>Status</span><i style="--c:#21B66F"></i><i style="--c:#F3A21B"></i><i style="--c:#D63E50"></i></div>
+            <div class="color-row"><span>Neutral</span><i style="--c:#FFFFFF"></i><i style="--c:#F0F2F8"></i><i style="--c:#8590A3"></i><i style="--c:#535D72"></i><i style="--c:#171B2A"></i></div>
+          </div>
+        </div>
+
+        <div class="spec-block">
+          <div class="spec-copy"><h3>Typography</h3><p>默认系统 Sans，不靠特殊字体制造品牌感。正文基准为 16/24；14px 负责高频辅助与控件；24/28px 只给真正的页面标题或关键数字。</p></div>
+          <div class="type-spec"><div class="display">Display 28 / 36 · Semibold</div><div class="title">Title 24 / 30 · Semibold</div><div class="heading">Heading 18 / 24 · Semibold</div><div class="body">Body 16 / 24 · Regular — 高密度不等于全局缩字。</div><div class="small">Body Small 14 / 20 · Caption 12 / 18</div></div>
+        </div>
+
+        <div class="foundation-grid">
+          <article><h3>Spacing & Density</h3><b>4px Grid</b><p>常用间距 4 / 8 / 12 / 16 / 20 / 24 / 32。Compact 控件 40px，大号 48px。</p></article>
+          <article><h3>Radius</h3><b>8 / 12 / 16 / Full</b><p>控件 8、容器 12、浮层 16、Pill full。圆角承担层级，不承担“可爱感”。</p></article>
+          <article><h3>Elevation</h3><b>Flat-first</b><p>普通卡片和按钮 resting 态不默认加阴影；只有真实悬浮关系才使用 elevation。</p></article>
+          <article><h3>Touch Target</h3><b>Visual ≠ Hit Area</b><p>视觉控件可保持紧凑，命中区域仍需独立满足 iOS / Android 平台要求。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="patterns" class="section">
+      <div class="wrap">
+        <div class="section-title"><span>03</span><div><h2>设计模式 Design Patterns</h2><p>组件解决一个控件怎么做；Pattern 解决一组控件怎样一起工作。</p></div></div>
+        <div class="pattern-list">
+          <article><b>01</b><h3>信息组织</h3><p><strong>Section-before-Card。</strong>先用标题、间距、Divider 建层级；只有真正独立的实体才进入 Card。</p></article>
+          <article><b>02</b><h3>表单</h3><p>Label → Control → Helper / Error 保持稳定。字段错误优先就地解释，不轻易升级成 Toast 或 Dialog。</p></article>
+          <article><b>03</b><h3>导航</h3><p>Bottom Navigation 管顶层目的地；Tabs 管同层视图；Segmented Control 管局部模式，三者不可因外观相似互换。</p></article>
+          <article><b>04</b><h3>搜索</h3><p>Search 不是普通 Input。Query、Clear、Loading、No Results 都属于完整搜索上下文。</p></article>
+          <article><b>05</b><h3>反馈层级</h3><p>Field / Helper → Inline Alert → Toast / Snackbar → Dialog。越往后，打断成本越高。</p></article>
+          <article><b>06</b><h3>Overlay</h3><p>同一时刻只保留一个 Blocking Modal；Dialog 不叠 Dialog，Sheet 不叠 Sheet。</p></article>
+          <article><b>07</b><h3>Loading / Empty / Error</h3><p>结构已知用 Skeleton；未知等待用 Loading；没有内容用 Empty；失败必须给 Recovery。</p></article>
+          <article><b>08</b><h3>Progress</h3><p>Progress 表示可计算进度；Stepper 表示有限步骤；Timeline 表示已经发生的事件历史。</p></article>
+          <article><b>09</b><h3>Status</h3><p>Status 是语义组合，不是“彩色胶囊”。颜色永远不能成为唯一信号。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="catalogue" class="section alt">
+      <div class="wrap">
+        <div class="section-title"><span>04</span><div><h2>组件目录 Component Catalogue</h2><p>V1 Core 共 33 个组件。这里先解决“该找哪个组件”，具体状态、结构与限制以对应契约和 Preview 为准。</p></div></div>
+
+        <div class="catalogue-group"><header><div><h3>Actions & Forms</h3><p>动作、输入、选择与即时设置。</p></div><span>8</span></header><div class="chips"><a>Button</a><a>Icon Button</a><a>Input / Text Field</a><a>Textarea</a><a>Select / Picker Trigger</a><a>Checkbox</a><a>Radio</a><a>Switch</a></div></div>
+        <div class="catalogue-group"><header><div><h3>Navigation & Information</h3><p>页面结构、层级、导航和信息展示。</p></div><span>11</span></header><div class="chips"><a>List Item</a><a>Tabs</a><a>Segmented Control</a><a>Top App Bar</a><a>Bottom Navigation</a><a>Section</a><a>Divider</a><a>Card</a><a>Tag</a><a>Badge</a><a>Avatar</a></div></div>
+        <div class="catalogue-group"><header><div><h3>Feedback / Overlay / Progress</h3><p>状态反馈、遮罩层、等待与进度。</p></div><span>11</span></header><div class="chips"><a>Toast</a><a>Snackbar</a><a>Alert / Inline Banner</a><a>Dialog</a><a>Bottom Sheet</a><a>Loading Indicator</a><a>Skeleton</a><a>Empty State</a><a>Progress Indicator</a><a>Stepper</a><a>Timeline</a></div></div>
+        <div class="catalogue-group"><header><div><h3>Search & Menu</h3><p>搜索上下文与临时动作集合。</p></div><span>3</span></header><div class="chips"><a>Search Field</a><a>Menu</a><a>Menu Item</a></div></div>
+
+        <div class="scope-note"><b>不为了“组件数量完整”而扩 Core。</b>Carousel、FAB、Data Table、Rich Text Editor、Navigation Rail 等，需要真实跨产品复用需求证明后再进入公司级 Core。</div>
+      </div>
+    </section>
+
+    <section id="adoption" class="section">
+      <div class="wrap">
+        <div class="section-title"><span>05</span><div><h2>采用验证 Adoption</h2><p>设计系统必须被真实产品消费，而不是只在规范页里成立。</p></div></div>
+        <div class="adoption-card">
+          <div class="adoption-status"><span>Completed</span><b>首批接入实验</b></div>
+          <div><h3>卡博士</h3><p>第一批接入实验已宣告完成。这个案例的意义是验证：产品可以消费 Com Design Core，同时保留自己的业务内容、插画、活动视觉与领域表达。</p></div>
+          <div class="adoption-rule"><b>边界</b><p>产品适配可以组合、扩展 Core；产品特有视觉和业务状态不得反写公司级 Foundation 与 Core Component 契约。</p></div>
+        </div>
+        <div class="adoption-note">后续产品接入时，优先复用这次形成的判断方法，而不是复制卡博士页面本身。</div>
+      </div>
+    </section>
+
+    <section id="system" class="section alt">
+      <div class="wrap">
+        <div class="section-title"><span>06</span><div><h2>系统边界</h2><p>Human Docs 解释系统；design-source 定义系统。</p></div></div>
+        <div class="layers"><div><b>Primitive</b><span>原始值</span></div><i>→</i><div><b>Semantic</b><span>角色</span></div><i>→</i><div><b>Component</b><span>控件契约</span></div><i>→</i><div><b>Pattern</b><span>组合规则</span></div></div>
+        <div class="axes"><span><b>Theme</b>Light / Dark</span><span><b>Density</b>Compact / Comfortable</span><span><b>Platform</b>iOS / Android</span><span><b>Motion</b>Standard / Reduced</span></div>
+        <div class="source-grid">
+          <article><small>唯一真相源</small><b>design-source/</b><p>colors_and_type.css、components.css、components/*.json、preview/、ui_kits/。</p></article>
+          <article><small>人类消费层</small><b>report/ + docs/</b><p>解释设计意图、选择依据、使用边界和采用方式，不复制另一套 token 真相。</p></article>
+          <article><small>工具消费层</small><b>penpot/</b><p>将当前真相源编译/同步到设计工具；工具状态与设计规范状态分开描述。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="next" class="section">
+      <div class="wrap">
+        <div class="section-title"><span>07</span><div><h2>Human Docs 下一步</h2><p>从“一张完整概览”继续长成真正可查阅的规范。</p></div></div>
+        <div class="next-grid">
+          <article><span>Now</span><h3>Foundation 深化</h3><p>补充 Color / Typography / Spacing / Radius / Elevation / Iconography 的使用规则与 Do / Don't。</p></article>
+          <article><span>Next</span><h3>组件单页</h3><p>统一 Anatomy → Variants → States → Usage → Behavior → Accessibility → Platform Notes 模板。</p></article>
+          <article><span>Next</span><h3>Pattern 单页</h3><p>把表单、导航、反馈、搜索、状态等高频组合从“原则”扩成可复用决策指南。</p></article>
+          <article><span>Later</span><h3>更多 Adoption</h3><p>积累第二、第三个产品案例，验证哪些规则真正跨产品稳定。</p></article>
+        </div>
+        <div class="closing"><b>定位：</b>这不是 Demo，也不是单次汇报页。它是设计师、产品和研发共同查阅的 Com Design 人类入口。</div>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>
