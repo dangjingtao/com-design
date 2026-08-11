@@ -1,9 +1,9 @@
 # Com Design Build Pipeline Contract
 
-Status: **Architecture contract / not fully implemented yet**  
+Status: **Phase 1 implemented / versioned human-doc builder pending**  
 Date: 2026-08-12
 
-This document defines how Com Design should evolve from the current `design-source -> Penpot manifest` flow into a single-source, multi-target build system. It is a build contract, not a claim that every target already exists.
+This document defines the Com Design single-source, multi-target build contract and records the current implementation state.
 
 ## 1. Core rule: one source, multiple outputs
 
@@ -37,29 +37,35 @@ Penpot export -> NativeWind config
 Tailwind config -> design-source
 ```
 
-## 2. Current state
+## 2. Current implementation state
 
-Already implemented:
+Phase 1 is implemented on `dev`.
 
-```text
-design-source/colors_and_type.css
-        + component contracts
-        -> penpot/bin/build.mjs
-        -> penpot/build/manifest.json
-```
+Implemented:
 
-The existing compiler already parses consumer-facing token families such as color, spacing, radius, size, shadow, typography, light/dark sets, density, and platform touch targets.
+- shared normalized token model in `tooling/src/token-model.mjs`;
+- transitive light/dark alias resolution shared with the existing Penpot parser;
+- repository-level validation and tests;
+- generated Tailwind preset + theme variables;
+- generated NativeWind v4 consumer preset + theme variables;
+- generated React Native TypeScript tokens;
+- compact/comfortable density mapping;
+- iOS/Android minimum touch-target mapping;
+- existing Penpot manifest build preserved;
+- repository-level `build:all` for all non-report targets;
+- GitHub Actions verification on `dev` and pull requests;
+- CI artifacts for engineering adapters and Penpot manifest;
+- CI guard proving `report/design-system-v1/` is not modified by the engineering build.
 
-Not implemented yet:
+Still pending:
 
-- unified repository-level `build:all`
-- generated Tailwind adapter
-- generated NativeWind adapter
-- generated React Native TypeScript tokens
-- generated human documentation from the same normalized token model
-- cross-target consistency checks
+- versioned human-document generator from the normalized model;
+- promotion/current-pointer flow for newly generated human reports;
+- component-contract recipe/type generation from `components/*.json`;
+- stronger cross-target snapshot checks beyond the current token/adapter tests;
+- release/package distribution policy beyond GitHub Actions artifacts.
 
-These targets must be added without rewriting the existing design source.
+The engineering implementation must continue without rewriting the existing design source.
 
 ## 3. Unit contract: `px` is a logical design unit
 
@@ -79,11 +85,11 @@ Do not multiply layout tokens by `PixelRatio`. Do not convert the source system 
 
 Platform-specific exceptions belong in adapters:
 
-- true hairline borders
-- safe-area handling
-- viewport/screen-relative layout
-- platform-native shadows/elevation
-- accessibility font scaling
+- true hairline borders;
+- safe-area handling;
+- viewport/screen-relative layout;
+- platform-native shadows/elevation;
+- accessibility font scaling.
 
 ## 4. Build targets
 
@@ -91,13 +97,15 @@ Platform-specific exceptions belong in adapters:
 
 Human documentation is a **first-class acceptance artifact**. It is not disposable generated output.
 
-The current live report remains:
+The current accepted report remains:
 
 ```text
 report/design-system-v1/
 ```
 
-Future generated reports must be versioned so that every accepted or reviewed report remains available as historical evidence. A newer build may become the current entry point, but it must not delete or overwrite the previously accepted report.
+The Phase 1 engineering build does not touch this directory.
+
+The next document phase must generate a new versioned report from the normalized token model while preserving every previously accepted report. A newer build may become the current entry point, but it must not delete or overwrite the previously accepted report.
 
 Recommended shape:
 
@@ -107,73 +115,71 @@ report/
   versions/
     <version-or-date>/           retained report snapshot
   archive/
-    ...                          additional immutable historical markers
+    ...                          immutable historical markers
 ```
 
 A `current` or `latest` entry may point to the newest accepted report, but must be treated as a pointer/entry point rather than the sole copy of the report.
 
-The human report should display the normalized values that the engineering adapters actually consume. Where useful it may show mapping examples such as:
-
-```text
-color.primary
-#5B5EF7
-Tailwind / NativeWind: bg-primary
-React Native: tokens.color.primary
-```
-
-The report must never maintain a second hand-written token table that can drift from `design-source`.
-
 ### 4.2 Penpot
 
-Keep the existing manifest target:
+Implemented target:
 
 ```text
 penpot/build/manifest.json
 ```
 
-The existing Penpot compiler remains an adapter of the common design source.
+The Penpot compiler continues to consume the same CSS-variable resolver. Dark aliases are now re-resolved against the dark token table, so aliases inherit dark primitive/semantic overrides even when the alias itself is not redeclared inside `.dark`.
 
 ### 4.3 Tailwind
 
-Planned target:
+Implemented target:
 
 ```text
 dist/tailwind/
+  preset.cjs
+  theme.css
 ```
 
-The adapter should expose semantic consumer tokens rather than force product code to use primitive palette names.
+The adapter exposes semantic consumer tokens instead of forcing product code to use primitive palette names.
 
-Preferred usage shape:
+Representative usage:
 
 ```text
 bg-primary
-text-text-primary
+bg-background
+text-foreground
 border-border
 rounded-control
 h-control
 ```
 
-Primitive tokens may remain available for tooling/debugging, but application code should prefer semantic tokens.
+Product projects remain responsible for their own Tailwind `content` paths and product-specific plugins.
 
 ### 4.4 NativeWind
 
-Planned target:
+Implemented Phase 1 target for NativeWind v4:
 
 ```text
 dist/nativewind/
+  preset.cjs
+  theme.css
 ```
 
-NativeWind should consume the same semantic token vocabulary as Tailwind wherever the platform supports the same concept. Platform-only behavior is handled by the NativeWind/RN adapter rather than by mutating the design source.
+NativeWind consumes the same semantic vocabulary as Tailwind. The generated CSS also carries Com Design density and platform variables so `h-control` can follow the density scope and `min-h-touch-min` can follow the platform scope.
+
+Product apps must still include NativeWind's own official preset/configuration in addition to the Com Design consumer preset.
 
 ### 4.5 React Native tokens
 
-Planned target:
+Implemented target:
 
 ```text
 dist/react-native/tokens.ts
 ```
 
-This target exists for cases where a component needs raw RN values instead of utility classes, for example animation, gesture, imperative style, or platform API integration.
+This target is for animation, gesture, imperative style, platform API, or other code paths where utility classes are not the right interface.
+
+It emits source `px` dimensions as numeric RN layout values and includes light/dark colors, compact/comfortable density, platform touch minimums, typography, shadows, and motion tokens.
 
 ## 5. Component boundary
 
@@ -183,44 +189,40 @@ Component implementation should **not** be blindly generated from the 33 compone
 
 Component contracts may drive:
 
-- variant names
-- allowed states
-- token references
-- recipe/class mappings
-- generated TypeScript types
-- documentation tables
-- contract tests
+- variant names;
+- allowed states;
+- token references;
+- recipe/class mappings;
+- generated TypeScript types;
+- documentation tables;
+- contract tests.
 
-But behavior-heavy components still require explicit React Native implementation for accessibility, gestures, focus, controlled state, animation, overlays, safe areas, and platform differences.
+Behavior-heavy components still require explicit React Native implementation for accessibility, gestures, focus, controlled state, animation, overlays, safe areas, and platform differences.
 
-## 6. Proposed commands
+## 6. Commands
 
-The final repository-level build interface should converge on:
+Implemented repository-level commands:
 
 ```bash
+npm test
 npm run validate
-npm run build:docs
+npm run build:engineering
 npm run build:penpot
-npm run build:tailwind
-npm run build:nativewind
-npm run build:react-native
 npm run build:all
 ```
 
-`build:all` should perform, in order:
+Current `build:all` order:
 
 ```text
 validate source
--> normalize token model
--> build a new versioned human report
--> build Penpot manifest
 -> build Tailwind adapter
 -> build NativeWind adapter
 -> build React Native tokens
--> cross-target consistency checks
+-> build Penpot manifest
+-> leave accepted human report untouched
 ```
 
-A target may be built independently during development, but CI should use the full build and consistency checks.
+A future `build:docs` must be introduced only together with versioned report retention. It must not silently turn `build:all` into an overwrite operation against the accepted report.
 
 ## 7. Generated-output policy
 
@@ -228,7 +230,8 @@ A target may be built independently during development, but CI should use the fu
 2. Fix `design-source` or the adapter/compiler instead.
 3. Generated engineering output may be committed when useful for downstream consumers, review, release, or static hosting.
 4. Human reports are retained acceptance artifacts and are explicitly exempt from cleanup rules that apply to disposable build output.
-5. CI must be able to rebuild the same semantic values from the same source revision.
+5. CI must be able to rebuild semantic values from the same source revision.
+6. GitHub Actions may publish generated engineering files as artifacts; those artifacts do not become the source of truth.
 
 ## 8. Human-document retention and archive policy
 
@@ -250,48 +253,52 @@ Preferred historical marker:
 report/archive/<report-name>-<reason>-YYYY-MM-DD/
 ```
 
-An archive may reference an immutable Git commit/tree when that reference preserves the complete historical report. The existing `report/design-system-v1/` stays intact as acceptance evidence while the unified document generator is introduced.
+The existing `report/design-system-v1/` stays intact as acceptance evidence while the versioned document generator is introduced.
 
 ## 9. CI trigger contract
 
-When the implementation phase begins, changes under these source paths should trigger the multi-target build:
+The implemented workflow is:
 
 ```text
-design-source/colors_and_type.css
-design-source/components/**
-design-source/specs/**
+.github/workflows/design-system-build.yml
 ```
 
-Changes to generated output alone must not be treated as design-source changes.
-
-Recommended CI responsibility:
+Changes to design source, tooling, Penpot compiler code, or build configuration trigger:
 
 ```text
-source change
+unit tests
 -> validate
--> build:all
--> verify generated diff
--> preserve previous accepted human report
--> publish new versioned human report / package artifacts according to branch policy
+-> build engineering adapters
+-> build Penpot manifest
+-> assert accepted report is unchanged
+-> upload engineering artifact
+-> upload Penpot manifest artifact
 ```
 
 Branch policy remains:
 
-- `dev`: integration and verification
-- `main`: stable design-system release
+- `dev`: integration and verification;
+- `main`: stable design-system release.
 
-## 10. Definition of done for the implementation phase
+## 10. Definition of done
 
-The pipeline is considered complete only when:
+### Phase 1 engineering pipeline — done
 
-- one source token change propagates to all enabled build targets;
-- light/dark semantic values stay aligned across targets;
-- spacing/radius/type/size values stay aligned across targets;
+- one source token model drives Tailwind, NativeWind, RN, and Penpot builds;
+- transitive dark aliases resolve correctly;
 - `px` source values map correctly to RN numeric layout units;
-- generated human docs show the same normalized values as engineering output;
-- previously accepted human reports remain readable and traceable after new builds;
-- no normal build or publish path can delete retained reports;
-- CI detects stale or inconsistent generated artifacts;
-- product projects can consume generated adapters without copying token values by hand.
+- density and platform touch-target scopes are represented;
+- CI executes tests and the real repository build;
+- accepted human report is protected from engineering build writes;
+- generated engineering artifacts are available from CI.
 
-Until those checks exist, Tailwind/NativeWind support should be described as **planned**, not complete.
+### Full pipeline — pending
+
+The full pipeline is complete only when:
+
+- new human docs are generated from the same normalized model;
+- every accepted human report remains readable and traceable after new builds;
+- report promotion is versioned rather than overwrite-based;
+- component contracts can generate validated recipe/type metadata where appropriate;
+- stronger cross-target snapshot checks detect stale or inconsistent generated artifacts;
+- product projects have a stable distribution/consumption path without copying token values by hand.
