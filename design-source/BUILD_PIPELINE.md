@@ -20,7 +20,7 @@ design-source/
         v
   Com Design build pipeline
         |
-        +-- report/design-system-v1/       Human documentation
+        +-- report/design-system-v1/       Human documentation / acceptance evidence
         +-- penpot/build/manifest.json     Penpot manifest
         +-- dist/tailwind/                 Tailwind adapter output
         +-- dist/nativewind/               NativeWind adapter output
@@ -89,11 +89,28 @@ Platform-specific exceptions belong in adapters:
 
 ### 4.1 Human documentation
 
-Target:
+Human documentation is a **first-class acceptance artifact**. It is not disposable generated output.
+
+The current live report remains:
 
 ```text
 report/design-system-v1/
 ```
+
+Future generated reports must be versioned so that every accepted or reviewed report remains available as historical evidence. A newer build may become the current entry point, but it must not delete or overwrite the previously accepted report.
+
+Recommended shape:
+
+```text
+report/
+  design-system-v1/             current accepted report
+  versions/
+    <version-or-date>/           retained report snapshot
+  archive/
+    ...                          additional immutable historical markers
+```
+
+A `current` or `latest` entry may point to the newest accepted report, but must be treated as a pointer/entry point rather than the sole copy of the report.
 
 The human report should display the normalized values that the engineering adapters actually consume. Where useful it may show mapping examples such as:
 
@@ -195,7 +212,7 @@ npm run build:all
 ```text
 validate source
 -> normalize token model
--> build human docs
+-> build a new versioned human report
 -> build Penpot manifest
 -> build Tailwind adapter
 -> build NativeWind adapter
@@ -209,22 +226,31 @@ A target may be built independently during development, but CI should use the fu
 
 1. Never hand-edit generated Tailwind, NativeWind, RN-token, Penpot-manifest, or generated token-table output.
 2. Fix `design-source` or the adapter/compiler instead.
-3. Generated output may be committed when useful for downstream consumers, review, release, or static hosting.
-4. CI must be able to rebuild the same semantic values from the same source revision.
+3. Generated engineering output may be committed when useful for downstream consumers, review, release, or static hosting.
+4. Human reports are retained acceptance artifacts and are explicitly exempt from cleanup rules that apply to disposable build output.
+5. CI must be able to rebuild the same semantic values from the same source revision.
 
-## 8. Human-document archive policy
+## 8. Human-document retention and archive policy
 
-Before replacing a published human report, preserve an immutable snapshot of the previous report revision.
+**Human reports must never be deleted as part of normal build, publish, cleanup, or migration workflows.** They are an important basis for design-system review and acceptance.
 
-Preferred archive marker:
+Rules:
+
+1. Never delete an accepted human report.
+2. Never overwrite an accepted report in place with materially different content.
+3. Before promoting a new report as current, preserve the existing report as a versioned or immutable snapshot.
+4. Preserve the exact Git commit/source revision associated with each retained report whenever practical.
+5. A report may move from the current entry point into `versions/` or `archive/`, but that move must preserve its complete readable assets and historical traceability.
+6. Archived/versioned reports never feed future builds and never become a design-system source of truth.
+7. Automated cleanup jobs must exclude `report/design-system-v1/`, `report/versions/**`, and `report/archive/**` unless a human explicitly authorizes a specific deletion.
+
+Preferred historical marker:
 
 ```text
 report/archive/<report-name>-<reason>-YYYY-MM-DD/
 ```
 
-An archive may reference an immutable Git commit/tree instead of duplicating every generated asset. Archived output is historical material only: it never feeds future builds and never becomes a source of truth.
-
-`report/design-system-v1/` remains the live report until the new human-doc generator is implemented and verified.
+An archive may reference an immutable Git commit/tree when that reference preserves the complete historical report. The existing `report/design-system-v1/` stays intact as acceptance evidence while the unified document generator is introduced.
 
 ## 9. CI trigger contract
 
@@ -245,7 +271,8 @@ source change
 -> validate
 -> build:all
 -> verify generated diff
--> publish human docs / package artifacts according to branch policy
+-> preserve previous accepted human report
+-> publish new versioned human report / package artifacts according to branch policy
 ```
 
 Branch policy remains:
@@ -262,7 +289,8 @@ The pipeline is considered complete only when:
 - spacing/radius/type/size values stay aligned across targets;
 - `px` source values map correctly to RN numeric layout units;
 - generated human docs show the same normalized values as engineering output;
-- archived reports are never overwritten;
+- previously accepted human reports remain readable and traceable after new builds;
+- no normal build or publish path can delete retained reports;
 - CI detects stale or inconsistent generated artifacts;
 - product projects can consume generated adapters without copying token values by hand.
 
