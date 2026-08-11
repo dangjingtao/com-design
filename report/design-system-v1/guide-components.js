@@ -8,6 +8,7 @@ const componentCategoryConfig = [
 const componentUi = {
   railGroups: document.querySelector('#rail-component-groups'),
   section: document.querySelector('#catalogue'),
+  workspace: document.querySelector('.component-studio'),
   title: document.querySelector('#inspector-title'),
   description: document.querySelector('#inspector-description'),
   preview: document.querySelector('#guide-component-preview'),
@@ -22,7 +23,6 @@ const componentUi = {
   stage: document.querySelector('#component-canvas-stage'),
   holder: document.querySelector('#phone-holder'),
   artboard: document.querySelector('#phone-artboard'),
-  canvasLabel: document.querySelector('.canvas-label'),
   actions: document.querySelector('.inspector-actions'),
   qrToggle: null,
   qrPopover: null,
@@ -62,6 +62,33 @@ function slugFromHash(){
   const raw = decodeURIComponent(location.hash.replace(/^#/,''));
   if(raw.startsWith('component-')) return raw.slice('component-'.length);
   return null;
+}
+
+function enterComponentMode(){
+  if(document.body.classList.contains('component-mode')) return;
+  document.body.classList.add('component-mode');
+  requestAnimationFrame(resizePhoneArtboard);
+}
+
+function exitComponentMode(){
+  if(!document.body.classList.contains('component-mode')) return;
+  document.body.classList.remove('component-mode');
+  requestAnimationFrame(resizePhoneArtboard);
+}
+
+function bindGuideNavigation(){
+  document.querySelectorAll('.rail a[href^="#"]').forEach(link => {
+    const target = link.getAttribute('href');
+    if(target === '#catalogue'){
+      link.addEventListener('click', event => {
+        event.preventDefault();
+        selectGuideComponent(selectedComponentSlug, true, true);
+      });
+      return;
+    }
+
+    link.addEventListener('click', () => exitComponentMode());
+  });
 }
 
 function ensureSimulatorChrome(){
@@ -153,7 +180,7 @@ async function initComponentWorkspace(){
     }
 
     renderComponentRail();
-    selectGuideComponent(selectedComponentSlug, Boolean(hashSlug), false);
+    await selectGuideComponent(selectedComponentSlug, Boolean(hashSlug), Boolean(hashSlug));
   }catch(error){
     componentUi.railGroups.innerHTML = `<p class="inspector-empty">组件清单加载失败：${escapeGuideHtml(error.message)}</p>`;
     componentUi.description.textContent = '组件清单加载失败，请检查 design-source/components/index.json。';
@@ -206,7 +233,7 @@ function setInspectorLoading(item){
   componentUi.traits.innerHTML = '<span class="inspector-empty">加载中…</span>';
 }
 
-async function selectGuideComponent(slug, updateHash = true, shouldScroll = true){
+async function selectGuideComponent(slug, updateHash = true, activateMode = true){
   const item = guideComponents.find(component => component.slug === slug);
   if(!item) return;
   selectedComponentSlug = slug;
@@ -228,10 +255,11 @@ async function selectGuideComponent(slug, updateHash = true, shouldScroll = true
   if(updateHash){
     history.replaceState(null,'',`#component-${slug}`);
   }
-  if(shouldScroll){
-    componentUi.section.scrollIntoView({behavior:'smooth', block:'start'});
+  if(activateMode){
+    enterComponentMode();
   }
   await loadGuideContract(item, contractPath);
+  requestAnimationFrame(resizePhoneArtboard);
 }
 
 async function loadGuideContract(item, contractPath){
@@ -387,12 +415,14 @@ function normalizePreviewCanvas(){
 
 function resizePhoneArtboard(){
   if(!componentUi.stage || !componentUi.holder || !componentUi.artboard) return;
-  const available = Math.max(280, componentUi.stage.clientWidth - 40);
-  const scale = Math.min(1, available / IPHONE_FRAME_WIDTH);
+  const availableWidth = Math.max(280, componentUi.stage.clientWidth - 40);
+  const immersive = document.body.classList.contains('component-mode');
+  const availableHeight = immersive ? Math.max(480, componentUi.stage.clientHeight - 40) : Number.POSITIVE_INFINITY;
+  const scale = Math.min(1, availableWidth / IPHONE_FRAME_WIDTH, availableHeight / IPHONE_FRAME_HEIGHT);
   componentUi.artboard.style.transform = `scale(${scale})`;
   componentUi.holder.style.width = `${IPHONE_FRAME_WIDTH * scale}px`;
   componentUi.holder.style.height = `${IPHONE_FRAME_HEIGHT * scale}px`;
-  componentUi.stage.style.minHeight = `${IPHONE_FRAME_HEIGHT * scale + 116}px`;
+  componentUi.stage.style.minHeight = immersive ? '0px' : `${IPHONE_FRAME_HEIGHT * scale + 84}px`;
 }
 
 componentUi.preview?.addEventListener('load', normalizePreviewCanvas);
@@ -405,9 +435,10 @@ window.addEventListener('hashchange', () => {
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
+  document.querySelector('.canvas-label')?.remove();
   ensureSimulatorChrome();
   ensureQrControl();
-  if(componentUi.canvasLabel) componentUi.canvasLabel.textContent = 'iPhone 15 · 393 × 852';
+  bindGuideNavigation();
   resizePhoneArtboard();
   await initComponentWorkspace();
   resizePhoneArtboard();
