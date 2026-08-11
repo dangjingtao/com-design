@@ -50,6 +50,10 @@ jobs:
           printf '\n' >> _site/guide-components.js
           cat report/design-system-v1/guide-preview-adapter.js >> _site/guide-components.js
 
+          # Foundation is flat-first: enforce a presentation guard after the main Foundation styles.
+          printf '\n' >> _site/foundation.css
+          cat report/design-system-v1/foundation-flat-guard.css >> _site/foundation.css
+
           # Every deployment references revisioned Human Guide assets.
           # Foundation is rendered from the copied design-source/colors_and_type.css at runtime.
           BUILD_ID="${GITHUB_SHA::12}"
