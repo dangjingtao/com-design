@@ -202,18 +202,83 @@ function normalizePreviewCanvas(){
   try{
     const doc = componentUi.preview.contentDocument;
     if(!doc || doc.querySelector('#human-guide-canvas-normalize')) return;
+
+    doc.documentElement.classList.add('human-guide-embedded');
+    doc.body?.classList.add('human-guide-embedded-body');
+
     const style = doc.createElement('style');
     style.id = 'human-guide-canvas-normalize';
     style.textContent = `
-      html,body{width:100%!important;min-height:100%!important;box-sizing:border-box!important;}
-      body{margin:0!important;padding:0!important;display:block!important;justify-content:initial!important;overflow:auto!important;background:var(--color-background,#fff)!important;}
-      .specimen{box-sizing:border-box!important;width:100%!important;max-width:none!important;min-height:100%!important;margin:0!important;padding:24px!important;}
-      .phone{box-sizing:border-box!important;width:100%!important;height:844px!important;min-height:844px!important;margin:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;}
-      .device{box-sizing:border-box!important;max-width:100%!important;}
+      html,body{
+        width:390px!important;
+        min-width:390px!important;
+        max-width:390px!important;
+        min-height:844px!important;
+        box-sizing:border-box!important;
+      }
+      html{background:var(--color-background,#fff)!important;}
+      body{
+        margin:0!important;
+        padding:0!important;
+        display:block!important;
+        justify-content:initial!important;
+        align-items:initial!important;
+        overflow-x:hidden!important;
+        overflow-y:auto!important;
+        background:var(--color-background,#fff)!important;
+      }
+      .specimen{
+        box-sizing:border-box!important;
+        width:390px!important;
+        max-width:none!important;
+        min-height:844px!important;
+        margin:0!important;
+        padding:24px!important;
+      }
+      /* A real full-page specimen becomes the Human Guide phone canvas itself. */
+      .phone{
+        box-sizing:border-box!important;
+        width:390px!important;
+        max-width:390px!important;
+        height:844px!important;
+        min-height:844px!important;
+        margin:0!important;
+        border:0!important;
+        border-radius:0!important;
+        box-shadow:none!important;
+      }
+      body>.phone{
+        position:relative!important;
+        left:auto!important;
+        right:auto!important;
+        top:auto!important;
+        bottom:auto!important;
+      }
+      /* Evidence-page scene boxes are not nested phones: keep their authored height,
+         but remove the fake device chrome so the outer 390x844 artboard is the only shell. */
+      .device{
+        box-sizing:border-box!important;
+        width:100%!important;
+        max-width:100%!important;
+        margin-left:0!important;
+        margin-right:0!important;
+        border:0!important;
+        border-radius:0!important;
+        box-shadow:none!important;
+      }
+      .story{max-width:100%!important;}
+      img,svg{max-width:100%;}
     `;
     doc.head.appendChild(style);
+
+    const rootPhone = doc.body?.querySelector(':scope > .phone');
+    if(rootPhone){
+      // Full-page previews already own their internal spacing. Do not wrap them in specimen padding.
+      doc.body.style.width = '390px';
+      doc.body.style.minHeight = '844px';
+    }
   }catch(error){
-    // Same-origin on Pages. If a local preview blocks access, leave the source preview untouched.
+    // Pages serves previews same-origin. If a local browser blocks iframe access, source Preview still works untouched.
   }
 }
 
