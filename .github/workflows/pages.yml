@@ -44,6 +44,36 @@ jobs:
           cp design-source/components.css _site/design-source/components.css
           cp -R design-source/components _site/design-source/components
           cp -R design-source/preview _site/design-source/preview
+
+          # Every deployment must reference fresh Human Guide CSS/JS.
+          # GitHub Pages/browser caches otherwise make different revisions appear mixed together.
+          BUILD_ID="${GITHUB_SHA::12}"
+          python3 - "$BUILD_ID" <<'PY'
+          from pathlib import Path
+          import sys
+
+          build = sys.argv[1]
+          page = Path('_site/index.html')
+          html = page.read_text(encoding='utf-8')
+          html = html.replace(
+              'href="./guide-components.css"',
+              f'href="./guide-components.css?v={build}"'
+          )
+          html = html.replace(
+              'src="./guide-components.js"',
+              f'src="./guide-components.js?v={build}"'
+          )
+          html = html.replace(
+              '<div class="canvas-label">Standard Mobile Canvas · 390 × 844</div>',
+              ''
+          )
+          html = html.replace(
+              '</head>',
+              f'  <meta name="com-design-build" content="{build}">\n</head>'
+          )
+          page.write_text(html, encoding='utf-8')
+          PY
+
           touch _site/.nojekyll
 
       - name: Upload Human Guide artifact
