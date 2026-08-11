@@ -163,7 +163,7 @@ export function createBuildManifest(model) {
       schemaVersion: 1,
       source: 'design-source/colors_and_type.css',
       sourceHash: model.sourceHash,
-      targets: ['tailwind', 'nativewind', 'react-native'],
+      targets: ['tailwind', 'nativewind', 'react-native', 'mcp'],
       tokenCount: model.consumer.length,
     }) + '\n'
   );
