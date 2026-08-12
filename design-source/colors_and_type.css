@@ -15,14 +15,43 @@
   --com-neutral-800: #252B3D;
   --com-neutral-900: #171B2A;
 
+  /* warm */
+  --com-warm-50: #FCF8F1;
+  --com-warm-100: #F8F0E5;
+
+  /* ink / member */
+  --com-ink-900: #1C1B18;
+  --com-ink-800: #292722;
+
+  --com-member-surface: var(--com-ink-900);
+  --com-member-text: #FFF9EA;
+  --com-member-accent: var(--com-premium-300);
+
   /* brand */
-  --com-brand-50: #F0F1FF;
-  --com-brand-100: #E3E5FF;
-  --com-brand-200: #C9CDFF;
-  --com-brand-400: #7B7EF8;
-  --com-brand-500: #5B5EF7; /* @primary */
-  --com-brand-600: #494CE0;
-  --com-brand-700: #393BBE;
+  --com-brand-50: #FFF3EC;
+  --com-brand-100: #FFE3D5;
+  --com-brand-200: #FFC4AA;
+  --com-brand-400: #FF7540;
+  --com-brand-500: #ED4D1B; /* @primary */
+  --com-brand-600: #D63D10;
+  --com-brand-700: #AD2E0A;
+
+  /* premium / reward */
+  --com-premium-50: #FFF9EA;
+  --com-premium-100: #FFF0C7;
+  --com-premium-200: #F8D992;
+  --com-premium-300: #EDBC6C;
+  --com-premium-400: #DFA348;
+  --com-premium-500: #C98A27;
+  --com-premium-600: #A96C19;
+  --com-premium-700: #7A4B12;
+  --com-premium-900: #332514;
+
+  /* premium semantic */
+  --com-reward-default: var(--com-premium-300);
+  --com-reward-strong: var(--com-premium-500);
+  --com-reward-subtle: var(--com-premium-50);
+  --com-reward-text: var(--com-premium-700);
 
   /* accent */
   --com-accent-50: #E9FCFF;
@@ -37,6 +66,17 @@
   --color-accent: var(--com-accent-semantic-default);
   --color-accent-strong: var(--com-accent-semantic-strong);
   --color-accent-subtle: var(--com-accent-semantic-subtle);
+
+  /* reward-consumer */
+  --color-reward: var(--com-reward-default);
+  --color-reward-strong: var(--com-reward-strong);
+  --color-reward-subtle: var(--com-reward-subtle);
+  --color-reward-text: var(--com-reward-text);
+
+  /* member-consumer */
+  --color-member-surface: var(--com-member-surface);
+  --color-member-text: var(--com-member-text);
+  --color-member-accent: var(--com-member-accent);
 
   /* success */
   --com-success-100: #DDF8EA;
@@ -73,7 +113,7 @@
   --color-text-brand: var(--com-text-brand);
 
   /* surface */
-  --com-surface-page: var(--com-neutral-50);
+  --com-surface-page: var(--com-warm-50);
   --com-surface-default: var(--com-neutral-0);
   --com-surface-subtle: var(--com-neutral-100);
   --com-surface-selected: var(--com-brand-50);
@@ -316,8 +356,8 @@
 .dark {
   /* dark-only primitive extensions */
   --com-neutral-950: #10131E;
-  --com-brand-800: #30326F;
-  --com-brand-900: #25264D;
+  --com-brand-800: #7A2106;
+  --com-brand-900: #461103;
   --com-accent-900: #123E44;
   --com-success-900: #163629;
   --com-warning-900: #403013;
