@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="./culture.css">
   <link rel="stylesheet" href="./guide-components.css">
   <link rel="stylesheet" href="./delivery.css">
+  <link rel="stylesheet" href="./premium-gold.css">
 </head>
 <body>
 <div class="page">
@@ -20,6 +21,7 @@
       <a href="#delivery">工程交付</a>
       <a href="#principles">设计原则</a>
       <a href="#foundations">视觉基础</a>
+      <a href="#premium-gold">土豪金兼容</a>
       <a href="#patterns">设计模式</a>
       <a href="#catalogue">组件</a>
     </nav>
@@ -50,7 +52,7 @@
           <span><b>1</b>Completed Adoption Pilot</span>
           <span><b>iOS / Android</b>Mobile-first</span>
         </div>
-        <div class="truth-callout"><b>当前状态：</b>V1 处于 <b>1.0.0-rc.2</b>。33 个核心组件已经进入结构化契约与独立 Preview；卡博士首批接入实验已完成。Human Docs 从本版本开始进入持续完善阶段。</div>
+        <div class="truth-callout"><b>当前状态：</b>V1 处于 <b>1.0.0-rc.2</b>。33 个核心组件已经进入结构化契约与独立 Preview；卡博士首批接入实验已完成。默认 Electric Indigo 色系保持不变，并新增 <b>Premium Gold 可选兼容主题</b>，用于奖励、兑换、会员等场景。</div>
       </div>
     </header>
 
@@ -66,7 +68,7 @@
           <article class="delivery-card primary">
             <small>Engineering Kit</small>
             <h3>Engineering Kit</h3>
-            <p>Tailwind、NativeWind 与 React Native 适配层。</p>
+            <p>Tailwind、NativeWind 与 React Native 适配层；Premium Gold 作为可选主题进入同一 token model。</p>
             <a class="delivery-file" href="./downloads/com-design-engineering.zip" download>下载 Engineering Kit ↓</a>
             <div class="delivery-links">
               <a href="./downloads/tailwind/preset.cjs" download>Tailwind</a>
@@ -110,11 +112,11 @@
         <div class="section-title"><span>01</span><div><h2>设计原则</h2><p>先统一判断方式，再统一组件外观。</p></div></div>
         <div class="character-grid">
           <article><h3>清晰 Clear</h3><p>先建立信息层级，再考虑装饰。正文、辅助信息、动作、状态有稳定优先级。</p><small>结果：低噪声背景、有限高纯度色、明确标题层级。</small></article>
-          <article><h3>轻快 Light</h3><p>高信息密度不等于沉重。靠冷调 Neutral、留白和薄边界保持呼吸感。</p><small>结果：Flat-first；普通信息层不依赖阴影。</small></article>
+          <article><h3>轻快 Light</h3><p>高信息密度不等于沉重。默认主题靠冷调 Neutral、留白和薄边界保持呼吸感；兼容主题可调整色温，但不改信息层级。</p><small>结果：Flat-first；普通信息层不依赖阴影。</small></article>
           <article><h3>高效 Efficient</h3><p>默认 Compact，但视觉尺寸与触摸命中区域分离，不用缩小可用性换密度。</p><small>结果：40px 常规控件；命中区域独立满足平台下限。</small></article>
-          <article><h3>年轻 Young</h3><p>年轻感来自 Electric Indigo 与局部 Cyan 的节奏，不靠霓虹、渐变和过度软化。</p><small>结果：Brand 主导身份，Accent 只做局部信号。</small></article>
+          <article><h3>年轻 Young</h3><p>默认主题由 Electric Indigo 与局部 Cyan 建立节奏；可选主题可以改变品牌气质，但不能破坏 Core 组件和状态语义。</p><small>结果：Brand 主导身份，Accent 只做局部信号。</small></article>
         </div>
-        <div class="one-line"><b>一句话：</b>冷静但不沉重，年轻但不轻浮，紧凑但不拥挤。</div>
+        <div class="one-line"><b>一句话：</b>冷静但不沉重，年轻但不轻浮，紧凑但不拥挤；主题可以变，判断方式不变。</div>
 
         <div class="reader-grid">
           <article><b>设计师</b><p>先看 Foundation 与 Pattern，再从左侧组件树确认具体控件边界。</p></article>
@@ -129,13 +131,78 @@
         <div class="section-title"><span>02</span><div><h2>视觉基础 Foundations</h2><p>所有产品共同消费的视觉语法。</p></div></div>
 
         <div class="spec-block">
-          <div class="spec-copy"><h3>Color</h3><p><b>Brand = Electric Indigo #5B5EF7</b>，用于主动作、核心选中和全局导航身份。<b>Accent = Cyan #16BFD3</b> 只做局部强调、进度、数据和受约束的产品 Pattern。</p></div>
+          <div class="spec-copy"><h3>Color · Default</h3><p><b>默认 Brand = Electric Indigo #5B5EF7</b>，用于主动作、核心选中和全局导航身份。<b>Accent = Cyan #16BFD3</b> 只做局部强调、进度、数据和受约束的产品 Pattern。默认色系仍是 Com Design 的基线，不因 Premium Gold 的加入被替换。</p></div>
           <div class="palette">
             <div class="color-row"><span>Brand</span><i style="--c:#F0F1FF"></i><i style="--c:#C9CDFF"></i><i style="--c:#7B7EF8"></i><i style="--c:#5B5EF7"></i><i style="--c:#393BBE"></i></div>
             <div class="color-row"><span>Accent</span><i style="--c:#E9FCFF"></i><i style="--c:#CAF7FB"></i><i style="--c:#16BFD3"></i><i style="--c:#0E9FB3"></i></div>
             <div class="color-row"><span>Status</span><i style="--c:#21B66F"></i><i style="--c:#F3A21B"></i><i style="--c:#D63E50"></i></div>
             <div class="color-row"><span>Neutral</span><i style="--c:#FFFFFF"></i><i style="--c:#F0F2F8"></i><i style="--c:#8590A3"></i><i style="--c:#535D72"></i><i style="--c:#171B2A"></i></div>
           </div>
+        </div>
+
+        <div id="premium-gold" class="premium-compat">
+          <div class="premium-compat-head">
+            <div>
+              <p class="premium-compat-kicker">Optional Theme Compatibility</p>
+              <h3>Premium Gold · 土豪金兼容主题</h3>
+              <p class="premium-compat-summary">这是一层<b>兼容扩展</b>，不是换肤覆盖。旧产品不启用 theme scope 时，Brand、Surface、Button、Status 全部继续使用原来的 Electric Indigo 体系；只有明确进入 Premium Gold scope 的页面或局部容器才切换到橙红品牌、香槟金价值表达、暖白背景与墨黑会员身份。</p>
+            </div>
+            <span class="premium-compat-badge">Compatible · Opt-in</span>
+          </div>
+
+          <div class="theme-compare">
+            <article class="theme-compare-card">
+              <small>Default · unchanged</small>
+              <strong>Com Design Electric Indigo</strong>
+              <div class="theme-swatch-row">
+                <i class="theme-swatch" style="--swatch:#5B5EF7"></i>
+                <i class="theme-swatch" style="--swatch:#16BFD3"></i>
+                <i class="theme-swatch" style="--swatch:#F7F8FC"></i>
+                <i class="theme-swatch" style="--swatch:#171B2A"></i>
+              </div>
+              <p>默认产品、通用后台能力、普通业务页继续使用这一套。没有迁移成本，也没有“全公司改成金色”的隐含要求。</p>
+            </article>
+
+            <article class="theme-compare-card premium">
+              <small>Optional · scoped</small>
+              <strong>Com Design Premium Gold</strong>
+              <div class="theme-swatch-row">
+                <i class="theme-swatch" style="--swatch:#D63D10"></i>
+                <i class="theme-swatch" style="--swatch:#EDBC6C"></i>
+                <i class="theme-swatch" style="--swatch:#FCF8F1"></i>
+                <i class="theme-swatch" style="--swatch:#1C1B18"></i>
+              </div>
+              <p>面向奖励、泡泡值、兑换码、会员与权益等高价值感场景。主按钮使用 Brand 600 <b>#D63D10</b>，避免 #ED4D1B + 白色普通字号的对比度不足。</p>
+            </article>
+          </div>
+
+          <div class="premium-role-grid">
+            <article class="premium-role orange"><b>橙红 = Brand / Action</b><p>品牌、主动作、Focus、Scoped Selection。它承担“我要做什么”，不是奖励本身。</p></article>
+            <article class="premium-role gold"><b>香槟金 = Reward / Value</b><p>泡泡值、积分、奖励、权益、可兑换资产。不得替代 Warning，也不作为通用主按钮色。</p></article>
+            <article class="premium-role ink"><b>墨黑 = Member Identity</b><p>只用于会员身份、等级与高价值权益容器。普通内容区域应回到暖白/标准 Surface。</p></article>
+          </div>
+
+          <div class="premium-compat-rule"><b>语义不变：</b>Success 仍是成功，Warning 仍是风险提醒，Danger 仍是错误/破坏动作。Premium Gold 只扩展 Brand / Reward / Member 表达，绝不拿“金色看起来贵”去重定义状态色。</div>
+
+          <h4 style="margin-top:22px">推荐 Pattern</h4>
+          <div class="premium-pattern-grid">
+            <article class="premium-pattern"><b>Reward Balance · 泡泡值</b><p>金色强调“价值”，主 CTA 仍走 Brand Action；不要整卡铺满高饱和金色。</p></article>
+            <article class="premium-pattern"><b>Reward Earned · 获得奖励</b><p>Reward 表示获得了什么，Success 表示任务是否完成，两种语义不要混为一个绿色/金色状态。</p></article>
+            <article class="premium-pattern"><b>Redemption Code · 兑换码</b><p>输入与提交沿用 Form / Button；金色只负责展示可兑换结果，失效/已使用必须走标准反馈语义。</p></article>
+            <article class="premium-pattern"><b>Member Identity · 会员身份</b><p>墨黑是局部身份面，不是整 App 暗黑皮肤；等级、资产与权益可用香槟金做克制强调。</p></article>
+            <article class="premium-pattern"><b>Benefit Card · 权益卡</b><p>标题、可用条件、有效期优先于装饰；不可用状态走 Disabled/Status，不发明“灰金色”。</p></article>
+            <article class="premium-pattern"><b>Reward Ledger · 奖励流水</b><p>先靠 +/−、排版和来源区分收入/消耗。消费不是 Danger，除非真的发生异常。</p></article>
+          </div>
+
+          <div class="premium-code">/* 默认：不加任何主题标记，旧色系保持不变 */
+&lt;App /&gt;
+
+/* Web / Tailwind / NativeWind：仅在需要的 scope 启用 */
+&lt;div class="theme-premium-gold"&gt;...&lt;/div&gt;
+&lt;div data-com-theme="premium-gold"&gt;...&lt;/div&gt;
+
+/* React Native：保持默认 tokens.color；需要时显式取主题 */
+tokens.themes.premiumGold.color.light</div>
         </div>
 
         <div class="spec-block">
@@ -244,9 +311,9 @@
       <div class="wrap">
         <div class="section-title"><span>06</span><div><h2>系统边界</h2><p>Human Docs 解释系统；design-source 定义系统。</p></div></div>
         <div class="layers"><div><b>Primitive</b><span>原始值</span></div><i>→</i><div><b>Semantic</b><span>角色</span></div><i>→</i><div><b>Component</b><span>控件契约</span></div><i>→</i><div><b>Pattern</b><span>组合规则</span></div></div>
-        <div class="axes"><span><b>Theme</b>Light / Dark</span><span><b>Density</b>Compact / Comfortable</span><span><b>Platform</b>iOS / Android</span><span><b>Motion</b>Standard / Reduced</span></div>
+        <div class="axes"><span><b>Theme</b>Default / Premium Gold + Light / Dark</span><span><b>Density</b>Compact / Comfortable</span><span><b>Platform</b>iOS / Android</span><span><b>Motion</b>Standard / Reduced</span></div>
         <div class="source-grid">
-          <article><small>唯一真相源</small><b>design-source/</b><p>colors_and_type.css、components.css、components/*.json、preview/、ui_kits/。</p></article>
+          <article><small>唯一真相源</small><b>design-source/</b><p>colors_and_type.css、themes/*.css、components.css、components/*.json、specs/*.json、preview/、ui_kits/。</p></article>
           <article><small>人类消费层</small><b>report/ + docs/</b><p>解释设计意图、选择依据、使用边界和采用方式，不复制另一套 token 真相。</p></article>
           <article><small>工具消费层</small><b>penpot/</b><p>将当前真相源编译/同步到设计工具；工具状态与设计规范状态分开描述。</p></article>
         </div>
@@ -258,6 +325,7 @@
         <div class="section-title"><span>07</span><div><h2>Human Docs 下一步</h2><p>从“一张完整概览”继续长成真正可查阅的规范。</p></div></div>
         <div class="next-grid">
           <article><span>Now</span><h3>Foundation 深化</h3><p>补充 Color / Typography / Spacing / Radius / Elevation / Iconography 的使用规则与 Do / Don't。</p></article>
+          <article><span>Now</span><h3>主题兼容</h3><p>Premium Gold 已作为 opt-in 主题进入同一 token model；后续主题必须沿用“兼容而非覆盖”的边界。</p></article>
           <article><span>Now</span><h3>组件工作区</h3><p>33 个组件已统一进入左侧树 + 标准手机画布 + Live Contract 浏览模式。</p></article>
           <article><span>Next</span><h3>Pattern 单页</h3><p>把表单、导航、反馈、搜索、状态等高频组合从“原则”扩成可复用决策指南。</p></article>
           <article><span>Later</span><h3>更多 Adoption</h3><p>积累第二、第三个产品案例，验证哪些规则真正跨产品稳定。</p></article>
