@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "theme": "premium-gold",
+  "status": "compatible-extension",
+  "principle": "Premium Gold is an optional Com Design theme and pattern vocabulary. It does not replace the default Electric Indigo palette or core component contracts.",
+  "colorRoles": {
+    "brand": "Orange-red is for brand identity, primary action and scoped selection.",
+    "reward": "Champagne gold is for value, points, rewards, benefits and redeemable assets; it is not a generic CTA color and must not replace Warning.",
+    "member": "Ink surfaces are reserved for high-level membership identity or premium benefit containers; they are not the default page surface.",
+    "status": "Success, Warning and Danger keep their original Com Design semantic colors."
+  },
+  "patterns": [
+    {
+      "id": "reward-balance",
+      "name": "Reward Balance",
+      "cn": "奖励余额 / 泡泡值",
+      "intent": "Present a user's accumulated value and the next meaningful action without turning the whole page gold.",
+      "tokens": ["color-reward", "color-reward-text", "color-surface", "color-text-primary"],
+      "rules": [
+        "Use gold for the value asset, badge, coin/bubble icon or a restrained highlight.",
+        "Keep the container on normal or warm surface; do not fill the entire card with saturated gold.",
+        "Primary action still uses scoped Brand action color, not Reward gold."
+      ]
+    },
+    {
+      "id": "reward-earned",
+      "name": "Reward Earned",
+      "cn": "获得奖励",
+      "intent": "Celebrate newly earned value while keeping feedback hierarchy readable.",
+      "tokens": ["color-reward", "color-reward-subtle", "color-success"],
+      "rules": [
+        "Reward color communicates value; Success communicates task completion. Do not merge the two meanings.",
+        "Use motion or illustration sparingly; the amount and source of the reward remain the information focus.",
+        "Do not use Reward gold as an error, warning or loading state."
+      ]
+    },
+    {
+      "id": "redemption-code",
+      "name": "Redemption Code",
+      "cn": "兑换码",
+      "intent": "Support codes obtained from enterprise WeChat, campaigns or partner channels with a clear game-like redeem interaction.",
+      "tokens": ["color-primary", "color-primary-container", "color-reward-subtle", "color-border"],
+      "rules": [
+        "The code input and submit action follow normal Form/Button contracts.",
+        "Reward styling may frame the redeemable outcome, but the input itself stays high-contrast and conventional.",
+        "Success, invalid, expired and already-used states must use semantic feedback, not different shades of gold."
+      ]
+    },
+    {
+      "id": "member-identity",
+      "name": "Member Identity",
+      "cn": "会员身份",
+      "intent": "Create a premium identity moment without converting the full application into a dark luxury theme.",
+      "tokens": ["color-member-surface", "color-member-text", "color-member-accent"],
+      "rules": [
+        "Use Ink as a bounded identity surface: membership card, header block or benefit summary.",
+        "Gold is an accent for tier, value or entitlement; it should not become body text.",
+        "Return to standard/warm surfaces for ordinary content below the identity block."
+      ]
+    },
+    {
+      "id": "benefit-card",
+      "name": "Benefit Card",
+      "cn": "权益卡",
+      "intent": "Describe a concrete benefit with clear availability and action state.",
+      "tokens": ["color-reward-subtle", "color-reward-text", "color-text-secondary", "color-border-subtle"],
+      "rules": [
+        "The benefit title and usable condition are more important than decorative gold.",
+        "Unavailable/expired benefits use disabled or status semantics instead of desaturated-gold invention.",
+        "Cards remain structurally compatible with Com Design Card spacing/radius/elevation rules."
+      ]
+    },
+    {
+      "id": "reward-ledger",
+      "name": "Reward Ledger",
+      "cn": "奖励流水",
+      "intent": "Show earn/spend history with amount direction, source and time at high scan speed.",
+      "tokens": ["color-text-primary", "color-text-secondary", "color-reward-text", "color-border-subtle"],
+      "rules": [
+        "Use typography and +/- amount direction before color to distinguish earn and spend.",
+        "Gold may emphasize positive value, but negative/spend entries are not Danger unless an actual error occurred.",
+        "Keep rows visually quiet; this is a data list, not a stack of promotional cards."
+      ]
+    }
+  ]
+}
