@@ -1,7 +1,11 @@
 (() => {
   const SOURCE_URL = './design-source/colors_and_type.css';
+  const PREMIUM_URL = './design-source/themes/premium-gold.css';
   const section = document.querySelector('#foundations');
   if(!section) return;
+
+  let cachedBaseCss = '';
+  let cachedPremiumCss = '';
 
   const esc = value => String(value ?? '')
     .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
@@ -33,7 +37,7 @@
   }
 
   function resolveValue(value, vars, depth = 0){
-    if(!value || depth > 12) return value || '';
+    if(!value || depth > 16) return value || '';
     return String(value).replace(/var\((--[a-zA-Z0-9-_]+)(?:\s*,\s*([^\)]+))?\)/g, (_, token, fallback) => {
       const next = vars[token] ?? fallback ?? `var(${token})`;
       return resolveValue(next, vars, depth + 1);
@@ -137,12 +141,62 @@
     return `<article class="theme-card"><div class="theme-canvas" style="--theme-bg:${esc(bg)};--theme-surface:${esc(surface)};--theme-text:${esc(text)};--theme-muted:${esc(muted)};--theme-border:${esc(border)};--theme-primary:${esc(primary)}"><div class="theme-canvas-head"><b>${esc(label)}</b><span>Semantic mapping</span></div><div class="theme-surface"><b>审批详情</b><p>表面、文字、边界与主动作都来自当前主题语义层。</p><span class="theme-action">确认提交</span><div class="theme-token-strip">${strip.map(token => `<i style="--c:${esc(get(token))}"></i>`).join('')}</div></div></div></article>`;
   }
 
-  function render(css){
-    const root = parseVars(extractBlock(css, ':root'));
-    const darkOverride = parseVars(extractBlock(css, '.dark'));
-    const comfortable = parseVars(extractBlock(css, '.density-comfortable'));
-    const androidOverride = parseVars(extractBlock(css, '.platform-android'));
-    const dark = {...root, ...darkOverride};
+  function currentTheme(){
+    return document.documentElement.dataset.comTheme === 'premium-gold' ? 'premium-gold' : 'default';
+  }
+
+  function resolveTheme(baseCss, premiumCss, theme){
+    const baseRoot = parseVars(extractBlock(baseCss, ':root'));
+    const baseDark = parseVars(extractBlock(baseCss, '.dark'));
+    const comfortable = parseVars(extractBlock(baseCss, '.density-comfortable'));
+    const androidOverride = parseVars(extractBlock(baseCss, '.platform-android'));
+
+    if(theme !== 'premium-gold'){
+      return {
+        root: baseRoot,
+        dark: {...baseRoot, ...baseDark},
+        comfortable,
+        androidOverride,
+        sourceLabel: 'colors_and_type.css',
+        themeLabel: 'Default · Electric Indigo',
+        premium: false
+      };
+    }
+
+    const premiumRoot = parseVars(extractBlock(premiumCss, ':root'));
+    const premiumLight = parseVars(extractBlock(premiumCss, '.theme-premium-gold'));
+    const premiumDarkBase = parseVars(extractBlock(premiumCss, '.dark'));
+    const premiumDark = parseVars(extractBlock(premiumCss, '.dark.theme-premium-gold'));
+    const root = {...baseRoot, ...premiumRoot, ...premiumLight};
+    const dark = {...root, ...baseDark, ...premiumDarkBase, ...premiumDark};
+    return {
+      root,
+      dark,
+      comfortable,
+      androidOverride,
+      sourceLabel: 'colors_and_type.css + themes/premium-gold.css',
+      themeLabel: 'Premium Gold · 土豪金',
+      premium: true
+    };
+  }
+
+  function themeCompatibilityBlock(premium){
+    if(premium){
+      return `<div id="premium-gold" class="premium-compat">
+        <div class="premium-compat-head"><div><p class="premium-compat-kicker">Active Optional Theme</p><h3>Premium Gold · 当前正在真实换肤</h3><p class="premium-compat-summary">当前页面、Foundation 数值、组件 Preview 与主题下载包都已切到 Premium Gold。橙红负责 Brand / Action，香槟金负责 Reward / Value，墨黑负责 Member Identity；Success / Warning / Danger 仍保持原语义。</p></div><span class="premium-compat-badge">Active · Opt-in</span></div>
+        <div class="premium-role-grid"><article class="premium-role orange"><b>橙红 = Brand / Action</b><p>品牌、主动作、Focus 与 Scoped Selection。</p></article><article class="premium-role gold"><b>香槟金 = Reward / Value</b><p>泡泡值、积分、奖励、权益与可兑换资产。</p></article><article class="premium-role ink"><b>墨黑 = Member Identity</b><p>会员等级、高价值身份和权益容器。</p></article></div>
+        <div class="premium-compat-rule"><b>兼容原则：</b>主题改变视觉映射，不改变组件契约、间距、排版、状态语义和交互判断方式。</div>
+      </div>`;
+    }
+    return `<div id="premium-gold" class="premium-compat is-default">
+      <div class="premium-compat-head"><div><p class="premium-compat-kicker">Theme Compatibility</p><h3>Default 正在生效 · Premium Gold 可选</h3><p class="premium-compat-summary">当前仍是原 Electric Indigo 基线。使用左侧 Theme 切换器即可让整份 Human Guide、Foundation 与组件 Preview 一起切到 Premium Gold；默认产品不会被自动覆盖。</p></div><span class="premium-compat-badge">Default · unchanged</span></div>
+      <div class="premium-compat-rule"><b>切换不是 Demo：</b>Human Guide 的切换读取与工程构建相同的主题真相源，并同步对应下载包。</div>
+    </div>`;
+  }
+
+  function render(baseCss, premiumCss, theme = currentTheme()){
+    const state = resolveTheme(baseCss, premiumCss, theme);
+    const {root, dark, comfortable, androidOverride, premium} = state;
 
     const semanticTokens = [
       ['Text · Primary','--com-text-primary'],['Text · Secondary','--com-text-secondary'],['Text · Tertiary','--com-text-tertiary'],['Text · Brand','--com-text-brand'],
@@ -151,6 +205,12 @@
       ['Action · Primary','--com-action-primary'],['Action · Primary Pressed','--com-action-primary-pressed'],['Action · Secondary','--com-action-secondary'],['Action · Destructive','--com-action-destructive'],
       ['Status · Success','--com-status-success'],['Status · Warning','--com-status-warning'],['Status · Danger','--com-status-danger'],['Status · Info','--com-status-info']
     ];
+    if(premium){
+      semanticTokens.push(
+        ['Reward · Default','--com-reward-default'],['Reward · Strong','--com-reward-strong'],['Reward · Subtle','--com-reward-subtle'],['Reward · Text','--com-reward-text'],
+        ['Member · Surface','--com-member-surface'],['Member · Text','--com-member-text'],['Member · Accent','--com-member-accent']
+      );
+    }
 
     const densityTokens = ['--density-control-height','--density-control-height-lg','--density-padding-h','--density-padding-v','--density-gap','--density-content-inset','--density-section-gap','--density-field-label-gap','--density-field-helper-gap','--density-field-gap'];
     const radiusAliases = ['--radius-control','--radius-container','--radius-overlay','--radius-pill'];
@@ -158,79 +218,87 @@
     const borderTokens = ['--com-border-control','--com-border-focus'];
     const shadowTokens = ['--com-elevation-floating','--com-elevation-modal'];
 
-    const primitiveColorCount = ['neutral','brand','accent','success','warning','danger']
-      .flatMap(name => collectNumericScale(root, `--com-${name}-`)).length;
+    const paletteGroups = premium
+      ? [['Warm','--com-warm-','暖白环境'],['Brand','--com-brand-','Orange Red · Brand / Action'],['Premium','--com-premium-','Champagne Gold · Reward / Value'],['Ink','--com-ink-','Member Identity'],['Accent','--com-accent-','Cyan · 局部信号'],['Success','--com-success-',''],['Warning','--com-warning-',''],['Danger','--com-danger-','']]
+      : [['Neutral','--com-neutral-','冷调中性色'],['Brand','--com-brand-','Electric Indigo'],['Accent','--com-accent-','Cyan · 局部信号'],['Success','--com-success-',''],['Warning','--com-warning-',''],['Danger','--com-danger-','']];
+    const primitiveColorCount = paletteGroups.flatMap(([,prefix]) => collectNumericScale(root, prefix)).length;
     const rootCount = Object.keys(root).length;
 
     section.classList.add('foundation-live');
     section.innerHTML = `<div class="wrap">
-      <div class="foundation-head"><span class="foundation-head-index">02</span><div><h2>视觉基础 Foundations</h2><p>这里不维护第二份数值。所有展示均实时读取 <code>design-source/colors_and_type.css</code>，Human Docs 只负责把机器真相翻译成设计师、产品和研发可读的视觉规范。</p></div><span class="foundation-source-badge">Live Source</span></div>
+      <div class="foundation-head"><span class="foundation-head-index">02</span><div><h2>视觉基础 Foundations</h2><p>当前主题：<b>${esc(state.themeLabel)}</b>。所有展示实时读取 <code>${esc(state.sourceLabel)}</code>；Human Docs 不维护第二份数值。</p></div><span class="foundation-source-badge">Live Theme Source</span></div>
       <div class="foundation-summary">
-        <article><small>Source Variables</small><b>${rootCount}</b><span>:root 当前声明</span></article>
-        <article><small>Color Primitives</small><b>${primitiveColorCount}</b><span>六组基础色阶</span></article>
-        <article><small>Default Density</small><b>${esc(resolveValue(root['--density-control-height'],root) || '40px')}</b><span>Compact control</span></article>
+        <article><small>Active Theme</small><b>${premium ? 'Gold' : 'Default'}</b><span>${esc(state.themeLabel)}</span></article>
+        <article><small>Source Variables</small><b>${rootCount}</b><span>当前主题可见声明</span></article>
+        <article><small>Color Primitives</small><b>${primitiveColorCount}</b><span>${premium ? '主题色阶 + 状态色' : '六组基础色阶'}</span></article>
         <article><small>Touch Target</small><b>${esc(resolveValue(root['--size-touch-ios'],root) || '44px')} / ${esc(resolveValue(root['--size-touch-android'],root) || '48px')}</b><span>iOS / Android</span></article>
       </div>
-      <nav class="foundation-nav"><a href="#foundation-color">Color</a><a href="#foundation-type">Typography</a><a href="#foundation-space">Spacing & Size</a><a href="#foundation-radius">Radius & Elevation</a><a href="#foundation-density">Density & Platform</a><a href="#foundation-dark">Dark Theme</a></nav>
+      <nav class="foundation-nav"><a href="#foundation-color">Color</a><a href="#premium-gold">Theme</a><a href="#foundation-type">Typography</a><a href="#foundation-space">Spacing & Size</a><a href="#foundation-radius">Radius & Elevation</a><a href="#foundation-density">Density & Platform</a><a href="#foundation-dark">Dark Theme</a></nav>
 
       <section class="foundation-block" id="foundation-color">
-        <div class="foundation-block-head"><h3>Color</h3><p><b>Primitive</b> 提供稳定色阶，<b>Semantic</b> 决定界面角色。业务应该消费语义色，而不是直接拿某个色阶猜用途。</p></div>
-        <div class="foundation-subtitle"><h4>Primitive palettes</h4><small>直接读取 --com-*-N</small></div>
-        <div class="foundation-palette">
-          ${paletteRow('Neutral','--com-neutral-',root,'冷调中性色')}
-          ${paletteRow('Brand','--com-brand-',root,'Electric Indigo')}
-          ${paletteRow('Accent','--com-accent-',root,'Cyan · 局部信号')}
-          ${paletteRow('Success','--com-success-',root)}
-          ${paletteRow('Warning','--com-warning-',root)}
-          ${paletteRow('Danger','--com-danger-',root)}
-        </div>
+        <div class="foundation-block-head"><h3>Color · ${premium ? 'Premium Gold' : 'Default'}</h3><p><b>Primitive</b> 提供稳定色阶，<b>Semantic</b> 决定界面角色。切换主题后，消费层仍使用相同语义 token。</p></div>
+        <div class="foundation-subtitle"><h4>Primitive palettes</h4><small>当前主题真实解析值</small></div>
+        <div class="foundation-palette">${paletteGroups.map(([name,prefix,note]) => paletteRow(name,prefix,root,note)).join('')}</div>
         <div class="foundation-subtitle"><h4>Semantic roles</h4><small>token → alias → resolved value</small></div>
         <div class="foundation-semantic-grid">${semanticTokens.map(([label,token]) => semanticCard(label,token,root)).join('')}</div>
       </section>
 
+      ${themeCompatibilityBlock(premium)}
+
       <section class="foundation-block" id="foundation-type">
-        <div class="foundation-block-head"><h3>Typography</h3><p>移动端排版使用系统 Sans。下面不是“推荐字号”，而是当前真相源里的 portable type aliases；样例也用解析后的真实 font shorthand 渲染。</p></div>
+        <div class="foundation-block-head"><h3>Typography</h3><p>主题只改变视觉映射，不重写排版系统。下面继续读取相同 portable type aliases。</p></div>
         ${typeRows(root)}
       </section>
 
       <section class="foundation-block" id="foundation-space">
-        <div class="foundation-block-head"><h3>Spacing & Size</h3><p>Spacing 不是只列常用值：这里展示当前完整 scale。Size 单独承载控件高度、Touch Target 与结构尺寸，避免把“视觉大小”和“可点击面积”混成一件事。</p></div>
+        <div class="foundation-block-head"><h3>Spacing & Size</h3><p>Spacing、Size 与 Touch Target 不因主题切换改变。</p></div>
         <div class="foundation-subtitle"><h4>Spacing scale</h4><small>完整 primitive scale</small></div>${spacingCards(root)}
         <div class="foundation-two-col" style="margin-top:12px"><article class="foundation-panel"><h4>Control & touch sizes</h4>${sizeCards(root)}</article><article class="foundation-panel"><h4>Icon & indicator</h4>${tokenTable(iconTokens,root)}</article></div>
       </section>
 
       <section class="foundation-block" id="foundation-radius">
-        <div class="foundation-block-head"><h3>Radius & Elevation</h3><p>圆角负责组件层级，阴影只表达真实悬浮关系。普通 Card / Button resting 态仍遵循 Flat-first。</p></div>
+        <div class="foundation-block-head"><h3>Radius & Elevation</h3><p>圆角负责组件层级，阴影只表达真实悬浮关系。主题不修改这一结构规则。</p></div>
         <div class="foundation-subtitle"><h4>Radius primitives</h4><small>0 / 4 / 8 / 12 / 16 / pill</small></div>${radiusCards(root)}
         <div class="foundation-two-col" style="margin-top:12px"><article class="foundation-panel"><h4>Semantic radius aliases</h4>${tokenTable(radiusAliases,root)}</article><article class="foundation-panel"><h4>Elevation & border</h4>${tokenTable([...shadowTokens,...borderTokens],root)}<div class="scale-grid" style="margin-top:12px">${shadowTokens.filter(t=>t in root).map(t=>`<article class="scale-card"><b>${esc(t.replace('--com-elevation-',''))}</b><i class="shadow-demo" style="box-shadow:${esc(resolveValue(root[t],root))}"></i></article>`).join('')}</div></article></div>
       </section>
 
       <section class="foundation-block" id="foundation-density">
-        <div class="foundation-block-head"><h3>Density & Platform</h3><p>Com Design 默认 Compact。密度只改变 portable density tokens，不允许业务组件自行发明高度。Touch Target 则明确区分 iOS 与 Android。</p></div>
-        <div class="foundation-two-col"><article class="foundation-panel"><h4>Compact · default</h4>${tokenTable(densityTokens,root)}</article><article class="foundation-panel"><h4>Comfortable · override</h4>${Object.keys(comfortable).length ? tokenTable(densityTokens,{...root,...comfortable}) : '<p>当前源文件未声明 .density-comfortable override；Human Docs 不补造数值。</p>'}</article></div>
+        <div class="foundation-block-head"><h3>Density & Platform</h3><p>Com Design 默认 Compact。Theme、Density、Platform 是相互独立的轴。</p></div>
+        <div class="foundation-two-col"><article class="foundation-panel"><h4>Compact · default</h4>${tokenTable(densityTokens,root)}</article><article class="foundation-panel"><h4>Comfortable · override</h4>${Object.keys(comfortable).length ? tokenTable(densityTokens,{...root,...comfortable}) : '<p>当前源文件未声明 .density-comfortable override。</p>'}</article></div>
         <div class="foundation-subtitle"><h4>Platform touch target</h4><small>视觉尺寸与命中区域分离</small></div>
-        <div class="platform-cards"><article class="platform-card is-primary"><small>iOS</small><strong>${esc(resolveValue(root['--size-touch-ios'],root) || '—')}</strong><p>默认 --platform-touch-min：${esc(resolveValue(root['--platform-touch-min'],root) || '—')}</p></article><article class="platform-card"><small>Android</small><strong>${esc(resolveValue(root['--size-touch-android'],root) || '—')}</strong><p>${Object.keys(androidOverride).length ? `platform override：${esc(resolveValue(androidOverride['--platform-touch-min'] || root['--size-touch-android'],{...root,...androidOverride}))}` : '使用显式 Android touch token；未发现额外 selector override。'}</p></article></div>
+        <div class="platform-cards"><article class="platform-card is-primary"><small>iOS</small><strong>${esc(resolveValue(root['--size-touch-ios'],root) || '—')}</strong><p>默认 --platform-touch-min：${esc(resolveValue(root['--platform-touch-min'],root) || '—')}</p></article><article class="platform-card"><small>Android</small><strong>${esc(resolveValue(root['--size-touch-android'],root) || '—')}</strong><p>${Object.keys(androidOverride).length ? `platform override：${esc(resolveValue(androidOverride['--platform-touch-min'] || root['--size-touch-android'],{...root,...androidOverride}))}` : '使用显式 Android touch token。'}</p></article></div>
       </section>
 
       <section class="foundation-block" id="foundation-dark">
-        <div class="foundation-block-head"><h3>Dark Theme</h3><p>Dark Mode 不是另一套组件。它通过 <code>.dark</code> 重映射 primitive / semantic token，同一组件契约继续消费相同语义角色。</p></div>
-        ${Object.keys(darkOverride).length ? `<div class="dark-preview">${themeCard('Light · :root',root)}${themeCard('Dark · .dark',dark)}</div>` : '<div class="foundation-error">当前真相源未解析到 .dark token block。</div>'}
+        <div class="foundation-block-head"><h3>Dark Theme · ${premium ? 'Premium Gold' : 'Default'}</h3><p>Dark Mode 继续使用同一组件契约；当前预览同时展示所选主题的 Light / Dark 映射。</p></div>
+        <div class="dark-preview">${themeCard(`${premium ? 'Premium Gold' : 'Default'} · Light`,root)}${themeCard(`${premium ? 'Premium Gold' : 'Default'} · Dark`,dark)}</div>
       </section>
 
-      <div class="foundation-footnote"><b>文档契约：</b>这里展示的数值不手工维护。新增、删除或调整 Foundation token，应先修改 <code>design-source/colors_and_type.css</code>；Human Docs 下一次加载会自动反映变化。</div>
+      <div class="foundation-footnote"><b>文档契约：</b>默认主题来自 <code>design-source/colors_and_type.css</code>；Premium Gold 来自 <code>design-source/themes/premium-gold.css</code>。Human Guide 的换肤只是把这两份真相源可视化，不反向发明 token。</div>
     </div>`;
   }
 
   async function init(){
-    section.innerHTML = '<div class="wrap"><div class="foundation-loading">正在从 design-source/colors_and_type.css 读取 Foundation…</div></div>';
+    section.innerHTML = '<div class="wrap"><div class="foundation-loading">正在读取 Default + Premium Gold Foundation…</div></div>';
     try{
-      const response = await fetch(SOURCE_URL, {cache:'no-cache'});
-      if(!response.ok) throw new Error(`HTTP ${response.status}`);
-      render(await response.text());
+      const [baseResponse, premiumResponse] = await Promise.all([
+        fetch(SOURCE_URL, {cache:'no-cache'}),
+        fetch(PREMIUM_URL, {cache:'no-cache'})
+      ]);
+      if(!baseResponse.ok) throw new Error(`Default source HTTP ${baseResponse.status}`);
+      if(!premiumResponse.ok) throw new Error(`Premium source HTTP ${premiumResponse.status}`);
+      cachedBaseCss = await baseResponse.text();
+      cachedPremiumCss = await premiumResponse.text();
+      render(cachedBaseCss, cachedPremiumCss, currentTheme());
     }catch(error){
-      section.innerHTML = `<div class="wrap"><div class="foundation-error">Foundation 真相源加载失败：${esc(error.message)}。没有使用手工 fallback，以免展示错误规范。</div></div>`;
+      section.innerHTML = `<div class="wrap"><div class="foundation-error">Foundation 主题真相源加载失败：${esc(error.message)}。没有使用手工 fallback，以免展示错误规范。</div></div>`;
     }
   }
+
+  window.addEventListener('com-design-theme-change', event => {
+    if(!cachedBaseCss || !cachedPremiumCss) return;
+    render(cachedBaseCss, cachedPremiumCss, event.detail?.theme || currentTheme());
+  });
 
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, {once:true});
   else init();
