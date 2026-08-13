@@ -33,6 +33,7 @@
   --com-reward-strong: var(--com-premium-500);
   --com-reward-subtle: var(--com-premium-50);
   --com-reward-text: var(--com-premium-700);
+  --com-reward-highlight-warm: var(--com-premium-100); /* reward price-flash background only */
 
   --color-reward: var(--com-reward-default);
   --color-reward-strong: var(--com-reward-strong);
@@ -47,6 +48,30 @@
   --color-member-surface: var(--com-member-surface);
   --color-member-text: var(--com-member-text);
   --color-member-accent: var(--com-member-accent);
+
+  /* member card glow shadow — premium identity only */
+  --shadow-member-card: 0 12px 24px -8px rgba(237,188,108,0.35);
+
+  /* rank crown palette — V1 silver, V2 emerald, V3 violet, V4 gold (identity-only) */
+  --com-rank-v1: #C0C5CE;
+  --com-rank-v2: #3FB68A;
+  --com-rank-v3: #8B6FE6;
+  --com-rank-v4: var(--com-premium-300);
+  --color-rank-v1: var(--com-rank-v1);
+  --color-rank-v2: var(--com-rank-v2);
+  --color-rank-v3: var(--com-rank-v3);
+  --color-rank-v4: var(--com-rank-v4);
+
+  /* member progress gradient — component pattern; tokens are concrete colors */
+  --com-member-progress-start: var(--com-brand-500);
+  --com-member-progress-end: var(--com-brand-700);
+  --color-member-progress-start: var(--com-member-progress-start);
+  --color-member-progress-end: var(--com-member-progress-end);
+
+  /* warm overlay surface — dialogs/sheets in premium scope only;
+     explicitly named with -warm suffix to avoid generic semantic leakage. */
+  --com-surface-overlay-warm: #FFFBF5;
+  --color-surface-overlay-warm: var(--com-surface-overlay-warm);
 }
 
 .dark {
@@ -58,17 +83,24 @@
   --com-member-surface: var(--com-ink-900);
   --com-member-text: var(--com-premium-50);
   --com-member-accent: var(--com-premium-300);
+  --com-reward-highlight-warm: #332514;
+  --shadow-member-card: 0 12px 24px -8px rgba(0,0,0,0.55);
+  --com-surface-overlay-warm: #292722;
 }
 
 .theme-premium-gold {
-  /* brand becomes orange only inside this explicit scope */
+  /* brand becomes warm orange-red only inside this explicit scope.
+     Scale is strictly monotonic in luminance:
+       400 #FF8355 → 500 #F25B26 → 600 #D63D10 → 700 #AD2E0A → 800 #7A2106
+     700 carries on-primary-container / status-info-text and must stay AAA-safe. */
   --com-brand-50: #FFF3EC;
   --com-brand-100: #FFE3D5;
   --com-brand-200: #FFC4AA;
-  --com-brand-400: #FF7540;
-  --com-brand-500: #ED4D1B;
-  --com-brand-600: #D63D10;
-  --com-brand-700: #AD2E0A;
+  --com-brand-400: #FF8355;
+  --com-brand-500: #F25B26; /* visual CTA tint in scope */
+  --com-brand-600: #D63D10; /* @primary in scope, fed to color-primary */
+  --com-brand-700: #AD2E0A; /* on-primary-container / status-info-text, AAA-safe on brand-50 */
+  --com-brand-800: #7A2106; /* pressed in scope */
 
   /* warm text */
   --com-text-primary: var(--com-ink-800);
@@ -105,7 +137,12 @@
 }
 
 .dark.theme-premium-gold {
-  --com-brand-800: #7A2106;
+  /* dark-mode brand also monotone: 400 #FF7540 → 500 #ED4D1B → 600 #C7390E → 700 #7A2106 → 900 #461103 */
+  --com-brand-400: #FF7540;
+  --com-brand-500: #ED4D1B;
+  --com-brand-600: #C7390E;
+  --com-brand-700: #7A2106;
+  --com-brand-800: #5A1804;
   --com-brand-900: #461103;
 
   --com-text-primary: var(--com-premium-50);
@@ -128,6 +165,9 @@
   --com-border-strong: #9B9184;
   --com-border-focused: var(--com-brand-400);
 
+  /* Primary uses brand-600 so white text keeps normal-size contrast in dark mode
+     (brand-500 #ED4D1B on white ≈ 3.70:1, brand-600 #C7390E ≈ 5.22:1).
+     Pressed stays one step deeper than primary. */
   --com-action-primary: var(--com-brand-600);
   --com-action-primary-pressed: var(--com-brand-700);
   --com-action-secondary: var(--com-brand-900);
