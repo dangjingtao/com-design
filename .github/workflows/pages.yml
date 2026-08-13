@@ -122,6 +122,39 @@ jobs:
           (cd "$DEFAULT_PACK" && zip -qr "$GITHUB_WORKSPACE/_site/downloads/com-design-default-theme.zip" .)
           (cd "$PREMIUM_PACK" && zip -qr "$GITHUB_WORKSPACE/_site/downloads/com-design-premium-gold-theme.zip" .)
 
+          # Trae Design / Agent source delivery. This intentionally publishes stable,
+          # machine-readable source instead of coupling Com Design to a private project format.
+          TRAE_SOURCE_PACK="$(mktemp -d)"
+          cp -R design-source "$TRAE_SOURCE_PACK/design-source"
+          cp design.md "$TRAE_SOURCE_PACK/design.md"
+          mkdir -p "$TRAE_SOURCE_PACK/generated"
+          cp -R dist/tailwind "$TRAE_SOURCE_PACK/generated/tailwind"
+          cp -R dist/nativewind "$TRAE_SOURCE_PACK/generated/nativewind"
+          cp -R dist/react-native "$TRAE_SOURCE_PACK/generated/react-native"
+          cp -R dist/mcp "$TRAE_SOURCE_PACK/generated/mcp"
+          cp dist/build-manifest.json "$TRAE_SOURCE_PACK/generated/build-manifest.json"
+          cp penpot/build/manifest.json "$TRAE_SOURCE_PACK/generated/penpot-manifest.json"
+          cat > "$TRAE_SOURCE_PACK/README.md" <<'EOF'
+          # Com Design — Trae Design Source Kit
+
+          This package is the stable source handoff for Trae Design and AI agents.
+          It is intentionally not tied to a private editor project-file format.
+
+          ## Contract
+
+          - `design-source/` is the source of truth. Read it; do not fork or rewrite it locally.
+          - `design.md` explains the human/agent usage contract.
+          - `generated/` contains same-revision derived outputs for consumption and verification only.
+          - Formal visual themes are Default and Premium Gold, each with Light / Dark mappings.
+          - Premium Gold is one optional evolving theme, not a parallel versioned theme family.
+          - Do not invent tokens when a semantic token or component contract already exists.
+
+          If Trae Design introduces an official public native serializer later, that adapter can be
+          added downstream without changing the Com Design source contract.
+          EOF
+          printf '\nBuild revision: `%s`\n' "$GITHUB_SHA" >> "$TRAE_SOURCE_PACK/README.md"
+          (cd "$TRAE_SOURCE_PACK" && zip -qr "$GITHUB_WORKSPACE/_site/downloads/com-design-trae-source.zip" .)
+
           # Append Human Guide-only iframe compatibility rules after the main workspace script.
           # This keeps Core Preview pages untouched while fixing multi-scene evidence layouts in the simulator.
           printf '\n' >> _site/guide-components.js
@@ -164,7 +197,9 @@ jobs:
               '</head>',
               f'  <link rel="stylesheet" href="./foundation.css?v={build}">\n'
               f'  <link rel="stylesheet" href="./mobile-nav.css?v={build}">\n'
+              f'  <link rel="stylesheet" href="./source-kit.css?v={build}">\n'
               f'  <script defer src="./theme-controller.js?v={build}"></script>\n'
+              f'  <script defer src="./source-kit.js?v={build}"></script>\n'
               f'  <meta name="com-design-build" content="{build}">\n</head>'
           )
           html = html.replace(
