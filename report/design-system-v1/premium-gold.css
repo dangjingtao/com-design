@@ -1,4 +1,72 @@
-/* Premium Gold compatibility section for Human Guide. */
+/* Human Guide theme switch + Premium Gold compatibility presentation. */
+
+.human-theme-switcher{
+  display:grid;
+  gap:8px;
+  margin:-12px 0 22px;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--n50);
+}
+.human-theme-label{color:var(--muted);font-size:9px;font-weight:760;letter-spacing:.08em;text-transform:uppercase}
+.human-theme-options{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.human-theme-options button{
+  min-width:0;
+  padding:8px 9px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:#fff;
+  color:var(--n700);
+  font:600 11px/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  text-align:left;
+  cursor:pointer;
+}
+.human-theme-options button i{display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:999px;background:#5B5EF7;vertical-align:0}
+.human-theme-options button[data-theme="premium-gold"] i{background:#D63D10;box-shadow:0 0 0 2px #FFF0C7}
+.human-theme-options button.is-active{border-color:var(--brand);background:var(--brand-50);color:var(--brand-600)}
+.human-theme-switcher small{color:var(--muted);font-size:10px}
+
+/* The Human Guide itself follows the selected theme. This maps documentation chrome
+ * to the same semantic intent as design-source/themes/premium-gold.css without
+ * changing the Default theme variables. */
+html[data-com-theme="premium-gold"]{
+  --brand:#D63D10;
+  --brand-600:#AD2E0A;
+  --brand-50:#FFF3EC;
+  --n50:#FCF8F1;
+  --n100:#F8F0E5;
+  --n200:#EEE2D2;
+  --n300:#DDCDBA;
+  --n400:#A99884;
+  --n500:#7B7468;
+  --n600:#5C574E;
+  --n700:#403D36;
+  --n800:#292722;
+  --n900:#1C1B18;
+  --line:#EEE2D2;
+  --text:#292722;
+  --muted:#7B7468;
+}
+html[data-com-theme="premium-gold"] body{background:#FCF8F1}
+html[data-com-theme="premium-gold"] .rail,
+html[data-com-theme="premium-gold"] .hero,
+html[data-com-theme="premium-gold"] .section.alt,
+html[data-com-theme="premium-gold"] .delivery-strip{background:#FFFDF9}
+html[data-com-theme="premium-gold"] .rail{border-right-color:#EEE2D2}
+html[data-com-theme="premium-gold"] .rail nav a:hover{background:#F8F0E5;color:#1C1B18}
+html[data-com-theme="premium-gold"] .truth-callout{background:#FFF3EC;border-left-color:#D63D10}
+html[data-com-theme="premium-gold"] .delivery-card.primary{background:#FFFBF5}
+html[data-com-theme="premium-gold"] .delivery-card.primary .delivery-file{background:#D63D10;border-color:#D63D10}
+html[data-com-theme="premium-gold"] .delivery-card.primary .delivery-file:hover{background:#AD2E0A;border-color:#AD2E0A}
+html[data-com-theme="premium-gold"] .delivery-card::before{background:#DDCDBA}
+html[data-com-theme="premium-gold"] .delivery-card.primary::before{background:#D63D10}
+html[data-com-theme="premium-gold"] .chips a:hover{border-color:#FFC4AA;background:#FFF3EC;color:#AD2E0A}
+html[data-com-theme="premium-gold"] .next-grid article:first-child span,
+html[data-com-theme="premium-gold"] .catalogue-group header>span{background:#FFF3EC;color:#AD2E0A}
+html[data-com-theme="premium-gold"] .human-theme-options button[data-theme="default"] i{background:#5B5EF7;box-shadow:none}
+html[data-com-theme="premium-gold"] .human-theme-options button[data-theme="premium-gold"] i{background:#D63D10;box-shadow:0 0 0 2px #FFF0C7}
+
 .premium-compat {
   margin-top: 28px;
   padding: 28px;
@@ -6,6 +74,12 @@
   border-radius: 16px;
   background: #FCF8F1;
   color: #292722;
+}
+
+.premium-compat.is-default{
+  background:#fff;
+  border-color:#E2E6F0;
+  color:#252B3D;
 }
 
 .premium-compat-head {
@@ -24,6 +98,7 @@
   text-transform: uppercase;
 }
 
+.premium-compat.is-default .premium-compat-kicker{color:#494CE0}
 .premium-compat h3,
 .premium-compat h4 { margin: 0; }
 
@@ -36,6 +111,7 @@
   color: #5C574E;
   line-height: 1.75;
 }
+.premium-compat.is-default .premium-compat-summary{color:#535D72}
 
 .premium-compat-badge {
   display: inline-flex;
@@ -49,6 +125,7 @@
   font-weight: 700;
   white-space: nowrap;
 }
+.premium-compat.is-default .premium-compat-badge{background:#F0F1FF;color:#393BBE}
 
 .theme-compare {
   display: grid;
@@ -70,38 +147,11 @@
   background: #FFFDF9;
 }
 
-.theme-compare-card small {
-  display: block;
-  margin-bottom: 4px;
-  color: #7B7468;
-}
-
-.theme-compare-card strong {
-  display: block;
-  margin-bottom: 14px;
-  font-size: 16px;
-}
-
-.theme-swatch-row {
-  display: flex;
-  gap: 8px;
-  margin: 12px 0;
-}
-
-.theme-swatch {
-  width: 32px;
-  height: 32px;
-  border: 1px solid rgba(0,0,0,.06);
-  border-radius: 8px;
-  background: var(--swatch);
-}
-
-.theme-compare-card p {
-  margin: 10px 0 0;
-  color: #5C574E;
-  font-size: 13px;
-  line-height: 1.65;
-}
+.theme-compare-card small {display:block;margin-bottom:4px;color:#7B7468}
+.theme-compare-card strong {display:block;margin-bottom:14px;font-size:16px}
+.theme-swatch-row {display:flex;gap:8px;margin:12px 0}
+.theme-swatch {width:32px;height:32px;border:1px solid rgba(0,0,0,.06);border-radius:8px;background:var(--swatch)}
+.theme-compare-card p {margin:10px 0 0;color:#5C574E;font-size:13px;line-height:1.65}
 
 .premium-role-grid,
 .premium-pattern-grid {
@@ -120,20 +170,9 @@
 }
 
 .premium-role b,
-.premium-pattern b {
-  display: block;
-  margin-bottom: 6px;
-  color: #292722;
-}
-
+.premium-pattern b {display:block;margin-bottom:6px;color:#292722}
 .premium-role p,
-.premium-pattern p {
-  margin: 0;
-  color: #5C574E;
-  font-size: 13px;
-  line-height: 1.65;
-}
-
+.premium-pattern p {margin:0;color:#5C574E;font-size:13px;line-height:1.65}
 .premium-role.orange { border-top: 3px solid #D63D10; }
 .premium-role.gold { border-top: 3px solid #EDBC6C; }
 .premium-role.ink { border-top: 3px solid #1C1B18; }
@@ -147,6 +186,7 @@
   font-size: 13px;
   line-height: 1.7;
 }
+.premium-compat.is-default .premium-compat-rule{background:#F0F1FF;color:#394156}
 
 .premium-code {
   margin-top: 16px;
@@ -160,12 +200,14 @@
   white-space: pre;
 }
 
+@media (max-width: 1050px){
+  .human-theme-switcher{display:none}
+}
 @media (max-width: 900px) {
   .premium-compat-head,
   .theme-compare,
   .premium-role-grid,
   .premium-pattern-grid { grid-template-columns: 1fr; }
-
   .premium-compat { padding: 20px; }
   .premium-compat-badge { justify-self: start; }
 }

@@ -51,11 +51,12 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf _site
-          mkdir -p _site/design-source
+          mkdir -p _site/design-source/themes
           mkdir -p _site/downloads
           cp -R report/design-system-v1/. _site/
           cp design-source/colors_and_type.css _site/design-source/colors_and_type.css
           cp design-source/components.css _site/design-source/components.css
+          cp -R design-source/themes/. _site/design-source/themes/
           cp -R design-source/components _site/design-source/components
           cp -R design-source/preview _site/design-source/preview
 
@@ -71,6 +72,55 @@ jobs:
             zip -qr ../_site/downloads/com-design-engineering.zip tailwind nativewind react-native build-manifest.json
             zip -qr ../_site/downloads/com-design-mcp.zip mcp
           )
+
+          # Theme-aware download kits. Human Guide switches its primary download together
+          # with the active visual theme, while the universal Engineering Kit stays available.
+          DEFAULT_PACK="$(mktemp -d)"
+          PREMIUM_PACK="$(mktemp -d)"
+
+          mkdir -p "$DEFAULT_PACK/design-source" "$DEFAULT_PACK/engineering" "$DEFAULT_PACK/penpot"
+          cp design-source/colors_and_type.css "$DEFAULT_PACK/design-source/colors_and_type.css"
+          cp -R dist/tailwind "$DEFAULT_PACK/engineering/tailwind"
+          cp -R dist/nativewind "$DEFAULT_PACK/engineering/nativewind"
+          cp -R dist/react-native "$DEFAULT_PACK/engineering/react-native"
+          cp dist/build-manifest.json "$DEFAULT_PACK/engineering/build-manifest.json"
+          cp penpot/build/manifest.json "$DEFAULT_PACK/penpot/manifest.json"
+          cat > "$DEFAULT_PACK/README.md" <<'EOF'
+          # Com Design Default Theme Kit
+
+          Active visual baseline: Default / Electric Indigo.
+
+          - Source: `design-source/colors_and_type.css`
+          - Tailwind / NativeWind: generated from the same source revision
+          - React Native: `tokens.color.light/dark` remain the default mapping
+          - Penpot: use Default Light / Default Dark theme sets
+          - Premium Gold remains compatible but is not activated by this kit
+          EOF
+
+          mkdir -p "$PREMIUM_PACK/design-source/themes" "$PREMIUM_PACK/engineering" "$PREMIUM_PACK/penpot"
+          cp design-source/colors_and_type.css "$PREMIUM_PACK/design-source/colors_and_type.css"
+          cp design-source/themes/premium-gold.css "$PREMIUM_PACK/design-source/themes/premium-gold.css"
+          cp -R dist/tailwind "$PREMIUM_PACK/engineering/tailwind"
+          cp -R dist/nativewind "$PREMIUM_PACK/engineering/nativewind"
+          cp -R dist/react-native "$PREMIUM_PACK/engineering/react-native"
+          cp dist/build-manifest.json "$PREMIUM_PACK/engineering/build-manifest.json"
+          cp penpot/build/manifest.json "$PREMIUM_PACK/penpot/manifest.json"
+          cat > "$PREMIUM_PACK/README.md" <<'EOF'
+          # Com Design Premium Gold Theme Kit
+
+          Active optional theme: Premium Gold / 土豪金.
+
+          - Load `design-source/colors_and_type.css` first
+          - Then load `design-source/themes/premium-gold.css`
+          - Web scope: add `.theme-premium-gold` to the desired root/container
+          - Tailwind / NativeWind generated theme.css includes the Premium Gold scope
+          - React Native: use `tokens.themes.premiumGold`
+          - Penpot: choose Premium Gold Light / Premium Gold Dark theme sets
+          - Default Electric Indigo remains available and unchanged
+          EOF
+
+          (cd "$DEFAULT_PACK" && zip -qr "$GITHUB_WORKSPACE/_site/downloads/com-design-default-theme.zip" .)
+          (cd "$PREMIUM_PACK" && zip -qr "$GITHUB_WORKSPACE/_site/downloads/com-design-premium-gold-theme.zip" .)
 
           # Append Human Guide-only iframe compatibility rules after the main workspace script.
           # This keeps Core Preview pages untouched while fixing multi-scene evidence layouts in the simulator.
@@ -99,6 +149,10 @@ jobs:
               f'href="./delivery.css?v={build}"'
           )
           html = html.replace(
+              'href="./premium-gold.css"',
+              f'href="./premium-gold.css?v={build}"'
+          )
+          html = html.replace(
               'src="./guide-components.js"',
               f'src="./guide-components.js?v={build}"'
           )
@@ -110,6 +164,7 @@ jobs:
               '</head>',
               f'  <link rel="stylesheet" href="./foundation.css?v={build}">\n'
               f'  <link rel="stylesheet" href="./mobile-nav.css?v={build}">\n'
+              f'  <script defer src="./theme-controller.js?v={build}"></script>\n'
               f'  <meta name="com-design-build" content="{build}">\n</head>'
           )
           html = html.replace(
