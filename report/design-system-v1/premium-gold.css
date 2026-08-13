@@ -2,30 +2,60 @@
 
 .human-theme-switcher{
   display:grid;
-  gap:8px;
+  gap:7px;
   margin:-12px 0 22px;
-  padding:12px;
+  padding:11px 12px 12px;
   border:1px solid var(--line);
   border-radius:12px;
   background:var(--n50);
 }
 .human-theme-label{color:var(--muted);font-size:9px;font-weight:760;letter-spacing:.08em;text-transform:uppercase}
-.human-theme-options{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.human-theme-options button{
-  min-width:0;
-  padding:8px 9px;
+.human-theme-select-wrap{
+  position:relative;
+  display:flex;
+  align-items:center;
+  min-height:38px;
   border:1px solid var(--line);
-  border-radius:8px;
+  border-radius:9px;
   background:#fff;
+  transition:border-color .16s ease,box-shadow .16s ease,background .16s ease;
+}
+.human-theme-select-wrap:hover{border-color:var(--n300)}
+.human-theme-select-wrap:focus-within{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-50)}
+.human-theme-swatch{
+  position:absolute;
+  left:10px;
+  width:8px;
+  height:8px;
+  border-radius:999px;
+  background:#5B5EF7;
+  pointer-events:none;
+}
+.human-theme-select-wrap[data-theme="premium-gold"] .human-theme-swatch{background:#D63D10;box-shadow:0 0 0 2px #FFF0C7}
+.human-theme-select-wrap select{
+  width:100%;
+  min-width:0;
+  height:38px;
+  padding:0 30px 0 27px;
+  border:0;
+  outline:0;
+  appearance:none;
+  -webkit-appearance:none;
+  background:transparent;
   color:var(--n700);
   font:600 11px/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  text-align:left;
   cursor:pointer;
 }
-.human-theme-options button i{display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:999px;background:#5B5EF7;vertical-align:0}
-.human-theme-options button[data-theme="premium-gold"] i{background:#D63D10;box-shadow:0 0 0 2px #FFF0C7}
-.human-theme-options button.is-active{border-color:var(--brand);background:var(--brand-50);color:var(--brand-600)}
-.human-theme-switcher small{color:var(--muted);font-size:10px}
+.human-theme-chevron{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-56%);
+  color:var(--muted);
+  font-size:15px;
+  line-height:1;
+  pointer-events:none;
+}
 
 /* The Human Guide itself follows the selected theme. This maps documentation chrome
  * to the same semantic intent as design-source/themes/premium-gold.css without
@@ -64,8 +94,6 @@ html[data-com-theme="premium-gold"] .delivery-card.primary::before{background:#D
 html[data-com-theme="premium-gold"] .chips a:hover{border-color:#FFC4AA;background:#FFF3EC;color:#AD2E0A}
 html[data-com-theme="premium-gold"] .next-grid article:first-child span,
 html[data-com-theme="premium-gold"] .catalogue-group header>span{background:#FFF3EC;color:#AD2E0A}
-html[data-com-theme="premium-gold"] .human-theme-options button[data-theme="default"] i{background:#5B5EF7;box-shadow:none}
-html[data-com-theme="premium-gold"] .human-theme-options button[data-theme="premium-gold"] i{background:#D63D10;box-shadow:0 0 0 2px #FFF0C7}
 
 .premium-compat {
   margin-top: 28px;
