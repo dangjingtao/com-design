@@ -42,26 +42,25 @@
     wrap.className = 'human-theme-switcher';
     wrap.setAttribute('aria-label', 'Human Guide 主题');
     wrap.innerHTML = `
-      <span class="human-theme-label">Theme</span>
-      <div class="human-theme-options" role="group" aria-label="切换 Com Design 主题">
-        <button type="button" data-theme="default"><i></i><span>Default</span></button>
-        <button type="button" data-theme="premium-gold"><i></i><span>Premium Gold</span></button>
-      </div>
-      <small id="human-theme-status">当前：Electric Indigo</small>`;
+      <label class="human-theme-label" for="human-theme-select">Theme</label>
+      <div class="human-theme-select-wrap" data-theme="default">
+        <i class="human-theme-swatch" aria-hidden="true"></i>
+        <select id="human-theme-select" aria-label="切换 Com Design 主题">
+          <option value="default">Default · Electric Indigo</option>
+          <option value="premium-gold">Premium Gold · 土豪金</option>
+        </select>
+        <span class="human-theme-chevron" aria-hidden="true">⌄</span>
+      </div>`;
     railBrand.insertAdjacentElement('afterend', wrap);
-    wrap.querySelectorAll('button[data-theme]').forEach(button => {
-      button.addEventListener('click', () => applyTheme(button.dataset.theme, true));
-    });
+    const select = wrap.querySelector('#human-theme-select');
+    select?.addEventListener('change', event => applyTheme(event.target.value, true));
   }
 
   function syncSwitcher(theme){
-    document.querySelectorAll('#human-theme-switcher button[data-theme]').forEach(button => {
-      const active = button.dataset.theme === theme;
-      button.classList.toggle('is-active', active);
-      button.setAttribute('aria-pressed', String(active));
-    });
-    const status = document.querySelector('#human-theme-status');
-    if(status) status.textContent = `当前：${themes[theme].short}`;
+    const select = document.querySelector('#human-theme-select');
+    if(select) select.value = theme;
+    const selectWrap = document.querySelector('.human-theme-select-wrap');
+    if(selectWrap) selectWrap.dataset.theme = theme;
   }
 
   function ensureThemeSourceLink(){
