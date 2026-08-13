@@ -165,7 +165,10 @@
   --com-border-strong: #9B9184;
   --com-border-focused: var(--com-brand-400);
 
-  --com-action-primary: var(--com-brand-500);
+  /* Primary uses brand-600 so white text keeps normal-size contrast in dark mode
+     (brand-500 #ED4D1B on white ≈ 3.70:1, brand-600 #C7390E ≈ 5.22:1).
+     Pressed stays one step deeper than primary. */
+  --com-action-primary: var(--com-brand-600);
   --com-action-primary-pressed: var(--com-brand-700);
   --com-action-secondary: var(--com-brand-900);
   --com-action-secondary-pressed: var(--com-brand-800);
