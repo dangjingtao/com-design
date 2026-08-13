@@ -1,5 +1,5 @@
-// 解析 colors_and_type.css 中的 CSS 变量，解析 var() 引用链，输出扁平 token 表。
-// 支持 :root 与 .dark 两个作用域。
+// 解析 design-source CSS 变量，解析 var() 引用链，输出扁平 token 表。
+// 基础解析支持 :root 与 .dark；命名 scope 供可选主题/密度等兼容层使用。
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -7,11 +7,46 @@ import path from 'node:path';
  * @typedef {Object} CssVar
  * @property {string} name      变量名，不含 --，如 com-brand-500
  * @property {string} value     原始值字符串，如 "#5B5EF7" 或 "var(--com-neutral-800)"
- * @property {string} scope     ":root" | ".dark"
+ * @property {string} scope     CSS scope
  */
 
 const VAR_DECL_RE = /--([\w-]+)\s*:\s*([^;]+?)\s*(?:;|$)/gm;
 const SCOPE_RE = /(:root|\.dark)\s*\{([\s\S]*?)\}/g;
+const BLOCK_RE = /([^{}]+)\{([^{}]*)\}/g;
+
+/**
+ * @param {string} body
+ * @returns {Record<string,string>}
+ */
+export function parseDeclarations(body) {
+  const output = {};
+  const re = new RegExp(VAR_DECL_RE.source, 'gm');
+  let declaration;
+  while ((declaration = re.exec(body)) !== null) {
+    output[declaration[1]] = declaration[2].trim();
+  }
+  return output;
+}
+
+/**
+ * 从 CSS 源码读取一个精确 selector 的变量声明。
+ * 支持逗号分隔 selector，例如：.a, .b { ... }。
+ *
+ * @param {string} source
+ * @param {string} selector
+ * @returns {Record<string,string>}
+ */
+export function parseNamedScope(source, selector) {
+  const output = {};
+  const re = new RegExp(BLOCK_RE.source, 'g');
+  let block;
+  while ((block = re.exec(source)) !== null) {
+    const selectors = block[1].split(',').map((item) => item.trim());
+    if (!selectors.includes(selector)) continue;
+    Object.assign(output, parseDeclarations(block[2]));
+  }
+  return output;
+}
 
 /**
  * @param {string} cssPath
@@ -24,16 +59,12 @@ export function parseCssVariables(cssPath) {
   /** @type {Record<string,string>} */
   const dark = {};
 
+  const scopeRe = new RegExp(SCOPE_RE.source, 'g');
   let scopeMatch;
-  while ((scopeMatch = SCOPE_RE.exec(css)) !== null) {
+  while ((scopeMatch = scopeRe.exec(css)) !== null) {
     const scope = scopeMatch[1];
     const body = scopeMatch[2];
-    const target = scope === '.dark' ? dark : root;
-    let declMatch;
-    const re = new RegExp(VAR_DECL_RE.source, 'gm');
-    while ((declMatch = re.exec(body)) !== null) {
-      target[declMatch[1]] = declMatch[2].trim();
-    }
+    Object.assign(scope === '.dark' ? dark : root, parseDeclarations(body));
   }
   return { root, dark };
 }

@@ -1,0 +1,144 @@
+/* Com Design optional theme — Premium Gold compatibility layer.
+ * Import after colors_and_type.css. Existing/default Com Design remains unchanged
+ * unless .theme-premium-gold (or generated data-com-theme alias) is explicitly applied.
+ */
+
+:root {
+  /* warm surfaces — additive primitives */
+  --com-warm-50: #FCF8F1;
+  --com-warm-100: #F8F0E5;
+  --com-warm-200: #EEE2D2;
+  --com-warm-300: #DDCDBA;
+
+  /* warm ink — additive primitives */
+  --com-ink-500: #7B7468;
+  --com-ink-600: #5C574E;
+  --com-ink-700: #403D36;
+  --com-ink-800: #292722;
+  --com-ink-900: #1C1B18;
+  --com-ink-950: #11100E;
+
+  /* premium / reward — separate from Brand and Warning */
+  --com-premium-50: #FFF9EA;
+  --com-premium-100: #FFF0C7;
+  --com-premium-200: #F8D992;
+  --com-premium-300: #EDBC6C;
+  --com-premium-400: #DFA348;
+  --com-premium-500: #C98A27;
+  --com-premium-600: #A96C19;
+  --com-premium-700: #7A4B12;
+  --com-premium-900: #332514;
+
+  --com-reward-default: var(--com-premium-300);
+  --com-reward-strong: var(--com-premium-500);
+  --com-reward-subtle: var(--com-premium-50);
+  --com-reward-text: var(--com-premium-700);
+
+  --color-reward: var(--com-reward-default);
+  --color-reward-strong: var(--com-reward-strong);
+  --color-reward-subtle: var(--com-reward-subtle);
+  --color-reward-text: var(--com-reward-text);
+
+  /* member identity — additive, not a replacement for normal surface tokens */
+  --com-member-surface: var(--com-ink-900);
+  --com-member-text: var(--com-premium-50);
+  --com-member-accent: var(--com-premium-300);
+
+  --color-member-surface: var(--com-member-surface);
+  --color-member-text: var(--com-member-text);
+  --color-member-accent: var(--com-member-accent);
+}
+
+.dark {
+  /* additive dark semantics for reward/member tokens */
+  --com-reward-default: var(--com-premium-300);
+  --com-reward-strong: var(--com-premium-200);
+  --com-reward-subtle: var(--com-premium-900);
+  --com-reward-text: var(--com-premium-100);
+  --com-member-surface: var(--com-ink-900);
+  --com-member-text: var(--com-premium-50);
+  --com-member-accent: var(--com-premium-300);
+}
+
+.theme-premium-gold {
+  /* brand becomes orange only inside this explicit scope */
+  --com-brand-50: #FFF3EC;
+  --com-brand-100: #FFE3D5;
+  --com-brand-200: #FFC4AA;
+  --com-brand-400: #FF7540;
+  --com-brand-500: #ED4D1B;
+  --com-brand-600: #D63D10;
+  --com-brand-700: #AD2E0A;
+
+  /* warm text */
+  --com-text-primary: var(--com-ink-800);
+  --com-text-secondary: var(--com-ink-600);
+  --com-text-tertiary: var(--com-ink-500);
+  --com-text-placeholder: var(--com-ink-500);
+  --com-text-disabled: var(--com-ink-500);
+  --com-text-brand: var(--com-brand-600);
+  --com-text-link: var(--com-brand-600);
+
+  /* warm surfaces and borders */
+  --com-surface-page: var(--com-warm-50);
+  --com-surface-default: #FFFFFF;
+  --com-surface-subtle: var(--com-warm-100);
+  --com-surface-selected: var(--com-brand-50);
+  --com-surface-pressed: var(--com-warm-100);
+  --com-surface-inverse: var(--com-ink-900);
+
+  --com-border-subtle: var(--com-warm-200);
+  --com-border-default: var(--com-warm-300);
+  --com-border-strong: #A99884;
+  --com-border-focused: var(--com-brand-600);
+
+  /* Primary uses brand-600 so white text keeps normal-size contrast. */
+  --com-action-primary: var(--com-brand-600);
+  --com-action-primary-pressed: var(--com-brand-700);
+  --com-action-secondary: var(--com-brand-50);
+  --com-action-secondary-pressed: var(--com-brand-100);
+
+  /* status meanings stay unchanged; Info follows scoped Brand */
+  --com-status-info: var(--com-brand-600);
+  --com-status-info-bg: var(--com-brand-50);
+  --com-status-info-text: var(--com-brand-700);
+}
+
+.dark.theme-premium-gold {
+  --com-brand-800: #7A2106;
+  --com-brand-900: #461103;
+
+  --com-text-primary: var(--com-premium-50);
+  --com-text-secondary: #D9D0C4;
+  --com-text-tertiary: #AFA599;
+  --com-text-placeholder: #AFA599;
+  --com-text-disabled: #8D857B;
+  --com-text-brand: var(--com-brand-200);
+  --com-text-link: var(--com-brand-200);
+
+  --com-surface-page: var(--com-ink-950);
+  --com-surface-default: var(--com-ink-900);
+  --com-surface-subtle: var(--com-ink-800);
+  --com-surface-selected: var(--com-brand-900);
+  --com-surface-pressed: var(--com-ink-800);
+  --com-surface-inverse: var(--com-ink-700);
+
+  --com-border-subtle: var(--com-ink-800);
+  --com-border-default: #71695E;
+  --com-border-strong: #9B9184;
+  --com-border-focused: var(--com-brand-400);
+
+  --com-action-primary: var(--com-brand-600);
+  --com-action-primary-pressed: var(--com-brand-700);
+  --com-action-secondary: var(--com-brand-900);
+  --com-action-secondary-pressed: var(--com-brand-800);
+
+  --com-status-info: var(--com-brand-400);
+  --com-status-info-bg: var(--com-brand-900);
+  --com-status-info-text: var(--com-brand-100);
+
+  --com-reward-default: var(--com-premium-300);
+  --com-reward-strong: var(--com-premium-200);
+  --com-reward-subtle: var(--com-premium-900);
+  --com-reward-text: var(--com-premium-100);
+}
