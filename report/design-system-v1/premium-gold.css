@@ -1,0 +1,171 @@
+/* Premium Gold compatibility section for Human Guide. */
+.premium-compat {
+  margin-top: 28px;
+  padding: 28px;
+  border: 1px solid #E6D8C7;
+  border-radius: 16px;
+  background: #FCF8F1;
+  color: #292722;
+}
+
+.premium-compat-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: start;
+}
+
+.premium-compat-kicker {
+  margin: 0 0 8px;
+  color: #A96C19;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.premium-compat h3,
+.premium-compat h4 { margin: 0; }
+
+.premium-compat h3 { font-size: 24px; line-height: 1.3; }
+.premium-compat h4 { font-size: 15px; }
+
+.premium-compat-summary {
+  max-width: 760px;
+  margin: 10px 0 0;
+  color: #5C574E;
+  line-height: 1.75;
+}
+
+.premium-compat-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: #1C1B18;
+  color: #FFF9EA;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.theme-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.theme-compare-card {
+  min-height: 170px;
+  padding: 18px;
+  border: 1px solid #E2E6F0;
+  border-radius: 12px;
+  background: #FFF;
+}
+
+.theme-compare-card.premium {
+  border-color: #EEE2D2;
+  background: #FFFDF9;
+}
+
+.theme-compare-card small {
+  display: block;
+  margin-bottom: 4px;
+  color: #7B7468;
+}
+
+.theme-compare-card strong {
+  display: block;
+  margin-bottom: 14px;
+  font-size: 16px;
+}
+
+.theme-swatch-row {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.theme-swatch {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 8px;
+  background: var(--swatch);
+}
+
+.theme-compare-card p {
+  margin: 10px 0 0;
+  color: #5C574E;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.premium-role-grid,
+.premium-pattern-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.premium-role,
+.premium-pattern {
+  padding: 16px;
+  border: 1px solid #EEE2D2;
+  border-radius: 12px;
+  background: rgba(255,255,255,.78);
+}
+
+.premium-role b,
+.premium-pattern b {
+  display: block;
+  margin-bottom: 6px;
+  color: #292722;
+}
+
+.premium-role p,
+.premium-pattern p {
+  margin: 0;
+  color: #5C574E;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.premium-role.orange { border-top: 3px solid #D63D10; }
+.premium-role.gold { border-top: 3px solid #EDBC6C; }
+.premium-role.ink { border-top: 3px solid #1C1B18; }
+
+.premium-compat-rule {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: #FFF0C7;
+  color: #403D36;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.premium-code {
+  margin-top: 16px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  border: 1px solid #332514;
+  border-radius: 10px;
+  background: #1C1B18;
+  color: #FFF9EA;
+  font: 12px/1.7 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre;
+}
+
+@media (max-width: 900px) {
+  .premium-compat-head,
+  .theme-compare,
+  .premium-role-grid,
+  .premium-pattern-grid { grid-template-columns: 1fr; }
+
+  .premium-compat { padding: 20px; }
+  .premium-compat-badge { justify-self: start; }
+}
