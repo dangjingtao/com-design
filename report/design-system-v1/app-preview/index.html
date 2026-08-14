@@ -4,32 +4,39 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>App Preview · Com Design</title>
-<style>html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"PingFang SC",sans-serif;background:#fcf8f1;color:#252b3d}.loading{min-height:100vh;display:grid;place-items:center}.loading span{font-size:14px;color:#687288}</style>
+<style>
+html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"PingFang SC",sans-serif;background:#fcf8f1;color:#252b3d}
+.loading{min-height:100vh;display:grid;place-items:center}.loading span{font-size:14px;color:#687288}
+.error{max-width:560px;margin:20vh auto;padding:24px;line-height:1.7}.error b{display:block;margin-bottom:8px}
+</style>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
-<body><div class="loading"><span>正在载入原型…</span></div>
+<body>
+<div class="loading"><span>正在载入原型…</span></div>
 <script>
 (async()=>{
+  const allowed=new Set(['index','member','levels','points','profile','profile-edit','redeem','scan','share','share-success','checkin','confirm']);
   const params=new URLSearchParams(location.search);
-  let page=params.get('page')||'index.html';
-  page=page.split('/').pop();
-  if(!/^[A-Za-z0-9_-]+\.html$/.test(page)) page='index.html';
-  const res=await fetch('./site.zip?v=20260814');
-  if(!res.ok) throw new Error('site.zip '+res.status);
-  const zip=await JSZip.loadAsync(await res.arrayBuffer());
-  const file=zip.file(page);
-  if(!file) throw new Error('页面不存在: '+page);
-  let html=await file.async('text');
-  const assets=[...new Set([...html.matchAll(/(?:src|href)="(assets\/[^"?#]+)"/g)].map(x=>x[1]))];
-  for(const path of assets){
-    const f=zip.file(path); if(!f) continue;
-    const ext=(path.split('.').pop()||'').toLowerCase();
-    const mime=ext==='webp'?'image/webp':ext==='png'?'image/png':ext==='jpg'||ext==='jpeg'?'image/jpeg':'application/octet-stream';
-    const uri='data:'+mime+';base64,'+await f.async('base64');
-    html=html.split(path).join(uri);
+  let name=params.get('page')||'index';
+  if(!allowed.has(name)) name='index';
+  try{
+    if(typeof JSZip==='undefined') throw new Error('JSZip 加载失败');
+    const res=await fetch('./site.zip?v=20260814',{cache:'no-store'});
+    if(!res.ok) throw new Error('site.zip HTTP '+res.status);
+    const zip=await JSZip.loadAsync(await res.arrayBuffer());
+    const wanted=name+'.html';
+    const key=Object.keys(zip.files).find(k=>!zip.files[k].dir&&(k===wanted||k.endsWith('/'+wanted)));
+    if(!key) throw new Error('找不到页面 '+wanted);
+    let html=await zip.files[key].async('string');
+    html=html.replace(/href=(['"])(?:\.\/)?([A-Za-z0-9-]+)\.html(?:#[^'"]*)?\1/g,(m,q,p)=>allowed.has(p)?`href=${q}?page=${encodeURIComponent(p)}${q}`:m);
+    document.open();
+    document.write(html);
+    document.close();
+  }catch(err){
+    document.body.innerHTML='<div class="error"><b>原型载入失败</b><div>'+String(err&&err.message||err)+'</div></div>';
+    console.error(err);
   }
-  html=html.replace(/href="([^"#?]+\.html)"/g,(_,p)=>'href="?page='+encodeURIComponent(p.split('/').pop())+'"');
-  document.open(); document.write(html); document.close();
-})().catch(err=>{document.body.innerHTML='<div class="loading"><span>原型载入失败：'+String(err.message||err)+'</span></div>';console.error(err)});
+})();
 </script>
-</body></html>
+</body>
+</html>
