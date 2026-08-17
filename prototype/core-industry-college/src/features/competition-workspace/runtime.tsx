@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
-import type { TaskRunStatus } from "../../state/model";
+import type { CompetitionIdentityState, TaskRunStatus } from "../../state/model";
 import { usePublicPlatform, type IdentityScenario } from "../public-platform/PublicPlatform";
 import { materialLabels, resultById, taskById, workshopTasks, type MaterialKey, type WorkshopLifecycle } from "./data";
 
@@ -15,7 +15,7 @@ export type CompetitionWorkshopRuntime = {
 type RuntimeStore = Record<string, CompetitionWorkshopRuntime>;
 
 type WorkshopRuntimeContextValue = {
-  identityFor: (competitionId: string) => ReturnType<typeof usePublicPlatform>["identities"][number] | undefined;
+  identityFor: (competitionId: string) => CompetitionIdentityState | undefined;
   setIdentityScenario: (competitionId: string, scenario: IdentityScenario) => void;
   getRuntime: (competitionId: string) => CompetitionWorkshopRuntime;
   setLifecycle: (competitionId: string, lifecycle: WorkshopLifecycle) => void;
