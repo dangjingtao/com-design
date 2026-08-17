@@ -71,10 +71,11 @@ import {
   SupportProvider,
   TasksDecisionPage,
 } from "../features/platform-support/SupportPages";
+import { RegistrationPortal } from "../registration-portal/RegistrationPortal";
 
 const account = (page: ReactNode) => <AccountRequired>{page}</AccountRequired>;
 
-export function App() {
+function CoreIndustryCollegeApp() {
   return (
     <PublicPlatformProvider>
       <WorkshopRuntimeProvider>
@@ -156,4 +157,11 @@ export function App() {
       </WorkshopRuntimeProvider>
     </PublicPlatformProvider>
   );
+}
+
+export function App() {
+  return <Routes>
+    <Route path="/registration-portal/*" element={<RegistrationPortal />} />
+    <Route path="*" element={<CoreIndustryCollegeApp />} />
+  </Routes>;
 }
