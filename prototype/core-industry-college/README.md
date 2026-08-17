@@ -1,6 +1,6 @@
-# 核心产业学院可交互原型 — T01 工程骨架
+# 核心产业学院可交互原型
 
-本目录只完成 T01：语义路由、上下文边界、mock state 基线与 Route Lab。**没有开始 T02 页面 UI。**
+当前完成至 **T02：公共平台——首页 / 赛事发现 / 企业与机会**，等待 R02。
 
 ## 运行
 
@@ -10,13 +10,21 @@ npm install
 npm run dev
 ```
 
-打开 `/dev/routes` 可查看全部语义路由。所有业务路由暂时使用同一个 `RouteProbe`，用于验证 route/context/state 规划，避免在 T01 就复制大量页面。
+默认入口 `/home`。`/dev/routes` 仍保留 T01 Route Lab，用于查看完整语义路由。
 
-## 约束
+## T02 已实现
 
-- 视觉/组件真相源仍是仓库根目录 `design.md` 与 `design-source/`。
-- `src/styles.css` 直接引入 Core runtime token CSS，不复制 token。
-- 公共赛事详情与赛事 workspace 分层。
-- 创赛工坊所有 S1–S6 后续共用 Task Runtime。
-- `/tasks` 仅保留冻结路由，等待产品定义。
-- R01 通过前不要进入 T02。
+- 首页：参赛 + 就业/实习首层心智、我的当前赛事、支撑层入口。
+- 赛事：列表、搜索/筛选、详情、我的赛事、registration handoff、workspace 边界。
+- 机会：列表、搜索/筛选、详情、长期简历检查接口、投递、投递记录。
+- 企业：列表、详情、关注，以及赛事/权益/课程/活动/岗位资源关系。
+- 状态：loading / empty / error 可通过页面右下角“原型状态”切换；首页可切换“多赛事身份 / 无赛事身份”账号场景；`/home?guest=1` 演示未登录浏览。
+
+## 边界
+
+- T01 的 `CompetitionAccountState / CompetitionContextState` 未修改。
+- 公共赛事详情 `/competitions/:id` 与赛事 workspace `/competitions/:id/workspace` 分开。
+- registration 只做响应式报名跳入/回流模拟，不重建复杂报名表单。
+- workspace 只做 T03 handoff；长期简历只做 T04 接口，不实现内部深层能力。
+- `/tasks` 继续冻结，不处理 D03。
+- 视觉/组件真相源仍为仓库根目录 `design.md` 与 `design-source/`。
