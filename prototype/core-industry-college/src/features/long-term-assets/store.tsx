@@ -1,5 +1,6 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
-import { benefits, courses, initialCertificates, initialCompetitionResults, type BenefitStatus, type CertificateRecord, type CompetitionResultRecord } from "./data";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { usePublicPlatform } from "../public-platform/PublicPlatform";
+import { benefitById, benefits, courses, initialCertificates, initialCompetitionResults, type BenefitStatus, type CertificateRecord, type CompetitionResultRecord } from "./data";
 
 export type LearningStatus = "notStarted" | "inProgress" | "completed";
 export type LearningRecord = {
@@ -27,6 +28,7 @@ export type ProfileState = {
 type LongTermAssetsContextValue = {
   learning: LearningRecord[];
   benefitStatuses: Record<string, BenefitStatus>;
+  benefitStatusFor: (benefitId: string) => BenefitStatus;
   certificates: CertificateRecord[];
   competitionResults: CompetitionResultRecord[];
   resume: ResumePresentation;
@@ -76,6 +78,7 @@ function updateLearning(records: LearningRecord[], courseId: string, updater: (r
 }
 
 export function LongTermAssetsProvider({ children }: { children: ReactNode }) {
+  const { session, identities } = usePublicPlatform();
   const [learning, setLearning] = useState<LearningRecord[]>(seedLearning);
   const [benefitStatuses, setBenefitStatuses] = useState<Record<string, BenefitStatus>>(() => Object.fromEntries(benefits.map(item => [item.id, item.initialStatus])));
   const [certificates, setCertificates] = useState<CertificateRecord[]>(initialCertificates);
@@ -83,21 +86,42 @@ export function LongTermAssetsProvider({ children }: { children: ReactNode }) {
   const [resume, setResume] = useState<ResumePresentation>(seedResume);
   const [profile, setProfile] = useState<ProfileState>(seedProfile);
 
+  const benefitStatusFor = useCallback((benefitId: string): BenefitStatus => {
+    const benefit = benefitById(benefitId);
+    if (!benefit) return "ineligible";
+    const stored = benefitStatuses[benefitId] ?? benefit.initialStatus;
+    if (stored === "claimed" || stored === "used" || stored === "expired") return stored;
+    if (!benefit.requiresCompetitionId) return stored;
+    const eligibleFromSharedIdentity = session.loggedIn && identities.some(identity => identity.competitionId === benefit.requiresCompetitionId && identity.identityStatus === "active");
+    return eligibleFromSharedIdentity ? stored : "ineligible";
+  }, [benefitStatuses, identities, session.loggedIn]);
+
   const value = useMemo<LongTermAssetsContextValue>(() => ({
     learning,
     benefitStatuses,
+    benefitStatusFor,
     certificates,
     competitionResults,
     resume,
     profile,
     learningFor: courseId => learning.find(record => record.courseId === courseId) ?? { courseId, status: "notStarted", progress: 0, assessment: "idle" },
-    startCourse: courseId => setLearning(records => updateLearning(records, courseId, record => record.status === "notStarted" ? { ...record, status: "inProgress", progress: 8 } : record)),
-    advanceCourse: courseId => setLearning(records => updateLearning(records, courseId, record => {
-      const nextProgress = Math.min(100, Math.max(record.progress, 8) + 22);
-      return { ...record, status: nextProgress >= 100 ? "completed" : "inProgress", progress: nextProgress };
-    })),
-    completeCourse: courseId => setLearning(records => updateLearning(records, courseId, record => ({ ...record, status: "completed", progress: 100 }))),
+    startCourse: courseId => {
+      if (!session.loggedIn) return;
+      setLearning(records => updateLearning(records, courseId, record => record.status === "notStarted" ? { ...record, status: "inProgress", progress: 8 } : record));
+    },
+    advanceCourse: courseId => {
+      if (!session.loggedIn) return;
+      setLearning(records => updateLearning(records, courseId, record => {
+        const nextProgress = Math.min(100, Math.max(record.progress, 8) + 22);
+        return { ...record, status: nextProgress >= 100 ? "completed" : "inProgress", progress: nextProgress };
+      }));
+    },
+    completeCourse: courseId => {
+      if (!session.loggedIn) return;
+      setLearning(records => updateLearning(records, courseId, record => ({ ...record, status: "completed", progress: 100 })));
+    },
     submitAssessment: (courseId, passed) => {
+      if (!session.loggedIn) return;
       setLearning(records => updateLearning(records, courseId, record => ({ ...record, status: passed ? "completed" : record.status, progress: passed ? 100 : record.progress, assessment: passed ? "passed" : "failed" })));
       if (passed) {
         const course = courses.find(item => item.id === courseId);
@@ -117,18 +141,39 @@ export function LongTermAssetsProvider({ children }: { children: ReactNode }) {
         }
       }
     },
-    claimBenefit: benefitId => setBenefitStatuses(current => current[benefitId] === "eligible" ? { ...current, [benefitId]: "claimed" } : current),
-    useBenefit: benefitId => setBenefitStatuses(current => current[benefitId] === "claimed" ? { ...current, [benefitId]: "used" } : current),
-    claimCertificate: certificateId => setCertificates(current => current.map(item => item.id === certificateId && item.status === "claimable" ? { ...item, status: "claimed", issuedAt: "2026-08-17" } : item)),
-    toggleResumeFact: factKey => setResume(current => ({
-      ...current,
-      selectedFactKeys: current.selectedFactKeys.includes(factKey) ? current.selectedFactKeys.filter(key => key !== factKey) : [...current.selectedFactKeys, factKey],
-      updatedAt: "2026-08-17",
-    })),
-    updateStrengths: strengths => setResume(current => ({ ...current, strengths, updatedAt: "2026-08-17" })),
-    updateEducation: education => setResume(current => ({ ...current, education, updatedAt: "2026-08-17" })),
-    updateProfile: patch => setProfile(current => ({ ...current, ...patch })),
-  }), [learning, benefitStatuses, certificates, competitionResults, resume, profile]);
+    claimBenefit: benefitId => {
+      if (!session.loggedIn || benefitStatusFor(benefitId) !== "eligible") return;
+      setBenefitStatuses(current => ({ ...current, [benefitId]: "claimed" }));
+    },
+    useBenefit: benefitId => {
+      if (!session.loggedIn) return;
+      setBenefitStatuses(current => current[benefitId] === "claimed" ? { ...current, [benefitId]: "used" } : current);
+    },
+    claimCertificate: certificateId => {
+      if (!session.loggedIn) return;
+      setCertificates(current => current.map(item => item.id === certificateId && item.status === "claimable" ? { ...item, status: "claimed", issuedAt: "2026-08-17" } : item));
+    },
+    toggleResumeFact: factKey => {
+      if (!session.loggedIn) return;
+      setResume(current => ({
+        ...current,
+        selectedFactKeys: current.selectedFactKeys.includes(factKey) ? current.selectedFactKeys.filter(key => key !== factKey) : [...current.selectedFactKeys, factKey],
+        updatedAt: "2026-08-17",
+      }));
+    },
+    updateStrengths: strengths => {
+      if (!session.loggedIn) return;
+      setResume(current => ({ ...current, strengths, updatedAt: "2026-08-17" }));
+    },
+    updateEducation: education => {
+      if (!session.loggedIn) return;
+      setResume(current => ({ ...current, education, updatedAt: "2026-08-17" }));
+    },
+    updateProfile: patch => {
+      if (!session.loggedIn) return;
+      setProfile(current => ({ ...current, ...patch }));
+    },
+  }), [learning, benefitStatuses, benefitStatusFor, certificates, competitionResults, resume, profile, session.loggedIn]);
 
   return <LongTermAssetsContext.Provider value={value}>{children}</LongTermAssetsContext.Provider>;
 }
