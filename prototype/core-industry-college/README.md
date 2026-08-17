@@ -1,6 +1,6 @@
 # 核心产业学院可交互原型
 
-当前进入 **T05：全量页面、交互回归与工程收口**。T01–T04 已通过对应评审，T05 正在按 R05 标准做最终路由、状态、返回路径、Com Design 与真实构建回归。
+当前完成至 **T05：全量页面、交互回归与工程收口**，等待 R05 终审。
 
 ## 安装与运行
 
@@ -22,11 +22,20 @@ npm run dev
 npm run preview -- --host 127.0.0.1
 ```
 
-也可以一次执行静态路由审计 + TypeScript/Vite 构建：
+静态路由审计 + TypeScript/Vite 构建：
 
 ```bash
 npm run verify
 ```
+
+浏览器母动线回归：
+
+```bash
+npx playwright install chromium
+npm run verify:browser
+```
+
+GitHub Actions 的 `Core Industry College Verify` 会在本分支原型代码变化时执行安装、Chromium 安装、66 条语义路由审计、生产构建、5 条母动线 + 404 smoke，并上传生产构建与 Playwright 证据。
 
 > 当前目录尚未提交 lockfile，因此暂用 `npm install`。最终交付若生成 lockfile，应在 CI / 验收环境改用 `npm ci` 做确定性安装。
 
@@ -69,20 +78,19 @@ npm run verify
 
 - task 工具支持 `locked / ready / queued / running / failed / completed`。
 
-T04 长期状态通过同一会话内真实交互推进：
+长期状态通过同一会话内真实交互推进：
 
 - 课程：未开始 → 学习中 → 完成 → 考试通过/失败 → 证书。
 - 权益：资格 → 领取 → 使用 / 失效。
 - 简历：可信事实选择 + 学生自己的表达。
 - 赛后资产：赛事经历 / 结果 / 证书 / 学习成果继续保留。
+- 投递记录可切换 `submitted / statusUnknown` 做状态回流检查。
 
 ## 路由与 dead-link
 
 T01 的 66 条语义路由都在 `src/routes/registry.ts` 保留为真相源。
 
 T05 正式 App 不再使用 `RouteProbe` 承接业务页面；未知路径进入明确 404/dead-link 页面，不会静默跳回首页。
-
-可执行：
 
 ```bash
 npm run audit:routes
@@ -96,7 +104,7 @@ npm run audit:routes
 
 ## 共享状态边界
 
-- `PublicPlatformProvider`：长期 session、赛事 identities、applications、followedCompanies。
+- `PublicPlatformProvider`：长期 session、赛事 identities、applications、followedCompanies，以及列表搜索/筛选/滚动视图状态。
 - `WorkshopRuntimeProvider`：赛事 lifecycle、permission、taskRuns、workshop results。
 - `LongTermAssetsProvider`：课程学习记录、权益长期记录、证书 / 成绩、资料与简历 presentation。
 - `SupportProvider`：通知、账号绑定、投稿等 T05 支撑页原型状态。
@@ -112,14 +120,19 @@ design.md
 design-source/
 ```
 
-原型消费 semantic token，不修改 Com Design Core。T05 继续收口 typography、spacing、按钮语义、状态反馈与触控区。
+原型消费 semantic token，不修改 Com Design Core。
+
+当前生产构建仍会从 Core 的 `design-source/colors_and_type.css` 报两处 reduced-motion CSS minifier warning：`.motion-reduced,` 与后续 `@media (prefers-reduced-motion: reduce)` 的组合不是合法 CSS selector 结构。T05 不在产品线程复制或修改 Core 真相源；R05 应把它作为上游 Com Design 缺口单独判断。
 
 ## R05 必走母动线
 
-1. 新用户 / 游客 → 公共平台 → 登录继续。
-2. 赛事详情 → 报名 → pending → approved → workspace。
-3. workspace → 创赛工坊 → task answer/review/progress/result → 下一步。
-4. 机会 → 企业 → 简历 → 编辑 → 返回原机会 → 投递 → applications。
-5. ended / revoked → 长期赛事经历、成绩、证书、学习成果 → 简历。
+Playwright 以 390×844 Chromium 独立浏览器上下文执行：
 
-真实 R05 必须以一次成功的 `npm run verify` 和浏览器连续点击 walkthrough 为准，静态审计不能替代真实运行。
+1. 新用户 / 游客 → 公共赛事 → 登录 → 回到赛事报名。
+2. 无赛事身份 → 报名 → pending → approved → workspace。
+3. workspace → 创赛工坊 → task answer/review/progress/result。
+4. 机会 → 企业 → 返回机会 → 长期简历 → 编辑 → `returnTo` → 投递 → applications。
+5. ended / revoked → 长期赛事经历 → 可信成绩。
+6. 额外验证未知 URL 显式进入 404/dead-link。
+
+R05 仍应以最新 HEAD 的 GitHub Actions 成功结果和评审线程的独立检查为最终 Gate；T05 实现线程不自行宣布 R05 PASS。
