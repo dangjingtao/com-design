@@ -2,37 +2,50 @@ import { useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button, Card, GhostButton, PageHeader, PublicShell, SecondaryButton, Section, StatusTag } from "../../components/ui";
 import { courseById, courses } from "./data";
-import { ProgressBar, SourceLine } from "./shared";
+import { ProgressBar, SourceLine, useAccountAction, useAccountLoggedIn } from "./shared";
 import { useLongTermAssets } from "./store";
 
 const statusLabel = (status: "notStarted" | "inProgress" | "completed") => status === "completed" ? "已完成" : status === "inProgress" ? "学习中" : "未开始";
 
 export function CoursesPage() {
+  const loggedIn = useAccountLoggedIn();
   const { learningFor } = useLongTermAssets();
   const [filter, setFilter] = useState<"all" | "learning" | "completed">("all");
   const visible = useMemo(() => courses.filter(course => {
+    if (!loggedIn) return true;
     const record = learningFor(course.id);
     return filter === "all" || (filter === "learning" ? record.status === "inProgress" : record.status === "completed");
-  }), [filter, learningFor]);
+  }), [filter, learningFor, loggedIn]);
 
   return <PublicShell><PageHeader title="课程" subtitle="支撑参赛与就业成长，学习结果长期保留" /><div className="space-y-5 px-4 py-5">
-    <div className="flex gap-2">{(["all","learning","completed"] as const).map(value => <button key={value} onClick={() => setFilter(value)} className={`min-h-10 rounded-full px-3 text-sm font-medium ${filter === value ? "bg-primary-container text-text-brand" : "bg-surface text-text-secondary"}`}>{value === "all" ? "全部" : value === "learning" ? "学习中" : "已完成"}</button>)}</div>
-    <div className="space-y-3">{visible.map(course => { const record = learningFor(course.id); return <Link key={course.id} to={`/courses/${course.id}`} className="block"><Card interactive className="space-y-3"><SourceLine source={course.source} /><div><h2 className="text-base font-semibold text-text-primary">{course.title}</h2><p className="mt-1 text-sm leading-5 text-text-secondary">{course.summary}</p></div><div className="flex items-center justify-between text-xs text-text-secondary"><span>{course.duration}</span><StatusTag tone={record.status === "completed" ? "success" : record.status === "inProgress" ? "info" : "neutral"}>{statusLabel(record.status)}</StatusTag></div><ProgressBar value={record.progress} /></Card></Link>; })}</div>
+    {loggedIn && <div className="flex gap-2">{(["all","learning","completed"] as const).map(value => <button key={value} onClick={() => setFilter(value)} className={`min-h-10 rounded-full px-3 text-sm font-medium ${filter === value ? "bg-primary-container text-text-brand" : "bg-surface text-text-secondary"}`}>{value === "all" ? "全部" : value === "learning" ? "学习中" : "已完成"}</button>)}</div>}
+    <div className="space-y-3">{visible.map(course => { const record = loggedIn ? learningFor(course.id) : undefined; return <Link key={course.id} to={`/courses/${course.id}`} className="block"><Card interactive className="space-y-3"><SourceLine source={course.source} /><div><h2 className="text-base font-semibold text-text-primary">{course.title}</h2><p className="mt-1 text-sm leading-5 text-text-secondary">{course.summary}</p></div><div className="flex items-center justify-between text-xs text-text-secondary"><span>{course.duration}</span>{record ? <StatusTag tone={record.status === "completed" ? "success" : record.status === "inProgress" ? "info" : "neutral"}>{statusLabel(record.status)}</StatusTag> : <StatusTag tone="neutral">登录查看进度</StatusTag>}</div>{record && <ProgressBar value={record.progress} />}</Card></Link>; })}</div>
   </div></PublicShell>;
 }
 
 export function CourseDetailPage() {
   const navigate = useNavigate();
+  const loggedIn = useAccountLoggedIn();
+  const accountAction = useAccountAction();
   const { courseId } = useParams();
   const course = courseById(courseId);
-  const { learningFor, startCourse, benefitStatuses } = useLongTermAssets();
+  const { learningFor, startCourse, benefitStatusFor } = useLongTermAssets();
   if (!course) return <PublicShell showNavigation={false}><PageHeader title="课程不存在" backTo="/courses" /></PublicShell>;
   const record = learningFor(course.id);
-  const unlocked = course.entitlement === "free" || !course.unlockBenefitId || ["claimed","used"].includes(benefitStatuses[course.unlockBenefitId] ?? "ineligible");
-  const begin = () => { startCourse(course.id); navigate(`/courses/${course.id}/learn`); };
-  return <PublicShell showNavigation={false}><PageHeader title="课程详情" backTo="/courses" /><div className="space-y-6 px-4 py-5"><SourceLine source={course.source} /><div><h1 className="text-2xl font-semibold leading-8 text-text-primary">{course.title}</h1><p className="mt-3 text-sm leading-6 text-text-secondary">{course.summary}</p></div><Card><div className="flex items-center justify-between"><span className="text-sm text-text-secondary">当前学习状态</span><StatusTag tone={record.status === "completed" ? "success" : record.status === "inProgress" ? "info" : "neutral"}>{statusLabel(record.status)}</StatusTag></div><div className="mt-3"><ProgressBar value={record.progress} /></div><p className="mt-2 text-xs text-text-secondary">进度 {record.progress}% · {course.duration}</p></Card>
+  const unlocked = course.entitlement === "free" || !course.unlockBenefitId || (loggedIn && ["claimed","used"].includes(benefitStatusFor(course.unlockBenefitId)));
+  const begin = () => {
+    if (record.status === "completed") {
+      accountAction(() => navigate(`/courses/${course.id}/achievement`));
+      return;
+    }
+    accountAction(() => {
+      startCourse(course.id);
+      navigate(`/courses/${course.id}/learn`);
+    });
+  };
+  return <PublicShell showNavigation={false}><PageHeader title="课程详情" backTo="/courses" /><div className="space-y-6 px-4 py-5"><SourceLine source={course.source} /><div><h1 className="text-2xl font-semibold leading-8 text-text-primary">{course.title}</h1><p className="mt-3 text-sm leading-6 text-text-secondary">{course.summary}</p></div>{loggedIn ? <Card><div className="flex items-center justify-between"><span className="text-sm text-text-secondary">当前学习状态</span><StatusTag tone={record.status === "completed" ? "success" : record.status === "inProgress" ? "info" : "neutral"}>{statusLabel(record.status)}</StatusTag></div><div className="mt-3"><ProgressBar value={record.progress} /></div><p className="mt-2 text-xs text-text-secondary">进度 {record.progress}% · {course.duration}</p></Card> : <Card><p className="text-sm text-text-secondary">课程目录可公开浏览；登录后读取学习进度、考试和证书状态。</p></Card>}
     <Section title="课程目录"><Card>{course.lessons.map((lesson, index) => <div key={lesson} className="flex min-h-touch items-center gap-3 border-b border-border-subtle last:border-0"><span className="text-xs text-text-tertiary">{String(index + 1).padStart(2,"0")}</span><span className="text-sm text-text-primary">{lesson}</span></div>)}</Card></Section>
-    {!unlocked ? <Card className="border border-warning bg-warning-bg"><p className="font-semibold text-warning-text">需要已有权益解锁</p><p className="mt-2 text-sm leading-5 text-warning-text">旧原型“需兑换课程”在详情页内完成资格说明，不另造商城。</p><SecondaryButton className="mt-4 w-full" onClick={() => navigate(`/benefits/${course.unlockBenefitId}`)}>查看对应权益</SecondaryButton></Card> : <Button className="w-full" onClick={begin}>{record.status === "notStarted" ? "开始学习" : record.status === "completed" ? "查看学习成果" : "继续学习"}</Button>}
+    {!unlocked ? <Card className="border border-warning bg-warning-bg"><p className="font-semibold text-warning-text">需要账号权益解锁</p><p className="mt-2 text-sm leading-5 text-warning-text">旧原型“需兑换课程”在详情页内完成资格说明，不另造商城。</p>{loggedIn ? <SecondaryButton className="mt-4 w-full" onClick={() => navigate(`/benefits/${course.unlockBenefitId}`)}>查看对应权益</SecondaryButton> : <Button className="mt-4 w-full" onClick={() => accountAction(() => undefined)}>登录后查看资格</Button>}</Card> : <Button className="w-full" onClick={begin}>{!loggedIn ? "登录后开始学习" : record.status === "notStarted" ? "开始学习" : record.status === "completed" ? "查看学习成果" : "继续学习"}</Button>}
   </div></PublicShell>;
 }
 
