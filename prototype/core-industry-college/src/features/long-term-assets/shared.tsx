@@ -1,6 +1,35 @@
 import type { ReactNode } from "react";
-import { Card, StatusTag } from "../../components/ui";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Button, Card, StatusTag } from "../../components/ui";
+import { usePublicPlatform } from "../public-platform/PublicPlatform";
 import type { BenefitSource, CourseSource } from "./data";
+
+export function useAccountLoggedIn() {
+  return usePublicPlatform().session.loggedIn;
+}
+
+export function useAccountAction() {
+  const loggedIn = useAccountLoggedIn();
+  const navigate = useNavigate();
+  const location = useLocation();
+  return (action: () => void, returnTo = `${location.pathname}${location.search}`) => {
+    if (!loggedIn) {
+      navigate(`/auth/login?returnTo=${encodeURIComponent(returnTo)}`);
+      return false;
+    }
+    action();
+    return true;
+  };
+}
+
+export function AccountRequired({ children }: { children: ReactNode }) {
+  const loggedIn = useAccountLoggedIn();
+  const navigate = useNavigate();
+  const location = useLocation();
+  if (loggedIn) return <>{children}</>;
+  const returnTo = `${location.pathname}${location.search}`;
+  return <div className="px-4 py-6"><Card className="py-8 text-center"><p className="text-base font-semibold text-text-primary">登录后查看长期账号内容</p><p className="mt-2 text-sm leading-5 text-text-secondary">赛事、课程、证书、权益记录和长期简历都属于同一长期账号。登录后会回到当前页面继续。</p><Button className="mt-4" onClick={() => navigate(`/auth/login?returnTo=${encodeURIComponent(returnTo)}`)}>登录后继续</Button></Card></div>;
+}
 
 export function SourceLine({ source }: { source: CourseSource | BenefitSource }) {
   const tone = source.type === "competition" ? "info" : source.type === "company" ? "warning" : source.type === "activity" ? "neutral" : "success";
