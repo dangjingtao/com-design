@@ -29,13 +29,14 @@ const accessCopy: Record<Exclude<WorkspaceAccessState, "active" | "notStarted">,
   rejected: { title: "本次报名未通过审核", body: "赛事工作区未开放。可返回报名状态页查看当前结果，不在工作区内继续操作。", tone: "danger" },
   ended: { title: "赛事已经结束", body: "赛事期操作已经关闭；成绩、证书和参赛经历转入长期账号资产。", tone: "neutral" },
   revoked: { title: "赛事期权限已回收", body: "比赛结束后赛事身份可以失效，但赛后长期资产仍然保留。", tone: "neutral" },
-  permissionDenied: { title: "当前赛事权限不足", body: "账号拥有赛事身份，但当前工作区权限不可用。请返回赛事状态页。", tone: "danger" },
+  permissionDenied: { title: "当前赛事权限不足", body: "账号拥有赛事身份，但当前工作区权限不可用。请返回赛事详情确认当前状态。", tone: "danger" },
 };
 
 export function WorkspaceBlocked({ competitionId, state, backTo }: { competitionId: string; state: Exclude<WorkspaceAccessState, "active" | "notStarted">; backTo?: string }) {
   const navigate = useNavigate();
   const copy = accessCopy[state];
   const assetHandoff = state === "ended" || state === "revoked";
+  const registrationState = state === "noIdentity" || state === "pending" || state === "rejected";
   return <div className="space-y-4 px-4 py-6">
     <Card className={copy.tone === "danger" ? "border border-danger bg-danger-bg" : copy.tone === "warning" ? "border border-warning bg-warning-bg" : "border border-border-subtle"}>
       <StatusTag tone={copy.tone}>{state === "pending" ? "审核中" : state === "rejected" ? "已拒绝" : state === "permissionDenied" ? "无权限" : "赛事状态"}</StatusTag>
@@ -44,20 +45,21 @@ export function WorkspaceBlocked({ competitionId, state, backTo }: { competition
     </Card>
     {assetHandoff ? <div className="space-y-2">
       <Button className="w-full" onClick={() => navigate("/assets/experiences")}>查看参赛经历</Button>
-      <SecondaryButton className="w-full" onClick={() => navigate("/assets/results")}>查看成绩 / 证书 handoff</SecondaryButton>
+      <SecondaryButton className="w-full" onClick={() => navigate("/assets/results")}>查看成绩与证书</SecondaryButton>
     </div> : <div className="space-y-2">
-      <Button className="w-full" onClick={() => navigate(`/competitions/${competitionId}/registration`)}>查看报名状态</Button>
+      {registrationState && <Button className="w-full" onClick={() => navigate(`/competitions/${competitionId}/registration`)}>查看报名状态</Button>}
       <SecondaryButton className="w-full" onClick={() => navigate(backTo ?? `/competitions/${competitionId}`)}>返回赛事详情</SecondaryButton>
     </div>}
   </div>;
 }
 
 export function RequireCompetitionAccess({ children, allowNotStarted = false }: { children: ReactNode; allowNotStarted?: boolean }) {
+  const navigate = useNavigate();
   const { competitionId } = useParams();
   const state = useCompetitionAccess(competitionId);
   if (!competitionId) return null;
   if (state === "active" || (allowNotStarted && state === "notStarted")) return <>{children}</>;
-  if (state === "notStarted") return <div className="space-y-4 px-4 py-6"><Card className="border border-info bg-info-bg"><StatusTag tone="info">赛事未开始</StatusTag><h2 className="mt-3 text-lg font-semibold text-info-text">赛事期任务还没有开放</h2><p className="mt-2 text-sm leading-5 text-info-text">团队与资料可以提前查看，创赛工坊执行动作等赛事开始后再开放。</p></Card><SecondaryButton className="w-full" onClick={() => window.history.back()}>返回赛事工作区</SecondaryButton></div>;
+  if (state === "notStarted") return <div className="space-y-4 px-4 py-6"><Card className="border border-info bg-info-bg"><StatusTag tone="info">赛事未开始</StatusTag><h2 className="mt-3 text-lg font-semibold text-info-text">赛事期任务还没有开放</h2><p className="mt-2 text-sm leading-5 text-info-text">团队与资料可以提前查看，创赛工坊执行动作等赛事开始后再开放。</p></Card><SecondaryButton className="w-full" onClick={() => navigate(`/competitions/${competitionId}/workspace`)}>返回赛事工作区</SecondaryButton></div>;
   return <WorkspaceBlocked competitionId={competitionId} state={state} />;
 }
 
