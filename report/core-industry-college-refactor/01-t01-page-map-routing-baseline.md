@@ -195,21 +195,58 @@ T01 所有业务路由暂复用 `RouteProbe`，只验证路由/context/state，�
 
 ### 状态分层
 
+T01 **已经实际落码**的共享 state contract：
+
 ```text
-SessionState           loggedIn / profileComplete
-CompetitionState       competitionStatus / identityStatus / registrationStatus
-CompetitionContext     currentCompetitionId / team / permissions
-WorkshopState          currentProject / nextTask / taskRuns / results / compute
-OpportunityState       opportunities / applicationRecords
-LearningState          enrollment / progress / assessment / achievement
-BenefitState           eligibility / claim / redeem / expiry
-AssetState             experiences / results / certificates / learningAchievements
-ViewState              loading / empty / error / permission / disabled / expired / success
+SessionState
+  loggedIn / profileComplete
+
+CompetitionAccountState
+  identities: CompetitionIdentityState[]
+
+CompetitionIdentityState
+  competitionId
+  competitionStatus
+  identityStatus
+  registrationStatus
+
+CompetitionContextState
+  currentCompetitionId
+  teamId?
+  permissions[]
+
+Workshop seed state
+  currentTaskId? / taskRun
+
+Application seed state
+  currentOpportunityId? / status
+
+ViewState
+  ready / loading / empty / error / permission / disabled / expired / success
 ```
 
-原则：**状态决定页面，不用复制页面表达状态。**
+关键边界：
 
-Mock scenario 基线：`guest`、`newUser`、`registrationPending`、`competitionActive`、`workshopTaskRunning`、`competitionEnded`、`applicationSubmitted`、`errorNetwork`、`emptyData`、`permissionDenied`。
+- `CompetitionAccountState.identities[]` 表示**长期账号关联的全部赛事身份集合**；`/competitions/mine` 从这里读取，不依赖当前 workspace。
+- `CompetitionContextState.currentCompetitionId` 只表示**此刻进入的赛事 workspace**，不会覆盖或代表账号的全部赛事身份。
+- 同一账号可以同时存在多个不同生命周期的赛事身份，例如：三创赛 `inProgress/active`、另一赛事 `registrationOpen/pending`、历史赛事 `ended/revoked`。
+- 公开赛事目录/详情中的赛事对象及其状态属于赛事 mock/domain data，不要求用户先拥有赛事身份。
+
+以下是 **T02–T04 的规划状态域，不是 T01 已实现代码 contract**；后续并行线程应在上述共享边界上增量定义，禁止各自重新发明账号/赛事上下文模型：
+
+```text
+Workshop domain         currentProject / nextTask / taskRuns / results / compute
+Opportunity domain      opportunities / applicationRecords
+Learning domain         enrollment / progress / assessment / achievement
+Benefit domain          eligibility / claim / redeem / expiry
+Asset domain            experiences / results / certificates / learningAchievements
+```
+
+原则：**状态决定页面，不用复制页面表达状态；赛事身份集合与当前赛事上下文必须分离。**
+
+Mock scenario 基线：`guest`、`newUser`、`registrationPending`、`competitionActive`、`workshopTaskRunning`、`competitionEnded`、`multiCompetitionAccount`、`applicationSubmitted`、`errorNetwork`、`emptyData`、`permissionDenied`。
+
+其中 `multiCompetitionAccount` 明确同时包含 3 个赛事身份：一个进行中、一个待审核、一个历史已结束；`currentCompetitionId` 仅指向其中当前打开的赛事，以验证 `/competitions/mine` 与 workspace context 不冲突。
 
 ### Com Design 复用
 
@@ -250,7 +287,10 @@ Mock scenario 基线：`guest`、`newUser`、`registrationPending`、`competitio
 - [x] 工坊 S1–S6 收敛到通用 Task Runtime。
 - [x] 未定义任务专区冻结，不用 UI 猜产品。
 - [x] Core 复用与 Product Pattern 缺口明确，不修改 Core。
+- [x] 多赛事身份集合与 current competition context 已在 state model 中分离。
+- [x] `multiCompetitionAccount` 同时覆盖进行中 / 待审核 / 历史结束赛事身份。
+- [x] 报告已区分 T01 实际落码 contract 与 T02–T04 规划状态域。
 - [x] `routes/state/mock` 无 React 依赖部分已通过 TypeScript 编译检查。
 - [ ] 当前执行环境无法连接 npm registry，因此不能在此环境完成依赖安装后的 Vite build；工程已提供标准 `npm install && npm run build` 配置，R01/有网环境需补一次真实安装构建验收。
 
-**T01 到此停止；等待 R01。**
+**T01 修正到此停止；等待 R01 复核。**
