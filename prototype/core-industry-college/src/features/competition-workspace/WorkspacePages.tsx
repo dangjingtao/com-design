@@ -8,6 +8,28 @@ import { CompetitionContextLine, RequireCompetitionAccess, useCompetitionAccess,
 
 const identityTone = (status: string) => status === "active" ? "success" as const : status === "pending" ? "warning" as const : status === "rejected" ? "danger" as const : "neutral" as const;
 
+export function CompetitionLifecycleDetailPage() {
+  const navigate = useNavigate();
+  const { competitionId } = useParams();
+  const { identityFor } = useWorkshopRuntime();
+  if (!competitionId) return null;
+  const competition = competitionById(competitionId);
+  if (!competition) return <PublicShell showNavigation={false}><PageHeader title="赛事不存在" backTo="/competitions" /><div className="px-4 py-6"><Card><p className="text-text-secondary">未找到对应赛事。</p></Card></div></PublicShell>;
+  const identity = identityFor(competitionId);
+  const publicLabel = competition.status === "registrationOpen" ? "报名中" : competition.status === "inProgress" ? "进行中" : competition.status === "ended" ? "已结束" : "即将开放";
+  const canRegister = competition.status === "registrationOpen" && competition.eligibility !== "ineligible";
+  const active = identity?.identityStatus === "active";
+  const pendingOrRejected = identity?.identityStatus === "pending" || identity?.identityStatus === "rejected";
+  const endedOrRevoked = competition.status === "ended" || identity?.identityStatus === "revoked";
+  return <PublicShell showNavigation={false}><PageHeader title="赛事详情" subtitle="公共信息 + 当前账号赛事状态" backTo="/competitions" /><div className="space-y-6 px-4 py-5">
+    <div><StatusTag tone={competition.status === "ended" ? "neutral" : competition.status === "registrationOpen" ? "success" : "info"}>{publicLabel}</StatusTag><h1 className="mt-3 text-2xl font-semibold leading-8 text-text-primary">{competition.name}</h1><p className="mt-2 text-sm text-text-secondary">{competition.organizer}</p><p className="mt-4 text-base leading-6 text-text-secondary">{competition.summary}</p></div>
+    <Section title="当前账号与赛事"><Card><div className="space-y-3 text-sm"><div className="flex justify-between gap-4"><span className="text-text-secondary">报名窗口</span><span className="font-medium text-text-primary">{competition.registrationEnds ?? publicLabel}</span></div><div className="flex justify-between gap-4"><span className="text-text-secondary">赛事身份</span><span className="font-medium text-text-primary">{identity?.identityStatus ?? "暂无"}</span></div><div className="flex justify-between gap-4"><span className="text-text-secondary">报名状态</span><span className="font-medium text-text-primary">{identity?.registrationStatus ?? "未报名"}</span></div></div></Card></Section>
+    {competition.eligibility === "ineligible" && <Card className="border border-warning bg-warning-bg"><p className="font-medium text-warning-text">当前条件暂不满足报名资格</p><p className="mt-2 text-sm text-warning-text">T03 不自行定义完整资格规则。</p></Card>}
+    <div className="space-y-2">{active ? <Button className="w-full" onClick={() => navigate(`/competitions/${competitionId}/workspace`)}>进入赛事工作区</Button> : pendingOrRejected ? <Button className="w-full" onClick={() => navigate(`/competitions/${competitionId}/registration`)}>查看报名 / 审核状态</Button> : endedOrRevoked ? <Button className="w-full" onClick={() => navigate(`/competitions/${competitionId}/workspace`)}>查看赛后出口</Button> : canRegister ? <Button className="w-full" onClick={() => navigate(`/competitions/${competitionId}/registration`)}>进入报名</Button> : <Button className="w-full" disabled>{competition.status === "upcoming" ? "报名尚未开始" : "暂不可报名"}</Button>}<SecondaryButton className="w-full" onClick={() => navigate("/competitions/mine")}>查看我的赛事</SecondaryButton></div>
+    <WorkspaceScenarioTools competitionId={competitionId} />
+  </div></PublicShell>;
+}
+
 export function MyCompetitionsLifecyclePage() {
   const navigate = useNavigate();
   const { identities } = useWorkshopRuntime();
