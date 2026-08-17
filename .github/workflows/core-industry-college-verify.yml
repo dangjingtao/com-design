@@ -2,7 +2,7 @@ name: Core Industry College Verify
 
 on:
   push:
-    branches: [core-industry-college-refactor]
+    branches: [core-industry-college-refactor, core-industry-college-registration-portal]
     paths:
       - 'prototype/core-industry-college/**'
       - '.github/workflows/core-industry-college-verify.yml'
@@ -39,7 +39,7 @@ jobs:
       - name: Build prototype
         run: npm run build
 
-      - name: Walk through five mother flows
+      - name: Walk through product and registration flows
         run: npm run e2e
 
       - name: Upload production build
