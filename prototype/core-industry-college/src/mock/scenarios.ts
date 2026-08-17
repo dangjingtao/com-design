@@ -35,7 +35,7 @@ export const scenarios = {
     session: { loggedIn: true, profileComplete: true },
     competitions: {
       identities: [
-        { competitionId: "sanchuang-16", competitionStatus: "inProgress", identityStatus: "active", registrationStatus: "approved" },
+        { competitionId: "sanchuang-16", competitionStatus: "registrationOpen", identityStatus: "active", registrationStatus: "approved" },
       ],
     },
     competitionContext: { currentCompetitionId: "sanchuang-16", teamId: "team-1", permissions: ["workspace:read", "workshop:use"] },
@@ -47,7 +47,7 @@ export const scenarios = {
     session: { loggedIn: true, profileComplete: true },
     competitions: {
       identities: [
-        { competitionId: "sanchuang-16", competitionStatus: "inProgress", identityStatus: "active", registrationStatus: "approved" },
+        { competitionId: "sanchuang-16", competitionStatus: "registrationOpen", identityStatus: "active", registrationStatus: "approved" },
       ],
     },
     competitionContext: { currentCompetitionId: "sanchuang-16", teamId: "team-1", permissions: ["workspace:read", "workshop:use"] },
@@ -59,10 +59,10 @@ export const scenarios = {
     session: { loggedIn: true, profileComplete: true },
     competitions: {
       identities: [
-        { competitionId: "sanchuang-16", competitionStatus: "ended", identityStatus: "revoked", registrationStatus: "approved" },
+        { competitionId: "sanchuang-15", competitionStatus: "ended", identityStatus: "revoked", registrationStatus: "approved" },
       ],
     },
-    competitionContext: { currentCompetitionId: "sanchuang-16", permissions: ["workspace:history:read"] },
+    competitionContext: { currentCompetitionId: "sanchuang-15", permissions: ["workspace:history:read"] },
     workshop: { taskRun: "completed" },
     application: { status: "statusUnknown" },
     view: "ready",
@@ -71,8 +71,8 @@ export const scenarios = {
     session: { loggedIn: true, profileComplete: true },
     competitions: {
       identities: [
-        { competitionId: "sanchuang-16", competitionStatus: "inProgress", identityStatus: "active", registrationStatus: "approved" },
-        { competitionId: "innovation-cup-2026", competitionStatus: "registrationOpen", identityStatus: "pending", registrationStatus: "pending" },
+        { competitionId: "sanchuang-16", competitionStatus: "registrationOpen", identityStatus: "active", registrationStatus: "approved" },
+        { competitionId: "innovation-cup-2026", competitionStatus: "upcoming", identityStatus: "pending", registrationStatus: "pending" },
         { competitionId: "sanchuang-15", competitionStatus: "ended", identityStatus: "revoked", registrationStatus: "approved" },
       ],
     },
