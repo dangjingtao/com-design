@@ -7,7 +7,9 @@
     "dev": "vite",
     "audit:routes": "node scripts/audit-routes.mjs",
     "build": "tsc -b && vite build",
+    "e2e": "playwright test",
     "verify": "npm run audit:routes && npm run build",
+    "verify:browser": "npm run verify && playwright test",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -16,6 +18,7 @@
     "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
