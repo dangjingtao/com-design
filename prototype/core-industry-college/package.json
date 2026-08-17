@@ -1,11 +1,13 @@
 {
   "name": "core-industry-college-prototype",
   "private": true,
-  "version": "0.0.3-t03",
+  "version": "0.0.5-t05",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "audit:routes": "node scripts/audit-routes.mjs",
     "build": "tsc -b && vite build",
+    "verify": "npm run audit:routes && npm run build",
     "preview": "vite preview"
   },
   "dependencies": {
