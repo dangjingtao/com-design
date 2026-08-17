@@ -8,6 +8,7 @@ import { companies, companyById, competitions, competitionById, opportunities, o
 type ApplicationRecord = { opportunityId: string; status: "submitted" | "statusUnknown" };
 type IdentityMode = "multi" | "none" | "runtime";
 type SessionState = { loggedIn: boolean; profileComplete: boolean };
+export type IdentityScenario = "none" | "pending" | "rejected" | "active" | "revoked";
 type PublicPlatformState = {
   session: SessionState;
   applications: ApplicationRecord[];
@@ -17,6 +18,7 @@ type PublicPlatformState = {
   setIdentityMode: (mode: "multi" | "none") => void;
   login: () => void;
   continueAsGuest: () => void;
+  setCompetitionIdentityScenario: (competitionId: string, scenario: IdentityScenario) => void;
   upsertRegistrationPending: (competitionId: string) => void;
   submitApplication: (opportunityId: string) => void;
   toggleFollow: (companyId: string) => void;
@@ -56,34 +58,38 @@ export function PublicPlatformProvider({ children }: { children: ReactNode }) {
   const login = () => setSession({ loggedIn: true, profileComplete: true });
   const continueAsGuest = () => setSession({ loggedIn: false, profileComplete: false });
 
-  const upsertRegistrationPending = (competitionId: string) => {
-    const competition = competitionById(competitionId);
-    if (!competition) return;
-    const nextIdentity: CompetitionIdentityState = {
-      competitionId,
-      competitionStatus: competition.status,
-      identityStatus: "pending",
-      registrationStatus: "pending",
-    };
+  const setCompetitionIdentityScenario = (competitionId: string, scenario: IdentityScenario) => {
+    if (!session.loggedIn) return;
     setIdentities(current => {
-      const existing = current.findIndex(identity => identity.competitionId === competitionId);
-      if (existing < 0) return [...current, nextIdentity];
-      return current.map((identity, index) => index === existing ? nextIdentity : identity);
+      if (scenario === "none") return current.filter(identity => identity.competitionId !== competitionId);
+      const competition = competitionById(competitionId);
+      const existing = current.find(identity => identity.competitionId === competitionId);
+      const next: CompetitionIdentityState = {
+        competitionId,
+        competitionStatus: competition?.status ?? existing?.competitionStatus ?? "registrationOpen",
+        identityStatus: scenario === "active" ? "active" : scenario === "pending" ? "pending" : scenario === "rejected" ? "rejected" : "revoked",
+        registrationStatus: scenario === "active" ? "approved" : scenario === "pending" ? "pending" : scenario === "rejected" ? "rejected" : "approved",
+      };
+      return existing
+        ? current.map(identity => identity.competitionId === competitionId ? next : identity)
+        : [...current, next];
     });
     setIdentityModeValue("runtime");
   };
+
+  const upsertRegistrationPending = (competitionId: string) => setCompetitionIdentityScenario(competitionId, "pending");
 
   const submitApplication = (opportunityId: string) => setApplications(records => records.some(record => record.opportunityId === opportunityId) ? records : [...records, { opportunityId, status: "submitted" }]);
   const toggleFollow = (companyId: string) => setFollowedCompanies(ids => ids.includes(companyId) ? ids.filter(id => id !== companyId) : [...ids, companyId]);
 
   return (
-    <PublicPlatformContext.Provider value={{ session, applications, followedCompanies, identities, identityMode, setIdentityMode, login, continueAsGuest, upsertRegistrationPending, submitApplication, toggleFollow }}>
+    <PublicPlatformContext.Provider value={{ session, applications, followedCompanies, identities, identityMode, setIdentityMode, login, continueAsGuest, setCompetitionIdentityScenario, upsertRegistrationPending, submitApplication, toggleFollow }}>
       {children}
     </PublicPlatformContext.Provider>
   );
 }
 
-function usePublicPlatform() {
+export function usePublicPlatform() {
   const value = useContext(PublicPlatformContext);
   if (!value) throw new Error("PublicPlatformProvider missing");
   return value;
