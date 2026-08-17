@@ -3,10 +3,9 @@ import { candidatePrimaryNavigation, routeDefinitions } from "../routes/registry
 
 const fixtures: Record<string, string> = {
   ":competitionId": "sanchuang-16",
-  ":resourceId": "rules",
+  ":resourceId": "rules-2026",
   ":skillId": "s1",
   ":taskId": "s1-product-score",
-  ":resultId": "result-s1-product-score",
   ":opportunityId": "intern-1",
   ":companyId": "northstar-beauty",
   ":contentId": "competition-guide",
@@ -18,7 +17,14 @@ const fixtures: Record<string, string> = {
   ":experienceId": "sanchuang-15",
 };
 
-const materialize = (path: string) => Object.entries(fixtures).reduce((resolved, [param, value]) => resolved.replace(param, value), path);
+function materialize(path: string) {
+  let resolved = Object.entries(fixtures).reduce((value, [param, fixture]) => value.replace(param, fixture), path);
+  if (resolved.includes(":resultId")) {
+    const resultId = path.includes("/workspace/workshop/results/") ? "result-s1-product-score" : "competition-result-sanchuang-15";
+    resolved = resolved.replace(":resultId", resultId);
+  }
+  return resolved;
+}
 
 export function RouteLab() {
   return <main className="mx-auto max-w-3xl p-6 text-[var(--color-text-primary)]">
