@@ -34,6 +34,7 @@ import {
 import { TaskAnswerPage, TaskProgressPage, TaskReviewPage } from "../features/competition-workspace/TaskRuntimePages";
 import { WorkshopRuntimeProvider } from "../features/competition-workspace/runtime";
 import { LongTermAssetsProvider } from "../features/long-term-assets/store";
+import { AccountRequired } from "../features/long-term-assets/shared";
 import { CourseAchievementPage, CourseAssessmentPage, CourseDetailPage, CourseLearnPage, CoursesPage } from "../features/long-term-assets/CoursesPages";
 import { BenefitDetailPage, BenefitsPage, BenefitsWalletPage } from "../features/long-term-assets/BenefitsPages";
 import {
@@ -100,6 +101,8 @@ const implementedRouteIds = new Set([
   "me.resume.education",
 ]);
 
+const account = (page: JSX.Element) => <AccountRequired>{page}</AccountRequired>;
+
 export function App() {
   return (
     <PublicPlatformProvider>
@@ -135,26 +138,26 @@ export function App() {
             <Route path="/companies/:companyId" element={<CompanyDetailPage />} />
             <Route path="/courses" element={<CoursesPage />} />
             <Route path="/courses/:courseId" element={<CourseDetailPage />} />
-            <Route path="/courses/:courseId/learn" element={<CourseLearnPage />} />
-            <Route path="/courses/:courseId/assessment" element={<CourseAssessmentPage />} />
-            <Route path="/courses/:courseId/achievement" element={<CourseAchievementPage />} />
+            <Route path="/courses/:courseId/learn" element={account(<CourseLearnPage />)} />
+            <Route path="/courses/:courseId/assessment" element={account(<CourseAssessmentPage />)} />
+            <Route path="/courses/:courseId/achievement" element={account(<CourseAchievementPage />)} />
             <Route path="/benefits" element={<BenefitsPage />} />
-            <Route path="/benefits/wallet" element={<BenefitsWalletPage />} />
+            <Route path="/benefits/wallet" element={account(<BenefitsWalletPage />)} />
             <Route path="/benefits/:benefitId" element={<BenefitDetailPage />} />
-            <Route path="/assets" element={<AssetsHomePage />} />
-            <Route path="/assets/experiences" element={<ExperiencesPage />} />
-            <Route path="/assets/experiences/:experienceId" element={<ExperienceDetailPage />} />
-            <Route path="/assets/learning" element={<LearningAssetsPage />} />
-            <Route path="/assets/results" element={<ResultsPage />} />
-            <Route path="/assets/results/:resultId" element={<ResultDetailPage />} />
-            <Route path="/assets/certificates" element={<CertificatesPage />} />
-            <Route path="/assets/certificates/:certificateId" element={<CertificateDetailPage />} />
-            <Route path="/assets/verification" element={<VerificationPage />} />
-            <Route path="/me" element={<MyPage />} />
-            <Route path="/me/profile" element={<ProfilePage />} />
-            <Route path="/me/resume" element={<ResumePage />} />
-            <Route path="/me/resume/strengths" element={<ResumeStrengthsPage />} />
-            <Route path="/me/resume/education" element={<ResumeEducationPage />} />
+            <Route path="/assets" element={account(<AssetsHomePage />)} />
+            <Route path="/assets/experiences" element={account(<ExperiencesPage />)} />
+            <Route path="/assets/experiences/:experienceId" element={account(<ExperienceDetailPage />)} />
+            <Route path="/assets/learning" element={account(<LearningAssetsPage />)} />
+            <Route path="/assets/results" element={account(<ResultsPage />)} />
+            <Route path="/assets/results/:resultId" element={account(<ResultDetailPage />)} />
+            <Route path="/assets/certificates" element={account(<CertificatesPage />)} />
+            <Route path="/assets/certificates/:certificateId" element={account(<CertificateDetailPage />)} />
+            <Route path="/assets/verification" element={account(<VerificationPage />)} />
+            <Route path="/me" element={account(<MyPage />)} />
+            <Route path="/me/profile" element={account(<ProfilePage />)} />
+            <Route path="/me/resume" element={account(<ResumePage />)} />
+            <Route path="/me/resume/strengths" element={account(<ResumeStrengthsPage />)} />
+            <Route path="/me/resume/education" element={account(<ResumeEducationPage />)} />
             {routeDefinitions.filter(route => !implementedRouteIds.has(route.id)).map(route => (
               <Route key={route.id} path={route.path} element={<RouteProbe route={route} />} />
             ))}
