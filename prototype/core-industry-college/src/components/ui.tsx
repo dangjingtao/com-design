@@ -2,7 +2,7 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 export function Button({ className = "", ...props }: ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <button className={`min-h-touch rounded-control bg-primary px-4 text-sm font-medium text-white transition active:bg-primary-pressed disabled:cursor-not-allowed disabled:bg-border-subtle disabled:text-text-tertiary ${className}`} {...props} />;
+  return <button className={`min-h-touch rounded-control bg-primary px-4 text-sm font-medium text-on-primary transition active:bg-primary-pressed disabled:cursor-not-allowed disabled:bg-border-subtle disabled:text-text-tertiary ${className}`} {...props} />;
 }
 
 export function SecondaryButton({ className = "", ...props }: ButtonHTMLAttributes<HTMLButtonElement>) {
@@ -34,7 +34,7 @@ export function StatusTag({ tone = "info", children }: { tone?: "info" | "succes
 export function PageHeader({ title, subtitle, backTo }: { title: string; subtitle?: string; backTo?: string }) {
   const navigate = useNavigate();
   return (
-    <header className="sticky top-0 z-20 border-b border-border-subtle bg-surface/95 backdrop-blur">
+    <header className="sticky top-0 z-20 border-b border-border-subtle bg-surface">
       <div className="mx-auto flex min-h-12 w-full max-w-md items-center gap-3 px-4">
         {backTo && <button aria-label="返回" className="flex min-h-touch min-w-11 items-center justify-center rounded-control text-xl text-text-primary active:bg-surface-pressed" onClick={() => navigate(backTo)}>‹</button>}
         <div className="min-w-0 flex-1 py-2"><h1 className="truncate text-lg font-semibold text-text-primary">{title}</h1>{subtitle && <p className="truncate text-xs text-text-secondary">{subtitle}</p>}</div>
@@ -70,7 +70,11 @@ export function StateBlock({ state, onRetry }: { state: "loading" | "empty" | "e
 export function PrototypeStateTools() {
   const location = useLocation();
   const navigate = useNavigate();
-  const params = new URLSearchParams(location.search);
-  const set = (state?: string) => { const next = new URLSearchParams(location.search); state ? next.set("view", state) : next.delete("view"); navigate(`${location.pathname}${next.size ? `?${next}` : ""}`); };
+  const set = (state?: string) => {
+    const next = new URLSearchParams(location.search);
+    state ? next.set("view", state) : next.delete("view");
+    const query = next.toString();
+    navigate(`${location.pathname}${query ? `?${query}` : ""}`);
+  };
   return <details className="fixed bottom-20 right-3 z-40 rounded-control border border-border-subtle bg-surface p-2 text-xs shadow-floating"><summary className="cursor-pointer font-medium text-text-secondary">原型状态</summary><div className="mt-2 grid grid-cols-2 gap-1">{[undefined,"loading","empty","error"].map(v => <button key={v ?? "ready"} className="min-h-8 rounded-control px-2 text-text-brand active:bg-surface-pressed" onClick={() => set(v)}>{v ?? "ready"}</button>)}</div></details>;
 }
