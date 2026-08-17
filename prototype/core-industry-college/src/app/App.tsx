@@ -6,7 +6,6 @@ import {
   ApplicationsPage,
   CompaniesPage,
   CompanyDetailPage,
-  CompetitionDetailPage,
   CompetitionsPage,
   HomePage,
   LoginBoundaryPage,
@@ -16,6 +15,7 @@ import {
   ResumeBoundaryPage,
 } from "../features/public-platform/PublicPlatform";
 import {
+  CompetitionLifecycleDetailPage,
   CompetitionResourceDetailPage,
   CompetitionResourcesPage,
   CompetitionTeamPage,
@@ -75,7 +75,7 @@ export function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/competitions" element={<CompetitionsPage />} />
           <Route path="/competitions/mine" element={<MyCompetitionsLifecyclePage />} />
-          <Route path="/competitions/:competitionId" element={<CompetitionDetailPage />} />
+          <Route path="/competitions/:competitionId" element={<CompetitionLifecycleDetailPage />} />
           <Route path="/competitions/:competitionId/registration" element={<RegistrationLifecyclePage />} />
           <Route path="/competitions/:competitionId/workspace" element={<CompetitionWorkspacePage />} />
           <Route path="/competitions/:competitionId/workspace/team" element={<CompetitionTeamPage />} />
