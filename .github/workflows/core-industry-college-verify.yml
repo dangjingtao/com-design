@@ -1,0 +1,44 @@
+name: Core Industry College Verify
+
+on:
+  push:
+    branches: [core-industry-college-refactor]
+    paths:
+      - 'prototype/core-industry-college/**'
+      - '.github/workflows/core-industry-college-verify.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: prototype/core-industry-college
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Audit semantic routes
+        run: npm run audit:routes
+
+      - name: Build prototype
+        run: npm run build
+
+      - name: Upload production build
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-industry-college-${{ github.sha }}
+          path: prototype/core-industry-college/dist/
+          if-no-files-found: error
+          retention-days: 14
