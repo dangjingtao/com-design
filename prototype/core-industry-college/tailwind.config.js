@@ -6,6 +6,7 @@ export default {
       colors: {
         primary: "var(--color-primary)",
         "primary-pressed": "var(--color-primary-hover)",
+        "on-primary": "var(--color-on-primary)",
         "primary-container": "var(--color-primary-container)",
         "on-primary-container": "var(--color-on-primary-container)",
         background: "var(--color-background)",
@@ -38,9 +39,7 @@ export default {
         container: "var(--radius-container)",
         overlay: "var(--radius-overlay)",
       },
-      minHeight: {
-        touch: "var(--size-touch-min)",
-      },
+      minHeight: { touch: "var(--size-touch-min)" },
       height: {
         control: "var(--size-control-height)",
         "control-lg": "var(--size-control-height-lg)",
