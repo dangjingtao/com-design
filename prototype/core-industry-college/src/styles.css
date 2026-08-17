@@ -6,3 +6,9 @@
 html { background: var(--color-background); }
 body { margin: 0; min-width: 320px; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
 * { box-sizing: border-box; }
+
+/* Registration Portal prototype controls must never cover bottom-page primary actions. */
+details.fixed.bottom-3.right-3.z-50 {
+  top: 96px;
+  bottom: auto;
+}
