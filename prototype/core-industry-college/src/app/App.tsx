@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { RouteProbe } from "./RouteProbe";
 import { RouteLab } from "../dev/RouteLab";
@@ -101,7 +102,7 @@ const implementedRouteIds = new Set([
   "me.resume.education",
 ]);
 
-const account = (page: JSX.Element) => <AccountRequired>{page}</AccountRequired>;
+const account = (page: ReactNode) => <AccountRequired>{page}</AccountRequired>;
 
 export function App() {
   return (
