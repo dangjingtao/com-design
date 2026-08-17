@@ -2,15 +2,15 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 export function Button({ className = "", ...props }: ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <button className={`min-h-touch rounded-control bg-primary px-4 text-sm font-medium text-on-primary transition active:bg-primary-pressed disabled:cursor-not-allowed disabled:bg-border-subtle disabled:text-text-tertiary ${className}`} {...props} />;
+  return <button className={`min-h-touch rounded-control bg-primary px-4 text-sm font-medium text-on-primary transition active:bg-primary-pressed disabled:cursor-not-allowed disabled:bg-[var(--color-disabled)] disabled:text-[var(--color-text-disabled)] ${className}`} {...props} />;
 }
 
 export function SecondaryButton({ className = "", ...props }: ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <button className={`min-h-touch rounded-control bg-primary-container px-4 text-sm font-medium text-text-brand transition active:bg-surface-pressed ${className}`} {...props} />;
+  return <button className={`min-h-touch rounded-control bg-[var(--color-secondary)] px-4 text-sm font-medium text-text-brand transition active:bg-[var(--color-secondary-hover)] disabled:cursor-not-allowed disabled:bg-[var(--color-disabled)] disabled:text-[var(--color-text-disabled)] ${className}`} {...props} />;
 }
 
 export function GhostButton({ className = "", ...props }: ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <button className={`min-h-touch rounded-control px-3 text-sm font-medium text-text-brand transition active:bg-surface-pressed ${className}`} {...props} />;
+  return <button className={`min-h-touch rounded-control px-3 text-sm font-medium text-text-brand transition active:bg-surface-pressed disabled:cursor-not-allowed disabled:text-[var(--color-text-disabled)] ${className}`} {...props} />;
 }
 
 export function Card({ children, className = "", interactive = false }: { children: ReactNode; className?: string; interactive?: boolean }) {
@@ -36,7 +36,7 @@ export function PageHeader({ title, subtitle, backTo }: { title: string; subtitl
   return (
     <header className="sticky top-0 z-20 border-b border-border-subtle bg-surface">
       <div className="mx-auto flex min-h-12 w-full max-w-md items-center gap-3 px-4">
-        {backTo && <button aria-label="返回" className="flex min-h-touch min-w-11 items-center justify-center rounded-control text-xl text-text-primary active:bg-surface-pressed" onClick={() => navigate(backTo)}>‹</button>}
+        {backTo && <button aria-label="返回" className="flex min-h-touch min-w-11 items-center justify-center rounded-control text-2xl leading-none text-text-primary active:bg-surface-pressed" onClick={() => navigate(backTo)}>‹</button>}
         <div className="min-w-0 flex-1 py-2"><h1 className="truncate text-lg font-semibold text-text-primary">{title}</h1>{subtitle && <p className="truncate text-xs text-text-secondary">{subtitle}</p>}</div>
       </div>
     </header>
