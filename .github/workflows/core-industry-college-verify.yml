@@ -14,6 +14,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: prototype/core-industry-college
@@ -29,16 +30,34 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
       - name: Audit semantic routes
         run: npm run audit:routes
 
       - name: Build prototype
         run: npm run build
 
+      - name: Walk through five mother flows
+        run: npm run e2e
+
       - name: Upload production build
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: core-industry-college-${{ github.sha }}
           path: prototype/core-industry-college/dist/
           if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-industry-college-browser-${{ github.sha }}
+          path: |
+            prototype/core-industry-college/playwright-report/
+            prototype/core-industry-college/test-results/
+          if-no-files-found: warn
           retention-days: 14
