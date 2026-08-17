@@ -1,7 +1,6 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
-import type { CompetitionIdentityState, TaskRunStatus } from "../../state/model";
-import { competitionById } from "../public-platform/data";
-import { scenarios } from "../../mock/scenarios";
+import type { TaskRunStatus } from "../../state/model";
+import { usePublicPlatform, type IdentityScenario } from "../public-platform/PublicPlatform";
 import { materialLabels, resultById, taskById, workshopTasks, type MaterialKey, type WorkshopLifecycle } from "./data";
 
 export type CompetitionWorkshopRuntime = {
@@ -14,11 +13,9 @@ export type CompetitionWorkshopRuntime = {
 };
 
 type RuntimeStore = Record<string, CompetitionWorkshopRuntime>;
-type IdentityScenario = "none" | "pending" | "rejected" | "active" | "revoked";
 
 type WorkshopRuntimeContextValue = {
-  identities: CompetitionIdentityState[];
-  identityFor: (competitionId: string) => CompetitionIdentityState | undefined;
+  identityFor: (competitionId: string) => ReturnType<typeof usePublicPlatform>["identities"][number] | undefined;
   setIdentityScenario: (competitionId: string, scenario: IdentityScenario) => void;
   getRuntime: (competitionId: string) => CompetitionWorkshopRuntime;
   setLifecycle: (competitionId: string, lifecycle: WorkshopLifecycle) => void;
@@ -91,27 +88,15 @@ function updateRuntime(store: RuntimeStore, competitionId: string, updater: (run
 const WorkshopRuntimeContext = createContext<WorkshopRuntimeContextValue | null>(null);
 
 export function WorkshopRuntimeProvider({ children }: { children: ReactNode }) {
-  const [identities, setIdentities] = useState<CompetitionIdentityState[]>(() => scenarios.multiCompetitionAccount.competitions.identities.map(identity => ({ ...identity })));
+  const { session, identities, setCompetitionIdentityScenario } = usePublicPlatform();
   const [store, setStore] = useState<RuntimeStore>(() => ({
     "sanchuang-16": makeActiveRuntime(),
     "sanchuang-15": makeEndedRuntime(),
   }));
 
   const value = useMemo<WorkshopRuntimeContextValue>(() => ({
-    identities,
-    identityFor: competitionId => identities.find(identity => identity.competitionId === competitionId),
-    setIdentityScenario: (competitionId, scenario) => setIdentities(current => {
-      if (scenario === "none") return current.filter(identity => identity.competitionId !== competitionId);
-      const competition = competitionById(competitionId);
-      const existing = current.find(identity => identity.competitionId === competitionId);
-      const next: CompetitionIdentityState = {
-        competitionId,
-        competitionStatus: competition?.status ?? existing?.competitionStatus ?? "registrationOpen",
-        identityStatus: scenario === "active" ? "active" : scenario === "pending" ? "pending" : scenario === "rejected" ? "rejected" : "revoked",
-        registrationStatus: scenario === "active" ? "approved" : scenario === "pending" ? "pending" : scenario === "rejected" ? "rejected" : "approved",
-      };
-      return existing ? current.map(identity => identity.competitionId === competitionId ? next : identity) : [...current, next];
-    }),
+    identityFor: competitionId => session.loggedIn ? identities.find(identity => identity.competitionId === competitionId) : undefined,
+    setIdentityScenario: (competitionId, scenario) => setCompetitionIdentityScenario(competitionId, scenario),
     getRuntime: competitionId => store[competitionId] ?? initialRuntime(competitionId),
     setLifecycle: (competitionId, lifecycle) => setStore(current => updateRuntime(current, competitionId, runtime => ({ ...runtime, lifecycle }))),
     setPermissionDenied: (competitionId, permissionDenied) => setStore(current => updateRuntime(current, competitionId, runtime => ({ ...runtime, permissionDenied }))),
@@ -149,7 +134,7 @@ export function WorkshopRuntimeProvider({ children }: { children: ReactNode }) {
       acceptedResultIds: runtime.acceptedResultIds.includes(resultId) ? runtime.acceptedResultIds : [...runtime.acceptedResultIds, resultId],
     }))),
     resetCompetition: competitionId => setStore(current => ({ ...current, [competitionId]: initialRuntime(competitionId) })),
-  }), [identities, store]);
+  }), [session.loggedIn, identities, setCompetitionIdentityScenario, store]);
 
   return <WorkshopRuntimeContext.Provider value={value}>{children}</WorkshopRuntimeContext.Provider>;
 }
