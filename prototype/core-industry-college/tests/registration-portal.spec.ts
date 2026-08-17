@@ -35,13 +35,13 @@ test("standalone registration portal completes leader flow on desktop", async ({
   await page.getByRole("button", { name: "确认承诺书并完成报名" }).click();
 
   await expect(page.getByText("完整报名流程已完成", { exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "团队业绩报告" }).click();
+  await page.getByRole("button", { name: "查看证书下载" }).click();
+  await expect(page.getByText("第十六届三创赛 · 校赛参赛证书", { exact: true })).toBeVisible();
+
+  await page.locator("aside").getByRole("link", { name: "团队业绩报告" }).click();
   await expect(page.getByRole("heading", { name: "团队业绩报告", level: 1 })).toBeVisible();
   await page.getByRole("button", { name: "提交团队业绩报告" }).click();
   await expect(page.getByText("业绩报告已提交，可在截止前更新。", { exact: true })).toBeVisible();
-
-  await page.goto("/registration-portal/certificates");
-  await expect(page.getByText("第十六届三创赛 · 校赛参赛证书", { exact: true })).toBeVisible();
 });
 
 test("standalone registration portal keeps member branch usable on mobile", async ({ page }) => {
