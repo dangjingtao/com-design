@@ -1,12 +1,15 @@
 # R04 — T04 长期资产 / 支撑系统评审
 
 > Review role: 评审线程  
-> Reviewed HEAD: `16bd51a8b42d2af30669668c21d7da1a07a919d8`  
-> Gate result: **CHANGES REQUIRED（小修后通过）**
+> Initial reviewed HEAD: `16bd51a8b42d2af30669668c21d7da1a07a919d8`  
+> Fix reviewed HEAD: `bdbfbf12dff6454514cf0105c9e41cd6d14c1230`  
+> Gate result: **PASS**
 
-## 结论
+## 最终结论
 
-T04 主体方向正确，现有课程 / 权益 / 长期资产 / 简历 UI 与数据结构不需要推翻：
+T04 通过 R04。
+
+主体实现保持成立：
 
 - 长期资产没有复制 T02 `applications / identities / followedCompanies` 或 T03 lifecycle / workshop result 真相源。
 - 赛事经历直接读取共享账号赛事身份与 T03 lifecycle，ended / revoked 后资产仍可访问且不会重新激活 workspace。
@@ -15,50 +18,45 @@ T04 主体方向正确，现有课程 / 权益 / 长期资产 / 简历 UI 与数
 - 长期简历把可信事实与学生自己的 presentation 分开，并保留 `returnTo` 回机会继续投递。
 - `/tasks` 继续冻结，没有擅自实现任务中心。
 
-R04 暂不放行有两个原因，均属于账号/资格状态边界，不是视觉问题。
+## R04 修正项复核
 
-## Blocking — R04-B1 长期账号私有状态没有统一 session guard
+### R04-B1 — PASS：长期账号私有状态统一受 Account Guard 约束
 
-当前只有 `/me` 首页显式检查 `session.loggedIn`，但多条长期账号路由可以被游客直接访问：
+已新增共享 `AccountRequired` / account action helper，并接入：
 
-- `/assets/*` 可直接读取 seeded learning / certificates / competitionResults；
-- `/me/resume*` 可直接读取并修改 profile / resume presentation，并直接读取公共 provider 中的 `identities[]`；
-- `/benefits/*` / wallet 可直接读取账号权益状态并执行领取 / 核销；
-- `/courses/:id/learn`、assessment、achievement 可直接修改长期学习记录。
+- `/assets/*`
+- `/me/*`
+- `/benefits/wallet`
+- `/courses/:courseId/learn`
+- `/courses/:courseId/assessment`
+- `/courses/:courseId/achievement`
 
-这会产生真实回归：游客虽然在首页被定义为“只浏览公共赛事/机会/企业”，但只要直接进入这些路由，就可以看到或修改一份长期账号资产。
+课程发现/详情与权益列表/详情仍可公共浏览，但游客不再读取 seeded 账号状态；需要写入账号状态的动作统一先检查共享 `PublicPlatformProvider.session`，并通过 `returnTo` 登录后回到原页面。
 
-### 修正要求
+`guest=1` 仅作为调试入口，生成 `returnTo` 时会移除该参数，避免登录成功后再次被调试参数切回游客。
 
-建立一个轻量、可复用的 **AccountRequired / LongTermAccountGuard**（名称不限），统一读取 `PublicPlatformProvider.session`：
+同时，长期资产 store 的课程学习、考试、证书领取、权益领取/使用、简历编辑、资料编辑等写方法也有 session 二次防护，不只依赖 UI 按钮隐藏。
 
-- `/assets/*`、`/me/profile`、`/me/resume*`、`/benefits/wallet` 必须要求登录；
-- 权益领取/使用必须要求登录；权益公共列表若要保留公开浏览，可以只展示公共信息，账号状态/动作登录后再读取；
-- 课程发现/详情可以继续公共浏览，但写入学习进度、考试、成果/证书的动作必须要求登录；
-- 登录后应使用 `returnTo` 回到原页面，不另建 session 真相源。
+### R04-B2 — PASS：赛事权益资格读取共享 identities[]
 
-不要在每个页面各写一套不同的游客判断。
+Benefit 增加轻量 `requiresCompetitionId`，没有复制赛事身份对象。
 
-## Blocking — R04-B2 身份相关权益资格目前是固定 seed，与共享账号身份脱节
+`benefitStatusFor()` 对赛事身份相关权益读取 `PublicPlatformProvider.identities[]`：
 
-`LongTermAssetsProvider` 当前直接用 `Benefit.initialStatus` 初始化全部权益状态。例如赛事权益 `benefit-sanchuang-course` 固定为 `eligible`，而“北辰美妆校园体验权益”固定为 `claimed`。
+- 尚未领取的赛事专属权益，在没有对应 active identity 时为 `ineligible`；
+- 满足对应 active identity 后可恢复可领取；
+- `claimBenefit()` 自身再次校验资格，避免绕过 UI；
+- 已领取 / 已使用 / 已过期作为长期记录继续保存。
 
-因此当公共账号切成“无赛事身份”或游客时，权益仍可能继续显示可领取/已领取；资格文案却写着“当前账号具备三创赛相关学生身份”。
+因此“资格依据”与账号共享 identity 真相源保持一致，同时长期权益记录仍可跨赛事生命周期保存。
 
-这违反 T04 的原则：权益状态可以长期保存，但**资格依据不能复制或脱离共享 identity 真相源**。
+### R04-A1 — PASS：completed course CTA 与目标页一致
 
-### 修正要求
+课程状态为 completed 时，“查看学习成果”直接进入：
 
-- 对明确依赖赛事身份的权益，资格判断必须读取 `PublicPlatformProvider.identities[]`（或等价共享账号事实）。
-- 可以在 Benefit 数据上增加轻量的 eligibility requirement，例如 `requiresCompetitionId` / rule key；不要复制赛事身份对象。
-- 已领取 / 已使用 / 已过期属于长期记录，可继续保存在 `LongTermAssetsProvider`；但“是否当前有资格领取”必须与共享账号状态一致。
-- 切换到无赛事身份时，不应还能新领取赛事身份专属权益；切回满足资格后可以恢复可领取能力。
+`/courses/:courseId/achievement`
 
-不要求设计完整规则引擎。
-
-## Required alignment — R04-A1 课程已完成 CTA 与目标页一致
-
-`CourseDetailPage` 中课程已完成时按钮文案为“查看学习成果”，但当前统一 `begin()` 仍跳 `/learn`。请在同一小修中让 completed 直接进入 achievement（或调整为一致的行为），避免主动作与下一步不一致。
+不再绕回 `/learn`。
 
 ## 已通过项
 
@@ -68,16 +66,12 @@ R04 暂不放行有两个原因，均属于账号/资格状态边界，不是视
 - 可信事实与简历 presentation 已分离。
 - applications / company / competition / workshop result 没有第二份 store。
 - 课程、权益仍处在参赛/就业的支撑层，没有反客为主。
-- `/tasks` 继续 blockedByDecision。
-- 当前环境未完成真实 npm build / browser walkthrough，不作为 R04 本次状态边界问题的替代证据；完整构建和五条母动线仍在 R05 终审执行。
+- `/tasks` 继续 `blockedByDecision`。
 
-## R04 快速复核标准
+## 验证边界
 
-只需证明：
+本次快速复核针对 R04 三项 blocking / alignment 做代码级验收，均已闭环。
 
-1. 游客不能读取/修改长期账号私有资产，登录 `returnTo` 连续；
-2. 课程学习/考试、权益领取/核销等写操作受统一账号 guard 约束；
-3. 赛事身份相关权益资格读取共享 `identities[]`，无身份时不能新领取；
-4. completed course 的主 CTA 与目标页一致。
+当前施工环境仍无法完成真实 npm build / browser walkthrough；该项没有被冒充通过，继续留到 R05 全量终审执行真实构建与五条母动线回归。
 
-满足后 **R04 PASS**。不需要重做 T04 页面或视觉。
+**R04 PASS。可以进入 T05。**
