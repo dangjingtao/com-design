@@ -31,6 +31,7 @@ export type Benefit = {
   reason: string;
   expiresAt?: string;
   initialStatus: BenefitStatus;
+  requiresCompetitionId?: string;
 };
 
 export type CertificateRecord = {
@@ -106,6 +107,7 @@ export const benefits: Benefit[] = [
     reason: "当前账号具备三创赛相关学生身份，且符合合作活动资格。",
     expiresAt: "2026-08-31",
     initialStatus: "claimed",
+    requiresCompetitionId: "sanchuang-16",
   },
   {
     id: "benefit-cloud-lab",
@@ -124,6 +126,7 @@ export const benefits: Benefit[] = [
     reason: "由赛事身份授予，不等同赛事 workspace 权限。",
     expiresAt: "2026-10-15",
     initialStatus: "eligible",
+    requiresCompetitionId: "sanchuang-16",
   },
   {
     id: "benefit-activity-ride",
@@ -142,6 +145,7 @@ export const benefits: Benefit[] = [
     reason: "赛事与权益有效期均已结束。",
     expiresAt: "2025-09-01",
     initialStatus: "expired",
+    requiresCompetitionId: "sanchuang-15",
   },
 ];
 
