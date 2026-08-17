@@ -1,7 +1,7 @@
 {
   "name": "core-industry-college-prototype",
   "private": true,
-  "version": "0.0.2-t02",
+  "version": "0.0.3-t03",
   "type": "module",
   "scripts": {
     "dev": "vite",
