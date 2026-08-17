@@ -2,12 +2,17 @@ import { createContext, useContext, useMemo, useState, type ReactNode } from "re
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button, Card, GhostButton, PageHeader, PrototypeStateTools, PublicShell, SecondaryButton, Section, StateBlock, StatusTag } from "../../components/ui";
 import { scenarios } from "../../mock/scenarios";
+import type { CompetitionIdentityState } from "../../state/model";
 import { companies, companyById, competitions, competitionById, opportunities, opportunityById, type Competition, type Opportunity } from "./data";
 
 type ApplicationRecord = { opportunityId: string; status: "submitted" | "statusUnknown" };
+type IdentityMode = "multi" | "none";
 type PublicPlatformState = {
   applications: ApplicationRecord[];
   followedCompanies: string[];
+  identities: CompetitionIdentityState[];
+  identityMode: IdentityMode;
+  setIdentityMode: (mode: IdentityMode) => void;
   submitApplication: (opportunityId: string) => void;
   toggleFollow: (companyId: string) => void;
 };
@@ -17,9 +22,11 @@ const PublicPlatformContext = createContext<PublicPlatformState | null>(null);
 export function PublicPlatformProvider({ children }: { children: ReactNode }) {
   const [applications, setApplications] = useState<ApplicationRecord[]>([]);
   const [followedCompanies, setFollowedCompanies] = useState<string[]>(["northstar-beauty"]);
+  const [identityMode, setIdentityMode] = useState<IdentityMode>("multi");
+  const identities = identityMode === "multi" ? scenarios.multiCompetitionAccount.competitions.identities : scenarios.newUser.competitions.identities;
   const submitApplication = (opportunityId: string) => setApplications(records => records.some(record => record.opportunityId === opportunityId) ? records : [...records, { opportunityId, status: "submitted" }]);
   const toggleFollow = (companyId: string) => setFollowedCompanies(ids => ids.includes(companyId) ? ids.filter(id => id !== companyId) : [...ids, companyId]);
-  return <PublicPlatformContext.Provider value={{ applications, followedCompanies, submitApplication, toggleFollow }}>{children}</PublicPlatformContext.Provider>;
+  return <PublicPlatformContext.Provider value={{ applications, followedCompanies, identities, identityMode, setIdentityMode, submitApplication, toggleFollow }}>{children}</PublicPlatformContext.Provider>;
 }
 
 function usePublicPlatform() {
@@ -57,16 +64,23 @@ function ViewGate({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
+function AccountScenarioSwitch() {
+  const { identityMode, setIdentityMode } = usePublicPlatform();
+  return <button className="min-h-10 rounded-control bg-surface-subtle px-3 text-xs font-medium text-text-secondary" onClick={() => setIdentityMode(identityMode === "multi" ? "none" : "multi")}>原型账号：{identityMode === "multi" ? "多赛事身份" : "无赛事身份"}</button>;
+}
+
 export function HomePage() {
   const navigate = useNavigate();
   const guest = useGuest();
   const view = usePrototypeView();
-  const activeIdentity = scenarios.multiCompetitionAccount.competitions.identities.find(identity => identity.identityStatus === "active");
+  const { identities } = usePublicPlatform();
+  const activeIdentity = identities.find(identity => identity.identityStatus === "active");
   const activeCompetition = competitionById(activeIdentity?.competitionId);
-  return <PublicShell><div className="px-4 pb-4 pt-6"><div className="flex items-start justify-between gap-3"><div><p className="text-sm font-medium text-text-brand">核心产业学院</p><h1 className="mt-1 text-2xl font-semibold leading-8 text-text-primary">今天，想去比赛还是找机会？</h1><p className="mt-2 text-sm leading-5 text-text-secondary">先看到值得行动的赛事与实习，再用课程、权益和可信成果支持成长。</p></div>{guest ? <StatusTag tone="neutral">未登录</StatusTag> : <StatusTag tone="success">已登录</StatusTag>}</div></div>
+  return <PublicShell><div className="px-4 pb-4 pt-6"><div className="flex items-start justify-between gap-3"><div><p className="text-sm font-medium text-text-brand">核心产业学院</p><h1 className="mt-1 text-2xl font-semibold leading-8 text-text-primary">今天，想去比赛还是找机会？</h1><p className="mt-2 text-sm leading-5 text-text-secondary">先看到值得行动的赛事与实习，再用课程、权益和可信成果支持成长。</p></div>{guest ? <StatusTag tone="neutral">未登录</StatusTag> : <StatusTag tone="success">已登录</StatusTag>}</div><div className="mt-4"><AccountScenarioSwitch /></div></div>
     {view !== "ready" ? <div className="px-4"><StateBlock state={view} /></div> : <div className="space-y-8 px-4">
       <Section title="现在可以做什么"><div className="grid grid-cols-2 gap-3"><button className="min-h-32 rounded-container bg-primary p-4 text-left text-white" onClick={() => navigate("/competitions")}><span className="text-sm font-medium opacity-90">参赛</span><strong className="mt-6 block text-lg">发现比赛</strong><span className="mt-1 block text-xs opacity-90">找值得投入的赛事</span></button><button className="min-h-32 rounded-container border border-border-subtle bg-surface p-4 text-left" onClick={() => navigate("/opportunities")}><span className="text-sm font-medium text-text-brand">就业 / 实习</span><strong className="mt-6 block text-lg text-text-primary">发现机会</strong><span className="mt-1 block text-xs text-text-secondary">岗位、实践与企业</span></button></div></Section>
       {!guest && activeCompetition && <Section title="我正在参加" action={<Link to="/competitions/mine" className="min-h-touch py-3 text-sm font-medium text-text-brand">我的赛事</Link>}><Card interactive><div className="flex items-start justify-between gap-3"><div><StatusTag tone="info">进行中</StatusTag><h3 className="mt-3 text-base font-semibold text-text-primary">{activeCompetition.name}</h3><p className="mt-1 text-sm text-text-secondary">赛事身份有效 · 可进入赛事工作区</p></div></div><Button className="mt-4 w-full" onClick={() => navigate(`/competitions/${activeCompetition.id}/workspace`)}>进入当前赛事</Button></Card></Section>}
+      {!guest && !activeCompetition && <Card className="border border-border-subtle"><h2 className="text-base font-semibold text-text-primary">你还没有赛事身份</h2><p className="mt-2 text-sm leading-5 text-text-secondary">这不会影响公共平台使用。你仍可以浏览赛事、机会和企业，再决定是否报名。</p><SecondaryButton className="mt-4" onClick={() => navigate("/competitions")}>发现赛事</SecondaryButton></Card>}
       {guest && <Card className="border border-border-subtle"><h2 className="text-base font-semibold text-text-primary">不用赛事身份，也可以先逛平台</h2><p className="mt-2 text-sm leading-5 text-text-secondary">赛事、机会和企业公开信息均可浏览；报名、投递等账号动作再要求登录。</p><SecondaryButton className="mt-4" onClick={() => navigate("/auth/login?returnTo=/home")}>登录 / 注册</SecondaryButton></Card>}
       <Section title="推荐赛事" action={<Link to="/competitions" className="text-sm font-medium text-text-brand">查看全部</Link>}><div className="space-y-3">{competitions.slice(0,2).map(item => <CompetitionCard item={item} key={item.id} />)}</div></Section>
       <Section title="实习与项目机会" action={<Link to="/opportunities" className="text-sm font-medium text-text-brand">查看全部</Link>}><div className="space-y-3">{opportunities.filter(item => item.status === "open").slice(0,2).map(item => <OpportunityCard item={item} key={item.id} />)}</div></Section>
@@ -85,11 +99,12 @@ export function CompetitionsPage() {
 export function CompetitionDetailPage() {
   const navigate = useNavigate();
   const guest = useGuest();
+  const { identities } = usePublicPlatform();
   const { competitionId } = useParams();
   const item = competitionById(competitionId);
   if (!item) return <PublicShell showNavigation={false}><PageHeader title="赛事不存在" backTo="/competitions" /><div className="px-4 py-6"><StateBlock state="error" /></div></PublicShell>;
   const [label, tone] = competitionStatus(item);
-  const identity = scenarios.multiCompetitionAccount.competitions.identities.find(value => value.competitionId === item.id);
+  const identity = guest ? undefined : identities.find(value => value.competitionId === item.id);
   const canEnterWorkspace = identity?.identityStatus === "active" && item.workspaceAvailable;
   const canRegister = item.status === "registrationOpen" && item.eligibility !== "ineligible";
   return <PublicShell showNavigation={false}><PageHeader title="赛事详情" subtitle="公共赛事信息" backTo="/competitions" /><ViewGate><div className="space-y-6 px-4 py-5"><div><StatusTag tone={tone}>{label}</StatusTag><h1 className="mt-3 text-2xl font-semibold leading-8 text-text-primary">{item.name}</h1><p className="mt-2 text-sm text-text-secondary">{item.organizer}</p><p className="mt-4 text-base leading-6 text-text-secondary">{item.summary}</p></div><Section title="赛事信息"><Card><div className="space-y-3 text-sm"><div className="flex justify-between gap-4"><span className="text-text-secondary">报名状态</span><span className="font-medium text-text-primary">{item.registrationEnds ?? label}</span></div><div className="flex justify-between gap-4"><span className="text-text-secondary">赛事身份</span><span className="font-medium text-text-primary">{identity ? identity.identityStatus : "当前账号暂无"}</span></div><div className="flex justify-between gap-4"><span className="text-text-secondary">赛事工作区</span><span className="font-medium text-text-primary">{canEnterWorkspace ? "可进入" : "需有效赛事身份"}</span></div></div></Card></Section>{item.eligibility === "ineligible" && <Card className="border border-warning bg-warning-bg"><p className="font-medium text-warning-text">当前条件暂不满足报名资格</p><p className="mt-1 text-sm text-warning-text">这里只展示资格状态，不在 T02 自行定义完整资格规则。</p></Card>}{item.status === "ended" && <Card className="border border-border-subtle"><p className="font-medium text-text-primary">赛事已结束</p><p className="mt-1 text-sm text-text-secondary">公开信息仍可查看；赛事期权限与赛后长期资产由对应后续卡处理。</p></Card>}<div className="space-y-2">{canEnterWorkspace ? <Button className="w-full" onClick={() => navigate(`/competitions/${item.id}/workspace`)}>进入赛事工作区</Button> : canRegister ? <Button className="w-full" onClick={() => guest ? navigate(`/auth/login?returnTo=/competitions/${item.id}/registration`) : navigate(`/competitions/${item.id}/registration`)}>进入报名</Button> : <Button className="w-full" disabled>{item.status === "upcoming" ? "报名尚未开始" : item.status === "ended" ? "赛事已结束" : "暂不可报名"}</Button>}<SecondaryButton className="w-full" onClick={() => navigate("/competitions/mine")}>查看我的赛事</SecondaryButton></div></div></ViewGate><PrototypeStateTools /></PublicShell>;
@@ -97,8 +112,8 @@ export function CompetitionDetailPage() {
 
 export function MyCompetitionsPage() {
   const navigate = useNavigate();
-  const identities = scenarios.multiCompetitionAccount.competitions.identities;
-  return <PublicShell><PageHeader title="我的赛事" subtitle="读取长期账号关联的全部赛事身份" backTo="/competitions" /><ViewGate><div className="space-y-3 px-4 py-5">{identities.map(identity => { const item = competitionById(identity.competitionId); if (!item) return null; return <Card key={identity.competitionId} interactive><div className="flex items-start justify-between gap-3"><div><h2 className="text-base font-semibold text-text-primary">{item.name}</h2><p className="mt-1 text-sm text-text-secondary">身份：{identity.identityStatus} · 报名：{identity.registrationStatus}</p></div><StatusTag tone={identity.identityStatus === "active" ? "success" : identity.identityStatus === "pending" ? "warning" : "neutral"}>{identity.competitionStatus === "inProgress" ? "进行中" : identity.competitionStatus === "ended" ? "已结束" : "报名阶段"}</StatusTag></div>{identity.identityStatus === "active" && <Button className="mt-4 w-full" onClick={() => navigate(`/competitions/${identity.competitionId}/workspace`)}>进入赛事工作区</Button>}{identity.identityStatus === "pending" && <SecondaryButton className="mt-4 w-full" onClick={() => navigate(`/competitions/${identity.competitionId}/registration`)}>查看报名状态</SecondaryButton>}{identity.identityStatus === "revoked" && <SecondaryButton className="mt-4 w-full" onClick={() => navigate(`/competitions/${identity.competitionId}`)}>查看赛事公开信息</SecondaryButton>}</Card>; })}</div></ViewGate><PrototypeStateTools /></PublicShell>;
+  const { identities } = usePublicPlatform();
+  return <PublicShell><PageHeader title="我的赛事" subtitle="读取长期账号关联的全部赛事身份" backTo="/competitions" /><ViewGate><div className="space-y-3 px-4 py-5">{identities.length ? identities.map(identity => { const item = competitionById(identity.competitionId); if (!item) return null; return <Card key={identity.competitionId} interactive><div className="flex items-start justify-between gap-3"><div><h2 className="text-base font-semibold text-text-primary">{item.name}</h2><p className="mt-1 text-sm text-text-secondary">身份：{identity.identityStatus} · 报名：{identity.registrationStatus}</p></div><StatusTag tone={identity.identityStatus === "active" ? "success" : identity.identityStatus === "pending" ? "warning" : "neutral"}>{identity.competitionStatus === "inProgress" ? "进行中" : identity.competitionStatus === "ended" ? "已结束" : "报名阶段"}</StatusTag></div>{identity.identityStatus === "active" && <Button className="mt-4 w-full" onClick={() => navigate(`/competitions/${identity.competitionId}/workspace`)}>进入赛事工作区</Button>}{identity.identityStatus === "pending" && <SecondaryButton className="mt-4 w-full" onClick={() => navigate(`/competitions/${identity.competitionId}/registration`)}>查看报名状态</SecondaryButton>}{identity.identityStatus === "revoked" && <SecondaryButton className="mt-4 w-full" onClick={() => navigate(`/competitions/${identity.competitionId}`)}>查看赛事公开信息</SecondaryButton>}</Card>; }) : <Card className="py-8 text-center"><p className="font-semibold text-text-primary">你还没有赛事身份</p><p className="mt-2 text-sm text-text-secondary">仍可完整浏览公共赛事、机会与企业。</p><Button className="mt-4" onClick={() => navigate("/competitions")}>发现赛事</Button></Card>}</div></ViewGate><PrototypeStateTools /></PublicShell>;
 }
 
 export function RegistrationHandoffPage() {
@@ -151,8 +166,9 @@ export function CompanyDetailPage() {
 }
 
 export function ApplicationsPage() {
+  const navigate = useNavigate();
   const { applications } = usePublicPlatform();
-  return <PublicShell><PageHeader title="投递记录" subtitle="T02 仅保证 submitted / statusUnknown" backTo="/opportunities" /><div className="space-y-3 px-4 py-5">{applications.length ? applications.map(record => { const item = opportunityById(record.opportunityId); const company = companyById(item?.companyId); if (!item) return null; return <Link key={record.opportunityId} to={`/opportunities/${record.opportunityId}`} className="block"><Card interactive><div className="flex items-start justify-between gap-3"><div><h2 className="font-semibold text-text-primary">{item.title}</h2><p className="mt-1 text-sm text-text-secondary">{company?.name}</p></div><StatusTag tone={record.status === "submitted" ? "success" : "warning"}>{record.status === "submitted" ? "已投递" : "状态待回流"}</StatusTag></div></Card></Link>; }) : <Card className="py-8 text-center"><p className="font-semibold text-text-primary">还没有投递记录</p><p className="mt-2 text-sm text-text-secondary">先去看看适合你的实习与项目机会。</p><Button className="mt-4" onClick={() => location.assign("/opportunities")}>去找机会</Button></Card>}</div></PublicShell>;
+  return <PublicShell><PageHeader title="投递记录" subtitle="T02 仅保证 submitted / statusUnknown" backTo="/opportunities" /><div className="space-y-3 px-4 py-5">{applications.length ? applications.map(record => { const item = opportunityById(record.opportunityId); const company = companyById(item?.companyId); if (!item) return null; return <Link key={record.opportunityId} to={`/opportunities/${record.opportunityId}`} className="block"><Card interactive><div className="flex items-start justify-between gap-3"><div><h2 className="font-semibold text-text-primary">{item.title}</h2><p className="mt-1 text-sm text-text-secondary">{company?.name}</p></div><StatusTag tone={record.status === "submitted" ? "success" : "warning"}>{record.status === "submitted" ? "已投递" : "状态待回流"}</StatusTag></div></Card></Link>; }) : <Card className="py-8 text-center"><p className="font-semibold text-text-primary">还没有投递记录</p><p className="mt-2 text-sm text-text-secondary">先去看看适合你的实习与项目机会。</p><Button className="mt-4" onClick={() => navigate("/opportunities")}>去找机会</Button></Card>}</div></PublicShell>;
 }
 
 export function ResumeBoundaryPage() {
