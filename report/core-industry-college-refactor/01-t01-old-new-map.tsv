@@ -1,0 +1,141 @@
+#	oldPageId	oldPage	disposition	newTarget	note
+1	FBcre9R5VO8	登录	保留	/auth/login	
+2	rO3Pd6xb0A	首页	保留	/home	
+3	vW8yJHwBF	任务专区	归档	/tasks (reserved)	旧页为空且业务定义未确认；仅保留路由保留位，不实现产品 UI。
+4	4Og6sVUqf3	赛事	保留	/competitions	
+5	G-Mpir1yrM	学院	合并	/courses	
+6	5Tgm571aEm	社区	拆分	/opportunities + /companies + /news	“社区”实际混合公告、企业、实训机会；按业务对象拆分，最终一级命名待定。
+7	lDO4Uuh5ty	我的	保留	/me	
+8	ImIHEa4rywq	赛事 / 赛事筛选器	合并	/competitions?filters=...	
+9	-XaaWLUc4Xx	赛事 / 我的比赛	保留	/competitions/mine	
+10	GYHs51Viggs	赛事 / 赛事详情（未报名）	合并	/competitions/:competitionId	
+11	9qTqzqT0PIk	赛事 / 赛事详情（完成报名）	合并	/competitions/:competitionId	
+12	VdyuGd7BMf3	赛事 / 赛事详情（已结束）	合并	/competitions/:competitionId	
+13	ZKylX-NG0Yv	赛事 / 我的团队	合并	/competitions/:competitionId/workspace/team	
+14	__TpEYGhiOa	赛事 / 赛事资料	保留	/competitions/:competitionId/workspace/resources	
+15	bIv2Tpn3AAi	赛事 / 赛事详情（未报名） / 报名弹窗选择	合并	/competitions/:competitionId/registration	
+16	QjPa82spZzX	赛事 / 赛事详情（未报名） / 基础信息填写（队长）	归档	external responsive registration	复杂原生报名/答题/注册成功由既有响应式报名层承接；App 只负责跳入、返回和状态回流。
+17	rVhC6jR5icG	赛事 / 赛事详情（未报名） / 基础信息填写（队员）	归档	external responsive registration	复杂原生报名/答题/注册成功由既有响应式报名层承接；App 只负责跳入、返回和状态回流。
+18	zWlBc8kea2S	赛事 / 赛事详情（未报名） / 答题弹窗	归档	external responsive registration	复杂原生报名/答题/注册成功由既有响应式报名层承接；App 只负责跳入、返回和状态回流。
+19	XZiZiSNh2_t	赛事 / 赛事详情（未报名） / 报名答题	归档	external responsive registration	复杂原生报名/答题/注册成功由既有响应式报名层承接；App 只负责跳入、返回和状态回流。
+20	PRzA8MEtNQo	赛事 / 赛事详情（未报名） / 三创注册成功弹窗（队长）	归档	external responsive registration	复杂原生报名/答题/注册成功由既有响应式报名层承接；App 只负责跳入、返回和状态回流。
+21	m0EjhXIrSaa	赛事 / 赛事详情（未报名） / 三创注册成功弹窗（队员）	归档	external responsive registration	复杂原生报名/答题/注册成功由既有响应式报名层承接；App 只负责跳入、返回和状态回流。
+22	NohnDZtUZzF	赛事 / 赛事详情（未报名） / 团队信息（待审核）	合并	/competitions/:competitionId/registration	
+23	SYZ6EjTsoDF	赛事 / 赛事详情（未报名） / 团队信息（审核通过）	合并	/competitions/:competitionId/registration	
+24	TdX0kd4V_qb	赛事 / 赛事详情（未报名） / 添加成员	归档	external responsive registration	成员维护/承诺书属于复杂报名范围；若后台确认必须 App 原生，再从待决策项恢复。
+25	U2RvLsJTpsg	赛事 / 赛事详情（未报名） / 承诺书	归档	external responsive registration	成员维护/承诺书属于复杂报名范围；若后台确认必须 App 原生，再从待决策项恢复。
+26	3dewYLzLw0l	赛事 / 赛事详情（已结束） / 领取赛事证书成功	合并	/assets/certificates/:certificateId	
+27	aNq5oVGBu8R	赛事 / 赛事资料 / 资料详情	保留	/competitions/:competitionId/workspace/resources/:resourceId	
+28	_G1xqVyhX58	赛事 / 赛事资料 / 下载保存	合并	/competitions/:competitionId/workspace/resources/:resourceId	
+29	MLLMDSoQGr	社区 / 公告详情	保留	/news/:contentId	
+30	5lWfl0JAEZ	社区 / 企业列表	保留	/companies	
+31	yZsGX2NnZw7	社区 / 企业列表筛选	合并	/companies?filters=...	
+32	X5QCzb__Ds	社区 / 企业详情	拆分	/companies/:companyId	企业详情保留，但关联赛事/权益/课程/活动/机会作为资源关系区块而非仅职位。
+33	1y9mlAJTaA	社区 / 实训机会	保留	/opportunities	
+34	vvNkelAImKC	社区 / 实训机会 / 实训列表筛选	合并	/opportunities?filters=...	
+35	JUolAFcJpU	社区 / 实训机会 / 岗位详情	保留	/opportunities/:opportunityId	
+36	UWzMJARxOOy	社区 / 实训机会 / 投递简历成功弹窗	合并	/opportunities/:opportunityId + /applications	
+37	iSM0NComL8	社区 / 企业详情 / 企业任务	归档	/tasks (reserved)	企业任务与平台/赛事任务边界未定义，暂不实现；保留来源记录。
+38	enL6G2S2uj	社区 / 企业详情 / 工商信息	合并	/companies/:companyId?tab=business	
+39	y5NcMeMqDzt	登录 / 邮箱登录	合并	/auth/login	
+40	TatMbCqF0CN	登录 / 信息填写	保留	/onboarding/profile	
+41	cWorTSQMqGL	登录 / 问卷调查	保留	/onboarding/survey	
+42	WosmqYdlPHV	登录 / 预备页	合并	/onboarding/ready	
+43	Yfw0F6qEih2	学院 / 已学完课程	合并	/courses?status=completed	
+44	XwCKFIpuAg6	学院 / 全部课程	保留	/courses	
+45	nZOt6FVWB2j	学院 / 课程详情（免费）	合并	/courses/:courseId	
+46	l7VvfjutUjI	学院 / 课程详情（需兑换）	合并	/courses/:courseId	
+47	cmro8qPSV0S	学院 / 兑换弹窗	合并	/courses/:courseId	
+48	kt7l7SH6GRG	学院 / 课程目录	保留	/courses/:courseId/learn	
+49	IypW0p65xp0	学院 / 课程成就	合并	/courses/:courseId/achievement	
+50	-yq0R3BQ0Kz	学院 / 课程成就 / 课程考试	保留	/courses/:courseId/assessment	
+51	rZcLgpEO857	学院 / 课程成就 / 可领取成就	合并	/courses/:courseId/achievement	
+52	5DPTiaYUIhj	学院 / 课程成就 / 领取证书成功	合并	/assets/certificates/:certificateId	
+53	sTgaFimZy1V	我的 / 通知公告	保留	/me/notifications	
+54	nkzcuLwwL8h	我的 / 未绑定邮箱提醒	合并	/me/profile	
+55	skeDg-IbO-X	我的 / 资料修改	保留	/me/profile	
+56	XnxNyKZm0o0	我的 / 我的卡包	保留	/benefits/wallet	
+57	IBLA5LPY6jl	我的 / 我的在线简历	保留	/me/resume	
+58	ZRz5yNgAIQy	我的 / 无主体状态	合并	/me/subjects	
+59	bH0rNkzpfkV	我的 / 我的比赛团队	合并	/competitions/mine	
+60	Yg1lDi5xvKI	我的 / 第三方账号绑定	保留	/me/accounts	
+61	LoRcpvYEmT8	我的 / 用户协议	保留	/legal/user-agreement	
+62	po3lfQXaoTI	我的 / 隐私协议	保留	/legal/privacy	
+63	f2eJzR7cVJw	我的 / 关于我们	保留	/about	
+64	sl0fj1YRwb8	我的 / 确定退出登录	合并	/me	
+65	oTudrcUAzfS	我的 / 我的在线简历 / 个人优势	保留	/me/resume/strengths	
+66	IVPbX1aoM_T	我的 / 我的在线简历 / 教育经历	保留	/me/resume/education	
+67	_Xs6J8hCHZH	我的 / 第三方账号绑定 / 添加账号信息	合并	/me/accounts	
+68	JY4h-dXDn8s	我的 / 第三方账号绑定 / 第三方账号绑定完成	合并	/me/accounts	
+69	BX2yd58MxJ_	我的 / 无主体状态 / 添加主体1	合并	/me/subjects	
+70	803RNQnVjHG	我的 / 无主体状态 / 添加主体2	合并	/me/subjects	
+71	f1suevmDXk1	我的 / 无主体状态 / 我的主体管理	合并	/me/subjects	
+72	blPpHewhEln	我的 / 无主体状态 / 扫码添加主体	合并	/me/subjects	
+73	GVCIbpFuB80	我的 / 通知公告 / 未读消息	合并	/me/notifications	
+74	ApTHQsoNs85	我的 / 通知公告 / 一键已读	合并	/me/notifications	
+75	TtJRMHBh5l4	我的 / 通知公告 / 通知详情	保留	/me/notifications/:notificationId	
+76	nXSgp7xlXHg	我的 / 资料修改 / 资料修改弹窗	合并	/me/profile	
+77	APpznO3sgMP	首页 / 可信空间	拆分	/assets	可信空间拆为证书、成绩、验真等长期资产入口。
+78	FsO1LBl0elb	首页 / 创赛福利	拆分	/benefits + /growth	创赛福利混合权益、学力值和任务；权益保留，任务待定义，学力值降为支撑。
+79	Ou8JYgf9kVr	首页 / 成绩查询	合并	/assets/results	
+80	mKeEdjR9-zG	首页 / 赛友风采	保留	/stories	
+81	bfmz-pDpy7Z	首页 / 创赛工坊	拆分	/competitions/:competitionId/workspace/workshop	创赛工坊必须进入具体赛事上下文；首页全局入口不再直接等同通用 AI。
+82	sAdxWW24vAi	首页 / 智能客服	合并	/support	
+83	Ze6unUr48fl	首页 / 可信空间 / 领取成功	合并	/assets/certificates	
+84	xexEmUzqo23	首页 / 可信空间 / 我的证书	合并	/assets/certificates	
+85	K39J8xyVKyp	首页 / 可信空间 / 我的证书‘	合并	/assets/certificates	
+86	p4roFfYm16v	首页 / 可信空间 / 证书详情	保留	/assets/certificates/:certificateId	
+87	KmrLzUI9t8y	首页 / 可信空间 / 快速验真	保留	/assets/verification	
+88	Lh-C8dseuag	首页 / 可信空间 / 帮助中心	合并	/support	
+89	HpB3jkoJsfW	首页 / 创赛福利 / 兑换中心	保留	/benefits	
+90	QhEGelplnTS	首页 / 创赛福利 / 兑换详情	保留	/benefits/:benefitId	
+91	IG34eNuZeuV	首页 / 创赛福利 / 学力值明细	保留	/growth/score	
+92	ZJBasvXu1x	首页 / 创赛福利 / 日常任务	归档	/tasks (reserved)	日常/核心任务和全局任务、企业任务关系未定义；等待业务定义。
+93	LW8vpOZSZR	首页 / 创赛福利 / 核心任务	归档	/tasks (reserved)	日常/核心任务和全局任务、企业任务关系未定义；等待业务定义。
+94	tJGUuKVqFG1	首页 / 创赛福利 / 学力值规则	合并	/growth/score	
+95	2pRInSeZGYH	首页 / 成绩查询 / 成绩查询‘	合并	/assets/results/:resultId	
+96	zbVpC5CZk_k	首页 / 成绩查询 / 成绩详情	合并	/assets/results/:resultId	
+97	J0q589-F_5V	首页 / 成绩查询 / 成绩详情‘	合并	/assets/results/:resultId	
+98	j_ZoWC3Mn1W	首页 / 创赛工坊 / 历史成果	保留	/competitions/:competitionId/workspace/workshop/results	
+99	Q_ZRFcclUBS	首页 / 创赛工坊 / 项目详情	保留	/competitions/:competitionId/workspace/workshop/project	
+100	0OhPmaHltGl	首页 / 创赛工坊 / 算力明细	保留	/competitions/:competitionId/workspace/workshop/compute	
+101	78EIwuepuAo	首页 / 创赛工坊 / 技能矩阵	保留	/competitions/:competitionId/workspace/workshop/skills	
+102	MHNeTVInvQj	首页 / 创赛工坊 / 项目洞察	合并	/competitions/:competitionId/workspace/workshop/skills/:skillId	
+103	beZ7-fjJaRL	首页 / 创赛工坊 / 项目诊断	合并	/competitions/:competitionId/workspace/workshop/skills/:skillId	
+104	-kwsKVjTUMM	首页 / 创赛工坊 / 平台运营	合并	/competitions/:competitionId/workspace/workshop/skills/:skillId	
+105	RES2Oo02cFf	首页 / 创赛工坊 / 数据复盘	合并	/competitions/:competitionId/workspace/workshop/skills/:skillId	
+106	3mtV3n2fZnk	首页 / 创赛工坊 / 项目冲刺	合并	/competitions/:competitionId/workspace/workshop/skills/:skillId	
+107	m1Wm5cddrbq	首页 / 创赛工坊 / 职业规划	合并	/competitions/:competitionId/workspace/workshop/skills/:skillId	
+108	yuVA6D-vUPI	首页 / 创赛工坊 / 平台运营 / 动态答题（S3）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+109	NvyVJ-TZHkr	首页 / 创赛工坊 / 平台运营 / 生成确认 (S3文案)	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+110	eaHngX8T2lR	首页 / 创赛工坊 / 平台运营 / 生成确认 (S3图)	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+111	TcLU6oorSfm	首页 / 创赛工坊 / 平台运营 / 任务进度 (S3)	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+112	grhu2KVTnMi	首页 / 创赛工坊 / 平台运营 / 成果详情 (S3)	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+113	BrY7OiMV12F	首页 / 创赛工坊 / 平台运营 / 成果详情 (S3图)	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+114	Z7gG7a5s9sl	首页 / 创赛工坊 / 项目冲刺 / 动态答题（S5）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+115	LoJ1T-mInD4	首页 / 创赛工坊 / 项目冲刺 / 动态答题（S5PPT）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+116	lSGfLUSkQEA	首页 / 创赛工坊 / 项目冲刺 / 生成确认 (S5PPT)	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+117	N40aWr75Dzm	首页 / 创赛工坊 / 项目冲刺 / 任务进度（S5）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+118	hAntNAAm8Y1	首页 / 创赛工坊 / 项目冲刺 / 成果详情 (S5PPT)	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+119	BMfUFNUPxIK	首页 / 创赛工坊 / 项目洞察 / 动态答题（S1）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+120	StRlNOcYpz5	首页 / 创赛工坊 / 项目洞察 / 生成确认（S1）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+121	9zqr6eD1uqX	首页 / 创赛工坊 / 项目洞察 / 任务进度 （S1）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+122	FLlZeL7gII3	首页 / 创赛工坊 / 项目洞察 / 成果详情（S1）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+123	Xr3uWosE8SZ	首页 / 创赛工坊 / 数据复盘 / 动态答题（S4）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+124	mte2SoKv_Mk	首页 / 创赛工坊 / 数据复盘 / 生成确认（S4）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+125	13KPy1FjUSo	首页 / 创赛工坊 / 数据复盘 / 任务进度 （S4）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+126	5aCAczfMair	首页 / 创赛工坊 / 数据复盘 / 成果详情（S4）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+127	2HL3hmo61yI	首页 / 创赛工坊 / 项目诊断 / 动态答题（S2）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+128	RGqf84hBChm	首页 / 创赛工坊 / 项目诊断 / 生成确认（S2）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+129	XLe6Dq-Jpxg	首页 / 创赛工坊 / 项目诊断 / 任务进度 (S2)	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+130	fEWbRFyTq5Z	首页 / 创赛工坊 / 项目诊断 / 成果详情（S2）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+131	_JWEeBfvi6p	首页 / 创赛工坊 / 职业规划 / 动态答题（S6）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+132	GwrjRMXg7_Z	首页 / 创赛工坊 / 职业规划 / 生成确认（S6）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+133	n3k1Xv0AGBg	首页 / 创赛工坊 / 职业规划 / 任务进度 （S6）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+134	GTKh2KotWj9	首页 / 创赛工坊 / 职业规划 / 成果详情（S6）	合并	/competitions/:competitionId/workspace/workshop/tasks/:taskId/*	
+135	RMD5xI6q6tb	首页 / 赛友风采 / 赛友故事详情	保留	/stories/:storyId	
+136	FwutIL-NpaL	首页 / 赛友风采 / 公众号内容详情	保留	/stories/:storyId	
+137	v9hhV81q9G5	首页 / 赛友风采 / 更多列表页	合并	/stories	
+138	dHEfsTFRun2	首页 / 赛友风采 / 投稿页	保留	/stories/submit	
+139	eHx-DBqwJ56	首页 / 智能客服 / 人工客服	合并	/support/chat	
+140	bFdMU5BhfR3	首页 / 智能客服 / 请求人工客服	合并	/support/chat	

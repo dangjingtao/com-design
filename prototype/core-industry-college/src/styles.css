@@ -1,0 +1,8 @@
+@import "../../../design-source/colors_and_type.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { background: var(--color-background); }
+body { margin: 0; min-width: 320px; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+* { box-sizing: border-box; }
