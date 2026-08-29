@@ -58,10 +58,12 @@ Use the following files according to their role:
 | Need | Source |
 | --- | --- |
 | Design context, principles, usage narrative | `design-source/README.md` |
+| Human-readable Core UX Pattern guidance | `design-source/UX_PATTERNS.md` |
 | Structured token understanding | `design-source/css.json` |
 | Runtime token variables, themes, density, platform and motion | `design-source/colors_and_type.css` |
 | Component catalog | `design-source/components/index.json` |
 | Exact component intent, anatomy, variants and restrictions | `design-source/components/{slug}.json` |
+| Canonical Core UX Pattern contracts | `design-source/specs/core-patterns.json` |
 | Structured system model and governance | `design-source/specs/design-system-v1.json` |
 | Visual/DOM reference for a component | `design-source/preview/component-{slug}.html` |
 | Penpot workflow | `design-source/PENPOT_MCP_PLAYBOOK.md` |
@@ -76,6 +78,8 @@ design.md
 -> design-source/colors_and_type.css
 -> design-source/components/index.json
 -> design-source/components/{slug}.json
+-> design-source/UX_PATTERNS.md when multiple components/states/flows must compose
+-> design-source/specs/core-patterns.json for exact Pattern contracts
 -> design-source/preview/component-{slug}.html
 ```
 
@@ -191,6 +195,14 @@ Current canonical Core patterns:
 
 - `statusComposition`
 - `searchPattern`
+- `collectionFilter`
+- `stateToAction`
+- `intentContinuity`
+- `contextualNextStep`
+
+Their canonical machine source is `design-source/specs/core-patterns.json`; `design-source/UX_PATTERNS.md` is the human-readable guide.
+
+A Pattern SHOULD be promoted to Core only when its intent and behavior remain reusable without product-domain names, page names or business-specific state enums.
 
 ### 5.5 Product extension
 
@@ -540,7 +552,7 @@ Core product UI SHOULD NOT use:
 
 ## 9. Component model
 
-Com Design V1 contains **33 Core Components** and **2 Core Patterns**.
+Com Design V1 contains **33 Core Components** and **6 Core UX Patterns**.
 
 ### 9.1 Actions & Forms — 8
 
@@ -595,14 +607,33 @@ Menu
 Menu Item
 ```
 
-### 9.5 Core Patterns — 2
+### 9.5 Core UX Patterns — 6
 
 ```text
 Status Composition
 Search Pattern
+Collection Filter
+State to Action
+Intent Continuity / Handoff
+Contextual Next Step
 ```
 
-### 9.6 Component contract rules
+Patterns do **not** increase the Core Component count. They define reusable multi-component UX behavior and composition.
+
+### 9.6 Pattern contract rules
+
+Before inventing a product-local multi-component flow, read `design-source/UX_PATTERNS.md` and `design-source/specs/core-patterns.json`.
+
+Promote a solution to Core Pattern only when:
+
+- multiple products or domains can reuse the same intent and behavior;
+- the pattern can be described without business-specific state enums or page names;
+- existing Core Components already provide most of the anatomy;
+- the real design problem is state, hierarchy, sequence, context or handoff rather than a missing independent control.
+
+Do not create a new Core Component merely to hide a few lines of product composition.
+
+### 9.7 Component contract rules
 
 Before implementing or modifying a component, read its `design-source/components/{slug}.json` contract.
 
@@ -621,7 +652,7 @@ A mature component definition SHOULD cover:
 
 Do not infer a new variant from visual convenience when the contract does not support it. Extend the contract first when a reusable new variant is genuinely needed.
 
-### 9.7 State completeness
+### 9.8 State completeness
 
 Interactive components SHOULD account for all relevant states, including where applicable:
 
@@ -639,7 +670,7 @@ expanded / collapsed
 
 Do not use `disabled` to represent `read-only`; they carry different interaction and accessibility semantics.
 
-### 9.8 Primary action hierarchy
+### 9.9 Primary action hierarchy
 
 A view or action group SHOULD normally have one clear highest-priority primary action.
 
@@ -707,6 +738,19 @@ Choose feedback by meaning:
 - brief operation result -> Toast/Snackbar according to action requirements.
 
 Do not use a generic empty state to hide a network or permission error.
+
+### 10.6 Core UX Pattern application
+
+Use the six Core UX Patterns when the design problem spans multiple components:
+
+- **Status Composition** — state + explanation + optional evidence/recovery;
+- **Search Pattern** — query + result state + intent preservation;
+- **Collection Filter** — committed filter truth + draft editing + active condition feedback;
+- **State to Action** — authoritative state determines the single strongest available action;
+- **Intent Continuity / Handoff** — preserve the user's original task across login, authorization or external flows;
+- **Contextual Next Step** — preserve active context and derive one meaningful next step from workflow state.
+
+Detailed anatomy, rules and avoid-cases are defined in `design-source/UX_PATTERNS.md` and `design-source/specs/core-patterns.json`.
 
 ---
 
@@ -862,7 +906,21 @@ A Core component change SHOULD include:
 
 Behavior-heavy components MUST NOT be blindly generated from JSON contracts. Native accessibility, gestures, focus, controlled state, overlays and platform behavior still require explicit implementation.
 
-### 14.4 Deprecation and removal
+### 14.4 Adding or changing a Core Pattern
+
+A Core Pattern change SHOULD include:
+
+1. reusable intent independent of one product domain;
+2. explicit anatomy and participating components;
+3. state/hierarchy/sequence rules;
+4. avoid-cases that prevent over-styling or state duplication;
+5. human-readable guidance in `design-source/UX_PATTERNS.md`;
+6. machine-readable update in `design-source/specs/core-patterns.json`;
+7. validation against at least one realistic multi-state flow before stable promotion.
+
+Patterns MUST NOT be counted as Core Components or used to smuggle product-specific business objects into Core.
+
+### 14.5 Deprecation and removal
 
 Breaking removal requires a deprecation period.
 
@@ -873,7 +931,7 @@ A deprecation SHOULD state:
 - migration impact;
 - target removal version/date when known.
 
-### 14.5 Versioning
+### 14.6 Versioning
 
 `dev` is the integration and verification branch. `main` represents the stable design-system release.
 
@@ -935,12 +993,13 @@ Before considering a Core design change complete, verify:
 - [ ] iOS and Android touch/platform differences were considered.
 - [ ] Motion has a reduced-motion path where relevant.
 - [ ] Component anatomy and states are complete.
+- [ ] Multi-component UX uses an existing Core Pattern or documents why a new reusable Pattern is needed.
 - [ ] Text, icons and color do not carry critical meaning through color alone.
 - [ ] Primary/brand-filled treatment is limited to genuinely dominant actions or selected emphasis rather than repeated across ordinary actions.
 - [ ] Contrast and rendered accessibility are testable.
 - [ ] Product UI uses semantic rather than primitive values.
 - [ ] No unnecessary gradient, glow, shadow, oversized card or invented radius was introduced.
-- [ ] Structured source and component contract are updated before downstream artifacts.
+- [ ] Structured source and component/pattern contract are updated before downstream artifacts.
 - [ ] Validation/build checks pass.
 - [ ] Human documentation remains consistent and historical accepted reports remain intact.
 
@@ -955,7 +1014,12 @@ Need grouping?            -> Section first, Card only if containment is needed.
 Need primary action?      -> Brand Indigo, normally one dominant action per view/action group.
 Need supporting action?   -> Secondary neutral surface; use Tertiary/text when less emphasis is enough.
 Need local highlight?     -> Accent Cyan may be appropriate.
-Need status?              -> Semantic status foreground + readable text; Info defaults to a neutral container.
+Need status?              -> Status Composition; semantic foreground + readable text, Info defaults to a neutral container.
+Need search?              -> Search Pattern; preserve query intent and distinct result states.
+Need mobile filtering?    -> Collection Filter; page owns committed state, sheet owns draft state.
+Need state-dependent CTA? -> State to Action; explain the state and expose one strongest available action.
+Need login/external hop?  -> Intent Continuity; preserve safe return target and map result back to existing state.
+Need long workflow?       -> Contextual Next Step; preserve active context and derive one meaningful next step.
 Need spacing?             -> Use existing spacing tokens; do not invent 10/14/18/etc.
 Need radius?              -> 8 control / 12 container / 16 overlay.
 Need depth?               -> Border/surface first; shadow only for floating/modal layers.
