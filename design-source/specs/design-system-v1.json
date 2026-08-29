@@ -39,15 +39,23 @@
     "feedbackOverlayProgress": ["toast","snackbar","alert","dialog","bottomSheet","loadingIndicator","skeleton","emptyState","progressIndicator","stepper","timeline"],
     "searchMenu": ["searchField","menu","menuItem"]
   },
-  "corePatterns": ["statusComposition","searchPattern"],
-  "legacyEmbeddedPatternEntries": {
-    "feedback-overlay-progress.json": ["statusComposition"],
-    "search-menu.json": ["searchPattern"],
-    "policy": "These phase-contract entries are compatibility copies from pre-release authoring. Canonical pattern definitions come from core-patterns.json and must not be counted as Core Components."
+  "corePatterns": [
+    "statusComposition",
+    "searchPattern",
+    "collectionFilter",
+    "stateToAction",
+    "intentContinuity",
+    "contextualNextStep"
+  ],
+  "patternPolicy": {
+    "countedAsCoreComponents": false,
+    "businessDomainEnumsInCore": false,
+    "canonicalSource": "core-patterns.json",
+    "promotionRule": "Promote a recurring multi-component UX solution only when its intent and behavior remain reusable without product-domain names or state enums."
   },
   "counts": {
     "coreComponents": 33,
-    "corePatterns": 2
+    "corePatterns": 6
   },
   "themeResolution": {
     "logicalNamespace": "semantic.light",
