@@ -76,7 +76,7 @@
     },
     "status": {
       "com-status-info-text": {
-        "hex": "#393bbe",
+        "hex": "#494ce0",
         "opacity": "1"
       },
       "com-status-danger-text": {
@@ -109,7 +109,7 @@
         "opacity": "1"
       },
       "com-status-info-bg": {
-        "hex": "#f0f1ff",
+        "hex": "#f0f2f8",
         "opacity": "1"
       },
       "com-status-warning-bg": {
@@ -170,7 +170,7 @@
         "opacity": "1"
       },
       "com-text-placeholder": {
-        "hex": "#535d72",
+        "hex": "#687288",
         "opacity": "1"
       },
       "com-text-brand": {
@@ -237,7 +237,7 @@
         "opacity": "1"
       },
       "com-border-default": {
-        "hex": "#8590a3",
+        "hex": "#cdd3e1",
         "opacity": "1"
       },
       "com-border-subtle": {
@@ -260,11 +260,11 @@
         "opacity": "1"
       },
       "com-action-secondary-pressed": {
-        "hex": "#e3e5ff",
+        "hex": "#e2e6f0",
         "opacity": "1"
       },
       "com-action-secondary": {
-        "hex": "#f0f1ff",
+        "hex": "#f0f2f8",
         "opacity": "1"
       }
     },
