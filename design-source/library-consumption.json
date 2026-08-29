@@ -4,6 +4,7 @@
   "componentIndex": "components/index.json",
   "patternGuide": "UX_PATTERNS.md",
   "patternSource": "specs/core-patterns.json",
+  "patternPreview": "preview/core-ux-patterns.html",
   "recommendedReadOrder": [
     "SKILL.md",
     "README.md",
@@ -13,6 +14,7 @@
     "components/{slug}.json",
     "UX_PATTERNS.md",
     "specs/core-patterns.json",
+    "preview/core-ux-patterns.html",
     "preview/component-{slug}.html"
   ],
   "coreComponents": ["button","input","list-item","card","tag","bottom-navigation"],
