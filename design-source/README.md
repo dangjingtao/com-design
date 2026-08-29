@@ -2,7 +2,7 @@
 
 Com Design Mobile 是一套公司级的移动端 Design System（版本 `1.0.0-rc.2`），不归属于任何单一业务产品，而是作为集团移动应用的共同视觉与交互地基。三创赛系列 App 是首批消费方，但 token、组件契约与密度规则在落地到具体产品时不得被改写——产品侧只能在 Core 之上做扩展。系统的整体气质可以概括为 *"Modern / Clear / Light / Efficient"*，并在工程上坚持 *"Compact-first、Flat-first、信息层级优先于装饰"*。本文档基于 `com-design` phase5-foundation-hardening 的结构化 token 与组件契约重建，覆盖 Foundation tokens 与 **V1 全部 33 个核心组件**（分布在 Actions & Forms、Navigation & Information、Feedback / Overlay / Progress、Search & Menu 四个契约分组），以及一套移动端 UI kit，作为新加入设计师的入门 brief，而非 token 查阅手册。
 
-> *"Compact-first、Flat-first、信息层级优先于装饰"*；*"Product extension does not mutate Core"*；*"Section before Card"*；*"Accent Cyan is not the default active color for global navigation; reserve it for local emphasis, progress, data"*。
+> *"Compact-first、Flat-first、信息层级优先于装饰"*；*"Product extension does not mutate Core"*；*"Section before Card"*；*"Brand color is a scarce hierarchy signal"*；*"Accent Cyan is not the default active color for global navigation; reserve it for local emphasis, progress, data"*。
 
 ## CONTENT FUNDAMENTALS
 
@@ -31,11 +31,11 @@ Com Design 的文案是**中文优先、专业、克制、信息密度高**的�
 
 ### Color
 
-品牌主色是 **Electric Indigo `#5B5EF7`**——一个偏冷的靛蓝紫，既不是纯蓝也不是纯紫，承担主按钮、链接、选中态、聚焦边框与品牌文字。色阶从 `--com-brand-50 #F0F1FF`（极浅容器底）经过 `100 #E3E5FF`、`200 #C9CDFF`、`400 #7B7EF8`、`500 #5B5EF7`（@primary）、`600 #494CE0`（按下态），到 `700 #393BBE`（深色文字/强压）；暗色模式额外延伸出 `800 #30326F` 与 `900 #25264D` 作为选中容器底。**Cyan `#16BFD3` 是强调色而非第二品牌色**，仅服务于局部强调、进度条、数据可视化和小范围信号，不用作全局导航的默认激活色——导航激活归 Brand Indigo。Cyan 阶有 `50 #E9FCFF`、`100 #CAF7FB`、`500 #16BFD3`、`600 #0E9FB3`，暗色下补 `900 #123E44` 作为 subtle 底。
+品牌主色是 **Electric Indigo `#5B5EF7`**——一个偏冷的靛蓝紫，既不是纯蓝也不是纯紫，承担最高优先级主按钮、链接、选中态、聚焦边框与品牌文字。色阶从 `--com-brand-50 #F0F1FF`（极浅品牌/选中容器底）经过 `100 #E3E5FF`、`200 #C9CDFF`、`400 #7B7EF8`、`500 #5B5EF7`（@primary）、`600 #494CE0`，到 `700 #393BBE`（强压）；暗色模式额外延伸出 `800 #30326F` 与 `900 #25264D` 作为品牌选中容器底。**品牌色面积本身也是层级信号**：不要因为多个控件都能点击，就把它们全部处理成品牌填充。Secondary 默认使用中性浅底，把 Brand 留给真正的 Primary、选中与局部强调。**Cyan `#16BFD3` 是强调色而非第二品牌色**，仅服务于局部强调、进度条、数据可视化和小范围信号，不用作全局导航的默认激活色——导航激活归 Brand Indigo。Cyan 阶有 `50 #E9FCFF`、`100 #CAF7FB`、`500 #16BFD3`、`600 #0E9FB3`，暗色下补 `900 #123E44` 作为 subtle 底。
 
-中性色是 11 档灰度：`0 #FFFFFF` / `50 #F7F8FC`（页面底）/ `100 #F0F2F8`（卡片次底、按压）/ `200 #E2E6F0`（分割/禁用）/ `300 #CDD3E1` / `400 #8590A3`（默认边框）/ `500 #687288`（占位、三级文字）/ `600 #535D72`（二级文字）/ `700 #394156` / `800 #252B3D`（主文字）/ `900 #171B2A`（暗色卡片底）。注意这套中性色是**冷灰而非纯灰**，与靛蓝主色在色温上对齐。文字层级：主文字 `--com-text-primary`（neutral-800）、二级 neutral-600、三级/占位/禁用 neutral-500，反色为 neutral-0。
+中性色是 11 档灰度：`0 #FFFFFF` / `50 #F7F8FC`（页面底）/ `100 #F0F2F8`（次底、按压、Secondary、Info 容器）/ `200 #E2E6F0`（分割/禁用/Secondary pressed）/ `300 #CDD3E1`（默认边框）/ `400 #8590A3` / `500 #687288`（占位、三级文字、强边界）/ `600 #535D72`（二级文字）/ `700 #394156` / `800 #252B3D`（主文字）/ `900 #171B2A`（暗色卡片底）。注意这套中性色是**冷灰而非纯灰**，与靛蓝主色在色温上对齐。文字层级：主文字 `--com-text-primary`（neutral-800）、二级 neutral-600、三级/占位/禁用 neutral-500，反色为 neutral-0。
 
-语义色采用"底 + 文"成对配置，避免纯饱和色直接铺大块：Success `#21B66F` 配 `#DDF8EA` 底与 `#147A4C` 文字；Warning `#F3A21B` 配 `#FFF2D6` 底与 `#9A6110` 文字；Danger `#D63E50` 配 `#FFE4E8` 底与 `#A92939` 文字；Info 直接复用 Brand 阶（`#5B5EF7` / `#F0F1FF` 底 / `#393BBE` 文字）。暗色下底色切到 900 档深色、文字切到 100 档浅色，保持对比度。遮罩统一为 `rgba(0,0,0,0.52)`（暗色 `0.6`）。整体色彩气质克制、偏冷、工程感，不使用默认渐变。
+语义色采用"底 + 文"成对配置，避免纯饱和色直接铺大块：Success `#21B66F` 配 `#DDF8EA` 底与 `#147A4C` 文字；Warning `#F3A21B` 配 `#FFF2D6` 底与 `#9A6110` 文字；Danger `#D63E50` 配 `#FFE4E8` 底与 `#A92939` 文字；Info 保留 Brand Indigo 的前景识别（`#5B5EF7` / `#494CE0`），但默认容器底使用 neutral-100 `#F0F2F8`，避免 Info、Selected、Secondary 同时铺成一片浅紫。暗色下 Info 同样使用中性深底 + 品牌前景，其余状态底色切到各自 900 档深色、文字切到 100 档浅色，保持对比度。遮罩统一为 `rgba(0,0,0,0.52)`（暗色 `0.6`）。整体色彩气质克制、偏冷、工程感，不使用默认渐变。
 
 ### Typography
 
@@ -57,7 +57,7 @@ Com Design 的文案是**中文优先、专业、克制、信息密度高**的�
 
 ### Borders
 
-边框宽度只有 `1px`（控件、卡片、分割线）与 `2px`（聚焦态外环）两种。颜色按语义分五档：`subtle` neutral-200（分割、弱描边）、`default` neutral-400（输入框默认）、`strong` neutral-500（强调边界）、`focused` brand-500（键盘聚焦）、`error` danger-500（校验失败）。禁止用阴影替代边框，也禁止使用 0.5px 以下的 hairline——在低密度移动屏上会发虚。
+边框宽度只有 `1px`（控件、卡片、分割线）与 `2px`（聚焦态外环）两种。颜色按语义分五档：`subtle` neutral-200（分割、弱描边）、`default` neutral-300（输入框/普通控件默认）、`strong` neutral-500（强调边界）、`focused` brand-500（键盘聚焦）、`error` danger-500（校验失败）。普通边界刻意降低重量，不用 `strong` 去承担日常分隔。禁止用阴影替代边框，也禁止使用 0.5px 以下的 hairline——在低密度移动屏上会发虚。
 
 ## COMPONENT PATTERNS
 
@@ -67,7 +67,7 @@ V1 核心组件共 **33 个**，按四个契约分组排列：Actions & Forms（
 
 | 组件 | 类别 | 一句话设计要点 |
 |---|---|---|
-| Button | 动作 | 扁平 Electric Indigo 主按钮，40/48px，无阴影，主次/描边/幽灵/危险层级 |
+| Button | 动作 | Primary 为稀缺层级信号；Secondary 中性浅底；40/48px，无阴影，主次/文字/危险层级明确 |
 | Icon Button | 动作 | 40/48px 方形图标按钮，ghost/subtle/destructive 三种样式，视觉尺寸与点击区分离 |
 | Input | 表单输入 | outlined 文本框，字段级校验优先，readonly 与 disabled 语义分离 |
 | Textarea | 表单输入 | 多行输入，88px 最小高，可选字数计数，继承 Input 状态 |
