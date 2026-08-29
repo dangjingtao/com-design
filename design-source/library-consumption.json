@@ -2,7 +2,27 @@
   "schemaVersion": 1,
   "tokenSource": "css.json",
   "componentIndex": "components/index.json",
-  "recommendedReadOrder": ["SKILL.md","README.md","css.json","colors_and_type.css","components/index.json","components/{slug}.json","preview/component-{slug}.html"],
+  "patternGuide": "UX_PATTERNS.md",
+  "patternSource": "specs/core-patterns.json",
+  "recommendedReadOrder": [
+    "SKILL.md",
+    "README.md",
+    "css.json",
+    "colors_and_type.css",
+    "components/index.json",
+    "components/{slug}.json",
+    "UX_PATTERNS.md",
+    "specs/core-patterns.json",
+    "preview/component-{slug}.html"
+  ],
   "coreComponents": ["button","input","list-item","card","tag","bottom-navigation"],
+  "corePatterns": [
+    "statusComposition",
+    "searchPattern",
+    "collectionFilter",
+    "stateToAction",
+    "intentContinuity",
+    "contextualNextStep"
+  ],
   "supportComponents": []
 }
