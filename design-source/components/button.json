@@ -57,15 +57,18 @@
     "icon-only buttons keep square hit area ≥ size-control-height"
   ],
   "usageHints": [
-    "Primary appears once per view for the highest-priority action",
-    "Tertiary has no background/border and uses brand text color",
-    "Destructive reserved for irreversible actions",
+    "Primary is a scarce hierarchy signal: normally one highest-priority primary action per view or action group",
+    "Do not promote every available action to Primary; use Secondary for visible supporting actions and Tertiary for low-emphasis actions",
+    "When Primary and supporting actions appear together, avoid multiple brand-filled buttons competing in the same visual region",
+    "Secondary uses a neutral surface by default so action importance is not confused with brand-color area",
+    "Destructive is reserved for irreversible actions and does not compete with Primary unless destruction is the current confirmed task",
     "Visual height differs from platform hit target (iOS 44 / Android 48)"
   ],
   "doNotInvent": [
     "no gradient or glow on primary (flat-first)",
     "no default shadow on button",
-    "no accent-cyan primary color"
+    "no accent-cyan primary color",
+    "no repeated primary-filled treatment merely because several actions are clickable"
   ],
   "unknowns": ["exact loading-spinner-in-button spacing not specified in RC2"]
 }
