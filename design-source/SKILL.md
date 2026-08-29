@@ -6,7 +6,7 @@ user-invocable: true
 
 # Com Design Mobile Design Skill
 
-Read `README.md` for brand context, then consume `css.json` for structured tokens and `colors_and_type.css` as the runtime CSS variable source. For multi-component UX decisions, read `UX_PATTERNS.md` and `specs/core-patterns.json` before inventing product-local compositions. For production code, link the token CSS; for visual prototypes, copy preview patterns. If invoked without guidance, ask what to build and output HTML artifacts or production code as needed.
+Read `README.md` for brand context, then consume `css.json` for structured tokens and `colors_and_type.css` as the runtime CSS variable source. For multi-component UX decisions, read `UX_PATTERNS.md` and `specs/core-patterns.json` before inventing product-local compositions; use `preview/core-ux-patterns.html` for a visual reference. For production code, link the token CSS; for visual prototypes, copy preview patterns. If invoked without guidance, ask what to build and output HTML artifacts or production code as needed.
 
 ## Quick map
 
@@ -18,6 +18,7 @@ Read `README.md` for brand context, then consume `css.json` for structured token
 - `components/index.json` — 33 Core Component index
 - `components/button.json`, `components/input.json`, `components/list-item.json`, `components/card.json`, `components/tag.json`, `components/bottom-navigation.json` — component contracts for intent and variants
 - `preview/component-button.html`, `preview/component-input.html`, `preview/component-list-item.html`, `preview/component-card.html`, `preview/component-tag.html`, `preview/component-bottom-navigation.html` — DOM/CSS source; read preview first, component JSON for intent, and evidence as fallback when available
+- `preview/core-ux-patterns.html` — visual composition reference for all six Core UX Patterns
 - `specs/core-patterns.json` — canonical machine-readable Core UX Pattern contracts
 - `specs/design-system-v1.json` — structured design-system manifest
 - `library-consumption.json` — downstream read order
