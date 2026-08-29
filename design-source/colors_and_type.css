@@ -57,7 +57,7 @@
   --com-text-primary: var(--com-neutral-800);
   --com-text-secondary: var(--com-neutral-600);
   --com-text-tertiary: var(--com-neutral-500);
-  --com-text-placeholder: var(--com-neutral-600);
+  --com-text-placeholder: var(--com-neutral-500);
   --com-text-disabled: var(--com-neutral-500);
   --com-text-inverse: var(--com-neutral-0);
   --com-text-brand: var(--com-brand-600);
@@ -91,7 +91,7 @@
 
   /* border */
   --com-border-subtle: var(--com-neutral-200);
-  --com-border-default: var(--com-neutral-400);
+  --com-border-default: var(--com-neutral-300);
   --com-border-strong: var(--com-neutral-500);
   --com-border-focused: var(--com-brand-500);
   --com-border-error: var(--com-danger-500);
@@ -106,8 +106,8 @@
   /* action */
   --com-action-primary: var(--com-brand-500);
   --com-action-primary-pressed: var(--com-brand-700);
-  --com-action-secondary: var(--com-brand-50);
-  --com-action-secondary-pressed: var(--com-brand-100);
+  --com-action-secondary: var(--com-neutral-100);
+  --com-action-secondary-pressed: var(--com-neutral-200);
   --com-action-destructive: var(--com-danger-500);
   --com-action-destructive-pressed: var(--com-danger-700);
   --com-action-disabled: var(--com-neutral-200);
@@ -135,8 +135,8 @@
   --com-status-danger-bg: var(--com-danger-100);
   --com-status-danger-text: var(--com-danger-700);
   --com-status-info: var(--com-brand-500);
-  --com-status-info-bg: var(--com-brand-50);
-  --com-status-info-text: var(--com-brand-700);
+  --com-status-info-bg: var(--com-neutral-100);
+  --com-status-info-text: var(--com-brand-600);
 
   --com-scrim: rgba(0,0,0,0.52);
 
@@ -327,7 +327,7 @@
   --com-text-primary: var(--com-neutral-50);
   --com-text-secondary: var(--com-neutral-300);
   --com-text-tertiary: var(--com-neutral-400);
-  --com-text-placeholder: var(--com-neutral-300);
+  --com-text-placeholder: var(--com-neutral-400);
   --com-text-disabled: var(--com-neutral-400);
   --com-text-inverse: var(--com-neutral-0);
   --com-text-brand: var(--com-brand-200);
@@ -343,7 +343,7 @@
 
   /* border */
   --com-border-subtle: var(--com-neutral-800);
-  --com-border-default: var(--com-neutral-500);
+  --com-border-default: var(--com-neutral-600);
   --com-border-strong: var(--com-neutral-400);
   --com-border-focused: var(--com-brand-400);
   --com-border-error: var(--com-danger-500);
@@ -351,8 +351,8 @@
   /* action */
   --com-action-primary: var(--com-brand-500);
   --com-action-primary-pressed: var(--com-brand-600);
-  --com-action-secondary: var(--com-brand-900);
-  --com-action-secondary-pressed: var(--com-brand-800);
+  --com-action-secondary: var(--com-neutral-800);
+  --com-action-secondary-pressed: var(--com-neutral-700);
   --com-action-destructive: var(--com-danger-500);
   --com-action-destructive-pressed: var(--com-danger-700);
   --com-action-disabled: var(--com-neutral-700);
@@ -373,7 +373,7 @@
   --com-status-danger-bg: var(--com-danger-900);
   --com-status-danger-text: var(--com-danger-100);
   --com-status-info: var(--com-brand-400);
-  --com-status-info-bg: var(--com-brand-900);
+  --com-status-info-bg: var(--com-neutral-800);
   --com-status-info-text: var(--com-brand-100);
 
   --com-scrim: rgba(0,0,0,0.6);
