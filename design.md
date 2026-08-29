@@ -3,7 +3,7 @@
 > **Status:** Release Candidate (`1.0.0-rc.2`)  
 > **Scope:** Company Mobile Core  
 > **Platforms:** iOS / Android, with Tailwind / NativeWind / React Native consumers  
-> **Last updated:** 2026-08-12
+> **Last updated:** 2026-08-29
 
 `design.md` is the canonical human-facing entry point for using Com Design correctly.
 
@@ -126,6 +126,8 @@ Interfaces SHOULD feel restrained, quick, structured and slightly technical rath
 
 Use whitespace to separate information, not to create oversized marketing layouts. Use color to identify action, status and emphasis, not to decorate every region.
 
+**Brand color is a scarce hierarchy signal.** A screen MAY contain many actions, but it SHOULD contain very few brand-filled regions. Importance, clickability and brand-color area are separate decisions.
+
 ### 4.2 What Com Design is not
 
 Core UI MUST NOT default to:
@@ -135,6 +137,7 @@ Core UI MUST NOT default to:
 - decorative shadows on ordinary cards/buttons/list items;
 - oversized rounded containers around every content group;
 - Cyan as a second global brand/active-navigation color;
+- repeated brand-filled buttons merely because several actions are available;
 - arbitrary one-off colors, radii, spacing or font sizes;
 - visual states communicated by color alone.
 
@@ -244,11 +247,13 @@ Electric Indigo #5B5EF7
 
 Brand Indigo is used for:
 
-- primary actions;
-- links;
-- selected/active navigation;
+- the highest-priority primary action;
+- links and selected/active navigation;
 - focus indication;
-- brand text and information emphasis.
+- brand text and selected-state emphasis;
+- informational foreground emphasis where appropriate.
+
+Brand Indigo SHOULD NOT be used as the default fill for every clickable control or informational container.
 
 #### Accent
 
@@ -282,6 +287,8 @@ Prefer semantic roles such as:
 --color-border
 ```
 
+Default supporting actions and common informational containers MAY use neutral subtle surfaces so that brand color remains available for true hierarchy emphasis.
+
 Do not hard-code palette steps in product screens when a semantic role exists.
 
 #### Status
@@ -292,6 +299,8 @@ Status uses paired foreground/background semantics:
 - Warning
 - Danger
 - Info
+
+Info uses Brand Indigo as foreground emphasis, but its default container background is neutral-subtle rather than a second large brand-tinted region.
 
 Critical state MUST NOT be communicated through color alone. Pair color with text and, when useful, an icon shape.
 
@@ -405,6 +414,8 @@ Use semantic border roles:
 ```text
 subtle / default / strong / focused / error
 ```
+
+The default light-theme border maps to the quieter neutral-300 level; use `strong` only when a boundary genuinely needs extra emphasis.
 
 Do not use shadow as a substitute for a required boundary.
 
@@ -630,11 +641,20 @@ Do not use `disabled` to represent `read-only`; they carry different interaction
 
 ### 9.8 Primary action hierarchy
 
-A view SHOULD normally have one clear highest-priority primary action.
+A view or action group SHOULD normally have one clear highest-priority primary action.
 
-Destructive treatment is reserved for destructive or difficult-to-recover actions.
+Primary is a **scarce hierarchy signal**, not the default style for every available action.
 
-Do not style multiple unrelated actions as equally dominant merely to make the screen look balanced.
+Use:
+
+- **Primary** for the single strongest next step;
+- **Secondary** for visible supporting actions that still need a control surface;
+- **Tertiary / text action** for low-emphasis, navigational or auxiliary actions;
+- **Destructive** only for destructive or difficult-to-recover actions.
+
+Secondary uses a neutral subtle surface by default. Supporting actions MUST NOT become extra brand-filled blocks just to look equally actionable.
+
+When several actions coexist, reduce visual competition before adding more color: choose one primary, demote support actions, and move overflow actions into an appropriate menu or sheet when the task does not require simultaneous visibility.
 
 ---
 
@@ -658,6 +678,10 @@ Build hierarchy in this order:
 4. semantic foreground/background color;
 5. border;
 6. elevation only when necessary.
+
+Color density is part of hierarchy. Before adding a brand-tinted container, ask whether spacing, typography, neutral surface or a simple foreground accent already communicates the distinction.
+
+Avoid stacking several simultaneous signals such as brand background + brand icon container + status tint + primary button in the same region unless each carries a distinct, necessary meaning.
 
 ### 10.3 Navigation
 
@@ -805,6 +829,7 @@ The following policies are part of the current system contract:
 - component-to-primitive references are forbidden by default;
 - product extensions cannot mutate Core;
 - critical state cannot be color-only;
+- brand-filled area is a hierarchy resource and is not the default treatment for all clickable or informational surfaces;
 - ordinary information surfaces do not receive default shadow;
 - blocking modal stack depth is one;
 - deprecation is required before removal;
@@ -911,6 +936,7 @@ Before considering a Core design change complete, verify:
 - [ ] Motion has a reduced-motion path where relevant.
 - [ ] Component anatomy and states are complete.
 - [ ] Text, icons and color do not carry critical meaning through color alone.
+- [ ] Primary/brand-filled treatment is limited to genuinely dominant actions or selected emphasis rather than repeated across ordinary actions.
 - [ ] Contrast and rendered accessibility are testable.
 - [ ] Product UI uses semantic rather than primitive values.
 - [ ] No unnecessary gradient, glow, shadow, oversized card or invented radius was introduced.
@@ -926,9 +952,10 @@ When unsure, use these defaults:
 
 ```text
 Need grouping?            -> Section first, Card only if containment is needed.
-Need primary action?      -> Brand Indigo, usually one dominant action per view.
+Need primary action?      -> Brand Indigo, normally one dominant action per view/action group.
+Need supporting action?   -> Secondary neutral surface; use Tertiary/text when less emphasis is enough.
 Need local highlight?     -> Accent Cyan may be appropriate.
-Need status?              -> Semantic status color + readable text, not color alone.
+Need status?              -> Semantic status foreground + readable text; Info defaults to a neutral container.
 Need spacing?             -> Use existing spacing tokens; do not invent 10/14/18/etc.
 Need radius?              -> 8 control / 12 container / 16 overlay.
 Need depth?               -> Border/surface first; shadow only for floating/modal layers.
