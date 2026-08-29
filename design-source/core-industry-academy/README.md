@@ -2,6 +2,10 @@
 
 本目录登记“核心产业学院”移动端原型的原始交付包，用于 Com Design 适配、页面评审与后续设计重构。
 
+## Field notes
+
+- [`ux-practice-feedback.md`](./ux-practice-feedback.md) — 核心产业学院 `dev` 的 UX 实践回流观察；当前为 Non-normative，不直接修改 Core。
+
 ## Mockplus 离线原型
 
 - 项目名：`核心产业学院 - 副本 1`
