@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Core UX Patterns · Com Design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="../components.css">
+<style>
+  body { margin:0; background:var(--color-background); color:var(--color-text-primary); font-family:var(--font-family-base); }
+  main { width:min(100% - 24px, 820px); margin:0 auto; padding:24px 0 48px; }
+  header { margin-bottom:24px; }
+  h1 { margin:0; font:var(--type-title); }
+  header p { margin:8px 0 0; font:var(--type-body-small); color:var(--color-text-secondary); max-width:64ch; }
+  .pattern-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+  .pattern { background:var(--color-surface); border:1px solid var(--color-border-subtle); border-radius:var(--radius-container); padding:16px; display:flex; flex-direction:column; gap:14px; }
+  .pattern-head { display:flex; flex-direction:column; gap:4px; }
+  .eyebrow { font:var(--type-label-small); color:var(--color-text-brand); }
+  .pattern h2 { margin:0; font:var(--type-heading); }
+  .pattern-desc { margin:0; font:var(--type-body-small); color:var(--color-text-secondary); }
+  .demo { display:flex; flex-direction:column; gap:10px; padding:12px; border-radius:var(--radius-control); background:var(--color-background); }
+  .row { display:flex; align-items:center; gap:8px; min-width:0; }
+  .row.wrap { flex-wrap:wrap; }
+  .grow { flex:1; min-width:0; }
+  .title { font:var(--type-heading-small); margin:0; }
+  .meta { font:var(--type-caption); color:var(--color-text-tertiary); margin:2px 0 0; }
+  .body { font:var(--type-body-small); color:var(--color-text-secondary); margin:0; line-height:20px; }
+  .soft { background:var(--color-surface-subtle); border-radius:var(--radius-control); padding:10px 12px; }
+  .info-line { border-left:3px solid var(--color-info); background:var(--color-info-bg); border-radius:var(--radius-control); padding:10px 12px; }
+  .info-line strong { color:var(--color-info-text); font:var(--type-label); }
+  .actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .chip { display:inline-flex; min-height:28px; align-items:center; padding:0 9px; border-radius:var(--radius-pill); background:var(--color-surface-subtle); color:var(--color-text-secondary); font:var(--type-label-small); }
+  .chip.active { background:var(--color-surface-selected); color:var(--color-text-brand); }
+  .filter-trigger { min-height:40px; padding:0 12px; border:1px solid var(--color-border); border-radius:var(--radius-control); background:var(--color-surface); color:var(--color-text-primary); font:var(--type-label); }
+  .mini-sheet { border-top:1px solid var(--color-border-subtle); padding-top:10px; display:flex; flex-direction:column; gap:10px; }
+  .step-line { display:grid; grid-template-columns:24px 1fr; gap:9px; align-items:start; }
+  .step-dot { width:20px; height:20px; border-radius:50%; background:var(--color-surface-subtle); color:var(--color-text-tertiary); display:flex; align-items:center; justify-content:center; font:var(--type-label-small); }
+  .step-dot.current { background:var(--color-primary); color:var(--color-on-primary); }
+  .handoff { display:grid; grid-template-columns:1fr auto 1fr; gap:8px; align-items:center; }
+  .node { min-height:52px; display:flex; flex-direction:column; justify-content:center; gap:2px; padding:8px 10px; border-radius:var(--radius-control); background:var(--color-surface-subtle); }
+  .arrow { color:var(--color-text-tertiary); }
+  .search-demo { display:flex; align-items:center; gap:8px; min-height:40px; padding:0 12px; border-radius:var(--radius-control); background:var(--color-surface-subtle); border:1px solid transparent; }
+  .search-demo input { border:0; outline:0; min-width:0; flex:1; background:transparent; color:var(--color-text-primary); font:var(--type-body-small); }
+  .search-demo input::placeholder { color:var(--color-text-placeholder); }
+  footer { margin-top:20px; font:var(--type-caption); color:var(--color-text-tertiary); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Core UX Patterns</h1>
+    <p>6 个多组件 UX 组合示例。它们不增加 33 个 Core Component 的数量；示例只展示层级、状态、回流和上下文关系，机器契约以 <code>specs/core-patterns.json</code> 为准。</p>
+  </header>
+
+  <div class="pattern-grid">
+    <section class="pattern" id="status-composition">
+      <div class="pattern-head"><span class="eyebrow">01 · STATUS COMPOSITION</span><h2>状态组合</h2><p class="pattern-desc">状态不是一块颜色，而是可读状态 + 必要解释 + 下一步。</p></div>
+      <div class="demo">
+        <div class="row"><span class="tag tag-warning">待审核</span><div class="grow"><p class="title">资料已提交</p><p class="meta">预计 1–2 个工作日完成审核</p></div></div>
+        <p class="body">审核完成前可以继续浏览内容，但暂不能提交正式申请。</p>
+        <div class="actions"><button class="btn secondary">查看已提交资料</button><button class="btn tertiary">了解审核规则</button></div>
+      </div>
+    </section>
+
+    <section class="pattern" id="search-pattern">
+      <div class="pattern-head"><span class="eyebrow">02 · SEARCH PATTERN</span><h2>搜索</h2><p class="pattern-desc">查询、结果状态和返回后的搜索意图保持是一个完整任务。</p></div>
+      <div class="demo">
+        <label class="search-demo"><span aria-hidden="true">⌕</span><input value="产品设计" aria-label="搜索关键词"></label>
+        <p class="meta">共 18 条结果 · 返回此列表时保留当前查询</p>
+        <div class="soft"><p class="title">移动端设计系统实践</p><p class="meta">设计规范 · 12 分钟阅读</p></div>
+      </div>
+    </section>
+
+    <section class="pattern" id="collection-filter">
+      <div class="pattern-head"><span class="eyebrow">03 · COLLECTION FILTER</span><h2>集合筛选</h2><p class="pattern-desc">页面持有已提交条件，浮层只编辑 draft；筛选不是第二个主按钮。</p></div>
+      <div class="demo">
+        <div class="row"><div class="search-demo grow"><span aria-hidden="true">⌕</span><input placeholder="搜索项目"></div><button class="filter-trigger">筛选 · 2</button></div>
+        <div class="row wrap"><span class="chip active">进行中 ×</span><span class="chip active">移动端 ×</span><button class="btn tertiary">重置</button></div>
+        <div class="mini-sheet"><p class="meta">筛选浮层 draft</p><div class="row wrap"><span class="chip">全部</span><span class="chip active">进行中</span><span class="chip">已完成</span></div><div class="actions"><button class="btn tertiary">重置</button><button class="btn secondary">确定</button></div></div>
+      </div>
+    </section>
+
+    <section class="pattern" id="state-to-action">
+      <div class="pattern-head"><span class="eyebrow">04 · STATE TO ACTION</span><h2>状态到动作</h2><p class="pattern-desc">先判断权威状态，再决定用户现在唯一最重要的动作。</p></div>
+      <div class="demo">
+        <div class="row"><span class="tag tag-info">可继续</span><div class="grow"><p class="title">资料已补齐</p><p class="meta">下一步需要确认提交</p></div></div>
+        <div class="info-line"><strong>为什么现在可以提交？</strong><p class="body">必填资料已完成，当前没有待解决的阻塞项。</p></div>
+        <div class="actions"><button class="btn primary">确认提交</button><button class="btn secondary">再次检查</button><button class="btn tertiary">保存后退出</button></div>
+      </div>
+    </section>
+
+    <section class="pattern" id="intent-continuity">
+      <div class="pattern-head"><span class="eyebrow">05 · INTENT CONTINUITY</span><h2>意图连续与回流</h2><p class="pattern-desc">登录或外部流程只是暂时中断，不应该让用户丢掉原本要做的事。</p></div>
+      <div class="demo">
+        <div class="handoff"><div class="node"><strong>原任务</strong><span class="meta">提交申请</span></div><span class="arrow">→</span><div class="node"><strong>暂时中断</strong><span class="meta">登录 / 授权</span></div></div>
+        <div class="handoff"><div class="node"><strong>结果映射</strong><span class="meta">更新原状态</span></div><span class="arrow">→</span><div class="node"><strong>回到任务</strong><span class="meta">继续提交</span></div></div>
+        <button class="btn primary">登录并继续</button>
+      </div>
+    </section>
+
+    <section class="pattern" id="contextual-next-step">
+      <div class="pattern-head"><span class="eyebrow">06 · CONTEXTUAL NEXT STEP</span><h2>上下文下一步</h2><p class="pattern-desc">长流程不是把所有能力铺开，而是持续回答“我现在最该做什么”。</p></div>
+      <div class="demo">
+        <div class="soft"><p class="title">当前项目 · 春季发布</p><p class="meta">3 / 6 步已完成</p></div>
+        <div class="step-line"><span class="step-dot">✓</span><div><p class="title">需求确认</p><p class="meta">已完成</p></div></div>
+        <div class="step-line"><span class="step-dot current">4</span><div><p class="title">完成视觉验收</p><p class="meta">当前下一步</p></div></div>
+        <div class="step-line"><span class="step-dot">5</span><div><p class="title">准备发布</p><p class="meta">稍后可用</p></div></div>
+        <div class="actions"><button class="btn primary">继续视觉验收</button><button class="btn tertiary">查看全部步骤</button></div>
+      </div>
+    </section>
+  </div>
+
+  <footer>Com Design RC2 · Pattern examples are composition evidence, not standalone component definitions.</footer>
+</main>
+</body>
+</html>
