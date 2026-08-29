@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "scope": "company-mobile-core",
+  "status": "release-candidate",
+  "principle": "Core Patterns describe recurring multi-component UX solutions. They do not add Core Component count, do not encode product-domain state names, and do not authorize product extensions to mutate Core semantics.",
+  "patterns": [
+    {
+      "id": "statusComposition",
+      "name": "Status Composition",
+      "cn": "状态组合",
+      "intent": "Present a meaningful state with enough explanation and recovery context that users do not have to infer meaning from color or a badge alone.",
+      "components": ["Tag", "Alert", "Icon", "Text", "Button"],
+      "anatomy": ["state label", "optional explanation", "optional evidence/meta", "optional next or recovery action"],
+      "rules": [
+        "State text MUST be independently understandable without color.",
+        "Use status color as reinforcement, not as the only carrier of meaning.",
+        "Do not repeat the same status through a tinted card, tag, icon block and button simultaneously unless each element adds distinct meaning.",
+        "A recoverable state SHOULD expose the next available action close to the explanation.",
+        "Terminal states SHOULD explain what is finished or unavailable instead of presenting a disabled primary action without context."
+      ],
+      "avoid": [
+        "status-only color blocks with no readable state text",
+        "multiple same-color surfaces competing in one region",
+        "using Warning or Danger merely to attract attention"
+      ]
+    },
+    {
+      "id": "searchPattern",
+      "name": "Search Pattern",
+      "cn": "搜索",
+      "intent": "Support focused retrieval while preserving a quiet content hierarchy before, during and after query entry.",
+      "components": ["Search Field", "Loading Indicator", "Empty State", "List Item"],
+      "anatomy": ["query input", "optional scope/context", "results or state feedback"],
+      "rules": [
+        "Search SHOULD begin with a single clear input before adding filters or advanced controls.",
+        "Pending input and committed query MAY be distinct when the product benefits from explicit submission.",
+        "Loading, zero-result and error states MUST be distinguishable.",
+        "Returning from a result detail SHOULD preserve the user's query when the search task is still active.",
+        "Search affordances SHOULD use neutral surfaces; Brand color is reserved for focus, selection and meaningful action."
+      ],
+      "avoid": [
+        "resetting query after every detail view",
+        "using one generic empty state for loading, network error and zero result",
+        "decorative brand-filled search containers"
+      ]
+    },
+    {
+      "id": "collectionFilter",
+      "name": "Collection Filter",
+      "cn": "集合筛选",
+      "intent": "Filter a mobile collection without turning every condition into permanent chrome or losing the user's active constraints during navigation.",
+      "components": ["Search Field", "Button", "Bottom Sheet", "Tag", "Radio", "Checkbox", "List Item"],
+      "anatomy": ["optional keyword input", "filter trigger", "draft filter surface", "active condition summary", "result feedback"],
+      "rules": [
+        "The collection owner MUST remain the authoritative source of committed filter state.",
+        "A sheet or dialog MAY keep local draft state until Confirm is invoked.",
+        "Active conditions SHOULD be visible and individually removable when that improves scanability.",
+        "The filter trigger SHOULD communicate when conditions are active without becoming a second primary action.",
+        "Reset and Confirm MUST have clearly different hierarchy; Confirm does not automatically require a brand-filled full-width action when the sheet is simple.",
+        "Detail-return navigation SHOULD preserve committed filters while the collection task remains active.",
+        "Result count or meaningful result feedback SHOULD be exposed accessibly after filter changes."
+      ],
+      "avoid": [
+        "committing every tap immediately when users need to compare multiple conditions",
+        "duplicating filter truth in both sheet-local and page state after confirmation",
+        "painting every active chip and surrounding container with Brand color"
+      ]
+    },
+    {
+      "id": "stateToAction",
+      "name": "State to Action",
+      "cn": "状态到动作",
+      "intent": "Translate account, lifecycle, permission, eligibility or process state into one understandable current action instead of exposing raw state machinery to users.",
+      "components": ["Tag", "Alert", "Button", "List Item", "Empty State"],
+      "anatomy": ["current state", "reason or evidence when needed", "highest-priority available action", "optional recovery or secondary action"],
+      "rules": [
+        "Determine available actions from authoritative product state before choosing visual hierarchy.",
+        "A view SHOULD normally expose one highest-priority action for the user's current state.",
+        "Supporting actions SHOULD use Secondary, Tertiary, list affordance or overflow treatment rather than repeated Primary fill.",
+        "Blocked, pending, rejected, expired and completed states MUST explain why the primary path changed or disappeared.",
+        "Eligibility and permission gates SHOULD tell users what can be done now; do not show an inert primary button as the explanation.",
+        "Status transitions SHOULD lead to the next relevant state or destination rather than a generic success dead-end."
+      ],
+      "avoid": [
+        "one primary button for every available action",
+        "raw backend status codes as user-facing explanation",
+        "disabled CTA without reason or recovery path",
+        "using brand fill to compensate for unclear action priority"
+      ]
+    },
+    {
+      "id": "intentContinuity",
+      "name": "Intent Continuity / Handoff",
+      "cn": "意图连续与回流",
+      "intent": "Preserve the user's original task when login, authorization, another app, a responsive web flow or another temporary interruption is required.",
+      "components": ["Button", "Alert", "Loading Indicator", "Dialog"],
+      "anatomy": ["origin intent", "interruption or handoff", "minimum context transfer", "result mapping", "return to task"],
+      "rules": [
+        "The origin task and safe return destination SHOULD be preserved before interruption.",
+        "External handoff MUST carry only the minimum context required to map the result back to the existing product entity.",
+        "Return targets MUST be validated; do not trust arbitrary external or protocol-relative destinations.",
+        "Callback results SHOULD update the existing authoritative state instead of creating a parallel copy.",
+        "One-time callback parameters SHOULD be consumed or cleared after successful mapping.",
+        "Failure, cancellation, rejection and conflict MUST provide an explicit recovery or exit path."
+      ],
+      "avoid": [
+        "sending users to home after login when they started from a deep task",
+        "duplicating entities after external return",
+        "silent handoff failures with no way back",
+        "using a modal stack to simulate cross-system navigation"
+      ]
+    },
+    {
+      "id": "contextualNextStep",
+      "name": "Contextual Next Step",
+      "cn": "上下文下一步",
+      "intent": "Help users answer 'what should I do now?' inside a long-running workflow without turning the whole workflow into a dashboard of equally weighted actions.",
+      "components": ["Section", "List Item", "Progress Indicator", "Stepper", "Button", "Tag"],
+      "anatomy": ["active context identity", "current progress/state", "one next meaningful step", "optional secondary destinations"],
+      "rules": [
+        "The active entity or workflow context SHOULD remain visible or recoverable on deep screens.",
+        "Progress and next action MUST come from authoritative workflow state rather than a duplicated dashboard status.",
+        "Highlight the next meaningful step, not every possible future action.",
+        "Secondary destinations SHOULD remain discoverable without competing with the current next step.",
+        "After completing a step, update progress and derive the next step from state; do not hard-code a page sequence when the workflow can branch.",
+        "Ended workflows SHOULD hand off to durable results, history or assets when those outlive the workflow itself."
+      ],
+      "avoid": [
+        "multiple equal primary CTAs in a workflow hub",
+        "copying workflow status into a separate presentation database",
+        "losing active context on deep navigation",
+        "keeping expired workflow actions visually dominant"
+      ]
+    }
+  ]
+}
