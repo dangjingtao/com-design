@@ -4,9 +4,12 @@
 > Scope: Company Mobile Core  
 > Canonical machine source: `specs/core-patterns.json`  
 > Pattern count: 6  
-> Core Component count remains: 33
+> Core Component count remains: 33  
+> Core Composite Component count: 4
 
-Com Design 的 Pattern 层用于描述**多个 Core Component 如何共同解决一个重复出现的用户任务**。Pattern 不是新组件，也不允许把某个业务项目的状态枚举、页面名或领域词带回 Core。
+Com Design 的 Pattern 层用于描述**多个 Core Component / Composite Component 如何共同解决一个重复出现的用户任务**。Pattern 不是一个固定视觉组件，也不允许把某个业务项目的状态枚举、页面名或领域词带回 Core。
+
+如果一套组合已经有稳定 anatomy、稳定交互和明确消费身份，应先检查 `COMPOSITE_COMPONENTS.md`，而不是继续把它写成抽象 Pattern。
 
 ## 1. Status Composition｜状态组合
 
@@ -38,17 +41,21 @@ Com Design 的 Pattern 层用于描述**多个 Core Component 如何共同解决
 
 用于移动端列表、卡片流、机会、订单、项目等集合的筛选。
 
+`Filter Bar` 是该 Pattern 的推荐 Composite 实现之一，但不是唯一合法实现。
+
 推荐结构：
 
 ```text
-关键词（可选） + 筛选触发器
+关键词（可选） + Filter Bar / 筛选触发器
 → Bottom Sheet / Dialog 中编辑 draft
-→ 确认后提交
+→ Apply 后提交
 → 已生效条件可回显 / 移除
 → 结果反馈
 ```
 
 Committed state 由集合页面持有；浮层只持有尚未确认的 draft。详情返回后，在任务仍连续时应保留已提交筛选条件。
+
+在筛选浮层这个独立 action group 内，**Apply 可以是唯一 Primary**；Reset 使用 Tertiary / text treatment。页面上的 Filter Trigger 仍然只是工具动作，不因为存在 active count 就升级成页面 Primary。
 
 ## 4. State to Action｜状态到动作
 
@@ -104,21 +111,40 @@ return target 必须安全校验；callback 不应创建第二份业务状态；
 
 ---
 
-## Pattern 与 Component 的边界
+## Component / Composite / Pattern 的边界
 
-以下情况优先做 Pattern，而不是新增 Core Component：
+### 优先做 Core Component
 
-- 由多个现有组件组合即可表达；
-- 主要难点是状态、层级、顺序、回流或上下文；
-- 不同业务对象可以复用同一交互逻辑；
-- 新增一个“万能业务卡片”只会把产品语义塞进 Core。
+当它是一个稳定、独立的控件或信息单元：
 
-以下情况才考虑新增 Core Component：
-
-- 有稳定、可复用的独立控件语义；
+- 有独立语义；
 - anatomy、states、interaction 可以独立定义；
 - 多个产品会以同样的组件身份消费它；
-- 不是为了减少某个项目里的几行组合代码。
+- 不需要依赖其它组件才能成立。
+
+### 优先做 Composite Component
+
+当它由多个 Core Component 构成，但已经形成稳定、可直接实例化的组合：
+
+- anatomy 基本固定；
+- 交互契约稳定；
+- 可以形成清晰 API / slots / props；
+- 跨产品仍保持相同身份；
+- 不包含业务页面名、路由或领域状态枚举。
+
+当前正式 Composite：`Carousel`、`Filter Bar`、`Tabbed Action Bar`、`Grouped List`。
+
+### 优先做 UX Pattern
+
+当主要难点不是“长什么样”，而是：
+
+- 状态如何推导；
+- 动作如何分级；
+- 页面之间如何回流；
+- 上下文如何保持；
+- 多种视觉组合都可以实现同一个任务规则。
+
+不要为了减少某个项目里的几行组合代码，就把业务卡片或业务工作台晋升为 Core。
 
 ## Color / Action discipline
 
@@ -131,4 +157,4 @@ Pattern 层继续服从 Com Design 的颜色剂量原则：
 - 状态色只表达真实状态；
 - 不通过堆叠彩色容器来制造“丰富感”。
 
-详细机器契约以 `specs/core-patterns.json` 为准。
+详细机器契约以 `specs/core-patterns.json` 为准；稳定组合请同时读取 `COMPOSITE_COMPONENTS.md` 与 `specs/core-composites.json`。
