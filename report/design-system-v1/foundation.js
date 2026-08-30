@@ -183,14 +183,14 @@
   function themeCompatibilityBlock(premium){
     if(premium){
       return `<div id="premium-gold" class="premium-compat">
-        <div class="premium-compat-head"><div><p class="premium-compat-kicker">Active Optional Theme</p><h3>Premium Gold · 当前正在真实换肤</h3><p class="premium-compat-summary">当前页面、Foundation 数值、组件 Preview 与主题下载包都已切到 Premium Gold。橙红负责 Brand / Action，香槟金负责 Reward / Value，墨黑负责 Member Identity；Success / Warning / Danger 仍保持原语义。</p></div><span class="premium-compat-badge">Active · Opt-in</span></div>
+        <div class="premium-compat-head"><div><p class="premium-compat-kicker">Active Optional Theme</p><h3>Premium Gold · 当前正在真实换肤</h3><p class="premium-compat-summary">当前页面、Foundation 数值、组件 Preview 与主题下载包都已切到 Premium Gold。橙红负责 Brand / Action，香槟金负责 Reward / Value，墨黑负责 Member Identity；Success / Warning / Danger 仍保持原语义。Primary 稀缺、Supporting Action 降权与 Core UX Pattern 不因主题切换而改变。</p></div><span class="premium-compat-badge">Active · Opt-in</span></div>
         <div class="premium-role-grid"><article class="premium-role orange"><b>橙红 = Brand / Action</b><p>品牌、主动作、Focus 与 Scoped Selection。</p></article><article class="premium-role gold"><b>香槟金 = Reward / Value</b><p>泡泡值、积分、奖励、权益与可兑换资产。</p></article><article class="premium-role ink"><b>墨黑 = Member Identity</b><p>会员等级、高价值身份和权益容器。</p></article></div>
-        <div class="premium-compat-rule"><b>兼容原则：</b>主题改变视觉映射，不改变组件契约、间距、排版、状态语义和交互判断方式。</div>
+        <div class="premium-compat-rule"><b>兼容原则：</b>主题改变视觉映射，不改变组件契约、间距、排版、状态语义、动作层级和交互判断方式。</div>
       </div>`;
     }
     return `<div id="premium-gold" class="premium-compat is-default">
-      <div class="premium-compat-head"><div><p class="premium-compat-kicker">Theme Compatibility</p><h3>Default 正在生效 · Premium Gold 可选</h3><p class="premium-compat-summary">当前仍是原 Electric Indigo 基线。使用左侧 Theme 切换器即可让整份 Human Guide、Foundation 与组件 Preview 一起切到 Premium Gold；默认产品不会被自动覆盖。</p></div><span class="premium-compat-badge">Default · unchanged</span></div>
-      <div class="premium-compat-rule"><b>切换不是 Demo：</b>Human Guide 的切换读取与工程构建相同的主题真相源，并同步对应下载包。</div>
+      <div class="premium-compat-head"><div><p class="premium-compat-kicker">Theme Compatibility</p><h3>Default 正在生效 · Premium Gold 可选</h3><p class="premium-compat-summary">当前是 Electric Indigo 最新基线：品牌主色保持不变，但普通 Supporting Action、Info Container、边界与 Placeholder 已降低视觉重量。使用左侧 Theme 切换器可让整份 Human Guide、Foundation 与组件 Preview 一起切到 Premium Gold；Core 层级规则保持不变。</p></div><span class="premium-compat-badge">Default · current</span></div>
+      <div class="premium-compat-rule"><b>切换不是 Demo：</b>Human Guide 的切换读取与工程构建相同的主题真相源；主题只改合法映射，不重写 UX Pattern。</div>
     </div>`;
   }
 
@@ -199,11 +199,11 @@
     const {root, dark, comfortable, androidOverride, premium} = state;
 
     const semanticTokens = [
-      ['Text · Primary','--com-text-primary'],['Text · Secondary','--com-text-secondary'],['Text · Tertiary','--com-text-tertiary'],['Text · Brand','--com-text-brand'],
+      ['Text · Primary','--com-text-primary'],['Text · Secondary','--com-text-secondary'],['Text · Tertiary','--com-text-tertiary'],['Text · Placeholder','--com-text-placeholder'],['Text · Brand','--com-text-brand'],
       ['Surface · Page','--com-surface-page'],['Surface · Default','--com-surface-default'],['Surface · Subtle','--com-surface-subtle'],['Surface · Selected','--com-surface-selected'],
-      ['Border · Subtle','--com-border-subtle'],['Border · Default','--com-border-default'],['Border · Focused','--com-border-focused'],['Border · Error','--com-border-error'],
-      ['Action · Primary','--com-action-primary'],['Action · Primary Pressed','--com-action-primary-pressed'],['Action · Secondary','--com-action-secondary'],['Action · Destructive','--com-action-destructive'],
-      ['Status · Success','--com-status-success'],['Status · Warning','--com-status-warning'],['Status · Danger','--com-status-danger'],['Status · Info','--com-status-info']
+      ['Border · Subtle','--com-border-subtle'],['Border · Default','--com-border-default'],['Border · Strong','--com-border-strong'],['Border · Focused','--com-border-focused'],['Border · Error','--com-border-error'],
+      ['Action · Primary','--com-action-primary'],['Action · Primary Pressed','--com-action-primary-pressed'],['Action · Secondary','--com-action-secondary'],['Action · Secondary Pressed','--com-action-secondary-pressed'],['Action · Destructive','--com-action-destructive'],
+      ['Status · Success','--com-status-success'],['Status · Warning','--com-status-warning'],['Status · Danger','--com-status-danger'],['Status · Info','--com-status-info'],['Status · Info Background','--com-status-info-bg'],['Status · Info Text','--com-status-info-text']
     ];
     if(premium){
       semanticTokens.push(
@@ -212,6 +212,17 @@
       );
     }
 
+    const governanceTokens = [
+      '--com-action-primary',
+      '--com-action-secondary',
+      '--com-action-secondary-pressed',
+      '--com-surface-selected',
+      '--color-primary-container',
+      '--com-status-info-bg',
+      '--com-status-info-text',
+      '--com-border-default',
+      '--com-text-placeholder'
+    ];
     const densityTokens = ['--density-control-height','--density-control-height-lg','--density-padding-h','--density-padding-v','--density-gap','--density-content-inset','--density-section-gap','--density-field-label-gap','--density-field-helper-gap','--density-field-gap'];
     const radiusAliases = ['--radius-control','--radius-container','--radius-overlay','--radius-pill'];
     const iconTokens = ['--com-icon-size-sm','--com-icon-size-md','--com-icon-size-lg','--com-indicator-size-inline','--com-indicator-size-regular'];
@@ -236,11 +247,15 @@
       <nav class="foundation-nav"><a href="#foundation-color">Color</a><a href="#premium-gold">Theme</a><a href="#foundation-type">Typography</a><a href="#foundation-space">Spacing & Size</a><a href="#foundation-radius">Radius & Elevation</a><a href="#foundation-density">Density & Platform</a><a href="#foundation-dark">Dark Theme</a></nav>
 
       <section class="foundation-block" id="foundation-color">
-        <div class="foundation-block-head"><h3>Color · ${premium ? 'Premium Gold' : 'Default'}</h3><p><b>Primitive</b> 提供稳定色阶，<b>Semantic</b> 决定界面角色。切换主题后，消费层仍使用相同语义 token。</p></div>
+        <div class="foundation-block-head"><h3>Color · ${premium ? 'Premium Gold' : 'Default'}</h3><p><b>Primitive</b> 提供稳定色阶，<b>Semantic</b> 决定界面角色。当前治理原则是：<b>品牌识别保持，品牌色面积克制</b>。Supporting Action 与普通 Info Container 不应因为“可点击 / 有信息”就自动获得品牌浅色填充。</p></div>
         <div class="foundation-subtitle"><h4>Primitive palettes</h4><small>当前主题真实解析值</small></div>
         <div class="foundation-palette">${paletteGroups.map(([name,prefix,note]) => paletteRow(name,prefix,root,note)).join('')}</div>
         <div class="foundation-subtitle"><h4>Semantic roles</h4><small>token → alias → resolved value</small></div>
         <div class="foundation-semantic-grid">${semanticTokens.map(([label,token]) => semanticCard(label,token,root)).join('')}</div>
+        <div class="foundation-two-col" style="margin-top:12px">
+          <article class="foundation-panel"><h4>Semantic usage · 当前原则</h4><p><b>Primary</b> 是当前最强动作的稀缺层级信号；<b>Secondary</b> 默认使用中性浅底；<b>Info</b> 默认中性容器 + Brand foreground；<b>Selected / Primary Container</b> 仍可保留品牌浅色，但不要在同一区域重复叠加。普通 Border 与 Placeholder 继续向低噪声收敛。</p></article>
+          <article class="foundation-panel"><h4>Key mappings · 实时值</h4>${tokenTable(governanceTokens,root)}</article>
+        </div>
       </section>
 
       ${themeCompatibilityBlock(premium)}
@@ -274,7 +289,7 @@
         <div class="dark-preview">${themeCard(`${premium ? 'Premium Gold' : 'Default'} · Light`,root)}${themeCard(`${premium ? 'Premium Gold' : 'Default'} · Dark`,dark)}</div>
       </section>
 
-      <div class="foundation-footnote"><b>文档契约：</b>默认主题来自 <code>design-source/colors_and_type.css</code>；Premium Gold 来自 <code>design-source/themes/premium-gold.css</code>。Human Guide 的换肤只是把这两份真相源可视化，不反向发明 token。</div>
+      <div class="foundation-footnote"><b>文档契约：</b>默认主题来自 <code>design-source/colors_and_type.css</code>；Premium Gold 来自 <code>design-source/themes/premium-gold.css</code>。Human Guide 只解释并可视化真相源，不反向发明 token；动作层级与 UX Pattern 由 Core 契约约束。</div>
     </div>`;
   }
 
