@@ -270,6 +270,69 @@ Com Design V2 的四端统一原则可以压缩为：
 
 ## Q3. 谁会使用 Com Design？
 
-### 待确认
+### 消费者优先级
 
-- V2 最重要的第一消费对象是谁，以及设计师、研发、AI / Agent、Penpot、产品项目之间应如何排序与分工？
+用户给出的顺序是：**C → B → A**。
+
+```text
+1. AI / Agent
+2. 研发
+3. 设计师
+```
+
+这不是价值高低排序，而是 V2 的**消费接口设计优先级**。
+
+### 第一消费者：AI / Agent
+
+V2 首先要成为机器能够稳定理解、执行和验证的 Design System，而不是要求 Agent 阅读大量截图、Web Preview 或散落说明后自行猜测。
+
+因此机器可消费能力必须是一等能力：
+
+- Token、Component、Composite、Pattern、Platform Adapter 都有明确的 machine-readable contract；
+- 名称、状态、variant、anatomy、interaction、platform exception 与禁止事项可被稳定检索；
+- Canonical source 不允许出现“文档说一个版本、Preview 又是另一个版本”的漂移；
+- Agent 能够根据目标平台选择正确 Adapter，而不是复制 Web DOM / CSS 到所有端；
+- 设计系统应提供 build-time / validation evidence，使 Agent 能判断实现是否符合契约，而不仅是“看起来差不多”；
+- Human Guide 与 Skill 可以帮助 Agent 理解意图，但不能代替 canonical machine source。
+
+这意味着 V2 的设计系统不是“给人看的规范附带 JSON”，而是从源头就把机器消费视为正式产品能力。
+
+### 第二消费者：研发
+
+研发应能够从同一套 canonical model 获取目标平台可执行的工程资产与实现规则：
+
+- Web / Native / Mini Program 等 Adapter outputs；
+- stable token naming 与 component semantics；
+- platform difference / exception 明确可查；
+- 不需要研发自己从 Penpot 截图反推尺寸和状态；
+- 不需要每个产品团队再维护一份本地 Design Token 真相源。
+
+AI-first 不等于研发只能通过 AI 使用 Com Design。研发仍然必须能够直接、确定地消费生成产物和契约。
+
+### 第三消费者：设计师
+
+设计师继续是重要消费者，但 V2 不以“手工维护设计稿资产”为系统架构中心。
+
+Penpot / Human Guide 应成为同一 canonical source 的设计消费视图：
+
+- 设计师能看到真实 Token / Component / Platform Context；
+- 设计资产不应和工程资产分叉成第二真相源；
+- 多端差异应通过 Platform Context / Adapter 规则表达，而不是复制四套互不关联的组件；
+- 人类可读文档负责解释原则、边界与例子，但不独立决定机器事实。
+
+### Shared source principle
+
+消费者存在优先级，但事实来源不能按消费者分裂：
+
+```text
+Canonical Design Source
+→ Machine Contract / AI
+→ Engineering Adapter / R&D
+→ Penpot + Human Guide / Design
+```
+
+三类消费者读取同一个设计意图，只是获得不同形式的消费产物。
+
+### 当前待确认
+
+- AI / Agent 作为第一消费者，V2 希望它主要做到“读懂并辅助人施工”，还是可以直接承担生产代码施工与设计系统合规验收？
