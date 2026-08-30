@@ -71,6 +71,58 @@ Android / iOS / Web / WeChat Mini Program
 
 因此，小程序在早期可以晚于前三端完成同等成熟的 engineering adapter / component implementation，但 Platform Model、Token 语义、Safe Area / Host Chrome、Navigation、Motion、Overlay、Input 等跨端契约不得排除它。
 
+### V1 评价：不是失败品，而是目标边界已经变化
+
+V2 不建立在“V1 很糟糕”的叙事上。
+
+V1 已经建立了几块值得保留的基础：
+
+- Primitive → Semantic → Component → Composite → Pattern → Product Extension 的分层方向是正确的；
+- Token 已有 light / dark、density、iOS / Android touch target 等模式意识；
+- 33 Core Components、4 Composite、6 Pattern 已经形成可讨论、可审查的系统边界；
+- `design-source` 单一编辑源、Penpot / engineering outputs 作为下游产物的方向是正确的；
+- Flat-first、Primary 稀缺、Section before Card、状态非 color-only 等设计治理原则具有继续复用价值；
+- 当前已经有 Tailwind / NativeWind / React Native token 等工程适配探索，说明 V1 并非纯视觉稿集合。
+
+V1 的核心局限更准确地描述为：**它的设计思想已经开始跨端，但其 canonical model、manifest、validator、preview 与 engineering adapter 仍带有明显的 Web / Prototype 形态，尚未真正闭合成多平台生产契约。**
+
+因此 V2 是升级，不是翻案。
+
+### Breaking-change policy
+
+选择：**B — 为了真正跨端，允许明确的 breaking change，把旧架构一次收干净。**
+
+但 breaking change 的理由必须是架构收益，而不是“V1 全部推倒重做”。
+
+优先保留：
+
+```text
+Design principles
+Semantic vocabulary
+Component intent
+Composite / Pattern boundaries
+Validated visual decisions
+```
+
+允许主动打破：
+
+```text
+false / stale manifest contracts
+Web-shaped platform assumptions
+incomplete schema model
+adapter output representation
+preview-as-production-source assumptions
+outdated downstream consumption entrypoints
+```
+
+V2 不承诺旧消费接口零修改；但任何 breaking change 都应该能回答：
+
+1. 它消除了哪一个跨端架构缺陷？
+2. 为什么不能通过兼容层合理解决？
+3. 哪些 V1 语义与设计资产仍然被保留？
+
+这使 V2 的迁移策略成为“保留设计资产，重构跨端承载方式”，而不是重做一套新设计系统。
+
 ### 当前待确认
 
-- V1 → V2 在兼容策略上，应优先保持现有消费方式可继续工作，还是允许为了真正跨端架构主动做 breaking change？
+- V2 发布后，V1 应该被视为怎样的存在：立即停止新增能力、只做必要修复；还是允许 V1 在一段迁移期继续独立演进？
