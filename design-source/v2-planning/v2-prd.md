@@ -140,3 +140,42 @@ V2 是 V1 的下一阶段：**在 V1 的设计思想和资产上继续演进，�
 V2 的意义可以压缩为一句话：
 
 > **Com Design V2 是 V1 思想的跨端工程落实：继承 V1 已建立的设计系统资产，并使同一套设计意图真正能够被 Android、iOS、Web 与微信小程序可靠消费。**
+
+---
+
+## Q2. 四端到底怎么统一？
+
+### 用户选择
+
+选择：**A — 四端视觉尽量一致，平台差异只做必要适配。**
+
+### 当前产品定义
+
+Com Design V2 的跨端统一，不采用“只统一语义、各端自由长相”的松散模型。
+
+目标是让 Android、iOS、Web、微信小程序拥有明确、稳定、可辨认的同一套 Com Design 视觉身份：
+
+```text
+shared visual language
++ shared semantic structure
++ shared component intent
++ shared interaction hierarchy
++ necessary platform adaptation only
+```
+
+因此默认原则是：
+
+- Color、Typography hierarchy、Spacing、Radius、Component anatomy、状态层级、Primary / Secondary hierarchy 尽量一致；
+- 同一个 Core Component 在四端应优先保持相同视觉身份，而不是分别“Material 化 / Cupertino 化 / Web 化”；
+- 平台原生能力可以被利用，但不得在没有必要的情况下覆盖 Com Design 自己的视觉语言；
+- 平台差异必须有明确理由，例如系统 Chrome、Safe Area、Back gesture、键盘 / pointer、Accessibility、原生 Picker、宿主能力限制等；
+- Adapter 的职责是解决平台约束，不是给每个平台重新设计一套 UI；
+- 若存在“视觉一致”与“平台基本可用性 / 系统行为”冲突，优先保证可用性与系统行为，再在不破坏体验的范围内保持品牌一致。
+
+这意味着 V2 的目标不是四套皮肤共享 Token，而是：
+
+> **一套 Com Design，在四种运行环境中自然地工作。**
+
+### 当前待确认
+
+- 哪些平台差异属于“必要适配”，可以合法打破视觉一致？
