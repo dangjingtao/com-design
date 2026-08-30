@@ -268,7 +268,7 @@ V2 的 Prototype Shell MAY 提供：
 optional brand / context header
 → navigation groups
   → navigation item
-  → optional nested items
+    → optional nested navigation item(s)
 → flexible scroll region
 → optional auxiliary / footer actions
 ```
@@ -277,11 +277,13 @@ optional brand / context header
 
 - Brand / Product identity 区域可选；其中的产品名、Logo、业务环境标签属于 Product Extension，不进入 Core 语义；
 - Navigation Group 可选，Group Heading 保持低强调，不通过大量 Card / Divider 制造层级；
-- 一级 Navigation Item 支持 optional icon + label + optional badge/count + optional expansion indicator；
+- Navigation Item 支持 optional icon + label + optional badge/count + optional expansion indicator；
 - 图标必须消费 V2 Icon Registry，不在 Side Navigation 内直接绑定 Lucide import；
-- 二级导航默认最多支持 **2 层导航深度**；更深的信息架构应重构，而不是无限增加缩进；
-- Parent 含 active child 时可以表达 `contains-active-destination`，但不能和真正 active child 使用同等强度的选中样式；
-- 非当前上下文的 nested group SHOULD 默认折叠；必要时可持久化用户折叠偏好；
+- **撤销 V2 早期“最多 2 层”的限制。Navigation Model 必须支持递归 nested children / groups，不在 Core API 层硬编码层级上限；**
+- 设计指引 SHOULD 提醒 1–3 层是常见可读范围；超过该深度时需要审查信息架构，但不能因此让组件无法表达真实的多级后台导航；
+- Parent 含 active descendant 时可以表达 `contains-active-destination`，但不能和真正 active destination 使用同等强度的选中样式；
+- active destination 的 ancestor chain SHOULD 自动展开，使当前页面在导航中可见；用户手动折叠后，parent 仍需要保留 active-descendant 提示；
+- expanded / collapsed state 支持 controlled model，并可由产品选择持久化用户折叠偏好；
 - Label 单行显示，超长使用 ellipsis；Rail / 折叠态或截断态需要 Tooltip / accessible label；
 - 主导航区域独立滚动，Header / Footer SHOULD 保持稳定；键盘聚焦或路由进入当前项时，应保证 active/focused item 可见；
 - Auxiliary / Footer Action 与主目的地视觉分区，但不能在 Core 中写死具体业务快捷入口。
@@ -294,6 +296,7 @@ optional brand / context header
 - Active destination 使用**单一最强选中信号**，推荐 Brand foreground + restrained selected surface / indicator，而不是多个层级同时铺浅紫；
 - Hover / Focus / Pressed / Selected 必须分别定义，不把 hover 当 active；
 - Group 间距和 typography 优先建立层级，减少“靠缩进 + 彩色底块”表达信息架构；
+- 多级导航的层级缩进必须 token 化，不允许每深入一级随手增加 padding；深层级可结合 connector / typography / disclosure icon 控制层级感，避免无限向右漂移；
 - Icon、Label、Badge 的视觉权重必须稳定，Badge 只表达真实数量 / 状态，不作为装饰；
 - 展开态常规宽度可在约 `220–280` logical units 范围内由 density / product 决定，不把核心学院当前固定 `w-64` 当成 Core 常量；
 - Rail 候选宽度约 `64–80` logical units，但正式值待 V2 Token / Desktop density 验证后确定。
@@ -302,7 +305,9 @@ optional brand / context header
 
 - Side Navigation 必须支持 pointer + keyboard；不得依赖 hover 才能发现关键子导航；
 - Focus ring / keyboard order 必须清晰，折叠/展开后焦点不能丢失；
-- Parent item 若负责展开子项，则其“展开”和“导航”行为必须明确，避免一个点击区域同时承担两个不可预测动作；
+- Parent item 若同时具备 destination 与 children，必须明确区分“进入父级目的地”和“展开/折叠子级”的 hit target / keyboard action；不能让一个点击区域承担两个不可预测动作；
+- disclosure indicator 必须真实反映 expanded state，不能只作为装饰 chevron；
+- 递归导航需要定义完整键盘遍历、展开/折叠与 focus restore 行为；Web 端采用 nested navigation semantics 还是 tree semantics 必须按最终交互模式选择，不能只为视觉像树就滥用 ARIA tree；
 - Route state / selected destination 必须由共享 Navigation Model 决定，不能像产品代码一样在组件内部散布 pathname prefix 判断；
 - Badge、collapsed state、expanded group state 的变化不应让主要目标产生明显位置抖动。
 
@@ -324,21 +329,82 @@ mobile / narrow  → Bottom Navigation / Top App Bar / Drawer or Sheet navigatio
 
 - destination / route truth 保持一份，视觉载体随平台变化；
 - Mobile 若已有 3–5 个一级目的地，优先复用 Bottom Navigation；
-- 层级较深或目的地较多时，使用 Drawer / Sheet 类入口候选，而不是横向滚动十几个导航项；
+- 层级较深或目的地较多时，使用 Drawer / Sheet 中的 **Multi-level Collapsible Navigation**，而不是横向滚动十几个导航项；
 - Desktop App Shell 负责内容区域 offset / resize；页面本身不应 hard-code `padding-left` 去配合 Side Navigation。
 
 #### Classification candidate
 
 当前建议：
 
-- `Side Navigation`：**Core Composite Component candidate**，因为它由 Icon / Label / Badge / Group / nested item / scroll / footer 等形成稳定可实例化组合；
+- `Side Navigation`：**Core Composite Component candidate**，因为它由 Icon / Label / Badge / Group / recursive nested item / scroll / footer 等形成稳定可实例化组合；
 - `Navigation Rail`：先作为 Side Navigation 的 compact variant / peer candidate，施工前根据 API 稳定性决定是否独立；
 - `App Shell / Sidebar Layout`：**Layout / Composite candidate**，负责 Side Navigation 与主内容区的空间关系，不和导航组件本身混为一体；
 - 是否需要独立 `Navigation Item` Core Component，必须等跨 Side Navigation / Drawer / Menu 等复用证据出现后再决定，当前不为了拆 API 提前增加组件。
 
+### V2-Navigation-04 — Multi-level Collapsible Navigation
+
+**确定需求：** V2 必须正式支持多级折叠导航，不把它当 Side Navigation 的临时特例。
+
+标准能力：
+
+- Navigation Model 使用递归结构表达 `item → children[]`；
+- 任意拥有 children 的节点都支持 expanded / collapsed state；
+- 支持多个分支同时展开，也允许产品按场景选择 accordion-like single-branch mode，但 Core 默认不强制单开；
+- active destination 自动展开 ancestor chain；
+- parent、ancestor-with-active-descendant、active destination 三种状态必须有不同视觉层级；
+- 每一级使用稳定 indentation token / density rule，不允许业务代码自行计算 `level * arbitrary px`；
+- 支持 leading icon、label、badge/count、trailing disclosure indicator，并允许无 icon 的纯文字层级；
+- 展开/折叠动画保持短促，并尊重 reduced-motion；大量节点场景不能因动画导致主导航滚动明显卡顿；
+- 折叠状态可受控；Desktop 产品 MAY 持久化，Mobile Drawer / Sheet MAY 每次按当前 route 重建；
+- 深层节点需要 scroll-into-view / active reveal；
+- 需要明确定义叶子节点、父级 destination、纯分组节点三类语义，避免所有行都长得一样却行为不同；
+- 如果 parent 本身也是可导航 destination，导航动作和 disclosure 动作必须分离；
+- 支持 keyboard 与 screen reader，不能把层级只画成不同 padding；
+- 多级导航可被 Side Navigation 与 Mobile Drawer / Sheet 共用同一 Navigation Model。
+
+**设计指引：**
+
+V2 不设硬性的 2 层上限。3 层以上应触发 IA 可读性提醒，但组件和数据契约仍必须可表达真实层级；设计系统的职责是治理复杂度，不是假装复杂度不存在。
+
 ---
 
-## 5. Future Desktop boundary（暂记，不展开施工）
+## 5. Disclosure & Collapsible Content
+
+### V2-Disclosure-01 — Accordion / Collapsible Panel
+
+**确定需求：** V2 补正式折叠面板组件。标准名优先使用 **Accordion**；单个条目的展开/折叠行为可称 `Collapsible / Disclosure`。
+
+建议结构：
+
+```text
+Accordion
+→ Accordion Item
+  → Trigger / Header
+  → Collapsible Content
+```
+
+能力要求：
+
+- 支持 `single` 与 `multiple` expansion mode；
+- 支持 controlled / uncontrolled state、default expanded、disabled item；
+- Trigger 至少支持 label + disclosure indicator，并可选 leading icon、辅助说明 / summary；
+- Header 若提供 trailing extra action，必须和展开/折叠 trigger 分离 hit target，避免一次点击同时触发两种动作；
+- Content 容器允许表单、说明、列表等通用内容，不把业务结构写死；
+- 展开/折叠动画不改变内容宽度，不制造布局横向抖动，并尊重 reduced-motion；
+- 支持嵌套 Accordion，但嵌套层级需要通过 spacing / heading hierarchy 管理，避免“卡片套卡片”；
+- 默认视觉 flat-first，优先 Divider / spacing / subtle surface，而不是每个 item 一张重 Card；
+- trigger 的整个主要行应有足够 pointer / touch target；
+- Web 端 trigger 使用 button / `aria-expanded` / `aria-controls` 或等价可访问语义；键盘可操作并在折叠后维持合理 focus；
+- 展开内容存在 validation error / active task 时，折叠 header SHOULD 能提供必要的摘要 / 状态提示，不能把关键信息完全藏掉。
+
+**归类候选：**
+
+- `Accordion`：Core Component candidate；
+- `Collapsible / Disclosure`：先视为 Accordion 与 Multi-level Navigation 可共享的 behavior contract candidate，是否单独暴露 Core primitive 待施工期 API 复用证据确认。
+
+---
+
+## 6. Future Desktop boundary（暂记，不展开施工）
 
 随着 Com Design 支持 Desktop，后续 Layout 可能需要审查：
 
@@ -348,11 +414,11 @@ mobile / narrow  → Bottom Navigation / Top App Bar / Drawer or Sheet navigatio
 - App Shell / Sidebar Layout
 - Breakpoint / responsive contract
 
-这些目前只作为方向，不视为已确认 V2 scope；其中 Side Navigation 能力已确认进入 V2，但 App Shell / Sidebar Layout 仍需单独审查。
+这些目前只作为方向，不视为已确认 V2 scope；其中 Side Navigation 与 Multi-level Collapsible Navigation 能力已确认进入 V2，但 App Shell / Sidebar Layout 仍需单独审查。
 
 ---
 
-## 6. Review ledger rule
+## 7. Review ledger rule
 
 从本文件建立后：
 
