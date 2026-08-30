@@ -1,6 +1,6 @@
 # Com Design Mobile 设计系统
 
-Com Design Mobile 是一套公司级的移动端 Design System（版本 `1.0.0-rc.2`），不归属于任何单一业务产品，而是作为集团移动应用的共同视觉与交互地基。三创赛系列 App 是首批消费方，但 token、组件契约与密度规则在落地到具体产品时不得被改写——产品侧只能在 Core 之上做扩展。系统的整体气质可以概括为 *"Modern / Clear / Light / Efficient"*，并在工程上坚持 *"Compact-first、Flat-first、信息层级优先于装饰"*。本文档基于 `com-design` phase5-foundation-hardening 的结构化 token 与组件契约重建，覆盖 Foundation tokens 与 **V1 全部 33 个核心组件**（分布在 Actions & Forms、Navigation & Information、Feedback / Overlay / Progress、Search & Menu 四个契约分组），以及一套移动端 UI kit，作为新加入设计师的入门 brief，而非 token 查阅手册。
+Com Design Mobile 是一套公司级的移动端 Design System（版本 `1.0.0-rc.2`），不归属于任何单一业务产品，而是作为集团移动应用的共同视觉与交互地基。token、组件契约、UX Pattern 与密度规则在落地到具体产品时不得被改写——产品侧只能在 Core 之上做扩展。系统的整体气质可以概括为 *"Modern / Clear / Light / Efficient"*，并在工程上坚持 *"Compact-first、Flat-first、信息层级优先于装饰"*。本文档基于 `com-design` phase5-foundation-hardening 的结构化 token 与组件契约重建，覆盖 Foundation tokens 与 **V1 全部 33 个核心组件**（分布在 Actions & Forms、Navigation & Information、Feedback / Overlay / Progress、Search & Menu 四个契约分组），以及一套移动端 UI kit，作为新加入设计师的入门 brief，而非 token 查阅手册。
 
 > *"Compact-first、Flat-first、信息层级优先于装饰"*；*"Product extension does not mutate Core"*；*"Section before Card"*；*"Brand color is a scarce hierarchy signal"*；*"Accent Cyan is not the default active color for global navigation; reserve it for local emphasis, progress, data"*。
 
