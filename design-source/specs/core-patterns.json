@@ -49,21 +49,23 @@
       "name": "Collection Filter",
       "cn": "集合筛选",
       "intent": "Filter a mobile collection without turning every condition into permanent chrome or losing the user's active constraints during navigation.",
-      "components": ["Search Field", "Button", "Bottom Sheet", "Tag", "Radio", "Checkbox", "List Item"],
+      "components": ["Search Field", "Button", "Bottom Sheet", "Tag", "Radio", "Checkbox", "List Item", "Filter Bar"],
       "anatomy": ["optional keyword input", "filter trigger", "draft filter surface", "active condition summary", "result feedback"],
       "rules": [
         "The collection owner MUST remain the authoritative source of committed filter state.",
-        "A sheet or dialog MAY keep local draft state until Confirm is invoked.",
+        "A sheet or dialog MAY keep local draft state until Apply is invoked.",
         "Active conditions SHOULD be visible and individually removable when that improves scanability.",
-        "The filter trigger SHOULD communicate when conditions are active without becoming a second primary action.",
-        "Reset and Confirm MUST have clearly different hierarchy; Confirm does not automatically require a brand-filled full-width action when the sheet is simple.",
+        "The filter trigger SHOULD communicate when conditions are active without becoming a second page-level primary action.",
+        "Inside the draft surface, Apply MAY be the single Primary action for that action group; Reset SHOULD use Tertiary or text treatment and MUST affect draft state before commitment.",
+        "Dismissing the draft surface without Apply MUST NOT mutate committed filter state.",
         "Detail-return navigation SHOULD preserve committed filters while the collection task remains active.",
         "Result count or meaningful result feedback SHOULD be exposed accessibly after filter changes."
       ],
       "avoid": [
         "committing every tap immediately when users need to compare multiple conditions",
         "duplicating filter truth in both sheet-local and page state after confirmation",
-        "painting every active chip and surrounding container with Brand color"
+        "painting the filter trigger, active conditions and footer actions with Brand fill simultaneously",
+        "using a disabled Apply control as the only indication that nothing changed"
       ]
     },
     {
