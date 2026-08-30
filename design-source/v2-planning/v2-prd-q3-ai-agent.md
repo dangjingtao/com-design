@@ -54,6 +54,55 @@ Com Design Contract
 → Human judges product quality / exception / release
 ```
 
+## Compliance governance
+
+用户选择：**B — 硬规则自动门禁，软规则输出 warning / evidence，由人做最终判断。**
+
+V2 不应把所有设计问题都伪装成可机器二值判断的问题，也不应把本可确定验证的规则全部丢给 Agent 自由发挥。
+
+因此合规治理分为两层：
+
+### Hard gate
+
+适合机器确定判断、违反即失败的规则，例如：
+
+- canonical source / manifest / schema 引用完整性；
+- Token、Component、Variant、State 等 contract 可解析且引用合法；
+- 必需状态、必需 anatomy、平台 Adapter 映射存在；
+- 明确的 accessibility / touch target / semantic constraints；
+- 禁止使用的 literal value、非法 semantic mapping 或已声明 incompatible pattern；
+- 生成物与 canonical source 的一致性；
+- 可自动验证的 contract ↔ implementation / preview parity。
+
+Hard gate 失败意味着 Agent 不能自行宣告 Com Design 合规。
+
+### Soft review
+
+无法可靠压缩成布尔规则、但仍应被结构化审查的问题，例如：
+
+- 信息层级是否足够清楚；
+- 品牌色使用面积是否克制；
+- 某个平台例外是否真的比统一表现更自然；
+- 动效节奏、视觉平衡、密度与审美质量；
+- 是否出现虽然“规则合法”但产品体验明显别扭的组合；
+- 新场景是否说明 Core / Composite / Pattern 需要演进。
+
+Agent 对此必须输出 warning、观察与证据，而不是把主观判断伪装成自动通过。
+
+理想验收结果不是单一 `pass / fail`，而更接近：
+
+```text
+hard compliance: pass | fail
+soft findings: warning[]
+evidence: evidence[]
+exceptions: exception[]
+human decision: accept | revise | reject
+```
+
+因此 V2 的 AI-first 治理原则是：
+
+> **能确定的规则机器负责守住；需要判断的质量问题机器负责举证，人负责裁决。**
+
 ## Product implication
 
 如果 V2 无法让 Agent 确定地回答“该用什么、如何实现、如何验证”，就还没有完成 AI-first 的消费目标。
