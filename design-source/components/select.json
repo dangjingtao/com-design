@@ -1,21 +1,31 @@
 {
   "schemaVersion": 2,
   "slug": "select",
-  "name": "Select / Picker Trigger",
+  "name": "Select",
   "sourceKind": "structured-spec",
   "confidence": "high",
-  "semanticTypeCandidates": ["actions-forms", "picker-trigger", "form-control"],
+  "semanticTypeCandidates": ["actions-forms", "single-select", "form-control"],
   "variantDimensions": {
-    "state": ["empty", "value", "pressed", "open", "error", "disabled"]
+    "state": ["empty", "value", "pressed", "open", "error", "disabled"],
+    "presentation": ["bottom-sheet", "anchored-listbox", "native-picker"]
   },
   "representativeVariants": [
-    { "state": "empty", "label": "所在部门", "placeholder": "请选择部门" },
-    { "state": "value", "label": "审批类型", "value": "请假申请" },
-    { "state": "open", "label": "优先级", "value": "高" },
-    { "state": "error", "label": "费用类型", "value": "", "errorText": "请选择费用类型" },
-    { "state": "disabled", "label": "归属公司", "value": "Com Design(不可修改)" }
+    { "state": "empty", "presentation": "bottom-sheet", "label": "所在部门", "placeholder": "请选择部门" },
+    { "state": "value", "presentation": "bottom-sheet", "label": "审批类型", "value": "请假申请" },
+    { "state": "open", "presentation": "bottom-sheet", "label": "优先级", "value": "高" },
+    { "state": "error", "presentation": "bottom-sheet", "label": "费用类型", "value": "", "errorText": "请选择费用类型" },
+    { "state": "disabled", "presentation": "native-picker", "label": "归属公司", "value": "Com Design（不可修改）" }
   ],
-  "anatomy": ["label?", "trigger", "valueOrPlaceholder", "disclosure", "helperOrError?"],
+  "anatomy": [
+    "label?",
+    "trigger",
+    "valueOrPlaceholder",
+    "disclosure",
+    "helperOrError?",
+    "presentationAdapter",
+    "singleSelectionModel",
+    "optionList"
+  ],
   "traits": {
     "height": "var(--size-control-height)",
     "paddingHorizontal": "var(--space-12)",
@@ -33,19 +43,78 @@
     "valueFont": "var(--type-body)",
     "placeholderColor": "var(--color-text-placeholder)",
     "valueColor": "var(--color-text-primary)",
-    "labelGap": "var(--space-6)"
+    "labelGap": "var(--space-6)",
+    "optionMinHeight": "48 logical units",
+    "optionHorizontalPadding": "var(--space-16)"
   },
+  "selectionModel": {
+    "mode": "single",
+    "valueOwnership": "The product/form owner is authoritative for committed value. A controlled implementation exposes value + onValueChange; uncontrolled wrappers MAY own temporary local value only when the product does not provide one.",
+    "commit": "Selecting an enabled option commits that value immediately and closes the current presentation unless a native platform picker requires its standard confirmation behavior.",
+    "emptyValue": "Empty is represented by no selected option plus placeholder text; V1 does not add a second clear button inside the trigger.",
+    "disabledOption": "Disabled options remain readable when needed but MUST NOT receive selection, keyboard commit or press activation."
+  },
+  "openStateModel": {
+    "controlledApi": "open + onOpenChange MAY be exposed when product orchestration needs controlled presentation state.",
+    "open": "Opening sets expanded state immediately, preserves the current committed value and moves focus to the selected option or first enabled option in custom presentations.",
+    "close": "Selection, Escape/back, explicit close or safe outside/scrim dismissal closes the presentation and returns focus to the trigger.",
+    "error": "Error semantics remain authoritative while open; focus/open styling MUST NOT erase the danger border or associated error message."
+  },
+  "presentationAdapters": {
+    "bottomSheet": {
+      "defaultUse": "touch-first mobile when an anchored list would be cramped, occluded or difficult to scan",
+      "composition": ["Bottom Sheet", "single-select listbox", "option rows"],
+      "behavior": "The sheet is modal, uses safe-area padding, focuses the selected/first enabled option, commits on option selection, closes, then restores trigger focus."
+    },
+    "anchoredListbox": {
+      "defaultUse": "keyboard/pointer-capable or wider environments with sufficient space around the trigger",
+      "composition": ["anchored floating surface", "listbox", "option rows"],
+      "behavior": "Visually MAY borrow Menu surface treatment, but semantics MUST be listbox/option rather than menu/menuitem. Placement may flip to stay on-screen."
+    },
+    "nativePicker": {
+      "defaultUse": "when a platform-native picker materially improves familiarity, input modality or accessibility",
+      "composition": ["platform-native picker presentation"],
+      "behavior": "The adapter maps the same label, value, disabled and validation semantics to the native control and returns the selected value through the same Select contract."
+    }
+  },
+  "keyboardContract": [
+    "Enter, Space or ArrowDown on the trigger opens a custom presentation.",
+    "ArrowUp/ArrowDown move option focus; Home/End move to first/last enabled option where supported.",
+    "Enter or Space commits the focused enabled option.",
+    "Escape closes without changing the committed value and restores focus to the trigger.",
+    "Typeahead SHOULD be supported for anchored listboxes when option labels are textual and the option set is not trivially small."
+  ],
+  "accessibilityContract": [
+    "The trigger MUST have an accessible name from its label and expose aria-haspopup=listbox, aria-expanded and aria-controls for custom web presentations.",
+    "Validation text MUST be associated with the trigger through the target platform's description/error semantics; web uses aria-invalid and aria-describedby when applicable.",
+    "Custom option containers use listbox semantics and options expose selected/disabled state; do not use menu semantics for value selection.",
+    "Opening custom presentation moves focus predictably; closing always restores focus to the originating trigger unless navigation intentionally leaves the field.",
+    "Selection cannot depend on color or a checkmark alone; selected options remain readable through semantic state and accessible selected value."
+  ],
   "structurePatterns": [
-    "looks like an outlined Input but with a chevron disclosure on the trailing edge",
-    "horizontal: label over trigger; trigger contains value/placeholder + chevron, 8px gap",
-    "open state uses the focused 2px border; pressed uses a subtle surface",
-    "trigger shows no text cursor; the actual picker presentation is a platform/overlay policy"
+    "trigger looks like an outlined Input but has no text cursor; trailing chevron communicates disclosure",
+    "label sits above trigger; trigger contains value/placeholder + disclosure with an 8px internal gap",
+    "open state uses focused border and rotated disclosure while the real option presentation is visible",
+    "Select is one component contract across adapters: touch mobile normally presents a Bottom Sheet, wider keyboard/pointer contexts may use an anchored listbox, and native platforms may substitute a native picker",
+    "selection is single-choice in V1 and the product/form owner remains authoritative for committed value"
   ],
   "usageHints": [
-    "must expose expanded state when open (aria-expanded)",
-    "picker UI (wheel / menu / sheet) is platform policy, not part of trigger appearance",
-    "error + open keeps danger semantics"
+    "this is a complete single-select contract, not only a Picker Trigger",
+    "touch-first mobile defaults to a Bottom Sheet listbox when anchored options would be cramped; anchored environments may use a floating listbox; native picker adapters are allowed",
+    "the presentation MUST expose the current selected value, disabled options and a predictable close/return-focus path",
+    "selecting an enabled option commits immediately for custom single-select presentations and closes the presentation",
+    "must expose expanded state when open and preserve error semantics while open",
+    "use listbox/option semantics for selection; Menu remains an action component and MUST NOT be reused semantically as a Select option list",
+    "for searchable or very large datasets, compose an explicit search/collection solution rather than silently turning V1 Select into a combobox"
   ],
-  "doNotInvent": ["no custom dropdown styling baked into the trigger", "no multi-select chips in V1 trigger"],
-  "unknowns": ["picker overlay presentation not visualized"]
+  "doNotInvent": [
+    "no trigger-only Select that claims open state without rendering a real option presentation",
+    "no custom dropdown styling baked into the trigger itself",
+    "no menu/menuitem semantics for value selection",
+    "no multi-select chips in V1 Select",
+    "no hidden second committed value inside the presentation adapter",
+    "no tiny chevron-only activation target; the whole trigger opens Select",
+    "no searchable free-text behavior unless the contract is explicitly extended to Combobox/Search Select"
+  ],
+  "unknowns": []
 }
