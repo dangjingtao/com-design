@@ -1,224 +1,202 @@
 # Com Design V2 PRD
 
-> Status: Discovery / Draft  
+> Status: **Ready for Task Breakdown**  
 > Branch: `dev`  
 > Target: Android / iOS / Web / WeChat Mini Program  
-> Method: 通过 6 个固定大题完成产品定义；每个大题最多追问 3 次。
-
-## PRD discovery outline（locked）
-
-1. V2 为什么存在：目标、成功标准、V1 → V2 的边界
-2. 四端到底怎么统一：Android / iOS / Web / 小程序的共性与平台自由度
-3. 谁会使用 Com Design：设计、研发、AI、Penpot、产品项目如何消费
-4. V2 要管到什么程度：Token / Foundation / Component / Pattern / Adapter / Product Extension 的责任边界
-5. 落地与治理：版本、兼容、验收、CI、设计变更如何进入四端
-6. 9 月怎么打仗：范围、优先级、阶段目标、可延后内容
+> Delivery target: **2026-09-01 → 2026-09-07 完成 V2 第一阶段工程主干**  
+> Release judgment: **Mira**  
+> Source of truth: **Canonical Design Source**
 
 ---
 
-## Q1. V2 为什么存在？
+## 1. Executive Summary
 
-### 用户原始判断
+Com Design V2 不是重做 V1，也不是把 Web Preview 扩成更多页面。
 
-> 多端真正意义上的适配。组件要补，但现在要把它从 web 原型基础升级到多端真正能用。
+V2 的任务是把 V1 已经建立的设计系统思想真正落实成一个可以被 Android、iOS、Web、微信小程序共同消费的跨端工程系统。
 
-> V2 是在 V1 基础上演进，或者说是 V1 思想的落实。
+核心目标是：
 
-### 产品定义
+> **同一份设计意图，通过稳定、机器可读的契约与平台 Adapter，在四端可靠落地；允许必要的平台差异，但不允许四端逐渐演变成四套设计系统。**
 
-V2 不是为了否定或替换 V1 的设计思想，而是把 V1 已经建立的设计系统思想进一步落实到真实多端工程。
+V2 第一阶段优先解决 Source、Contract、Adapter、Validation、AI Consumption、Governance 六条主干，而不是追求组件数量 KPI。
 
-更准确的关系是：
+第一周结束时，Com Design 应从“已经有较成熟设计系统思想与 Web / mobile 工程实践”进入：
 
 ```text
-V1：建立设计系统思想、语义、层级与移动端基线
-→
-V2：把这些思想落实为真正可被多端工程消费的体系
+Canonical Source
+→ Machine Contract
+→ Platform Adapter
+→ Android / iOS / Web / WeChat Mini Program
+→ Validation / Evidence
+→ AI / R&D / Penpot consumption
+→ Versioned Release
 ```
 
-因此，V2 的首要目标不是增加组件数量，而是让 Com Design 真正面向 Android、iOS、Web、微信小程序使用。组件补齐仍然属于 V2 工作，但服从于跨端可消费、可实现、可验证这一更高优先级目标。
+---
 
-### V1 → V2 的连续性
+## 2. Why V2 Exists
 
-V1 是 V2 的基础，而不是需要被推翻的旧系统。
+### 2.1 当前阶段判断
 
-V1 已经建立且 V2 应继续继承的核心资产包括：
+V1 已经完成了大量关键设计系统工作，包括：
 
 - Primitive → Semantic → Component → Composite → Pattern → Product Extension 的分层；
-- Semantic-first 的 Token 与组件表达；
-- light / dark、density、iOS / Android touch target 等模式意识；
-- 33 Core Components、4 Composite、6 Pattern 已形成的系统边界；
-- `design-source` 作为单一编辑源，Penpot / engineering outputs 作为下游产物的方向；
-- Flat-first、Primary 稀缺、Section before Card、状态非 color-only 等设计治理原则；
-- Tailwind / NativeWind / React Native token 等已有工程适配实践。
+- Semantic-first Token 与组件表达；
+- 33 Core Components；
+- 4 Core Composite Components；
+- 6 Core UX Patterns；
+- light / dark、density、touch target 等模式意识；
+- Flat-first、Primary 稀缺、Section before Card、状态非 color-only 等设计规则；
+- Penpot、Tailwind、NativeWind、React Native token 等消费实践。
 
-V2 要解决的不是“V1 思想错了”，而是让这些思想从已经成立的设计基线继续走到完整的跨端实现：
+V2 不把这些视为失败的旧架构。
+
+V1 暴露出的 manifest、schema、preview、adapter、消费入口等问题，应定义为：
+
+> **实现闭环和工程成熟度缺口。**
+
+### 2.2 V1 → V2 的关系
 
 ```text
-设计语义已经成立
-→ 契约进一步机器化
-→ 平台边界正式化
-→ Adapter 完整化
-→ 四端可以从同一设计意图可靠落地
+V1
+建立设计系统思想、语义、层级与移动端基线
+
+↓
+
+V2
+把这些思想落实为真正可被多端工程与 AI 消费的体系
 ```
 
-V1 中目前发现的 manifest、schema、preview、adapter 等问题，应被定义为**实现闭环和工程成熟度缺口**，不能反推成对 V1 整体设计价值的否定。
+优先继承：
 
-### 成功标准
+- Design principles；
+- Semantic vocabulary；
+- Component intent；
+- Composite / Pattern boundaries；
+- 已验证的视觉与交互判断。
 
-V2 达到“真正完成多端适配”的最低标准，不要求先证明一个产品已经同时上线四端，而要求设计系统本身已经形成统一、可消费的跨端契约：
+允许升级：
+
+- 不准确或失真的 manifest；
+- 阻碍跨端的单平台假设；
+- 不完整 schema；
+- adapter 输出表示；
+- preview 与 production consumption 的边界；
+- 过时的下游消费入口。
+
+### 2.3 V2 成功定义
+
+V2 第一阶段不要求某一个业务产品已经四端全部上线。
+
+最低成功标准是设计系统本身具备：
 
 ```text
 shared Token semantics
 + shared Component Contract
 + shared cross-platform architecture
 + platform-specific Adapter
++ machine validation
 ```
 
-同一份设计意图能够被各目标平台通过正式 Adapter 解释并落地，而不是依赖某一个 Preview 实现作为唯一事实来源。
-
-### 平台阶段优先级
-
-目标平台完整定义为：
-
-```text
-Android / iOS / Web / WeChat Mini Program
-```
-
-但 V2 第一阶段成熟度优先级不是机械的四端同步：
-
-- Android：优先达到可真实消费；
-- iOS：优先达到可真实消费；
-- Web：优先达到可真实消费；
-- 微信小程序：相对不急，但 V2 架构从第一天就必须为它保留正式位置。
-
-因此，小程序早期可以晚于前三端达到同等成熟的 engineering adapter / component implementation，但 Platform Model、Token 语义、Safe Area / Host Chrome、Navigation、Motion、Overlay、Input 等跨端契约不得排除它。
-
-### Breaking-change policy
-
-选择：**B — 为了真正跨端，允许明确的 breaking change。**
-
-这里的 breaking change 是 V1 向 V2 演进过程中对实现结构和消费接口的主动升级，而不是“推倒 V1”。
-
-优先继承：
-
-```text
-Design principles
-Semantic vocabulary
-Component intent
-Composite / Pattern boundaries
-Validated visual decisions
-```
-
-允许调整：
-
-```text
-stale / inaccurate manifest contracts
-platform assumptions that prevent real multi-platform use
-incomplete schema model
-adapter output representation
-preview and production-consumption boundaries
-outdated downstream consumption entrypoints
-```
-
-任何 breaking change 都应该能回答：
-
-1. 它解决了哪个真实的多端问题？
-2. 为什么现有结构不足以承载？
-3. V1 的哪些思想、语义和设计资产被继续继承？
-
-### 版本关系
-
-V1 与 V2 不定义为两个长期独立演进的设计系统。
-
-V2 是 V1 的下一阶段：**在 V1 的设计思想和资产上继续演进，并把 V1 的跨端意图落实为真实工程能力。**
-
-因此后续 PRD 不采用“V1 是否被淘汰”的叙事，而采用“哪些 V1 能力直接继承、哪些需要在 V2 中实现完整、哪些实现接口允许升级”的迁移视角。
-
-### Q1 conclusion
-
-V2 的意义可以压缩为一句话：
-
-> **Com Design V2 是 V1 思想的跨端工程落实：继承 V1 已建立的设计系统资产，并使同一套设计意图真正能够被 Android、iOS、Web 与微信小程序可靠消费。**
+同一份设计意图不再依赖某个 Web Preview 或某段人工说明作为事实来源。
 
 ---
 
-## Q2. 四端到底怎么统一？
+## 3. Product Goals
 
-### 用户选择
+### G1 — 真正的四端设计系统
 
-选择：**A — 四端视觉尽量一致，平台差异只做必要适配。**
-
-### 当前产品定义
-
-Com Design V2 的跨端统一，不采用“只统一语义、各端自由长相”的松散模型。
-
-目标是让 Android、iOS、Web、微信小程序拥有明确、稳定、可辨认的同一套 Com Design 视觉身份：
+正式目标平台：
 
 ```text
-shared visual language
-+ shared semantic structure
-+ shared component intent
-+ shared interaction hierarchy
-+ necessary platform adaptation only
+Android
+/iOS
+/Web
+/WeChat Mini Program
 ```
 
-因此默认原则是：
+Android、iOS、Web 第一阶段优先达到真实消费成熟度。
 
-- Color、Typography hierarchy、Spacing、Radius、Component anatomy、状态层级、Primary / Secondary hierarchy 尽量一致；
-- 同一个 Core Component 在四端应优先保持相同视觉身份，而不是分别“Material 化 / Cupertino 化 / Web 化”；
-- 平台原生能力可以被利用，但不得在没有必要的情况下覆盖 Com Design 自己的视觉语言；
-- 平台差异必须有明确理由，例如系统 Chrome、Safe Area、Back gesture、键盘 / pointer、Accessibility、原生 Picker、宿主能力限制等；
-- Adapter 的职责是解决平台约束，不是给每个平台重新设计一套 UI。
+微信小程序可以在 engineering maturity 上稍后追平，但从 V2 第一天开始必须进入正式 Platform Model，不允许先做成 Web / native 封闭架构后再补洞。
 
-这意味着 V2 的目标不是四套皮肤共享 Token，而是：
+### G2 — 一套视觉身份，不是四套皮肤
 
-> **一套 Com Design，在四种运行环境中自然地工作。**
+四端默认共享：
 
-### 必要适配边界
+- Color semantics；
+- Typography hierarchy；
+- Spacing rhythm；
+- Radius language；
+- Component intent / anatomy；
+- State semantics；
+- Action hierarchy；
+- 品牌识别。
 
-用户选择：**B — 除系统级差异外，平台习惯很强的组件也允许适度不同。**
+平台差异只在必要或明显改善可用性时进入 Adapter。
 
-因此 V2 将平台差异分为两层。
+### G3 — AI-first consumption
 
-#### 1. System-owned / host-owned differences
-
-这些差异由平台拥有，Com Design 不强行抹平：
-
-- Status Bar / Home Indicator / Safe Area；
-- iOS swipe-back、Android Back / predictive back、微信宿主返回；
-- system keyboard / IME；
-- accessibility service 与系统字号机制；
-- 微信小程序 Capsule / Host Chrome；
-- 平台提供且具有明显可用性优势的 Native Picker 等。
-
-#### 2. Strong platform-convention components
-
-对于平台习惯非常强的组件，允许保持同一 Com Design 语义与视觉身份，同时由 Adapter 调整 presentation / interaction。例如：
-
-- Dialog；
-- Bottom Sheet / Sheet；
-- Menu / Popover；
-- Navigation presentation；
-- Picker / Select presentation；
-- Overlay dismissal 与 Back 行为。
-
-这里的“允许不同”不是给各端自由设计，而是：
+消费者优先级：
 
 ```text
-shared intent + shared hierarchy + shared brand language
-→ platform-aware presentation
+1. AI / Agent
+2. R&D
+3. Designer
 ```
 
-允许变化的通常包括：placement、transition、system gesture、sheet detent、popover positioning、back/dismiss behavior、focus/keyboard handling 等。
+这不是组织价值排序，而是 **Com Design 消费接口的设计优先级**。
 
-默认不应该因为平台不同而随意改变的包括：颜色语义、信息层级、操作优先级、状态含义、核心 anatomy、组件命名和业务结果。
+V2 应达到：
 
-### 冲突优先级
+```text
+AI-readable
++ AI-executable
++ AI-verifiable
+```
 
-用户选择：**A — 默认 Com Design 优先，除非会明显伤害可用性。**
+Agent 不应该靠截图、网页 Demo 或经验猜测 Com Design。
 
-因此 V2 采用一个明确的默认顺序：
+### G4 — 单一事实来源
+
+所有正式消费面都必须来自同一 Canonical Design Source：
+
+```text
+Canonical Design Source
+├─ Machine Contract / AI
+├─ Engineering Adapter / R&D
+├─ Penpot Adapter / Designer
+├─ Human Guide
+└─ Validation / Evidence
+```
+
+任何消费端都不能形成第二真相源。
+
+### G5 — 可治理、可升级、可审查
+
+Com Design 必须有明确版本、兼容策略、迁移方式、门禁与放行规则。
+
+“CI 全绿”不等于“设计系统判断通过”。
+
+---
+
+## 4. Non-goals
+
+V2 第一阶段明确不追求：
+
+- 为了数字好看扩充大量 Core Component；
+- 四端所有物理动画、系统手势、控件外观像素级完全一致；
+- 把业务流程、领域状态机、产品权限或路由塞进 Core；
+- 让 Penpot 成为新的主数据库；
+- 一次性建设四套独立 production component library；
+- 在第一周完成所有低优先级候选组件和长尾视觉抛光；
+- 用 React Native 作为所有平台的统一答案。
+
+---
+
+## 5. Cross-platform Design Principle
+
+### 5.1 默认顺序
 
 ```text
 Com Design identity / hierarchy / interaction intent
@@ -226,113 +204,607 @@ Com Design identity / hierarchy / interaction intent
 → platform implementation detail
 ```
 
-当平台习惯与 Com Design 视觉或交互语言冲突时，不能仅以“iOS 一般这样”“Android 原生那样”为理由直接改掉组件。只有出现下列情况，Platform Adapter 才应覆盖 Core 默认表现：
+Com Design 默认优先。
 
-- 坚持 Core 表现会明显降低任务可用性；
-- 会破坏系统级导航、返回、键盘、焦点或手势行为；
-- 会降低 Accessibility / assistive technology 可用性；
-- Host 平台明确限制或禁止某种实现；
-- 使用成熟系统控件能显著降低错误率或学习成本，而保持自定义表现没有足够产品收益。
+不能仅因为“iOS 一般这样”“Android 原生这样”“Web 常见这样”，就覆盖 Com Design 自己的设计语言。
 
-平台适配后仍应尽可能保留 Com Design 的颜色语义、Typography hierarchy、Spacing rhythm、Action hierarchy、状态表达与品牌识别。
+### 5.2 允许平台差异的情况
 
-这条原则的目的不是与平台对抗，而是防止“跨端适配”逐渐变成四套独立 UI：
+Adapter 可以因为以下原因改变 presentation：
 
-> **平台负责让 Com Design 自然运行，不负责重新定义 Com Design。**
+- Safe Area / Status Bar / Home Indicator；
+- Android Back / predictive back；
+- iOS swipe-back；
+- 微信宿主 Capsule / Host Chrome；
+- Keyboard / IME；
+- Pointer / Focus；
+- Accessibility；
+- Gesture；
+- 系统或宿主强约束；
+- Native Picker 等具有明显可用性优势的系统能力。
 
-### Interaction equivalence
+### 5.3 强平台习惯组件
 
-用户选择：**A — 当某个平台不适合提供相同交互时，优先保证任务结果和状态语义等价。**
+以下能力允许在不同平台使用不同 presentation：
 
-因此 V2 不把“手势、控件形态、弹出方向、系统动画完全一致”定义为跨端一致性的必要条件。跨端首先必须保证：
+- Dialog；
+- Sheet / Bottom Sheet；
+- Menu / Popover；
+- Navigation；
+- Picker / Select；
+- Overlay dismissal；
+- Back behavior。
 
-- 用户面对的是同一个任务；
-- 相同前置状态得到相同可执行能力；
-- Primary / Secondary / Destructive 等操作优先级一致；
-- 提交、取消、返回、失败、重试等结果语义一致；
-- authoritative state 的变化一致；
-- 成功 / 失败 / pending / disabled / selected 等状态含义一致；
-- 用户在任一端都能理解“发生了什么、现在是什么状态、下一步是什么”。
+允许变化：
 
-平台可根据输入方式、宿主能力和系统习惯改变 interaction form，例如同一 Select 在触屏端使用 Sheet / Native Picker，在宽屏 pointer 环境使用 anchored listbox；但它们必须消费同一 selection model，并产生同一 committed value semantics。
+- placement；
+- transition；
+- system gesture；
+- detent；
+- positioning；
+- focus / keyboard behavior；
+- 有依据的有限 anatomy 调整。
 
-换句话说：
+原则上不可随意变化：
 
-> **跨端一致的最小不可破坏单位是任务与状态语义，不是像素级交互动作。**
+- 状态语义；
+- 操作优先级；
+- 业务结果；
+- 核心 Component identity；
+- 通用 semantic token 含义。
 
-### Q2 conclusion
+### 5.4 Interaction Equivalence
 
-Com Design V2 的四端统一原则可以压缩为：
+当四端无法提供完全相同的 interaction form 时，优先保证：
 
-> **视觉身份尽量一致，Com Design 默认优先；平台差异只在必要或明显改善可用性时进入 Adapter。交互形式允许平台化，但任务结果、状态语义和操作层级必须等价。**
+- 用户完成的是同一个任务；
+- authoritative state 一致；
+- Primary / Secondary / Destructive 层级一致；
+- 提交 / 取消 / 返回 / 失败 / 重试结果语义一致；
+- success / failed / pending / disabled / selected 等状态含义一致。
+
+因此：
+
+> **跨端一致的最小不可破坏单位是任务与状态语义，而不是像素级交互动作。**
 
 ---
 
-## Q3. 谁会使用 Com Design？
+## 6. Architecture and Responsibility Boundary
 
-### 消费者优先级
-
-用户给出的顺序是：**C → B → A**。
+V2 正式责任层级：
 
 ```text
-1. AI / Agent
-2. 研发
-3. 设计师
+Primitive
+→ Semantic
+→ Foundation
+→ Component
+→ Composite Component
+→ UX Pattern
+→ Platform Adapter
+→ Product Extension
+→ Product / Business Logic
 ```
 
-这不是价值高低排序，而是 V2 的**消费接口设计优先级**。
+### 6.1 Core
 
-### 第一消费者：AI / Agent
+Core 负责：
 
-V2 首先要成为机器能够稳定理解、执行和验证的 Design System，而不是要求 Agent 阅读大量截图、Web Preview 或散落说明后自行猜测。
+- 通用设计语义；
+- Foundation；
+- Component / Composite；
+- 可复用 UX Pattern；
+- 通用 accessibility / state / interaction contract；
+- Agent 可读取与验证的规则。
 
-因此机器可消费能力必须是一等能力：
+Core 不负责：
 
-- Token、Component、Composite、Pattern、Platform Adapter 都有明确的 machine-readable contract；
-- 名称、状态、variant、anatomy、interaction、platform exception 与禁止事项可被稳定检索；
-- Canonical source 不允许出现“文档说一个版本、Preview 又是另一个版本”的漂移；
-- Agent 能够根据目标平台选择正确 Adapter，而不是复制 Web DOM / CSS 到所有端；
-- 设计系统应提供 build-time / validation evidence，使 Agent 能判断实现是否符合契约，而不仅是“看起来差不多”；
-- Human Guide 与 Skill 可以帮助 Agent 理解意图，但不能代替 canonical machine source。
+- 会员等级计算；
+- 审批流程；
+- 活动奖励规则；
+- 产品专属状态枚举；
+- 产品权限模型；
+- 路由与业务数据；
+- 强制所有业务页面长成固定模板。
 
-这意味着 V2 的设计系统不是“给人看的规范附带 JSON”，而是从源头就把机器消费视为正式产品能力。
+### 6.2 Platform Adapter
 
-### 第二消费者：研发
+Platform Adapter 不是格式转换器，也不是第二套组件系统。
 
-研发应能够从同一套 canonical model 获取目标平台可执行的工程资产与实现规则：
+它可以负责：
 
-- Web / Native / Mini Program 等 Adapter outputs；
-- stable token naming 与 component semantics；
-- platform difference / exception 明确可查；
-- 不需要研发自己从 Penpot 截图反推尺寸和状态；
-- 不需要每个产品团队再维护一份本地 Design Token 真相源。
+- Token / type / motion / elevation / shadow 的平台工程表示；
+- Safe Area / Host Chrome / Back / Focus / IME / Pointer / Gesture；
+- 同一 Component 的 presentation 选择；
+- 强平台习惯组件的有限结构变化；
+- 平台自然的 interaction form。
 
-AI-first 不等于研发只能通过 AI 使用 Com Design。研发仍然必须能够直接、确定地消费生成产物和契约。
+Adapter 不可以：
 
-### 第三消费者：设计师
+- 改写 Core 语义；
+- 改变操作优先级；
+- 删除关键状态；
+- 自己建立一套独立组件命名与状态模型；
+- 塞入产品业务逻辑。
 
-设计师继续是重要消费者，但 V2 不以“手工维护设计稿资产”为系统架构中心。
+有限结构变化必须：
 
-Penpot / Human Guide 应成为同一 canonical source 的设计消费视图：
+1. 有平台 / 宿主 / 输入方式依据；
+2. 保持任务结果、状态语义与操作层级等价；
+3. 能写进 machine-readable Adapter contract 并验证。
 
-- 设计师能看到真实 Token / Component / Platform Context；
-- 设计资产不应和工程资产分叉成第二真相源；
-- 多端差异应通过 Platform Context / Adapter 规则表达，而不是复制四套互不关联的组件；
-- 人类可读文档负责解释原则、边界与例子，但不独立决定机器事实。
+### 6.3 Product Extension
 
-### Shared source principle
+Product Extension 是正式扩展层，不是 Core 管不到的垃圾桶。
 
-消费者存在优先级，但事实来源不能按消费者分裂：
+允许新增：
+
+- Product semantic token；
+- Product Component / Composite；
+- Product UX Pattern；
+- 品牌资产；
+- Mascot；
+- Product theme；
+- 领域专属 presentation。
+
+但不得：
+
+- 重定义 Core semantic token 含义；
+- 静默覆盖同名 Core Component；
+- 改写 Core Pattern 的通用定义；
+- 让 Product 业务枚举进入 Core；
+- 重定义 Success / Warning / Danger 等通用语义。
+
+### 6.4 Pattern 的约束级别
+
+Core UX Pattern 是成熟默认答案，但不是业务产品不可违反的法律。
+
+```text
+Core hard contract / semantic invariant
+= must comply
+
+Core UX Pattern
+= recommended default
+
+Product UX
+= may choose a better domain-specific solution
+```
+
+当 Product Extension 与 Core UX Pattern 冲突时，具体产品可以选择更适合真实业务的方案。
+
+但 Product 仍不能绕过硬契约、semantic invariant、accessibility、touch target、schema 或合法 Adapter 边界。
+
+---
+
+## 7. Canonical Source Model
+
+### 7.1 Desired flow
+
+```text
+Editable Canonical Design Source
+→ Normalized Design Model
+→ Platform-neutral Contracts
+→ Platform Adapters
+→ Generated / Synchronized Consumers
+```
+
+### 7.2 Source Integrity
+
+V2 必须把 Source Integrity 变成 P0 gate：
+
+- manifest 引用必须真实存在；
+- schema 必须可解析；
+- Token / Component / Composite / Pattern / Adapter catalog 必须可解析；
+- source 与 generated output 必须可验证一致；
+- release gate 不能依赖手写 `true`；
+- stale docs / Skill / consumption index 必须能被检测。
+
+### 7.3 Platform axes
+
+V2 的跨端模型应至少能表达：
+
+```text
+platform = ios | android | web | wechat-mini-program
+viewport = compact | medium | wide   // exact naming may be finalized during implementation
+input = touch | pointer | keyboard | hybrid
+motion = standard | reduced
+color-scheme = light | dark
+content-scale = standard | enlarged / platform-driven
+```
+
+不能通过 `web = hover`、`mini-program = no keyboard` 之类隐含假设推断交互能力。
+
+---
+
+## 8. AI / Agent Consumer Contract
+
+### 8.1 Agent should be able to
+
+Agent 应能够从 canonical machine source 确定地读取：
+
+- Token；
+- Component；
+- Composite；
+- Pattern；
+- Variant；
+- State；
+- Anatomy；
+- Platform Adapter；
+- Platform exception；
+- Prohibition；
+- Validation rule。
+
+并完成：
+
+```text
+read contract
+→ choose platform path
+→ implement production code
+→ validate compliance
+→ output evidence
+```
+
+### 8.2 Hard vs Soft review
+
+Hard gate 适合机器确定判断：
+
+- source / manifest / schema 完整性；
+- 引用合法性；
+- required state / anatomy；
+- Adapter mapping；
+- accessibility / touch target 等确定性约束；
+- forbidden literals / semantic misuse；
+- generated-source consistency；
+- 可自动验证的 contract parity。
+
+Soft review 由 Agent 输出 warning / evidence：
+
+- 信息层级；
+- 品牌色克制度；
+- 平台例外是否自然；
+- 视觉平衡；
+- 动效质量；
+- 密度；
+- 虽合法但体验别扭的组合；
+- 是否需要演进 Core / Pattern。
+
+统一输出模型：
+
+```text
+hard compliance: pass | fail
+AI review findings: finding[]
+soft findings: warning[]
+evidence: evidence[]
+exceptions: exception[]
+release judgment: approve | revise | reject
+```
+
+### 8.3 Penpot
+
+Penpot 是正式消费端，但不是第二真相源：
 
 ```text
 Canonical Design Source
-→ Machine Contract / AI
-→ Engineering Adapter / R&D
-→ Penpot + Human Guide / Design
+→ Penpot Adapter / Sync
+→ editable designer workspace
 ```
 
-三类消费者读取同一个设计意图，只是获得不同形式的消费产物。
+设计师可以在 Penpot 真实工作，但 Token / Component / Variant / State / Platform Context 应尽可能可追溯到 canonical source。
 
-### 当前待确认
+未来如需 Penpot → source 回写，应通过显式 proposal / review / sync workflow，不默认开放自由双向写入。
 
-- AI / Agent 作为第一消费者，V2 希望它主要做到“读懂并辅助人施工”，还是可以直接承担生产代码施工与设计系统合规验收？
+---
+
+## 9. Validation and Release Governance
+
+### 9.1 Governance chain
+
+```text
+Canonical Change
+→ Deterministic Hard Gates
+→ AI Review Gate when required
+→ Mira Review / Veto
+→ Versioned Release
+→ Consumer Project Pins Version
+→ Explicit Upgrade
+```
+
+### 9.2 Deterministic gate
+
+所有提交，无论来自人、Mira 或其他 Agent，都必须通过确定性门禁。
+
+至少包括：
+
+```text
+Token validation
+→ Contract schema validation
+→ Source integrity
+→ Adapter validation
+→ Contract ↔ Preview / Implementation parity
+→ Build / Smoke / Representative checks
+```
+
+### 9.3 AI Review Gate
+
+对于指定的 AI / Agent 施工提交，可根据施工风险增加独立 AI Review Gate。
+
+它针对的是 AI-generated change 的风险，而不是对模型厂商做价值判断。
+
+重点检查：
+
+- 是否误解 contract；
+- 是否把 Web 实现直接复制到其他平台；
+- literal / semantic drift；
+- 漏状态 / 异常路径 / accessibility；
+- build 通过但设计意图错误；
+- evidence 是否足够。
+
+### 9.4 Mira release judgment
+
+Mira 是主要 Design System reviewer / release judge，并拥有最终否决权。
+
+即使 CI 与 AI Review Gate 全绿，以下情况仍可 `revise / reject`：
+
+- 方向偏离 V2；
+- 为单端需求破坏共享 contract；
+- Core / Adapter / Product Extension 边界错误；
+- 设计意图或体验明显不成立；
+- breaking change 收益证据不足；
+- evidence 不足以支撑正式版本。
+
+原则：
+
+> **门禁决定“是否具备被评审的资格”，Mira 决定“是否值得进入正式版本”。**
+
+---
+
+## 10. Versioning and Compatibility
+
+采用 SemVer 基线：
+
+```text
+Patch
+→ 修缺陷，默认不要求消费项目修改
+
+Minor
+→ 增兼容能力，默认不破坏现有消费接口
+
+Major
+→ 允许明确 breaking change，但必须承担迁移成本
+```
+
+Major 发布至少需要：
+
+- breaking surface；
+- breaking 原因；
+- migration guide；
+- 受影响 Token / Component / Pattern / Adapter / Product Extension；
+- representative consumer evidence；
+- Mira release judgment。
+
+### Consumer version pinning
+
+每个业务项目锁定自己的 Com Design 版本。
+
+```text
+Com Design publishes N
+→ consumer remains on pinned version
+→ project chooses upgrade
+→ impact / migration / validation
+→ update lock to N
+```
+
+禁止 Design System 发布后让所有消费项目自动漂移到最新版本。
+
+---
+
+## 11. Week-1 Delivery Plan
+
+### 11.1 Delivery posture
+
+2026 年 9 月第一周采用高并行、细拆卡、短验收链路。
+
+不受此前约 11 张主卡估算限制。
+
+正式派卡时可以拆成 **约 16–20 张更小任务卡**，具体数量由依赖图和文件竞态决定，而不是为了数字好看固定。
+
+拆卡原则：
+
+- 单卡单一验收目标；
+- 可机器检查；
+- 尽量低竞态；
+- 明确文件 ownership；
+- Schema / Adapter / Docs / Preview / Validation 尽量拆开；
+- shared canonical files 只由少数串行卡修改；
+- 可并行工作尽量并行；
+- 每卡必须产出 evidence。
+
+### 11.2 P0 — Week 1 必须完成
+
+1. Source Integrity / Manifest 修正与自动校验；
+2. Canonical Design Model 与 platform / input / viewport / motion / content-scale 轴；
+3. Component Contract Schema + validator；
+4. Android Adapter 可真实消费；
+5. iOS Adapter 可真实消费；
+6. Web Adapter 可真实消费；
+7. WeChat Mini Program 正式 Platform Model + minimum viable Adapter path；
+8. Safe Area / Host Chrome / Back / Overlay / Navigation Platform Foundation；
+9. Motion semantic foundation + reduced motion；
+10. AI-readable / AI-executable / AI-verifiable 消费入口；
+11. deterministic hard gates + evidence model；
+12. Penpot / Human Guide / Skill / library-consumption 与 canonical source 对齐；
+13. representative component / pattern cross-platform smoke；
+14. version / migration / release governance 可执行化。
+
+### 11.3 P1 — 第一周有并行容量则完成
+
+- Responsive / Layout foundation；
+- Side Navigation / Rail / recursive navigation；
+- Mobile Search + Filter + Incremental Loading；
+- Alert / Banner / Result / Blocking State hardening；
+- Switch / Timeline 已发现 implementation defects；
+- Icon Registry / Provider / Adapter；
+- V2 Button additions；
+- Accordion / Index Bar 等高证据候选能力。
+
+### 11.4 Week-1 completion definition
+
+第一周末必须形成：
+
+```text
+Canonical Source Integrity
++ Cross-platform Model
++ Machine-readable Contracts
++ Android / iOS / Web usable Adapters
++ WeChat Mini Program formal architecture + minimum Adapter path
++ Platform Adapter Foundation
++ AI-executable / AI-verifiable path
++ Deterministic Gates
++ Evidence / Review / Version Governance
++ Penpot formal downstream path
+```
+
+第一周以后可以继续“长肉”，但 Source / Contract / Adapter / Validation / Governance 不能再作为基础尾债遗留。
+
+---
+
+## 12. Deferred After Week 1
+
+允许后续继续演进：
+
+- 低优先级候选 Component；
+- 微信小程序更完整的 production maturity；
+- 更多真实产品四端消费证据；
+- 长尾 visual polish；
+- 新 Product Extension；
+- 经过多产品证据后决定是否晋升 Core 的能力；
+- 更完整 Data Table / Pagination / Popover / Tooltip / Drawer / Breadcrumb / Date-Time / Upload / Combobox 等候选能力。
+
+这些不应阻塞 V2 第一阶段主干成立。
+
+---
+
+## 13. Acceptance Criteria
+
+V2 第一阶段进入“可正式消费”至少满足：
+
+### Source
+
+- Canonical manifest 与真实 source 一致；
+- schema 引用存在且可解析；
+- release gate 可计算，不依赖手写布尔状态。
+
+### Contract
+
+- Core Component 有 formal machine-readable contract schema；
+- State / Variant / Anatomy / Platform exception 可读取；
+- Product Extension 与 Core namespace 可区分。
+
+### Platform
+
+- Android / iOS / Web 有可真实消费的 Adapter path；
+- WeChat Mini Program 已进入正式 Platform Model，并有最小 Adapter path；
+- Adapter 可以表达 presentation 差异，不重新定义 Core 语义。
+
+### AI
+
+Agent 可以从 canonical source 确定：
+
+- 用什么；
+- 如何实现；
+- 使用哪个平台路径；
+- 如何验证；
+- 为什么判定通过 / 不通过。
+
+### Validation
+
+- hard gates 自动执行；
+- soft finding 可结构化输出；
+- representative smoke 可执行；
+- evidence 可审查。
+
+### Governance
+
+- SemVer policy 明确；
+- Major migration 规则明确；
+- consumer version pinning 可执行；
+- Mira release judgment 进入正式流程。
+
+### Design consumption
+
+- Penpot / Human Guide / Skill / machine contract 不形成互相冲突的第二事实来源。
+
+---
+
+## 14. Key Risks
+
+### R1 — 高并行导致 canonical file 竞态
+
+Mitigation：共享 canonical 文件限制 ownership，主干串行，外围 Adapter / Validator / Preview 并行。
+
+### R2 — 为赶第一周，把四端做成四套实现
+
+Mitigation：先锁 Contract 与 Adapter responsibility，再写平台代码。
+
+### R3 — AI-first 退化成“给 AI 多写点文档”
+
+Mitigation：要求机器契约、validator、evidence，而不是只增加 prose。
+
+### R4 — 小程序因为优先级较低再次被架构遗忘
+
+Mitigation：第一周必须完成正式 Platform Model + minimum Adapter path，成熟度可以后补，架构位置不能后补。
+
+### R5 — V2 breaking 伤害现有项目
+
+Mitigation：Major-only breaking + migration guide + consumer pinning + representative evidence。
+
+### R6 — Pattern 治理过强导致产品僵化
+
+Mitigation：Pattern 作为推荐默认；Core hard semantic contract 才是强约束。
+
+---
+
+## 15. Product Decisions Summary
+
+### Q1 — Why V2
+
+> **V2 是 V1 思想的跨端工程落实，而不是否定 V1。**
+
+### Q2 — Four-platform consistency
+
+> **视觉身份尽量一致，Com Design 默认优先；必要的平台差异进入 Adapter，任务结果、状态语义和操作层级必须等价。**
+
+### Q3 — Consumers
+
+> **AI / Agent 第一，研发第二，设计师第三；AI 要可读、可执行、可验证；Penpot 是正式下游，不是第二真相源。**
+
+### Q4 — Responsibility boundary
+
+> **Core 管通用语义、Component / Composite 与默认 UX Pattern；Adapter 管平台化；Product Extension 可以正式扩展，并拥有具体产品 UX 的最终选择权，但不能改写 Core 硬语义。**
+
+### Q5 — Governance
+
+> **机器守确定性底线；需要时增加 AI Review Gate；Mira 负责综合设计系统判断并拥有最终否决权；消费项目锁版本并显式升级。**
+
+### Q6 — September execution
+
+> **9 月第一周完成 V2 跨端工程主干；用更多、更小、更可并行的卡提高吞吐量，第一周后继续扩展覆盖广度，但不再欠基础架构。**
+
+---
+
+## 16. Next Step
+
+PRD 产品定义已经完成。
+
+下一阶段不是继续扩写 PRD，而是：
+
+```text
+PRD
+→ architecture work breakdown
+→ dependency graph
+→ 16–20 small task cards (estimated)
+→ parallel execution
+→ evidence-based review
+→ V2 first-week milestone
+```
+
+只有在施工中发现新的真实平台证据、产品冲突或架构不可行性时，才回写 PRD；基础工程实现细节进入 Architecture / Task Card / Contract 文档，不继续膨胀 PRD。
