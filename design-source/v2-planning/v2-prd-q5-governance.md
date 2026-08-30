@@ -69,10 +69,40 @@ evidence: evidence[]
 Mira decision: approve | revise | reject
 ```
 
+## Mira final veto
+
+用户选择：**A — Mira 拥有最终否决权。**
+
+即使 deterministic CI 与额外 AI Review Gate 都已经通过，Mira 仍可以因为设计系统方向、架构边界、跨端语义、软质量判断或 evidence 不足而拒绝进入正式版本。
+
+这意味着“全绿”只能证明已经满足当前可机器化与已配置审查规则，不能自动等价为“Com Design 设计系统判断已经通过”。
+
+Mira 可以据此要求 `revise` / `reject`，典型理由包括：
+
+- 变更在局部合法，但整体方向偏离 V2；
+- 为解决单端问题破坏了共享 contract 或长期跨端能力；
+- Core / Platform Adapter / Product Extension 责任边界放错；
+- 虽然没有硬规则失败，但设计意图、状态语义或体验质量存在明显问题；
+- breaking change 的收益与证据不足；
+- review evidence 不足以支持正式版本承诺。
+
+Mira 的否决不是替代 CI，也不能把已经失败的硬门禁主观改成通过。治理关系是单向的：
+
+```text
+hard gate fail → cannot release
+hard gate pass + AI gate pass → eligible for Mira judgment
+Mira reject → cannot release
+Mira approve → eligible for formal release
+```
+
+因此最终治理原则是：
+
+> **门禁决定“是否具备被评审的资格”，Mira 决定“是否值得进入正式版本”。**
+
 ### Governance principle
 
-> **机器守住确定性底线，额外 AI 门禁用于审查 AI 施工风险，Mira 负责综合设计系统判断与主要放行决策。**
+> **机器守住确定性底线，额外 AI 门禁用于审查 AI 施工风险，Mira 负责综合设计系统判断，并拥有正式版本最终否决权。**
 
 ### Current question
 
-- Mira 的放行判断是否应该拥有最终否决权，即便 CI / AI Review Gate 全绿，也可以因为设计系统方向、架构边界或 evidence 不足而拒绝进入正式版本？
+- 对已经进入正式版本的 Core contract / Token / Component，V2 是否需要明确的兼容策略：默认保持向后兼容，还是允许在 major 版本中主动 breaking？
