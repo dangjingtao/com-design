@@ -418,7 +418,29 @@ Accordion
 
 ---
 
-## 7. Review ledger rule
+## 7. Control state defects
+
+### V2-Switch-01 — Disabled visual differentiation
+
+**确认问题：** 当前 Switch 的 disabled 视觉与正常态过于接近，属于视觉缺陷。现有 V1 Contract 已存在 `disabled-off` / `disabled-on`，因此 V2 不新增状态枚举，而是修正视觉层级与 Preview / token 映射。
+
+验收要求：
+
+- `disabled-on` 必须仍然清楚表达当前值为 On；
+- `disabled-off` 必须仍然清楚表达当前值为 Off；
+- 两个 disabled 状态都必须明显弱于对应 enabled 状态，用户不应需要点击后才发现不可用；
+- 禁用态不能只依赖 cursor、事件拦截或交互失败表达；
+- Track、Thumb、Border 与外部 Label / Helper Text 应共同形成 disabled hierarchy，不能只把某一个局部改灰；
+- 不建议通过全组件粗暴 `opacity` 解决，因为这可能同时损坏 On / Off 的可辨识度和文本对比度；
+- Disabled On 可以保留弱化后的 selected / brand semantic cue，但不得与正常 On 使用同强度品牌色；
+- Disabled Off 使用 neutral disabled surface / border，同时需要和正常 Off 有足够差异；
+- Preview / Human Guide 必须至少并排展示 `off / on / disabled-off / disabled-on` 四态进行视觉验收；
+- iOS / Android / 微信小程序适配后仍需保持上述状态层级，不以平台原生控件差异作为跳过验收的理由；
+- 可访问语义继续保留当前 checked value 与 disabled state，不能因为视觉弱化而丢失 On / Off 状态信息。
+
+---
+
+## 8. Review ledger rule
 
 从本文件建立后：
 
