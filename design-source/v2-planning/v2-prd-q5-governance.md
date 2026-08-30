@@ -147,10 +147,65 @@ Major 可以主动进行 V2 演进所需的 breaking change，但正式发布前
 
 > **平时升级尽量不折腾现有项目；真正需要改变契约时，用 Major 明确承担迁移成本。**
 
+## Consumer version policy
+
+用户选择：**B — 每个消费项目锁定自己的 Com Design 版本；需要时显式升级，并在升级前查看影响与验收结果。**
+
+默认治理策略：
+
+- Android / iOS / Web / 微信小程序项目不得自动漂移到最新 Com Design；
+- 每个项目明确记录当前消费版本；
+- 升级由项目主动触发，而不是由 Design System 强制推送；
+- 升级前读取 changelog、breaking surface、migration guide 与适配器变化；
+- 执行项目自身 build / smoke / representative UI / contract checks；
+- 对 Major 升级必须显式确认迁移影响；
+- 对 Patch / Minor 可以提供自动化升级建议，但默认仍需项目侧接受后进入版本锁。
+
+理想关系：
+
+```text
+Com Design publishes version N
+→ consumer project stays on pinned version
+→ project chooses upgrade
+→ impact / migration / validation
+→ project updates lock to version N
+```
+
+这保证 Design System 可以继续演进，同时不会让一个中央版本发布把多个正在运行的产品同时变成隐式测试场。
+
+### Version-consumption principle
+
+> **设计系统负责发布可升级的版本，产品项目负责决定何时升级；版本锁是稳定边界，不是阻碍演进。**
+
+## Discovery decision rule
+
+在后续 PRD discovery 中，成熟且低争议的工程治理问题默认由 Mira 直接给出方案并落文档，不再占用用户的产品追问额度，例如：
+
+- SemVer 基础策略；
+- consumer version pinning；
+- changelog / migration guide；
+- deterministic CI gate；
+- source integrity / schema validation；
+- 常规 rollback / deprecation 基线。
+
+只有当一个问题会真实改变产品价值、组织权责、跨端设计自由度、Core / Product 边界或发布风险承受方式时，才继续向用户追问。
+
 ### Governance principle
 
 > **机器守住确定性底线，额外 AI 门禁用于审查 AI 施工风险，Mira 负责综合设计系统判断，并拥有正式版本最终否决权。**
 
-### Current question
+### Q5 conclusion
 
-- Com Design 发布新版本后，Android / iOS / Web / 微信小程序等消费项目应该自动追随最新版，还是由每个项目锁定版本并显式升级？
+Com Design V2 的正式治理关系为：
+
+```text
+canonical change
+→ deterministic hard gates
+→ AI Review Gate when required
+→ Mira review / veto
+→ versioned release
+→ consumer project pins version
+→ explicit project upgrade with migration + evidence
+```
+
+Q5 已收口。
