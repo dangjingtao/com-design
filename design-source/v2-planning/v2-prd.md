@@ -176,6 +176,45 @@ shared visual language
 
 > **一套 Com Design，在四种运行环境中自然地工作。**
 
+### 必要适配边界
+
+用户选择：**B — 除系统级差异外，平台习惯很强的组件也允许适度不同。**
+
+因此 V2 将平台差异分为两层。
+
+#### 1. System-owned / host-owned differences
+
+这些差异由平台拥有，Com Design 不强行抹平：
+
+- Status Bar / Home Indicator / Safe Area；
+- iOS swipe-back、Android Back / predictive back、微信宿主返回；
+- system keyboard / IME；
+- accessibility service 与系统字号机制；
+- 微信小程序 Capsule / Host Chrome；
+- 平台提供且具有明显可用性优势的 Native Picker 等。
+
+#### 2. Strong platform-convention components
+
+对于平台习惯非常强的组件，允许保持同一 Com Design 语义与视觉身份，同时由 Adapter 调整 presentation / interaction。例如：
+
+- Dialog；
+- Bottom Sheet / Sheet；
+- Menu / Popover；
+- Navigation presentation；
+- Picker / Select presentation；
+- Overlay dismissal 与 Back 行为。
+
+这里的“允许不同”不是给各端自由设计，而是：
+
+```text
+shared intent + shared hierarchy + shared brand language
+→ platform-aware presentation
+```
+
+允许变化的通常包括：placement、transition、system gesture、sheet detent、popover positioning、back/dismiss behavior、focus/keyboard handling 等。
+
+默认不应该因为平台不同而随意改变的包括：颜色语义、信息层级、操作优先级、状态含义、核心 anatomy、组件命名和业务结果。
+
 ### 当前待确认
 
-- 哪些平台差异属于“必要适配”，可以合法打破视觉一致？
+- 当“视觉一致”与“平台原生习惯”发生冲突时，V2 应由什么原则决定谁优先？
