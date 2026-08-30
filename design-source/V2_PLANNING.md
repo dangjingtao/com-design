@@ -169,6 +169,74 @@ V2 开始明确 Layout 能力，为后续 Desktop 设计系统扩展留出干净
 
 正式施工前再根据 API 稳定性确认是否拆成 Component + Composite，当前先作为 V2 确认能力记录。
 
+### V2-Navigation-02 — Top App Bar + WeChat Mini Program support
+
+**确定需求：** V2 顶部导航必须支持微信小程序，但必须区分产品 UI、平台适配与原型 Chrome，不能把状态栏或微信胶囊错误地做成 Core Component。
+
+采用三层模型：
+
+```text
+Top App Bar / Navigation Bar
+→ Platform Navigation Adapter
+→ Device / Platform Chrome
+```
+
+#### A. Top App Bar / Navigation Bar — Core Component
+
+Core 只负责产品真正拥有的页面导航 UI：
+
+- optional leading back / close action；
+- title；
+- trailing actions / overflow；
+- default / scrolled 等页面级状态；
+- action hierarchy、touch target、title truncation 与 accessible name；
+- 可被 Native App、H5、WebView、微信小程序等不同运行环境消费。
+
+V2 继续沿用 V1 的边界：Safe Area 不由 Top App Bar 自己硬编码。
+
+#### B. Mini Program Navigation Adapter — Platform Adapter
+
+微信小程序不新增一套 `WeChatNavBar` Core 视觉组件，而增加平台适配契约。
+
+职责包括：
+
+- 获取 / 接收微信宿主提供的顶部 inset 与胶囊区域信息；
+- 计算 Top App Bar 可用 title / trailing action 空间；
+- 保证自定义导航栏不会与右上角宿主胶囊冲突；
+- 映射微信返回、首页等宿主行为时，不污染 Core Navigation API；
+- 微信平台尺寸或宿主行为变化时，应修改 Adapter，而不是改写 Core Top App Bar。
+
+#### C. Status Bar / Mini Program Capsule — Device / Platform Chrome
+
+顶部状态栏、微信右上角胶囊、小程序宿主层等 **不属于 Core Component**。
+
+它们主要用于：
+
+- Penpot / Human Guide / Prototype 的真实环境展示；
+- 设计验收时模拟真机 / 小程序宿主约束；
+- 计算 Reserved Region / Platform Chrome Inset。
+
+产品实现不得把模拟状态栏或模拟微信胶囊当成普通 UI Component 重复绘制。
+
+#### D. Platform Reserved Region
+
+虽然微信胶囊不是 Com Design 组件，但它真实占据布局空间，因此 V2 需要正式定义：
+
+`Platform Reserved Region / Platform Chrome Inset`
+
+Top App Bar 根据 Reserved Region 计算可用布局区域，而不是通过“画一个假胶囊”解决冲突。
+
+#### Prototype policy
+
+V2 的 Prototype Shell MAY 提供：
+
+- iOS Status Bar simulation；
+- Android Status Bar simulation；
+- WeChat Mini Program Chrome simulation；
+- platform reserved region visualization。
+
+这些必须明确标注 `Prototype / Environment Chrome`，不能出现在 Core Component 计数中。
+
 ---
 
 ## 5. Future Desktop boundary（暂记，不展开施工）
