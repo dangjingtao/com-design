@@ -10,7 +10,7 @@
     { "slug": "icon-button", "name": "Icon Button", "category": "actions-forms", "contract": "components/icon-button.json", "preview": "preview/component-icon-button.html" },
     { "slug": "input", "name": "Input / Text Field", "category": "actions-forms", "contract": "components/input.json", "preview": "preview/component-input.html" },
     { "slug": "textarea", "name": "Textarea", "category": "actions-forms", "contract": "components/textarea.json", "preview": "preview/component-textarea.html" },
-    { "slug": "select", "name": "Select / Picker Trigger", "category": "actions-forms", "contract": "components/select.json", "preview": "preview/component-select.html" },
+    { "slug": "select", "name": "Select", "category": "actions-forms", "contract": "components/select.json", "preview": "preview/component-select.html" },
     { "slug": "checkbox", "name": "Checkbox", "category": "actions-forms", "contract": "components/checkbox.json", "preview": "preview/component-checkbox.html" },
     { "slug": "radio", "name": "Radio", "category": "actions-forms", "contract": "components/radio.json", "preview": "preview/component-radio.html" },
     { "slug": "switch", "name": "Switch", "category": "actions-forms", "contract": "components/switch.json", "preview": "preview/component-switch.html" },
