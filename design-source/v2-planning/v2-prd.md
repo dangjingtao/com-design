@@ -240,6 +240,36 @@ Com Design identity / hierarchy / interaction intent
 
 > **平台负责让 Com Design 自然运行，不负责重新定义 Com Design。**
 
-### 当前待确认
+### Interaction equivalence
 
-- 当某个平台无法或不适合提供与其他端完全相同的交互能力时，V2 更重视“交互形式一致”，还是“任务结果与状态语义等价”？
+用户选择：**A — 当某个平台不适合提供相同交互时，优先保证任务结果和状态语义等价。**
+
+因此 V2 不把“手势、控件形态、弹出方向、系统动画完全一致”定义为跨端一致性的必要条件。跨端首先必须保证：
+
+- 用户面对的是同一个任务；
+- 相同前置状态得到相同可执行能力；
+- Primary / Secondary / Destructive 等操作优先级一致；
+- 提交、取消、返回、失败、重试等结果语义一致；
+- authoritative state 的变化一致；
+- 成功 / 失败 / pending / disabled / selected 等状态含义一致；
+- 用户在任一端都能理解“发生了什么、现在是什么状态、下一步是什么”。
+
+平台可根据输入方式、宿主能力和系统习惯改变 interaction form，例如同一 Select 在触屏端使用 Sheet / Native Picker，在宽屏 pointer 环境使用 anchored listbox；但它们必须消费同一 selection model，并产生同一 committed value semantics。
+
+换句话说：
+
+> **跨端一致的最小不可破坏单位是任务与状态语义，不是像素级交互动作。**
+
+### Q2 conclusion
+
+Com Design V2 的四端统一原则可以压缩为：
+
+> **视觉身份尽量一致，Com Design 默认优先；平台差异只在必要或明显改善可用性时进入 Adapter。交互形式允许平台化，但任务结果、状态语义和操作层级必须等价。**
+
+---
+
+## Q3. 谁会使用 Com Design？
+
+### 待确认
+
+- V2 最重要的第一消费对象是谁，以及设计师、研发、AI / Agent、Penpot、产品项目之间应如何排序与分工？
