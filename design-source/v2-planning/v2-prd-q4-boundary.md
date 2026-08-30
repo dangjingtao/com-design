@@ -85,6 +85,51 @@ Core provides stable semantics and contracts
 
 如果 Product Extension 中的能力经过多个真实产品长期验证，证明其已去业务化、结构和交互稳定、跨产品复用价值明确，才进入“是否晋升 Core”的独立评审，而不是自动上收。
 
+## Platform Adapter scope
+
+用户选择：**B — Platform Adapter 除了技术映射，也允许决定同一 Component 在不同平台下的 presentation，并承载有限的结构变化。**
+
+因此 Platform Adapter 不是纯粹的格式转换器，也不是第二套组件系统。它负责把同一个 Com Design contract 解释成目标平台自然、可用且可实现的表现。
+
+Adapter 可以负责：
+
+- Token / type / motion / elevation / shadow 等平台值与工程表示的转换；
+- Safe Area、Host Chrome、Back、Focus、Keyboard / IME、Pointer、Gesture 等平台环境接入；
+- 同一 Component 的 presentation 选择，例如 Select 在触屏端使用 Sheet / Native Picker，在宽屏 pointer 环境使用 anchored listbox；
+- Dialog / Sheet / Menu / Navigation / Picker 等强平台习惯组件的 placement、dismiss、transition、focus 与 gesture 行为；
+- 为适配真实平台约束而进行有限 anatomy 调整，例如为微信 Capsule 预留可用导航区域，或在宽屏环境重新分配 action placement；
+- 将同一任务与状态语义映射为平台更自然的交互形式。
+
+Adapter 不可以：
+
+- 改写 Core Component 的语义或业务结果；
+- 改变 Primary / Secondary / Destructive 等操作优先级；
+- 擅自删除 contract 要求的关键状态或反馈；
+- 为平台重新定义一套独立的 Component 命名、状态模型或设计语言；
+- 因为“原生一般这样”就无条件覆盖 Com Design 的视觉身份；
+- 把产品业务逻辑塞进平台适配层。
+
+允许的结构变化应满足三个条件：
+
+1. 有明确的平台可用性、宿主限制或输入方式依据；
+2. 任务结果、状态语义和操作层级保持等价；
+3. 变化能够被 machine-readable adapter contract 明确描述和验证，而不是由实现者临场发挥。
+
+因此理想关系是：
+
+```text
+Core Component Contract
+→ Platform Adapter chooses presentation / limited structure
+→ Platform implementation
+```
+
+而不是：
+
+```text
+Core Component
+→ each platform redesigns its own component
+```
+
 ### Current question
 
-- Platform Adapter 应该只负责平台实现差异，还是也允许承载同一个 Component 在不同平台下的 presentation 选择与有限结构变化？
+- 当 UX Pattern 与 Product Extension 发生冲突时，Product 是否可以明确例外 / override Pattern，还是 Core Pattern 应被视为不可破坏的强约束？
