@@ -85,7 +85,7 @@
     "Typeahead SHOULD be supported for anchored listboxes when option labels are textual and the option set is not trivially small."
   ],
   "accessibilityContract": [
-    "The trigger MUST have an accessible name from its label and expose aria-haspopup=listbox, aria-expanded and aria-controls for custom web presentations.",
+    "The trigger MUST have an accessible name from its label, expose aria-expanded and aria-controls for custom web presentations, and set aria-haspopup to the actual popup type: dialog for modal Bottom Sheet presentations or listbox for directly anchored listboxes.",
     "Validation text MUST be associated with the trigger through the target platform's description/error semantics; web uses aria-invalid and aria-describedby when applicable.",
     "Custom option containers use listbox semantics and options expose selected/disabled state; do not use menu semantics for value selection.",
     "Opening custom presentation moves focus predictably; closing always restores focus to the originating trigger unless navigation intentionally leaves the field.",
