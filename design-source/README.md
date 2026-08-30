@@ -1,141 +1,312 @@
 # Com Design Mobile 设计系统
 
-Com Design Mobile 是一套公司级的移动端 Design System（版本 `1.0.0-rc.2`），不归属于任何单一业务产品，而是作为集团移动应用的共同视觉与交互地基。token、组件契约、UX Pattern 与密度规则在落地到具体产品时不得被改写——产品侧只能在 Core 之上做扩展。系统的整体气质可以概括为 *"Modern / Clear / Light / Efficient"*，并在工程上坚持 *"Compact-first、Flat-first、信息层级优先于装饰"*。本文档基于 `com-design` phase5-foundation-hardening 的结构化 token 与组件契约重建，覆盖 Foundation tokens 与 **V1 全部 33 个核心组件**（分布在 Actions & Forms、Navigation & Information、Feedback / Overlay / Progress、Search & Menu 四个契约分组），以及一套移动端 UI kit，作为新加入设计师的入门 brief，而非 token 查阅手册。
+Com Design Mobile 是一套公司级移动端 Design System（`1.0.0-rc.2`），不归属于任何单一业务产品，而是作为公司移动应用共同的视觉、交互与组合地基。
 
-> *"Compact-first、Flat-first、信息层级优先于装饰"*；*"Product extension does not mutate Core"*；*"Section before Card"*；*"Brand color is a scarce hierarchy signal"*；*"Accent Cyan is not the default active color for global navigation; reserve it for local emphasis, progress, data"*。
+当前 Core 由三类可消费契约组成：
+
+```text
+33 Core Components
+4 Core Composite Components
+6 Core UX Patterns
+```
+
+系统整体气质：**Modern / Clear / Light / Efficient**。
+
+工程和设计原则：**Compact-first、Flat-first、信息层级优先于装饰、Section before Card、Semantic before literal**。
+
+> Brand color is a scarce hierarchy signal. Product extension does not mutate Core.
+
+完整系统层级：
+
+```text
+Primitive
+→ Semantic
+→ Core Component
+→ Core Composite Component
+→ Core UX Pattern
+→ Product Extension
+```
+
+- **Core Component**：独立控件或信息单元，例如 Button、Tabs、List Item、Dialog。
+- **Core Composite Component**：结构和交互已稳定、可以直接实例化的组合，例如 Filter Bar、Grouped List。
+- **Core UX Pattern**：跨组件 / 跨状态 / 跨页面的任务规则，允许多种合法视觉实现。
+- **Product Extension**：业务领域专属的组件、内容、路由和状态表达，不反写 Core。
+
+---
 
 ## CONTENT FUNDAMENTALS
 
 ### Voice & tone
 
-Com Design 的文案是**中文优先、专业、克制、信息密度高**的产品语言。句子短，动词前置，不使用感叹号和 emoji；状态不靠颜色单独传达，而是由"图标形状 + 文字标签"共同承担，以保证在暗色模式、色弱场景和低饱和屏幕上仍然可读。人称上默认第二人称省略（"请输入…"而不是"您请输入…"），错误信息直接给出可执行的修正动作，而不是只描述失败。数字与单位之间不留空，百分比、容量、计数都以紧凑形式呈现。
+Com Design 文案中文优先、专业、克制、信息密度高。句子短，动词前置；状态不能只靠颜色传达；错误信息优先告诉用户下一步怎么修正。
 
-### Concrete copy examples
+默认：
 
-- 主操作按钮：*"确认提交"*
-- 次要操作按钮：*"次要操作"*
-- 输入校验错误：*"请输入有效的 11 位手机号"*
-- 容量/进度描述：*"已使用 68%,共 128 GB。"*
-- 流程终态：*"已完成"*
-- 审核中状态：*"待审核"*
-- 权限受阻：*"当前无访问权限"*
+- 不使用 emoji 作为界面装饰；
+- 不用营销落地页口吻写任务流；
+- 主动作使用明确动词，例如“确认提交”“保存修改”“重新加载”；
+- 状态文字本身必须可理解，例如“已完成”“待审核”“当前无访问权限”。
 
-### When generating copy
-
-- **先给动作，再给对象**：按钮写"确认提交"而不是"提交确认"；错误提示先告诉用户怎么改（"请输入有效的 11 位手机号"）。
-- **状态必须可被文字独立读出**：标签文案（已完成 / 待审核）本身就要传达状态，颜色和图标只做强化，不承担唯一语义。
-- **量化信息用紧凑格式**：百分比紧贴数字，容量句用全角逗号断句，如"已使用 68%,共 128 GB。"。
-- **禁止 emoji 与营销腔**：界面内不出现表情符号、"哦"、"啦"等语气词，也不使用"立即体验"这类落地页话术。
+---
 
 ## VISUAL FOUNDATIONS
 
 ### Color
 
-品牌主色是 **Electric Indigo `#5B5EF7`**——一个偏冷的靛蓝紫，既不是纯蓝也不是纯紫，承担最高优先级主按钮、链接、选中态、聚焦边框与品牌文字。色阶从 `--com-brand-50 #F0F1FF`（极浅品牌/选中容器底）经过 `100 #E3E5FF`、`200 #C9CDFF`、`400 #7B7EF8`、`500 #5B5EF7`（@primary）、`600 #494CE0`，到 `700 #393BBE`（强压）；暗色模式额外延伸出 `800 #30326F` 与 `900 #25264D` 作为品牌选中容器底。**品牌色面积本身也是层级信号**：不要因为多个控件都能点击，就把它们全部处理成品牌填充。Secondary 默认使用中性浅底，把 Brand 留给真正的 Primary、选中与局部强调。**Cyan `#16BFD3` 是强调色而非第二品牌色**，仅服务于局部强调、进度条、数据可视化和小范围信号，不用作全局导航的默认激活色——导航激活归 Brand Indigo。Cyan 阶有 `50 #E9FCFF`、`100 #CAF7FB`、`500 #16BFD3`、`600 #0E9FB3`，暗色下补 `900 #123E44` 作为 subtle 底。
+品牌主色：**Electric Indigo `#5B5EF7`**。
 
-中性色是 11 档灰度：`0 #FFFFFF` / `50 #F7F8FC`（页面底）/ `100 #F0F2F8`（次底、按压、Secondary、Info 容器）/ `200 #E2E6F0`（分割/禁用/Secondary pressed）/ `300 #CDD3E1`（默认边框）/ `400 #8590A3` / `500 #687288`（占位、三级文字、强边界）/ `600 #535D72`（二级文字）/ `700 #394156` / `800 #252B3D`（主文字）/ `900 #171B2A`（暗色卡片底）。注意这套中性色是**冷灰而非纯灰**，与靛蓝主色在色温上对齐。文字层级：主文字 `--com-text-primary`（neutral-800）、二级 neutral-600、三级/占位/禁用 neutral-500，反色为 neutral-0。
+它用于最高优先级 Primary、链接、选中态、全局导航激活、Focus 与少量品牌识别。
 
-语义色采用"底 + 文"成对配置，避免纯饱和色直接铺大块：Success `#21B66F` 配 `#DDF8EA` 底与 `#147A4C` 文字；Warning `#F3A21B` 配 `#FFF2D6` 底与 `#9A6110` 文字；Danger `#D63E50` 配 `#FFE4E8` 底与 `#A92939` 文字；Info 保留 Brand Indigo 的前景识别（`#5B5EF7` / `#494CE0`），但默认容器底使用 neutral-100 `#F0F2F8`，避免 Info、Selected、Secondary 同时铺成一片浅紫。暗色下 Info 同样使用中性深底 + 品牌前景，其余状态底色切到各自 900 档深色、文字切到 100 档浅色，保持对比度。遮罩统一为 `rgba(0,0,0,0.52)`（暗色 `0.6`）。整体色彩气质克制、偏冷、工程感，不使用默认渐变。
+**品牌色面积本身就是层级信号。** 不要因为多个控件都能点击，就把它们全部处理成品牌填充。
+
+Secondary 默认使用中性浅底；Info 默认使用中性容器 + Brand foreground，从而避免 Selected、Info、Secondary 同时铺成一片浅紫。
+
+Accent Cyan `#16BFD3` 是局部强调色，不是第二品牌色。它用于进度、数据、小范围信息信号，不替代全局导航和 Primary。
+
+常用中性层级：
+
+- Background：neutral-50
+- Secondary / Info surface：neutral-100
+- Divider / disabled：neutral-200
+- Default border：neutral-300
+- Placeholder / tertiary：neutral-500
+- Secondary text：neutral-600
+- Primary text：neutral-800
+
+状态色继续使用 Success / Warning / Danger / Info 的语义配对；Critical State 不得只靠颜色表达。
 
 ### Typography
 
-字体栈为 **`system-ui, -apple-system, Segoe UI, Roboto, sans-serif`**——即 iOS 上落到 San Francisco (-apple-system)、Windows 上落到 Segoe UI、Android/旧设备回退 Roboto，不引入任何 web font，以保证移动端首屏速度与原生观感。权重仅使用 Regular 400、Medium 500、SemiBold 600 三档（Bold 700 保留但不用于正文层级）；**所有 label 类文字使用 Medium 500**，正文与说明使用 Regular，标题使用 SemiBold。
+字体栈：
 
-共 9 个语义角色，从 12px caption 到 28px display：`caption` 12/18 Regular、`label-small` 12/16 Medium、`body-small` 14/20 Regular、`label` 14/20 Medium、`body` 16/24 Regular（正文基准）、`heading-small` 16/22 SemiBold、`heading` 18/24 SemiBold（栏目标题）、`title` 24/30 SemiBold（页面主标题）、`display` 28/36 SemiBold（数据/空状态大数字）。行高被严格绑定：12px 配 16-18、14px 配 20、16px 配 22-24、18px 配 24、24px 配 30、28px 配 36，因此正文行宽即便拉满也不会出现松散行距。不使用负字距。
+```text
+system-ui, -apple-system, Segoe UI, Roboto, sans-serif
+```
+
+语义字号从 `12/18 caption` 到 `28/36 display`。正文优先 400，Label 500，Heading 600。不要随手发明中间字号或负字距。
 
 ### Spacing
 
-间距基准为 **4px 网格**，实际出 token 的档位为 `0 / 2 / 4 / 6 / 8 / 12 / 16 / 20 / 24 / 32`。注意刻意**不提供 40 以上的间距 token**——大块留白通过组合 32 + 16 实现，以避免设计师随手拉出不一致的大空白。组件密度默认 compact：控件高度 `--com-density-control-height: 40px`，大号控件 48px；触摸目标遵循 iOS 44px / Android 48px 的下限（`--com-size-touch-ios` / `--com-size-touch-android`），即视觉上可以是 40px，但命中区域必须外扩到 44/48px。图标尺寸三档：sm 16、md 20、lg 24，与 label 行高对齐。Section 内的分组靠 12-16px 间距完成，Section 之间才上 24-32px。
+基础间距：
+
+```text
+0 / 2 / 4 / 6 / 8 / 12 / 16 / 20 / 24 / 32
+```
+
+- Section 内通常 `12–16`
+- Section 之间通常 `24–32`
+- 默认页面 edge inset 为 `16`
+
+### Density / touch
+
+默认 Compact：标准控件视觉高度 `40`，大号 `48`。
+
+视觉尺寸和命中区域必须分离考虑：
+
+- iOS 设计目标约 `44 × 44pt`
+- Android 至少 `48 × 48dp`
+
+一个 6px 的轮播指示点绝不能同时只有 6px 的点击区域。
 
 ### Radius
 
-圆角分四档语义：**控件 8px**（按钮、输入框、开关、菜单项）、**容器 12px**（卡片、sheet 区块）、**浮层 16px**（dialog、popover、bottom sheet 顶部圆角）、**pill 9999px**（标签、徽标、进度条轨道端点）。另保留 4px 用于次级小元素（tag 内部、checkbox）和 0 用于分割型容器。规则上"控件永远不超过 8、卡片不超过 12、只有遮罩型浮层才用 16"，这三级差异让用户能凭圆角直觉判断元素层级——圆角越大、离底层越远。
+```text
+4   detail
+8   control
+12  container
+16  overlay
+pill tag / badge / progress end
+```
 
-### Shadow / Elevation
+### Shadow / elevation
 
-**整个系统只有两档阴影**：floating `0 4px 12px 0 rgba(23,27,42,0.14)`（FAB、悬浮操作条、临时浮出的小卡）与 modal `0 8px 28px 0 rgba(23,27,42,0.18)`（dialog、bottom sheet、全屏弹层）。暗色下分别加深为 `0 4px 16px rgba(0,0,0,0.40)` 与 `0 10px 32px rgba(0,0,0,0.50)`。由于坚持 **flat-first**，普通卡片、列表项、按钮在 resting 态**没有默认阴影**，它们靠 1px 边框 + 背景色差建立层级；只有在元素真正脱离文档流时才上阴影。这是 Com Design 与 Material 风格最明显的视觉分野。
+Flat-first。普通 Card、Button、List Item、Grouped List 等静态 Surface 默认无阴影。
 
-### Borders
+只保留 Floating 与 Modal 两类真实浮层 elevation。
 
-边框宽度只有 `1px`（控件、卡片、分割线）与 `2px`（聚焦态外环）两种。颜色按语义分五档：`subtle` neutral-200（分割、弱描边）、`default` neutral-300（输入框/普通控件默认）、`strong` neutral-500（强调边界）、`focused` brand-500（键盘聚焦）、`error` danger-500（校验失败）。普通边界刻意降低重量，不用 `strong` 去承担日常分隔。禁止用阴影替代边框，也禁止使用 0.5px 以下的 hairline——在低密度移动屏上会发虚。
+---
 
-## COMPONENT PATTERNS
+## CORE COMPONENTS
 
-V1 核心组件共 **33 个**，按四个契约分组排列：Actions & Forms（8）、Navigation & Information（11）、Feedback / Overlay / Progress（11）、Search & Menu（3）。下表顺序与 `components/index.json` 完全一致，每个组件均同时具备契约 JSON、聚合 CSS 段落与独立预览页。
+V1 仍为 **33 个 Core Components**，数量没有因为 Composite / Pattern 增加而膨胀。
 
-### Actions & Forms（8）
+### Actions & Forms — 8
 
-| 组件 | 类别 | 一句话设计要点 |
-|---|---|---|
-| Button | 动作 | Primary 为稀缺层级信号；Secondary 中性浅底；40/48px，无阴影，主次/文字/危险层级明确 |
-| Icon Button | 动作 | 40/48px 方形图标按钮，ghost/subtle/destructive 三种样式，视觉尺寸与点击区分离 |
-| Input | 表单输入 | outlined 文本框，字段级校验优先，readonly 与 disabled 语义分离 |
-| Textarea | 表单输入 | 多行输入，88px 最小高，可选字数计数，继承 Input 状态 |
-| Select | 表单输入 | 选择触发器，尾部下拉箭头，展开态 2px 聚焦边；弹出层为平台策略 |
-| Checkbox | 选择 | 20px 方框，选中主色填充配白勾，含 indeterminate 横杠 |
-| Radio | 选择 | 20px 圆环 + 8px 实心点，组内互斥单选 |
-| Switch | 开关 | 44×24 轨道 + 20px 滑块，即时生效的二元设置 |
+Button · Icon Button · Input · Textarea · Select · Checkbox · Radio · Switch
 
-### Navigation & Information（11）
+### Navigation & Information — 11
 
-| 组件 | 类别 | 一句话设计要点 |
-|---|---|---|
-| List Item | 信息行 | 48px 最小高，leading/content/trailing 结构，section-before-card |
-| Tabs | 导航 | 同级视图切换，激活项主色文字 + 2px 下划线，2-4 项固定/更多可滚动 |
-| Segmented Control | 导航 | 局部模式切换，subtle 容器内白色滑块，2-4 个短选项 |
-| Top App Bar | 导航 | 页级导航，48px 高，至多两个尾部图标操作，滚动时出现细分隔线 |
-| Bottom Navigation | 导航 | 56px 底栏，3-5 个目的地，Brand 为激活色（非 Cyan） |
-| Section | 分组 | 默认无背景无边框的内容分组，优先于 Card 使用 |
-| Divider | 分隔 | 1px subtle 发丝线，支持通栏与内容内凹 |
-| Card | 容器 | 默认无边框无阴影，边框仅在需要强化收纳时使用，禁止嵌套 |
-| Tag | 标签 | 色调药丸，六种语义色，Accent Cyan 不充当状态色 |
-| Badge | 徽标 | 红点/数字（1-99，超出 99+），叠加在图标或头像上 |
-| Avatar | 身份 | 24/32/40 圆形，图像→首字母→图标三级回退 |
+List Item · Tabs · Segmented Control · Top App Bar · Bottom Navigation · Section · Divider · Card · Tag · Badge · Avatar
 
-### Feedback / Overlay / Progress（11）
+### Feedback / Overlay / Progress — 11
 
-| 组件 | 类别 | 一句话设计要点 |
-|---|---|---|
-| Toast | 反馈 | 瞬时无操作轻提示，深色 inverse 胶囊，状态靠图标形状+文案 |
-| Snackbar | 反馈 | 瞬时但带唯一恢复操作（撤销/重试），操作使用 Cyan |
-| Alert | 反馈 | 持久化行内/横幅提示，色调背景配 *Text 色，至多一个操作 |
-| Dialog | 浮层 | 阻断式决策，scrim + 16px 圆角 + modal 阴影，至多两操作 |
-| Bottom Sheet | 浮层 | 底部弹层，内容驱动高度，拖拽把手，禁止堆叠 |
-| Loading Indicator | 进度 | 不确定圆形转圈（16/24px），品牌主色 |
-| Skeleton | 进度 | 已知结构的加载占位，镜像真实内容，支持微光 |
-| Empty State | 状态 | 零内容/错误恢复，居中图标+标题+说明+唯一主操作 |
-| Progress Indicator | 进度 | 确定进度（线性 4px / 环形 24px），仅展示真实进度 |
-| Stepper | 进度 | 有限有序任务步骤，完成/当前/未到/错误四态 |
-| Timeline | 信息 | 纵向事件历史，10px 节点 + 连接线，状态色仅用于有语义的事件 |
+Toast · Snackbar · Alert · Dialog · Bottom Sheet · Loading Indicator · Skeleton · Empty State · Progress Indicator · Stepper · Timeline
 
-### Search & Menu（3）
+### Search & Menu — 3
 
-| 组件 | 类别 | 一句话设计要点 |
-|---|---|---|
-| Search Field | 搜索 | 扁平搜索框，subtle 底，聚焦变 surface + 2px 边，loading 与清除不冲突 |
-| Menu | 菜单 | 浮动上下文操作容器，16px 圆角 + floating 阴影，2-6 项 |
-| Menu Item | 菜单 | 48px 上下文操作行，可选/危险/禁用态，危险项置末 |
+Search Field · Menu · Menu Item
 
-## Index
+核心组件原则：
 
-- `README.md` — 本文档，面向设计师的品牌叙述与使用 brief
-- `colors_and_type.css` — 颜色、字体、间距、圆角、阴影的 CSS 变量（含暗色模式 `.dark`）
-- `css.json` — 上述 token 的结构化 JSON 表达，供程序化消费
-- `components.css` — 从预览页聚合的组件运行时样式，覆盖全部 33 个 V1 核心组件
-- `components/` — 33 个 V1 核心组件契约 JSON（`index.json` + 每个组件一份契约，分属 actions-forms / navigation-information / feedback-overlay-progress / search-menu 四个契约分组）
-- `preview/` — 33 个组件独立 HTML 预览页（`component-{slug}.html`，每个组件对应一份）
-- `specs/` — 设计系统 v1 结构化规范（`design-system-v1.json` 等）
-- `ui_kits/mobile/` — 移动端 click-thru 套件，演示精选组件组合（非一屏 33 件全铺）
-- `SKILL.md` — AI 代理入口清单
-- `library-consumption.json` — 下游消费方推荐读取顺序
+- Primary 是稀缺层级信号；
+- Secondary 默认中性浅底；
+- Card 默认无阴影，只有真正需要收纳时才加强边界；
+- Section before Card；
+- 状态色必须有文字语义；
+- Bottom Navigation 3–5 个主要目的地；
+- Tabs 用于同级视图，不承担 App 一级导航。
 
-## Caveats / 已知替换与缺口
+完整契约：`components/index.json` 与 `components/*.json`。
 
-1. **字体栈为 `system-ui, -apple-system, Segoe UI, Roboto, sans-serif`，不引入任何 web font**。这是有意为之——首屏性能与原生感优先于跨设备字形完全一致；跨端截图时数字与拉丁字符字形会随平台变化，属于预期。
-2. **图标在预览中以 Lucide 内联 SVG（outline 风格）渲染**，未引入 icon font 或独立图标包。线条粗细、24px 画布与 1.5-2px 描边对齐 token，但实际生产库应替换为集团统一的 SVG sprite。
-3. **V1 全部 33 个核心组件均已具备契约 + 聚合 CSS 段落 + 独立预览页**，覆盖 Actions & Forms（8）、Navigation & Information（11）、Feedback / Overlay / Progress（11）、Search & Menu（3）四个契约分组，不再存在代表性子集的覆盖缺口。表单族沿用统一的 fieldFamily 约定（20px 选择器、14/20 label、14/20 helper、8px 指示器与文案间距、组级错误复用 Input 的 helper）；反馈族沿用最小打断与单阻断浮层层级（Dialog 是唯一阻断式 modal，Bottom Sheet 不堆叠，Alert 持久但不阻断，Toast 瞬时且不堆叠，Snackbar 仅带唯一恢复操作）。
-4. Token 中已记录 **comfortable 密度（控件 48px）以及 iOS / Android 平台差异变量**，但**预览与组件契约当前默认展示 compact 密度**；切换到 comfortable 时主要影响控件高度与触摸外扩，色板与字号不变。平台差异（iOS 44px / Android 48px 触摸下限、切页/返回手势等）继续以 token 形式记录，预览页不逐平台复刻。
-5. **动效契约**（过渡时长、缓动、位移距离）在规范中被引用，但**预览页未做动画可视化**，目前只能从 specs 中读取数值；组件的进入/退出、按下、聚焦过渡需由消费方按规范实现。
-6. **移动端 UI Kit 演示的是经过策展的组件子集与典型页面组合**，用于展示布局、密度与组件协同模式，并非把 33 个组件全部堆在同一屏；逐组件的完整状态与变体请以 `preview/` 下的独立预览页和 `components/*.json` 契约为准。
-7. 版本号 `1.0.0-rc.2` 表示仍在候选阶段，**RC2 的 P1 加固项（动效可视化、暗色模式回归、跨平台预览补齐）仍在上游计划中继续推进**，不在本次重建产出范围内。
-8. Token 采用**双层命名**：`--com-*` 为保留的源命名（对齐 com-design 原始契约），`--color-*` / `--radius-*` / `--space-*` / `--type-*` 为可移植消费层，组件与预览只消费后者。两层在 `css.json` 中投影出相同数值，属于有意保留的设计契约，而非重复定义。
+---
+
+## CORE COMPOSITE COMPONENTS — 4
+
+Composite 用于已经形成稳定 anatomy、interaction 和直接消费身份的组合。
+
+Canonical machine source：`specs/core-composites.json`  
+Human guide：`COMPOSITE_COMPONENTS.md`  
+Interactive preview：`preview/core-composite-components.html`
+
+### 1. Carousel｜轮播
+
+Manual-first：
+
+- Autoplay 默认关闭；
+- 启用后通常至少 5 秒，用户交互 / focus 后暂停；
+- Reduced Motion 下停止或降低非必要位移动效；
+- swipe / scroll-snap 不依赖 autoplay；
+- 指示点视觉可以小，Hit Area 不可以小；
+- 控制按钮不得遮挡内容；
+- 避免整卡链接和内部操作区互相嵌套。
+
+### 2. Filter Bar｜筛选栏
+
+用于集合页的 `query + filter trigger + active state + draft sheet + result feedback`。
+
+关键状态边界：
+
+```text
+pending query / draft filters
+≠
+committed query / committed filters
+```
+
+集合页面持有 committed truth；Sheet 只持 draft。
+
+关闭而未 Apply 不提交。Filter Trigger 只是工具动作；在 Sheet 内，Apply 可以成为该 action group 的唯一 Primary，Reset 使用 Tertiary / text。
+
+### 3. Tabbed Action Bar｜标签导航操作栏
+
+适用于同级 Tabs 旁需要少量当前上下文 Search / Filter / More 工具动作的页面。
+
+- Tabs 始终是主结构；
+- 常见窄屏建议最多 2 个 local utilities inline；
+- 额外动作进入 Overflow 或 Top App Bar；
+- 全局通知等跨 Tab 动作优先放 Top App Bar；
+- 不能通过缩小 Tab label / touch target 换空间；
+- Tab selection 立即稳定，异步 loading 在内容区反馈。
+
+### 4. Grouped List｜分组堆叠列表
+
+用于设置、服务入口、账户信息和相关功能入口。
+
+```text
+optional Section heading
+→ one group surface
+  → List Item
+  → inset Divider
+  → List Item
+```
+
+- 一组相关条目共享一个 Surface，不做 Card-per-row；
+- 导航行整行可点，Chevron 只是方向提示；
+- Switch 行默认不再叠 Chevron；
+- Divider subtle，可从内容列开始；
+- Leading icon 默认 Neutral Surface，不给每行都铺品牌浅底；
+- Pressed / Focus 作用于整行。
+
+---
+
+## CORE UX PATTERNS — 6
+
+Pattern 解决任务规则，而不是固定视觉 anatomy。
+
+1. **Status Composition** — 状态 + 必要解释 + 可选证据 / 恢复动作
+2. **Search Pattern** — Query + Loading / Zero / Error + Detail Return 意图保持
+3. **Collection Filter** — committed truth + draft editing + active conditions + result feedback
+4. **State to Action** — 从权威状态推导当前最强可执行动作
+5. **Intent Continuity / Handoff** — 登录 / 授权 / 外部系统打断后回到原任务
+6. **Contextual Next Step** — 长流程持续回答“我现在该做什么”
+
+`Filter Bar` 是 `Collection Filter` 的推荐 Composite 实现之一，但 Pattern 不被某一个 Composite 锁死。
+
+Canonical source：`specs/core-patterns.json`  
+Human guide：`UX_PATTERNS.md`  
+Preview：`preview/core-ux-patterns.html`
+
+---
+
+## COMPONENT / COMPOSITE / PATTERN DECISION
+
+```text
+独立控件 / 信息单元？
+→ Component
+
+稳定、可直接实例化的多组件组合？
+→ Composite Component
+
+核心难点是状态、动作层级、回流、上下文和顺序？
+→ UX Pattern
+
+必须依赖业务页面名、领域文案、路由、业务枚举？
+→ Product Extension
+```
+
+不要为了减少几行产品代码新增 Core Component；也不要为了维持“组件数量好看”，把已经稳定的组合永远留成抽象 Pattern。
+
+---
+
+## ACCESSIBILITY BASELINE
+
+- WCAG 2.2 AA 作为可测量的跨端基线之一；
+- 正文对比度通常至少 `4.5:1`；
+- 重要非文字边界 / 状态按适用标准至少 `3:1`；
+- Color 不能是唯一信息载体；
+- Icon-only action 需要 accessible name；
+- Focus 不能被 Sticky / Overlay 遮挡；
+- Drag-only 交互尽量提供非拖拽替代；
+- Reduced Motion 与 Text Scaling 必须真实测试。
+
+---
+
+## INDEX
+
+- `README.md` — 本文档，设计语境与快速入口
+- `colors_and_type.css` — runtime token variables
+- `css.json` — structured token view
+- `components.css` — Core Component aggregated CSS
+- `components/` — 33 个 Core Component contracts
+- `COMPOSITE_COMPONENTS.md` — 4 个 Core Composite Component 人类指南
+- `specs/core-composites.json` — Composite machine contracts
+- `preview/core-composite-components.html` — Composite interactive reference
+- `UX_PATTERNS.md` — 6 个 Core UX Pattern 人类指南
+- `specs/core-patterns.json` — Pattern machine contracts
+- `preview/core-ux-patterns.html` — Pattern composition reference
+- `preview/component-*.html` — Core Component previews
+- `specs/design-system-v1.json` — system manifest
+- `SKILL.md` — AI / Agent design entry
+- `library-consumption.json` — downstream recommended read order
+- `ui_kits/mobile/` — curated mobile composition kit
+
+---
+
+## CAVEATS
+
+1. 字体使用系统字体，不引入 web font；跨平台字形差异属于预期。
+2. 预览图标以 Lucide 风格 inline SVG 为主；生产应映射到公司统一图标资产。
+3. Core Component = 33，Composite = 4，UX Pattern = 6；三者分层计数，不为了 KPI 互相吞并。
+4. Comfortable density 和平台触摸差异存在于 Token / Contract 层；默认 Preview 仍以 compact 为主。
+5. 动效必须有 Reduced Motion 路径；Carousel 等行为型 Composite 不允许只靠静态稿验收。
+6. `1.0.0-rc.2` 仍是候选版本；Stable 前需要继续做 Light / Dark、跨平台、可访问性和行为烟测。
+7. Product Extension 可以组合和扩展 Core，但不得反写 Core 语义。
