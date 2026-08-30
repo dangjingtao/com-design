@@ -76,6 +76,96 @@ function exitComponentMode(){
   requestAnimationFrame(resizePhoneArtboard);
 }
 
+function ensureCompositeGuide(){
+  if(document.querySelector('#composites')) return;
+
+  const primaryNav = document.querySelector('.rail-primary');
+  const patternNav = primaryNav?.querySelector('a[href="#patterns"]');
+  if(primaryNav && patternNav){
+    const link = document.createElement('a');
+    link.href = '#composites';
+    link.textContent = '组合组件';
+    primaryNav.insertBefore(link, patternNav);
+  }
+
+  const facts = document.querySelector('.hero .facts');
+  if(facts && !facts.querySelector('[data-composite-fact]')){
+    const patternFact = [...facts.children].find(node => node.textContent.includes('Core UX Patterns'));
+    const fact = document.createElement('span');
+    fact.dataset.compositeFact = 'true';
+    fact.innerHTML = '<b>4</b>Core Composites';
+    facts.insertBefore(fact, patternFact || null);
+  }
+
+  const truthCallout = document.querySelector('.truth-callout');
+  if(truthCallout && !truthCallout.textContent.includes('4 个 Core Composite')){
+    truthCallout.insertAdjacentHTML('beforeend', ' 同时新增 <b>4 个 Core Composite Component</b>，用于稳定、可直接实例化的跨组件组合；33 个 Core Component 数量保持不变。');
+  }
+
+  const principleCards = document.querySelectorAll('#principles .reader-grid article');
+  const uxCard = [...principleCards].find(card => card.querySelector('b')?.textContent.includes('UX 组合'));
+  if(uxCard){
+    uxCard.innerHTML = '<b>UX 组合</b><p>先判断是不是稳定 Composite：可直接实例化就读 Composite Contract；如果核心难点是状态、动作层级、回流和上下文，再读 UX Pattern。</p>';
+  }
+
+  const patterns = document.querySelector('#patterns');
+  if(patterns){
+    const section = document.createElement('section');
+    section.id = 'composites';
+    section.className = 'section alt';
+    section.innerHTML = `
+      <div class="wrap">
+        <div class="section-title"><span>03</span><div><h2>Core Composite Components</h2><p>Component 解决单控件；Composite 把已经稳定的多组件结构收成可直接复用的组合。它们单独计数，不挤进 33 个 Core Component。</p></div></div>
+        <div class="pattern-list">
+          <article><b>01</b><h3>Carousel · 轮播</h3><p>Manual-first。默认不自动播放；启用后至少给用户足够阅读时间并可暂停。视觉小的 Indicator 仍保留完整 Hit Area，Reduced Motion 下停止或降低非必要运动。</p></article>
+          <article><b>02</b><h3>Filter Bar · 筛选栏</h3><p>集合页持有 committed truth，Sheet 只持 draft。关闭不提交；Sheet 内 Apply 可以成为唯一 Primary，Reset 使用 Tertiary / text，结果更新需要可感知反馈。</p></article>
+          <article><b>03</b><h3>Tabbed Action Bar · 标签导航操作栏</h3><p>Tabs 是主结构，Search / Filter / More 只是局部工具。常见窄屏最多保留 2 个 inline utilities，额外动作进 Overflow 或 Top App Bar，不靠缩小 Tab 点击区硬挤。</p></article>
+          <article><b>04</b><h3>Grouped List · 分组堆叠列表</h3><p>相关入口共享一个安静 Surface。导航行整行可点；Switch 行不再叠 Chevron；Divider 保持 subtle，Leading icon 默认 Neutral，不做每行浅紫块。</p></article>
+        </div>
+        <div class="one-line"><b>边界：</b>稳定 anatomy + interaction + consumption identity 才进入 Composite；状态 / 层级 / 回流规则仍由 UX Pattern 管。 <a href="./design-source/preview/core-composite-components.html" target="_blank" rel="noopener">查看 Composite Interactive Preview ↗</a></div>
+      </div>`;
+    patterns.before(section);
+  }
+
+  const renumber = [
+    ['#patterns','04'],
+    ['#catalogue','05'],
+    ['#adoption','06'],
+    ['#system','07'],
+    ['#next','08']
+  ];
+  renumber.forEach(([selector,number]) => {
+    const marker = document.querySelector(`${selector} .section-title > span`);
+    if(marker) marker.textContent = number;
+  });
+
+  const catalogueDescription = document.querySelector('#catalogue .section-title p');
+  if(catalogueDescription){
+    catalogueDescription.textContent = '左侧按能力域组织全部 33 个 Core Component；稳定多组件结构先查看 4 个 Core Composite Component，复杂任务状态与流程再查看 6 个 Core UX Pattern。';
+  }
+
+  const layers = document.querySelector('#system .layers');
+  if(layers){
+    layers.innerHTML = '<div><b>Primitive</b><span>原始值</span></div><i>→</i><div><b>Semantic</b><span>角色</span></div><i>→</i><div><b>Component</b><span>控件契约</span></div><i>→</i><div><b>Composite</b><span>稳定组合</span></div><i>→</i><div><b>Pattern</b><span>UX 任务规则</span></div><i>→</i><div><b>Product Extension</b><span>业务扩展</span></div>';
+  }
+
+  const sourceCard = [...document.querySelectorAll('#system .source-grid article')].find(card => card.textContent.includes('唯一真相源'));
+  if(sourceCard){
+    const paragraph = sourceCard.querySelector('p');
+    if(paragraph) paragraph.textContent = 'colors_and_type.css、components/*.json、specs/core-composites.json、specs/core-patterns.json、preview/、themes/ 与 ui_kits/。';
+  }
+
+  const railNote = document.querySelector('.rail-note');
+  if(railNote){
+    railNote.innerHTML = '唯一真相源<br><b>design-source/</b><br>Token / Component / Composite / Pattern / Preview<br><br>Human Guide 解释判断方式，不维护第二套规范值。';
+  }
+
+  const nextPattern = [...document.querySelectorAll('#next .next-grid article')].find(card => card.textContent.includes('Core UX Pattern'));
+  if(nextPattern){
+    nextPattern.innerHTML = '<span>Now</span><h3>Composite + UX Pattern</h3><p>4 个 Composite 负责稳定可实例化组合，6 个 Pattern 负责状态、层级、回流和长流程规则；两层分别维护，不再把页面经验全塞进 Component。</p>';
+  }
+}
+
 function bindGuideNavigation(){
   document.querySelectorAll('.rail a[href^="#"]').forEach(link => {
     const target = link.getAttribute('href');
@@ -436,6 +526,7 @@ window.addEventListener('hashchange', () => {
 
 document.addEventListener('DOMContentLoaded', async () => {
   document.querySelector('.canvas-label')?.remove();
+  ensureCompositeGuide();
   ensureSimulatorChrome();
   ensureQrControl();
   bindGuideNavigation();
