@@ -142,7 +142,36 @@ V2 开始明确 Layout 能力，为后续 Desktop 设计系统扩展留出干净
 
 ---
 
-## 4. Future Desktop boundary（暂记，不展开施工）
+## 4. Navigation & Indexed Content
+
+### V2-Navigation-01 — Index Bar / Indexed List
+
+**规划：** V2 必须支持 `Index Bar`，用于通讯录、城市、品牌、组织等按索引快速跳转的长列表。
+
+标准能力边界：
+
+- 推荐将完整能力定义为 `Index Bar + Indexed List`，而不是只做一条右侧字母栏；
+- Index Bar 负责索引导航，Indexed List 负责 section / anchor / sticky section header 与滚动同步；
+- 支持字母、数字、`#` 及产品自定义索引键，但 Core 不绑定具体业务数据；
+- 点击或滑动 Index Bar 时，列表跳转到对应 section，并同步当前 active index；
+- 长按 / 滑动快速索引时可显示当前索引的浮层反馈，但不能遮挡核心内容；
+- Section header SHOULD 支持 sticky 行为，并与当前 active index 保持一致；
+- 索引项视觉尺寸可以紧凑，但命中区域必须满足移动端 touch target；
+- 对不存在内容的索引项要有明确 disabled / skip policy，不能跳到空白位置；
+- 需要定义滚动驱动与手势驱动之间的同步规则，避免 active index 抖动或循环更新；
+- 无障碍实现必须提供非纯手势路径，读屏用户可以按 section / heading 顺序导航；
+- Desktop 可复用 Indexed List，但右侧垂直 Index Bar 是否保留应按输入设备与屏幕空间自适应，不强制照搬 Mobile 形态。
+
+**归类候选：**
+
+- `Index Bar`：Core Component candidate；
+- `Indexed List`：Composite Component candidate（Index Bar + Section + List Item + sticky heading + scroll synchronization）。
+
+正式施工前再根据 API 稳定性确认是否拆成 Component + Composite，当前先作为 V2 确认能力记录。
+
+---
+
+## 5. Future Desktop boundary（暂记，不展开施工）
 
 随着 Com Design 支持 Desktop，后续 Layout 可能需要审查：
 
@@ -156,7 +185,7 @@ V2 开始明确 Layout 能力，为后续 Desktop 设计系统扩展留出干净
 
 ---
 
-## 5. Review ledger rule
+## 6. Review ledger rule
 
 从本文件建立后：
 
