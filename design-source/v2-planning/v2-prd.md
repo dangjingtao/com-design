@@ -169,8 +169,7 @@ shared visual language
 - 同一个 Core Component 在四端应优先保持相同视觉身份，而不是分别“Material 化 / Cupertino 化 / Web 化”；
 - 平台原生能力可以被利用，但不得在没有必要的情况下覆盖 Com Design 自己的视觉语言；
 - 平台差异必须有明确理由，例如系统 Chrome、Safe Area、Back gesture、键盘 / pointer、Accessibility、原生 Picker、宿主能力限制等；
-- Adapter 的职责是解决平台约束，不是给每个平台重新设计一套 UI；
-- 若存在“视觉一致”与“平台基本可用性 / 系统行为”冲突，优先保证可用性与系统行为，再在不破坏体验的范围内保持品牌一致。
+- Adapter 的职责是解决平台约束，不是给每个平台重新设计一套 UI。
 
 这意味着 V2 的目标不是四套皮肤共享 Token，而是：
 
@@ -215,6 +214,32 @@ shared intent + shared hierarchy + shared brand language
 
 默认不应该因为平台不同而随意改变的包括：颜色语义、信息层级、操作优先级、状态含义、核心 anatomy、组件命名和业务结果。
 
+### 冲突优先级
+
+用户选择：**A — 默认 Com Design 优先，除非会明显伤害可用性。**
+
+因此 V2 采用一个明确的默认顺序：
+
+```text
+Com Design identity / hierarchy / interaction intent
+→ platform convention
+→ platform implementation detail
+```
+
+当平台习惯与 Com Design 视觉或交互语言冲突时，不能仅以“iOS 一般这样”“Android 原生那样”为理由直接改掉组件。只有出现下列情况，Platform Adapter 才应覆盖 Core 默认表现：
+
+- 坚持 Core 表现会明显降低任务可用性；
+- 会破坏系统级导航、返回、键盘、焦点或手势行为；
+- 会降低 Accessibility / assistive technology 可用性；
+- Host 平台明确限制或禁止某种实现；
+- 使用成熟系统控件能显著降低错误率或学习成本，而保持自定义表现没有足够产品收益。
+
+平台适配后仍应尽可能保留 Com Design 的颜色语义、Typography hierarchy、Spacing rhythm、Action hierarchy、状态表达与品牌识别。
+
+这条原则的目的不是与平台对抗，而是防止“跨端适配”逐渐变成四套独立 UI：
+
+> **平台负责让 Com Design 自然运行，不负责重新定义 Com Design。**
+
 ### 当前待确认
 
-- 当“视觉一致”与“平台原生习惯”发生冲突时，V2 应由什么原则决定谁优先？
+- 当某个平台无法或不适合提供与其他端完全相同的交互能力时，V2 更重视“交互形式一致”，还是“任务结果与状态语义等价”？
