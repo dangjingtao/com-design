@@ -1,0 +1,113 @@
+{
+  "$schema": "../schemas/composite-contract-v1.schema.json",
+  "schemaVersion": 1,
+  "scope": "company-mobile-core",
+  "status": "release-candidate",
+  "principle": "Core Composite Components are stable, directly reusable assemblies built from Core Components. They have a concrete anatomy and interaction contract, but they must not encode product-domain names, routes, state enums or business copy.",
+  "composites": [
+    {
+      "id": "carousel",
+      "name": "Carousel",
+      "cn": "轮播",
+      "intent": "Present a small ordered set of peer content panels that users can move through without losing orientation or accessibility.",
+      "components": ["Card", "Icon Button", "Badge", "Text"],
+      "anatomy": ["viewport", "track", "slide", "optional previous/next controls", "position indicator", "accessible status"],
+      "variants": ["compact", "standard", "manual", "autoplay-opt-in"],
+      "rules": [
+        "Manual swipe or scroll-snap MUST work without autoplay or pointer-only controls.",
+        "Autoplay MUST be off by default. When enabled it SHOULD use an interval of at least 5 seconds, pause after user interaction or focus, and stop or collapse under reduced-motion preferences.",
+        "If motion continues beyond 5 seconds, users MUST have a way to pause or stop it.",
+        "Visible indicators MAY be visually small, but their interactive hit areas MUST meet platform touch-target guidance.",
+        "Previous/next controls MUST NOT obscure meaningful slide content; mobile layouts MAY omit overlay arrows when swipe and indicators are sufficient.",
+        "Slide changes SHOULD be announced for user-initiated navigation without producing repeated screen-reader announcements for passive autoplay.",
+        "A slide SHOULD have one clear primary destination; avoid nested full-card links plus overlapping child actions."
+      ],
+      "avoid": [
+        "autoplay as the only way to reveal content",
+        "2-second promotional rotation",
+        "tiny indicator dots as tiny tap targets",
+        "overlay arrows covering titles or actions",
+        "different slide heights causing the page to jump"
+      ],
+      "relatedPatterns": ["searchPattern", "contextualNextStep"]
+    },
+    {
+      "id": "filterBar",
+      "name": "Filter Bar",
+      "cn": "筛选栏",
+      "intent": "Provide a reusable mobile collection control that combines optional query input, filter entry, active-condition summary and result feedback while keeping committed state authoritative outside the composite.",
+      "components": ["Search Field", "Button", "Icon Button", "Tag", "Bottom Sheet", "Radio", "Checkbox"],
+      "anatomy": ["optional query input", "filter trigger", "active count", "optional removable conditions", "draft filter surface", "result feedback"],
+      "variants": ["search-plus-filter", "filter-only", "inline-summary", "sheet-summary"],
+      "rules": [
+        "Pending query input and committed query MAY be separate states; submission behavior MUST be explicit and predictable.",
+        "The parent collection MUST remain the authoritative owner of committed query and filter values.",
+        "Opening the filter surface SHOULD initialize a local draft from committed state; dismissing without Apply MUST NOT mutate committed state.",
+        "The filter trigger SHOULD show an active count or equivalent state cue without becoming a page-level Primary action.",
+        "Inside the draft surface, Apply MAY be the single Primary action for that action group; Reset SHOULD be Tertiary or text treatment and MUST reset the draft before commitment.",
+        "Applied conditions SHOULD be individually removable when space and scanability benefit from it.",
+        "After commitment, result count or a meaningful result update SHOULD be exposed through an accessible status region.",
+        "Returning from a detail view SHOULD preserve committed filter state while the collection task is still active."
+      ],
+      "avoid": [
+        "committing every option tap when users are comparing several conditions",
+        "keeping a second authoritative filter truth inside the sheet after Apply",
+        "brand-filling the trigger, chips and sheet footer at the same time",
+        "using disabled Apply as the only indication that nothing changed"
+      ],
+      "relatedPatterns": ["collectionFilter", "searchPattern"]
+    },
+    {
+      "id": "tabbedActionBar",
+      "name": "Tabbed Action Bar",
+      "cn": "标签导航操作栏",
+      "intent": "Combine peer-view navigation with a small, stable set of local utility actions without compressing tabs or turning a navigation row into an icon toolbar.",
+      "components": ["Tabs", "Icon Button", "Badge", "Menu"],
+      "anatomy": ["tab list", "active indicator", "optional trailing utility group", "optional overflow"],
+      "variants": ["fixed-tabs", "scrollable-tabs", "sticky", "with-utilities"],
+      "rules": [
+        "Tabs remain the primary structure; utility actions MUST NOT reduce tab hit targets below platform guidance.",
+        "On narrow mobile widths, keep at most two local utility actions inline; move additional actions to overflow or a more appropriate Top App Bar before shrinking labels or hit areas.",
+        "Global actions such as account-wide notifications SHOULD live in the Top App Bar rather than being repeated inside every tabbed local navigation row.",
+        "Active tab state MUST use readable text plus the normal Tabs indicator; do not convert the whole row into multiple brand-filled pills.",
+        "Tab labels MUST remain single-line. Use scrollable Tabs before truncating several peer labels into ambiguous abbreviations.",
+        "Selecting a tab SHOULD update selection immediately; asynchronous content loading belongs below the bar and MUST NOT make the selected tab appear uncertain.",
+        "Web implementations SHOULD support tablist keyboard behavior; mobile implementations MUST preserve full-row touch targets and predictable focus order."
+      ],
+      "avoid": [
+        "three or more equally weighted icon actions squeezing three tabs on a narrow screen",
+        "putting global notification, local filter and local search into the same cramped row by default",
+        "brand-filled pill tabs mixed with brand-filled utility buttons",
+        "reordering tabs when an action badge appears"
+      ],
+      "relatedPatterns": ["searchPattern", "collectionFilter"]
+    },
+    {
+      "id": "groupedList",
+      "name": "Grouped List",
+      "cn": "分组堆叠列表",
+      "intent": "Present several related destinations, settings or attributes as one calm stacked group so users scan relationships without a card-per-row layout.",
+      "components": ["Section", "List Item", "Divider", "Icon Button", "Switch", "Badge"],
+      "anatomy": ["optional section heading", "group surface", "stacked rows", "inset dividers", "optional leading visual", "trailing accessory"],
+      "variants": ["navigation", "settings", "mixed-accessory", "compact"],
+      "rules": [
+        "Use one shared group surface for related rows instead of wrapping every row in its own Card.",
+        "Rows SHOULD use a minimum visual height around 52-56 logical units while preserving platform touch-target minimums.",
+        "The whole row SHOULD be the activation target when the row navigates; a chevron then indicates destination rather than acting as a separate tiny button.",
+        "Switch rows MUST NOT also expose a navigation chevron unless there are clearly separated actions with distinct labels and hit regions.",
+        "Dividers SHOULD be subtle and MAY begin at the content column rather than cutting through the leading visual area.",
+        "Leading icon containers SHOULD default to neutral subtle treatment; use Brand tint only when selection, identity or meaning requires it, not on every row for decoration.",
+        "Pressed and focus states SHOULD apply to the row surface, not only to the trailing accessory.",
+        "Destructive actions SHOULD be separated or placed at the end with Danger text; avoid a permanently red group surface."
+      ],
+      "avoid": [
+        "card inside card for every setting row",
+        "purple icon tile on every row regardless of meaning",
+        "chevron plus switch producing two unclear actions",
+        "divider lines darker than the content hierarchy",
+        "tiny chevron-only tap targets"
+      ],
+      "relatedPatterns": ["stateToAction", "contextualNextStep"]
+    }
+  ]
+}
