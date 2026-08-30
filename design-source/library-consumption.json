@@ -2,6 +2,9 @@
   "schemaVersion": 1,
   "tokenSource": "css.json",
   "componentIndex": "components/index.json",
+  "compositeGuide": "COMPOSITE_COMPONENTS.md",
+  "compositeSource": "specs/core-composites.json",
+  "compositePreview": "preview/core-composite-components.html",
   "patternGuide": "UX_PATTERNS.md",
   "patternSource": "specs/core-patterns.json",
   "patternPreview": "preview/core-ux-patterns.html",
@@ -12,12 +15,21 @@
     "colors_and_type.css",
     "components/index.json",
     "components/{slug}.json",
+    "COMPOSITE_COMPONENTS.md",
+    "specs/core-composites.json",
+    "preview/core-composite-components.html",
     "UX_PATTERNS.md",
     "specs/core-patterns.json",
     "preview/core-ux-patterns.html",
     "preview/component-{slug}.html"
   ],
   "coreComponents": ["button","input","list-item","card","tag","bottom-navigation"],
+  "coreCompositeComponents": [
+    "carousel",
+    "filterBar",
+    "tabbedActionBar",
+    "groupedList"
+  ],
   "corePatterns": [
     "statusComposition",
     "searchPattern",
