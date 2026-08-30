@@ -99,10 +99,58 @@ Mira approve → eligible for formal release
 
 > **门禁决定“是否具备被评审的资格”，Mira 决定“是否值得进入正式版本”。**
 
+## Compatibility and versioning
+
+用户选择：**B — Minor / Patch 默认保持向后兼容；Major 可以明确 breaking，但必须提供迁移说明和影响证据。**
+
+用产品消费视角表达：
+
+```text
+2.0.1 / patch
+→ 修复缺陷，不应要求消费项目改代码
+
+2.1.0 / minor
+→ 增加兼容能力，不应主动破坏既有消费接口
+
+3.0.0 / major
+→ 允许明确的不兼容升级，但必须给出迁移路径与影响证据
+```
+
+这套策略约束的不是“版本号好看”，而是 Com Design 对下游项目作出的兼容承诺。
+
+### Patch / Minor
+
+默认不得无提示破坏已经发布的：
+
+- canonical token / semantic naming；
+- Core Component contract；
+- state / variant / anatomy 中已承诺的消费接口；
+- Platform Adapter 的稳定输出接口；
+- Product Extension 依赖的公开 Core contract。
+
+如果一个所谓 patch / minor 实际要求消费项目修改调用方式、重新解释语义或大范围重构，应升级为 major 或重新设计兼容方案。
+
+### Major
+
+Major 可以主动进行 V2 演进所需的 breaking change，但正式发布前至少需要：
+
+- 明确列出 breaking surface；
+- 说明为什么兼容层不足以解决问题；
+- 给出旧 → 新的迁移方式；
+- 给出受影响 Token / Component / Pattern / Adapter / Product Extension 范围；
+- 提供 build / validation / representative-consumer evidence；
+- 由 Mira 判断 breaking 的长期收益是否值得迁移成本。
+
+因此 Major 不是“可以随便改”，而是拥有**被治理的 breaking 权利**。
+
+### Compatibility principle
+
+> **平时升级尽量不折腾现有项目；真正需要改变契约时，用 Major 明确承担迁移成本。**
+
 ### Governance principle
 
 > **机器守住确定性底线，额外 AI 门禁用于审查 AI 施工风险，Mira 负责综合设计系统判断，并拥有正式版本最终否决权。**
 
 ### Current question
 
-- 对已经进入正式版本的 Core contract / Token / Component，V2 是否需要明确的兼容策略：默认保持向后兼容，还是允许在 major 版本中主动 breaking？
+- Com Design 发布新版本后，Android / iOS / Web / 微信小程序等消费项目应该自动追随最新版，还是由每个项目锁定版本并显式升级？
