@@ -186,13 +186,26 @@ Top App Bar / Navigation Bar
 Core 只负责产品真正拥有的页面导航 UI：
 
 - optional leading back / close action；
-- title；
-- trailing actions / overflow；
+- centered title；
+- extensible trailing icon actions / overflow；
 - default / scrolled 等页面级状态；
 - action hierarchy、touch target、title truncation 与 accessible name；
 - 可被 Native App、H5、WebView、微信小程序等不同运行环境消费。
 
 V2 继续沿用 V1 的边界：Safe Area 不由 Top App Bar 自己硬编码。
+
+**V2 标题与 Action 细化：**
+
+- Title 默认采用 **Centered Title** 布局；
+- “居中”指在当前可用安全导航区域内保持视觉居中，不能因为左侧返回按钮或右侧 Action 数量不同而被简单 Flex 推偏；
+- 当微信胶囊、系统 Reserved Region 等使物理屏幕中心不可安全使用时，由 Platform Adapter 给出可用区域，Top App Bar 在该安全区域中居中；
+- Title 必须单行显示；超出可用宽度时使用 `overflow hidden + text-overflow: ellipsis + white-space: nowrap` 或等价平台实现，不换行、不挤压 Action；
+- Title 的最大宽度必须同时考虑 leading action、trailing actions 与 Platform Reserved Region；
+- 右侧提供正式 **Trailing Action Slot / Action List** 扩展机制，优先消费 Core `Icon Button` + Icon Registry，而不是在 Top App Bar 内写死具体图标；
+- 支持 0 / 1 / 多个右侧 Icon Button，但视觉层默认保持克制；常规 Mobile 场景建议最多 2 个直接可见 Action，其余进入 Overflow；
+- 微信小程序等 Reserved Region 已占据右侧空间时，可见 Action 数量需要由 Adapter / available width 进一步收缩，不能强行与胶囊抢空间；
+- Icon-only Action 必须有 accessible name，且 Hit Area 满足平台 touch target；
+- Action 的增删不得导致标题位置在页面状态切换中明显跳动。
 
 #### B. Mini Program Navigation Adapter — Platform Adapter
 
