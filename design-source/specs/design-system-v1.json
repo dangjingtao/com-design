@@ -8,20 +8,21 @@
     "canonicalEntrypoint": true
   },
   "systemModel": {
-    "layers": ["primitive", "semantic", "component", "pattern"],
+    "layers": ["primitive", "semantic", "component", "composite-component", "pattern"],
     "axes": {
       "theme": {"default":"light", "supported":["light","dark"]},
       "density": {"default":"compact", "supported":["compact","comfortable"]},
       "platform": {"supported":["ios","android"]},
       "motion": {"default":"standard", "supported":["standard","reduced"]}
     },
-    "resolutionOrder": ["foundation", "theme", "density", "platform", "motion", "component", "pattern", "product-extension"]
+    "resolutionOrder": ["foundation", "theme", "density", "platform", "motion", "component", "composite-component", "pattern", "product-extension"]
   },
   "sources": {
     "foundation": "../tokens/tokens.json",
     "themeDark": "../tokens/theme-dark.json",
     "motion": "../tokens/motion.json",
     "componentSchema": "../schemas/component-contract-v1.schema.json",
+    "compositeSchema": "../schemas/composite-contract-v1.schema.json",
     "themeOverlaySchema": "../schemas/theme-overlay-v1.schema.json",
     "motionSchema": "../schemas/motion-modes-v1.schema.json",
     "patternSchema": "../schemas/pattern-contract-v1.schema.json",
@@ -31,6 +32,7 @@
     "navigationInformation": "./navigation-information.json",
     "feedbackOverlayProgress": "./feedback-overlay-progress.json",
     "searchMenu": "./search-menu.json",
+    "coreComposites": "./core-composites.json",
     "corePatterns": "./core-patterns.json"
   },
   "componentCatalog": {
@@ -38,6 +40,18 @@
     "navigationInformation": ["listItem","tabs","segmentedControl","topAppBar","bottomNavigation","section","divider","card","tag","badge","avatar"],
     "feedbackOverlayProgress": ["toast","snackbar","alert","dialog","bottomSheet","loadingIndicator","skeleton","emptyState","progressIndicator","stepper","timeline"],
     "searchMenu": ["searchField","menu","menuItem"]
+  },
+  "coreCompositeComponents": [
+    "carousel",
+    "filterBar",
+    "tabbedActionBar",
+    "groupedList"
+  ],
+  "compositePolicy": {
+    "countedAsCoreComponents": false,
+    "businessDomainEnumsInCore": false,
+    "canonicalSource": "core-composites.json",
+    "promotionRule": "Promote a recurring assembly to a Core Composite Component only when it has stable anatomy, interaction and consumption identity across products without product-domain names, routes or state enums."
   },
   "corePatterns": [
     "statusComposition",
@@ -55,6 +69,7 @@
   },
   "counts": {
     "coreComponents": 33,
+    "coreCompositeComponents": 4,
     "corePatterns": 6
   },
   "themeResolution": {
@@ -88,6 +103,7 @@
     "iconographyContractMapped": true,
     "sharedIconScaleMapped": true,
     "componentCatalogDeclared": true,
+    "compositeCatalogDeclared": true,
     "patternsSeparatedCanonically": true,
     "humanReadableAssemblyRequired": true,
     "penpotSyncPolicyRequired": true,
