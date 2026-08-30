@@ -71,7 +71,7 @@ Product Extension 不是“Core 管不到的垃圾桶”，而是正式、受治
 
 - 为了一个产品需求直接重定义 Core semantic token 的含义；
 - 用 Product Component 静默覆盖同名 Core Component；
-- 让 Product Pattern 改写 Core Pattern 的通用决策规则；
+- 让 Product Pattern 改写 Core Pattern 的通用定义本身；
 - 把领域状态、业务枚举或品牌词汇塞进 Core contract；
 - 通过主题或 Adapter 改变 Success / Warning / Danger 等通用语义的含义。
 
@@ -130,6 +130,44 @@ Core Component
 → each platform redesigns its own component
 ```
 
-### Current question
+## Product priority over Core UX Pattern
 
-- 当 UX Pattern 与 Product Extension 发生冲突时，Product 是否可以明确例外 / override Pattern，还是 Core Pattern 应被视为不可破坏的强约束？
+用户选择：**C — 当 Product Extension 与 Core UX Pattern 冲突时，具体产品优先；Core UX Pattern 主要作为推荐与默认解法。**
+
+这意味着 UX Pattern 在 V2 中承担的是“高质量默认决策模型”，而不是对具体产品不可违反的强制流程模板。
+
+Product Extension 可以基于真实业务目标、用户场景或领域约束偏离 Core Pattern，而不要求把每一次偏离都包装成正式 override 审批。产品团队 / Agent 应优先对最终任务结果与产品体验负责，而不是为了机械满足 Pattern 把真实业务做僵。
+
+但这种自由度仅发生在 **UX Pattern 层**。它不等于 Product 可以绕开已经被定义为 hard gate 的基础约束，例如：
+
+- canonical source / schema / contract 完整性；
+- Core semantic token 的含义；
+- Component 必需状态与关键 anatomy；
+- Accessibility、touch target 等硬约束；
+- Platform Adapter 的合法映射边界；
+- 明确禁止的 semantic misuse。
+
+因此层级关系更准确地表达为：
+
+```text
+Core hard contract / semantic invariant
+= must comply
+
+Core UX Pattern
+= recommended default
+
+Product Extension / Product UX
+= may choose a better domain-specific solution
+```
+
+如果某个 Product 长期、反复地采用与 Core Pattern 不同的解法，并在多个产品或场景中证明更稳定，这应成为 Core Pattern 复盘或演进的证据，而不是被视为“产品违规”。
+
+换句话说：
+
+> **Pattern 给产品一个成熟默认答案，但产品仍然拥有最后的 UX 决策权。**
+
+## Q4 conclusion
+
+Com Design V2 的责任边界可以压缩为：
+
+> **Core 管通用设计语义、Component / Composite 与可复用 UX Pattern；Platform Adapter 负责平台化实现与有限 presentation 差异；Product Extension 可以正式扩展并在具体产品 UX 上拥有最终选择权，但不得改写 Core 的硬语义与基础契约。**
