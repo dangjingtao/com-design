@@ -55,6 +55,36 @@ Product Extension 不是“Core 管不到的垃圾桶”，而是正式、受治
 
 因此 V2 的目标不是把所有产品设计都标准化，而是让产品在一个稳定、可机器消费、可跨端落地的共同基础上扩展。
 
+## Product Extension freedom
+
+用户选择：**B — Product Extension 可以新增产品专属 Token / Component / Pattern，但必须基于 Core 语义，且不能反向污染或改写 Core。**
+
+这意味着 Product Extension 不是只能“拼装现有组件”的薄层，而是拥有正式扩展能力：
+
+- 可以定义产品专属 semantic token，例如会员身份、奖励价值、活动强调等产品语义；
+- 可以定义领域专属 Component / Composite，只要其命名、状态、anatomy、accessibility 与平台适配方式仍遵循 Com Design contract；
+- 可以定义产品专属 UX Pattern，例如某类业务资格判断、奖励领取、会员权益呈现等，但它们属于 Product scope，而不是因为存在就自动成为 Core Pattern；
+- 可以拥有比 Core 更强的视觉表达和品牌资产，包括品牌图形、Mascot、特殊主题与活动视觉；
+- 这些扩展仍应通过正式 namespace / source / validation 进入系统，使 AI / Agent 能区分 Core 与 Product 能力。
+
+禁止的反向污染包括：
+
+- 为了一个产品需求直接重定义 Core semantic token 的含义；
+- 用 Product Component 静默覆盖同名 Core Component；
+- 让 Product Pattern 改写 Core Pattern 的通用决策规则；
+- 把领域状态、业务枚举或品牌词汇塞进 Core contract；
+- 通过主题或 Adapter 改变 Success / Warning / Danger 等通用语义的含义。
+
+理想关系是：
+
+```text
+Core provides stable semantics and contracts
+→ Product Extension specializes them for a product domain
+→ Product / Business Logic supplies real business state and rules
+```
+
+如果 Product Extension 中的能力经过多个真实产品长期验证，证明其已去业务化、结构和交互稳定、跨产品复用价值明确，才进入“是否晋升 Core”的独立评审，而不是自动上收。
+
 ### Current question
 
-- Product Extension 对 Core 应拥有多大的扩展自由：只能组合现有能力，还是允许新增产品专属 Token / Component / Pattern，只要不污染 Core？
+- Platform Adapter 应该只负责平台实现差异，还是也允许承载同一个 Component 在不同平台下的 presentation 选择与有限结构变化？
