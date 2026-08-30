@@ -250,6 +250,92 @@ V2 的 Prototype Shell MAY 提供：
 
 这些必须明确标注 `Prototype / Environment Chrome`，不能出现在 Core Component 计数中。
 
+### V2-Navigation-03 — Side Navigation / Navigation Rail
+
+**确定需求：** V2 必须补齐桌面端侧边导航能力。核心学院现有实现作为真实产品证据参考，但不直接复制其组件结构、业务路由判断或视觉样式。
+
+核心学院已验证一套常见骨架确实存在：固定左侧导航、Icon + Label 一级入口、二级入口、可滚动主导航区、底部辅助入口以及内容区让位。V2 保留这些可复用结构经验，但重新定义为产品无关的导航契约。
+
+#### Standard naming
+
+- **Side Navigation**：展开态、Label-first 的持久侧边导航，是 Desktop 管理端 / 工作台的主要形态；
+- **Navigation Rail**：紧凑的 Icon-first 侧边导航，可作为中等宽度或用户主动折叠后的候选形态；
+- 不建议把导航组件本身泛称为 `Sidebar`。`Sidebar` 可以是任何次级面板；`Sidebar Layout / App Shell` 属于更上层 Layout 问题。
+
+#### Recommended anatomy
+
+```text
+optional brand / context header
+→ navigation groups
+  → navigation item
+  → optional nested items
+→ flexible scroll region
+→ optional auxiliary / footer actions
+```
+
+要求：
+
+- Brand / Product identity 区域可选；其中的产品名、Logo、业务环境标签属于 Product Extension，不进入 Core 语义；
+- Navigation Group 可选，Group Heading 保持低强调，不通过大量 Card / Divider 制造层级；
+- 一级 Navigation Item 支持 optional icon + label + optional badge/count + optional expansion indicator；
+- 图标必须消费 V2 Icon Registry，不在 Side Navigation 内直接绑定 Lucide import；
+- 二级导航默认最多支持 **2 层导航深度**；更深的信息架构应重构，而不是无限增加缩进；
+- Parent 含 active child 时可以表达 `contains-active-destination`，但不能和真正 active child 使用同等强度的选中样式；
+- 非当前上下文的 nested group SHOULD 默认折叠；必要时可持久化用户折叠偏好；
+- Label 单行显示，超长使用 ellipsis；Rail / 折叠态或截断态需要 Tooltip / accessible label；
+- 主导航区域独立滚动，Header / Footer SHOULD 保持稳定；键盘聚焦或路由进入当前项时，应保证 active/focused item 可见；
+- Auxiliary / Footer Action 与主目的地视觉分区，但不能在 Core 中写死具体业务快捷入口。
+
+#### Visual direction
+
+核心学院当前侧边栏的结构可以借鉴，但 V2 视觉需要更克制、更现代：
+
+- Flat-first，不使用重阴影和大面积品牌色 Side Surface；
+- Active destination 使用**单一最强选中信号**，推荐 Brand foreground + restrained selected surface / indicator，而不是多个层级同时铺浅紫；
+- Hover / Focus / Pressed / Selected 必须分别定义，不把 hover 当 active；
+- Group 间距和 typography 优先建立层级，减少“靠缩进 + 彩色底块”表达信息架构；
+- Icon、Label、Badge 的视觉权重必须稳定，Badge 只表达真实数量 / 状态，不作为装饰；
+- 展开态常规宽度可在约 `220–280` logical units 范围内由 density / product 决定，不把核心学院当前固定 `w-64` 当成 Core 常量；
+- Rail 候选宽度约 `64–80` logical units，但正式值待 V2 Token / Desktop density 验证后确定。
+
+#### Interaction and accessibility
+
+- Side Navigation 必须支持 pointer + keyboard；不得依赖 hover 才能发现关键子导航；
+- Focus ring / keyboard order 必须清晰，折叠/展开后焦点不能丢失；
+- Parent item 若负责展开子项，则其“展开”和“导航”行为必须明确，避免一个点击区域同时承担两个不可预测动作；
+- Route state / selected destination 必须由共享 Navigation Model 决定，不能像产品代码一样在组件内部散布 pathname prefix 判断；
+- Badge、collapsed state、expanded group state 的变化不应让主要目标产生明显位置抖动。
+
+#### Responsive navigation mapping
+
+V2 **不采用核心学院当前“窄屏直接变成顶部横向滚动主导航”作为默认规则**。
+
+同一 Navigation Model 在不同空间下应通过 responsive adapter 映射：
+
+```text
+wide desktop     → Side Navigation
+medium desktop   → Navigation Rail candidate
+mobile / narrow  → Bottom Navigation / Top App Bar / Drawer or Sheet navigation
+```
+
+具体映射由目的地数量、层级和任务类型决定，而不是单纯按 CSS breakpoint 把所有侧边项横着排。
+
+要求：
+
+- destination / route truth 保持一份，视觉载体随平台变化；
+- Mobile 若已有 3–5 个一级目的地，优先复用 Bottom Navigation；
+- 层级较深或目的地较多时，使用 Drawer / Sheet 类入口候选，而不是横向滚动十几个导航项；
+- Desktop App Shell 负责内容区域 offset / resize；页面本身不应 hard-code `padding-left` 去配合 Side Navigation。
+
+#### Classification candidate
+
+当前建议：
+
+- `Side Navigation`：**Core Composite Component candidate**，因为它由 Icon / Label / Badge / Group / nested item / scroll / footer 等形成稳定可实例化组合；
+- `Navigation Rail`：先作为 Side Navigation 的 compact variant / peer candidate，施工前根据 API 稳定性决定是否独立；
+- `App Shell / Sidebar Layout`：**Layout / Composite candidate**，负责 Side Navigation 与主内容区的空间关系，不和导航组件本身混为一体；
+- 是否需要独立 `Navigation Item` Core Component，必须等跨 Side Navigation / Drawer / Menu 等复用证据出现后再决定，当前不为了拆 API 提前增加组件。
+
 ---
 
 ## 5. Future Desktop boundary（暂记，不展开施工）
@@ -259,10 +345,10 @@ V2 的 Prototype Shell MAY 提供：
 - Container
 - Responsive Grid
 - Split Pane
-- Sidebar Layout
+- App Shell / Sidebar Layout
 - Breakpoint / responsive contract
 
-这些目前只作为方向，不视为已确认 V2 scope；待 Desktop 审查时逐项判断。
+这些目前只作为方向，不视为已确认 V2 scope；其中 Side Navigation 能力已确认进入 V2，但 App Shell / Sidebar Layout 仍需单独审查。
 
 ---
 
