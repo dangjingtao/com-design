@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://com-design.local/schemas/platform-context-v2.schema.json",
+  "title": "Com Design Platform Context V2",
+  "description": "Orthogonal cross-platform execution context. Platform never implies viewport, input modality, motion preference, color scheme, or content scale.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "platform",
+    "viewport",
+    "input",
+    "motion",
+    "colorScheme",
+    "contentScale"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 2
+    },
+    "platform": {
+      "type": "string",
+      "enum": ["ios", "android", "web", "wechat-mini-program"]
+    },
+    "viewport": {
+      "type": "string",
+      "enum": ["compact", "medium", "wide"]
+    },
+    "input": {
+      "type": "string",
+      "enum": ["touch", "pointer", "keyboard", "hybrid"]
+    },
+    "motion": {
+      "type": "string",
+      "enum": ["standard", "reduced"]
+    },
+    "colorScheme": {
+      "type": "string",
+      "enum": ["light", "dark"]
+    },
+    "contentScale": {
+      "type": "string",
+      "enum": ["standard", "enlarged", "platform-driven"]
+    }
+  },
+  "additionalProperties": false
+}
