@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildTokenModel, validateTokenModel } from '../src/token-model.mjs';
 import { validateSourceIntegrity } from '../src/source-integrity.mjs';
-import { writeEngineeringOutputs } from '../src/adapters.mjs';
+import { writeRegisteredEngineeringOutputs } from '../src/adapters/registry.mjs';
 import { writeMcpOutput } from '../src/mcp-adapter.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -31,7 +31,7 @@ if (errors.length) {
 }
 
 const files = [
-  ...writeEngineeringOutputs(repoRoot, model),
+  ...writeRegisteredEngineeringOutputs(repoRoot, model),
   ...writeMcpOutput(repoRoot, model),
 ];
 console.log(
