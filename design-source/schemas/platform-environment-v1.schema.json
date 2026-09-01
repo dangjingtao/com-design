@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://com-design.local/schemas/platform-environment-v1.schema.json",
+  "title": "Com Design Platform Environment Snapshot V1",
+  "description": "Runtime environment facts and capabilities consumed by platform adapters. Environment may change presentation, but never Core task result, state semantics, or action hierarchy.",
+  "type": "object",
+  "required": ["schemaVersion", "platform", "geometry", "chrome", "back", "focus", "keyboardIme", "pointer", "gesture", "overlay", "accessibility"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "platform": {"type": "string", "enum": ["ios", "android", "web", "wechat-mini-program"]},
+    "geometry": {
+      "type": "object",
+      "required": ["unit", "safeAreaInsets", "reservedRegions"],
+      "properties": {
+        "unit": {"type": "string", "enum": ["layout-unit"]},
+        "safeAreaInsets": {
+          "type": "object",
+          "required": ["top", "right", "bottom", "left"],
+          "properties": {
+            "top": {"type": "number", "minimum": 0},
+            "right": {"type": "number", "minimum": 0},
+            "bottom": {"type": "number", "minimum": 0},
+            "left": {"type": "number", "minimum": 0}
+          },
+          "additionalProperties": false
+        },
+        "reservedRegions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "owner", "kind", "edge", "rect", "affectsLayout", "comDesignOwned"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "owner": {"type": "string", "enum": ["system", "host"]},
+              "kind": {"type": "string", "enum": ["status-bar", "home-indicator", "gesture-inset", "host-capsule", "browser-chrome", "other"]},
+              "edge": {"type": "string", "enum": ["top", "top-right", "right", "bottom", "left", "floating"]},
+              "rect": {
+                "type": "object",
+                "required": ["x", "y", "width", "height"],
+                "properties": {
+                  "x": {"type": "number"},
+                  "y": {"type": "number"},
+                  "width": {"type": "number", "minimum": 0},
+                  "height": {"type": "number", "minimum": 0}
+                },
+                "additionalProperties": false
+              },
+              "affectsLayout": {"type": "boolean"},
+              "comDesignOwned": {"const": false}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "chrome": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "owner", "kind", "comDesignOwned", "reservedRegionIds"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "owner": {"type": "string", "enum": ["system", "host"]},
+          "kind": {"type": "string", "enum": ["status-bar", "home-indicator", "system-navigation", "host-capsule", "browser-chrome", "other"]},
+          "comDesignOwned": {"const": false},
+          "reservedRegionIds": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+        },
+        "additionalProperties": false
+      }
+    },
+    "back": {
+      "type": "object",
+      "required": ["available", "mechanisms", "predictive"],
+      "properties": {
+        "available": {"type": "boolean"},
+        "mechanisms": {"type": "array", "items": {"type": "string", "enum": ["system-button", "system-gesture", "host-action", "history", "app-action"]}, "uniqueItems": true},
+        "predictive": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "focus": {
+      "type": "object",
+      "required": ["supported", "focusVisible", "programmatic"],
+      "properties": {
+        "supported": {"type": "boolean"},
+        "focusVisible": {"type": "string", "enum": ["required", "platform-managed", "not-applicable"]},
+        "programmatic": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "keyboardIme": {
+      "type": "object",
+      "required": ["supported", "composition", "viewportBehavior", "dismissal"],
+      "properties": {
+        "supported": {"type": "boolean"},
+        "composition": {"type": "boolean"},
+        "viewportBehavior": {"type": "string", "enum": ["resize", "overlay", "resize-or-overlay", "none"]},
+        "dismissal": {"type": "array", "items": {"type": "string", "enum": ["system", "explicit", "tap-outside", "back"]}, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    },
+    "pointer": {
+      "type": "object",
+      "required": ["supported", "hover", "precision"],
+      "properties": {
+        "supported": {"type": "boolean"},
+        "hover": {"type": "boolean"},
+        "precision": {"type": "string", "enum": ["none", "coarse", "fine", "mixed"]}
+      },
+      "additionalProperties": false
+    },
+    "gesture": {
+      "type": "object",
+      "required": ["supported", "backGesture", "systemReservedEdges"],
+      "properties": {
+        "supported": {"type": "boolean"},
+        "backGesture": {"type": "string", "enum": ["none", "edge-swipe", "system-predictive", "host-managed"]},
+        "systemReservedEdges": {"type": "array", "items": {"type": "string", "enum": ["top", "right", "bottom", "left"]}, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    },
+    "overlay": {
+      "type": "object",
+      "required": ["dismissalMechanisms", "externallyOwnedUi"],
+      "properties": {
+        "dismissalMechanisms": {"type": "array", "items": {"type": "string", "enum": ["explicit", "tap-outside", "escape", "back", "swipe", "system"]}, "uniqueItems": true},
+        "externallyOwnedUi": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind", "owner"],
+            "properties": {
+              "kind": {"type": "string", "enum": ["picker", "date-picker", "time-picker", "share-sheet", "permission-prompt", "file-picker", "other"]},
+              "owner": {"type": "string", "enum": ["system", "host"]}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "accessibility": {
+      "type": "object",
+      "required": ["contentScale", "contentScaleHook", "screenReaderHook"],
+      "properties": {
+        "contentScale": {"type": "string", "enum": ["standard", "enlarged", "platform-driven"]},
+        "contentScaleHook": {"type": "string", "enum": ["system", "host", "css-user-agent", "app-bridge", "none"]},
+        "screenReaderHook": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

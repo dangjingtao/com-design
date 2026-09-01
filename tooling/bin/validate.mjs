@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateComponentCatalog } from '../src/component-contract.mjs';
+import { validatePlatformEnvironmentContract } from '../src/platform-environment.mjs';
 import { validatePlatformModel } from '../src/platform-context.mjs';
 import { validateSourceIntegrity } from '../src/source-integrity.mjs';
 import { buildTokenModel, validateTokenModel } from '../src/token-model.mjs';
@@ -14,11 +15,14 @@ const sourceIntegrity = validateSourceIntegrity(repoRoot, { manifestPath });
 const foundationPath = sourceIntegrity.evidence.canonicalSources.foundation?.resolvedPath;
 const platformModel = sourceIntegrity.evidence.canonicalSources.platformModel?.value;
 const platformContextSchema = sourceIntegrity.evidence.canonicalSources.platformContextSchema?.value;
+const platformEnvironment = sourceIntegrity.evidence.canonicalSources.platformEnvironment?.value;
+const platformEnvironmentSchema = sourceIntegrity.evidence.canonicalSources.platformEnvironmentSchema?.value;
 const componentIndexPath = sourceIntegrity.evidence.canonicalSources.componentIndex?.resolvedPath;
 const componentSchemaPath = sourceIntegrity.evidence.canonicalSources.componentSchema?.resolvedPath;
 let model = null;
 let tokenErrors = [];
 let platformErrors = [];
+let environmentErrors = [];
 let componentValidation = { errors: [], evidence: { componentCount: 0 } };
 
 if (foundationPath) {
@@ -30,6 +34,17 @@ if (!platformModel) platformErrors.push('canonical platformModel source is unava
 if (!platformContextSchema) platformErrors.push('canonical platformContextSchema source is unavailable.');
 if (platformModel && platformContextSchema) {
   platformErrors = validatePlatformModel(platformModel, platformContextSchema, manifest);
+}
+
+if (!platformEnvironment) environmentErrors.push('canonical platformEnvironment source is unavailable.');
+if (!platformEnvironmentSchema) environmentErrors.push('canonical platformEnvironmentSchema source is unavailable.');
+if (platformEnvironment && platformEnvironmentSchema && platformModel) {
+  environmentErrors = validatePlatformEnvironmentContract(
+    platformEnvironment,
+    platformEnvironmentSchema,
+    platformModel,
+    manifest,
+  );
 }
 
 if (!componentIndexPath) componentValidation.errors.push('canonical componentIndex source is unavailable.');
@@ -45,6 +60,7 @@ const errors = [
   ...sourceIntegrity.errors,
   ...tokenErrors,
   ...platformErrors,
+  ...environmentErrors,
   ...componentValidation.errors,
 ];
 
@@ -63,4 +79,5 @@ console.log(`Com Design validation passed: ${model.consumer.length} consumer tok
 const counts = sourceIntegrity.evidence.catalogCounts;
 console.log(`Source integrity passed: ${Object.keys(sourceIntegrity.evidence.canonicalSources).length} canonical sources; catalogs ${counts.coreComponents} components / ${counts.coreCompositeComponents} composites / ${counts.corePatterns} patterns.`);
 console.log(`Platform model passed: ${platformModel.axes.platform.values.length} platforms, 6 orthogonal context axes with manifest parity.`);
+console.log(`Platform environment passed: ${platformEnvironment.examples.length} platform examples with safe area, chrome, interaction and accessibility capability parity.`);
 console.log(`Component contracts passed: ${componentValidation.evidence.componentCount} catalog entries validated against component-contract-v2 schema with canonical contract/preview path and drift checks.`);
