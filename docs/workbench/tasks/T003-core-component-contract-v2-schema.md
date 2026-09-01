@@ -51,19 +51,19 @@
 
 ## Implementation record
 
-- Commit / PR: original PR #16; integrated after T002 via PR #17 because both cards modify shared manifest / validator files.
-- Changed paths: `design-source/schemas/component-contract-v2.schema.json`, `design-source/specs/design-system-v1.json`, `tooling/src/component-contract.mjs`, `tooling/test/component-contract.test.mjs`, `tooling/bin/validate.mjs`, plus this task card and work-ledger status.
+- Commit / PR: original PR #16 closed as superseded after conflict with merged T002; T003 was semantically integrated on top of T002 through PR #17, merged to `dev` as `e7918e5557e3f2de7b9ac8a7036ddfee18111687`.
+- Changed paths: `design-source/schemas/component-contract-v2.schema.json`, `design-source/specs/design-system-v1.json`, `tooling/src/component-contract.mjs`, `tooling/test/component-contract.test.mjs`, `tooling/bin/validate.mjs`, plus task/ledger evidence.
 - Notes: Component V2 schema uses a required common identity/anatomy spine plus optional richer capability blocks. Existing 33 component contracts were not bulk-rewritten and no visual/component-count change was made. `componentSchema` is canonical alongside T002's platform model sources. Catalog validation checks duplicate catalog/internal slugs, duplicate contract paths, broken contract/preview paths, filename/slug/name drift, orphan contracts, schema compliance and repository-contained real paths. Review fixes include order-independent `uniqueItems` equality and canonical preview enforcement under `design-source/preview/component-<slug>.html`.
 
 ## Verification evidence
 
-- CI: integration Design System Build run #120 (`33478385306`) — PASS with T002 + T003 enabled together.
+- CI: original T003 run #116 (`33477782656`) PASS; integrated PR run #120 (`33478385306`) PASS; post-merge `dev` Design System Build run #123 (`33478494618`) PASS.
 - Schema / catalog tests: integrated suite 36/36 PASS. T003 coverage includes all 33 indexed contracts, optional capability posture, malformed schema rejection, duplicate ids/paths, broken paths, catalog drift, orphan contracts, deep `uniqueItems`, and canonical preview path/filename rejection.
-- Other evidence: integrated repository validation reports `Source integrity passed: 9 canonical sources; catalogs 33 components / 4 composites / 6 patterns`, `Platform model passed: 4 platforms, 6 orthogonal context axes with manifest parity`, and `Component contracts passed: 33 catalog entries validated against component-contract-v2 schema with canonical contract/preview path and drift checks.` Engineering/Penpot artifact upload passed and Penpot remains at 33 components.
+- Other evidence: merged `dev` validation reports `Source integrity passed: 9 canonical sources; catalogs 33 components / 4 composites / 6 patterns`, `Platform model passed: 4 platforms, 6 orthogonal context axes with manifest parity`, and `Component contracts passed: 33 catalog entries validated against component-contract-v2 schema with canonical contract/preview path and drift checks.` Engineering/Penpot artifact upload passed, Penpot remains at 33 components, and Human Docs Pages build/publish succeeded after merge.
 
 ## Review
 
 - Reviewer: Mira
 - Result: REVIEW
-- Conclusion: T003 implementation is integrated with the already-merged T002 baseline and deterministic evidence is green. The remaining PR #16 preview-path P2 was fixed in the integration branch. Per work-ledger rule, merge does not itself imply PASS.
-- Follow-up: T005/T006/T014/T015/T020-T025 may consume the component contract only after formal PASS. T002/T003 shared manifest/validator conflict is resolved by PR #17 integration.
+- Conclusion: T003 is merged and verified on the same `dev` baseline as T002. The original shared-file conflict and the remaining preview-path P2 were resolved in PR #17; post-merge CI is green. Merge does not itself imply PASS.
+- Follow-up: T005/T006/T014/T015/T020-T025 may consume the component contract only after formal PASS.
