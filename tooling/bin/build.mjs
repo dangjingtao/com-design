@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildTokenModel, validateTokenModel } from '../src/token-model.mjs';
 import { validateSourceIntegrity } from '../src/source-integrity.mjs';
+import { buildCanonicalDesignModel, writeCanonicalDesignModel } from '../src/design-model.mjs';
 import { writeRegisteredEngineeringOutputs } from '../src/adapters/registry.mjs';
 import { writeMcpOutput } from '../src/mcp-adapter.mjs';
 
@@ -30,11 +31,13 @@ if (errors.length) {
   process.exit(1);
 }
 
+const designModel = buildCanonicalDesignModel(repoRoot);
 const files = [
+  writeCanonicalDesignModel(repoRoot, designModel),
   ...writeRegisteredEngineeringOutputs(repoRoot, model),
   ...writeMcpOutput(repoRoot, model),
 ];
 console.log(
-  `Generated ${files.length} engineering artifacts from ${model.consumer.length} consumer tokens.`,
+  `Generated ${files.length} engineering artifacts from ${model.consumer.length} consumer tokens and Canonical Design Model V2.`,
 );
 for (const file of files) console.log(`  ${file}`);

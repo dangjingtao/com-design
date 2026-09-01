@@ -36,7 +36,7 @@
 | T002 | Cross-platform Platform Model + Axes | Architecture | PASS | V2 first-stage | - |
 | T003 | Core Component Contract V2 Schema | Contract / Validation | PASS | V2 first-stage | - |
 | T004 | Adapter Modularization + Stable Registry | Tooling / Adapter | PASS | V2 first-stage | - |
-| T005 | Canonical Design Model V2 | Architecture / Tooling | TODO | V2 first-stage | T001、T002、T003 |
+| T005 | Canonical Design Model V2 | Architecture / Tooling | PASS | V2 first-stage | T001、T002、T003 |
 | T006 | Validation Orchestrator + Evidence Output | Validation | TODO | V2 first-stage | T001、T003、T005 |
 | T007 | Web Adapter V2 | Web / Adapter | TODO | V2 first-stage | T004、T005 |
 | T008 | Native Mobile Adapter V2 | iOS / Android / Adapter | TODO | V2 first-stage | T002、T004、T005 |
