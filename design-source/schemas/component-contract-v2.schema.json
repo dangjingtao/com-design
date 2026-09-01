@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://com-design.local/schemas/component-contract-v2.schema.json",
+  "title": "Com Design Core Component Contract V2",
+  "description": "Machine-validatable Core Component contract. A small common identity/anatomy core is required; interaction, accessibility and platform presentation blocks are opt-in capabilities so simple components are not padded with meaningless fields.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "slug",
+    "name",
+    "sourceKind",
+    "confidence",
+    "semanticTypeCandidates",
+    "variantDimensions",
+    "representativeVariants",
+    "anatomy",
+    "traits",
+    "structurePatterns",
+    "usageHints",
+    "doNotInvent",
+    "unknowns"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "name": { "type": "string", "minLength": 1 },
+    "sourceKind": { "type": "string", "minLength": 1 },
+    "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
+    "intent": { "type": "string", "minLength": 1 },
+    "semanticTypeCandidates": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "variantDimensions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": { "type": "string", "minLength": 1 }
+      }
+    },
+    "states": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "representativeVariants": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "anatomy": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "traits": { "type": "object" },
+    "interactionContract": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "keyboardContract": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "accessibilityContract": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "platformPresentationRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["ref"],
+        "properties": {
+          "ref": { "type": "string", "minLength": 1 },
+          "context": { "type": "string", "minLength": 1 },
+          "note": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "platformExceptionRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["ref", "reason"],
+        "properties": {
+          "ref": { "type": "string", "minLength": 1 },
+          "context": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "structurePatterns": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "usageHints": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "doNotInvent": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "unknowns": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "additionalProperties": true
+}
