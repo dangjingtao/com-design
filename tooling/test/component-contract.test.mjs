@@ -117,6 +117,18 @@ test('schema can express intent, states, interaction, accessibility and platform
   assert.deepEqual(validateJsonSchemaValue(contract, repositorySchema), []);
 });
 
+test('uniqueItems treats objects with different key order as the same value', () => {
+  const contract = {
+    ...baseContract('select', 'Select'),
+    platformPresentationRefs: [
+      { ref: 'adapter/select/presentation', context: 'touch' },
+      { context: 'touch', ref: 'adapter/select/presentation' },
+    ],
+  };
+  const errors = validateJsonSchemaValue(contract, repositorySchema);
+  assert.ok(errors.some((error) => error.includes('platformPresentationRefs: items must be unique')));
+});
+
 test('schema rejects malformed identity and duplicate variant values', () => {
   const contract = baseContract('Bad Slug', 'Bad');
   contract.variantDimensions.state = ['default', 'default'];
