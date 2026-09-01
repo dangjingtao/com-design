@@ -12,6 +12,19 @@ function valueType(value) {
   return typeof value;
 }
 
+function canonicalJson(value) {
+  if (Array.isArray(value)) {
+    return `[${value.map((item) => canonicalJson(item)).join(',')}]`;
+  }
+  if (isObject(value)) {
+    return `{${Object.keys(value)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`)
+      .join(',')}}`;
+  }
+  return JSON.stringify(value);
+}
+
 export function validateJsonSchemaValue(value, schema, currentPath = '$') {
   const errors = [];
 
@@ -56,7 +69,7 @@ export function validateJsonSchemaValue(value, schema, currentPath = '$') {
     if (schema.uniqueItems === true) {
       const seen = new Set();
       for (const item of value) {
-        const key = JSON.stringify(item);
+        const key = canonicalJson(item);
         if (seen.has(key)) {
           errors.push(`${currentPath}: items must be unique.`);
           break;
