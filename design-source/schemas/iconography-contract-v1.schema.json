@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://com-design.local/schemas/iconography-contract-v1.schema.json",
+  "title": "Com Design Iconography Contract V1",
+  "description": "Provider-agnostic icon registry contract for stable names, Core/Product namespaces, provider mapping, geometry, accessibility and explicit fallback behavior.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "name",
+    "namespacePolicy",
+    "visualSizes",
+    "geometry",
+    "providerKinds",
+    "defaultCoreProvider",
+    "providers",
+    "fallback",
+    "icons"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "namespacePolicy": {
+      "type": "object",
+      "required": ["corePrefix", "productPrefix", "productNamespacePattern", "productMayOverrideCore"],
+      "properties": {
+        "corePrefix": { "const": "core." },
+        "productPrefix": { "const": "product." },
+        "productNamespacePattern": { "type": "string", "minLength": 1 },
+        "productMayOverrideCore": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "visualSizes": {
+      "type": "array",
+      "minItems": 3,
+      "uniqueItems": true,
+      "items": { "type": "integer", "enum": [16, 20, 24] }
+    },
+    "geometry": {
+      "type": "object",
+      "required": ["viewBox", "alignment", "strokeWidth", "lineCap", "lineJoin"],
+      "properties": {
+        "viewBox": { "type": "string", "minLength": 1 },
+        "alignment": { "type": "string", "enum": ["optical-center", "geometric-center"] },
+        "strokeWidth": { "type": "number" },
+        "lineCap": { "type": "string", "enum": ["round", "butt", "square"] },
+        "lineJoin": { "type": "string", "enum": ["round", "miter", "bevel"] }
+      },
+      "additionalProperties": false
+    },
+    "providerKinds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "enum": ["lucide", "svg"] }
+    },
+    "defaultCoreProvider": { "type": "string", "minLength": 1 },
+    "providers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "namespace", "source"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$" },
+          "kind": { "type": "string", "enum": ["lucide", "svg"] },
+          "namespace": { "type": "string", "pattern": "^(?:core|product\\.[a-z0-9]+(?:-[a-z0-9]+)*)$" },
+          "source": { "type": "string", "minLength": 1 },
+          "versionPolicy": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "fallback": {
+      "type": "object",
+      "required": ["stableName", "missingIcon", "missingProvider"],
+      "properties": {
+        "stableName": { "type": "string", "pattern": "^core\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "missingIcon": { "type": "string", "enum": ["fallback-with-warning", "error"] },
+        "missingProvider": { "const": "error" }
+      },
+      "additionalProperties": false
+    },
+    "icons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["stableName", "namespace", "provider", "providerName", "sizes", "viewBox", "alignment", "strokeWidth", "a11y"],
+        "properties": {
+          "stableName": { "type": "string", "pattern": "^(?:core|product\\.[a-z0-9]+(?:-[a-z0-9]+)*)\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "namespace": { "type": "string", "pattern": "^(?:core|product\\.[a-z0-9]+(?:-[a-z0-9]+)*)$" },
+          "provider": { "type": "string", "minLength": 1 },
+          "providerName": { "type": "string", "minLength": 1 },
+          "semanticName": { "type": "string", "minLength": 1 },
+          "sizes": {
+            "type": "array",
+            "minItems": 3,
+            "uniqueItems": true,
+            "items": { "type": "integer", "enum": [16, 20, 24] }
+          },
+          "viewBox": { "type": "string", "minLength": 1 },
+          "alignment": { "type": "string", "enum": ["optical-center", "geometric-center"] },
+          "strokeWidth": { "type": "number" },
+          "a11y": {
+            "type": "object",
+            "required": ["decorativeAllowed", "interactiveAccessibleNameRequired"],
+            "properties": {
+              "decorativeAllowed": { "type": "boolean" },
+              "interactiveAccessibleNameRequired": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
