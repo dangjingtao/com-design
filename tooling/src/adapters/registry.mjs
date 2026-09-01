@@ -37,12 +37,19 @@ function assertAdapter(adapter) {
   }
 }
 
+function freezeRegisteredAdapter(adapter) {
+  return Object.freeze({
+    ...adapter,
+    outputPaths: Object.freeze([...adapter.outputPaths]),
+  });
+}
+
 function publicDescriptor(adapter) {
   return Object.freeze({
     id: adapter.id,
     target: adapter.target,
     family: adapter.family,
-    outputPaths: [...adapter.outputPaths],
+    outputPaths: Object.freeze([...adapter.outputPaths]),
   });
 }
 
@@ -55,13 +62,15 @@ export function createAdapterRegistry(initialAdapters = []) {
   const registry = {
     register(adapter) {
       assertAdapter(adapter);
-      if (byId.has(adapter.id)) {
-        throw new Error(`adapter id is already registered: ${adapter.id}`);
+      const registered = freezeRegisteredAdapter(adapter);
+
+      if (byId.has(registered.id)) {
+        throw new Error(`adapter id is already registered: ${registered.id}`);
       }
-      if (byTarget.has(adapter.target)) {
-        throw new Error(`adapter target is already registered: ${adapter.target}`);
+      if (byTarget.has(registered.target)) {
+        throw new Error(`adapter target is already registered: ${registered.target}`);
       }
-      for (const outputPath of adapter.outputPaths) {
+      for (const outputPath of registered.outputPaths) {
         if (claimedOutputs.has(outputPath)) {
           throw new Error(
             `adapter output is already claimed by ${claimedOutputs.get(outputPath)}: ${outputPath}`,
@@ -69,11 +78,11 @@ export function createAdapterRegistry(initialAdapters = []) {
         }
       }
 
-      adapters.push(adapter);
-      byId.set(adapter.id, adapter);
-      byTarget.set(adapter.target, adapter);
-      for (const outputPath of adapter.outputPaths) {
-        claimedOutputs.set(outputPath, adapter.id);
+      adapters.push(registered);
+      byId.set(registered.id, registered);
+      byTarget.set(registered.target, registered);
+      for (const outputPath of registered.outputPaths) {
+        claimedOutputs.set(outputPath, registered.id);
       }
       return registry;
     },
