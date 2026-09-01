@@ -1,6 +1,6 @@
 # T003 · Core Component Contract V2 Schema
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: Contract / Validation
 - Owner: -
@@ -64,6 +64,6 @@
 ## Review
 
 - Reviewer: Mira
-- Result: REVIEW
-- Conclusion: T003 is merged and verified on the same `dev` baseline as T002. The original shared-file conflict and the remaining preview-path P2 were resolved in PR #17; post-merge CI is green. Merge does not itself imply PASS.
-- Follow-up: T005/T006/T014/T015/T020-T025 may consume the component contract only after formal PASS.
+- Result: PASS
+- Conclusion: Final design-system review completed against merged `dev`. The schema provides a strict shared Core spine while leaving richer component-specific capability blocks optional, so simple components are not padded with meaningless data and existing specialized contracts are not flattened into one oversized template. Root-level extensibility is intentional at this stage: canonical shared fields and standardized capability blocks are schema-validated, while existing specialized blocks remain compatible until later normalization work; this does not weaken catalog identity/path/drift gates. Platform presentation/exception fields are references rather than platform-specific Core forks. Duplicate IDs/paths, broken or non-canonical previews, orphan contracts, index↔contract drift, malformed shared fields, and deep duplicate object values fail deterministically. No blocking design, contract, validation, or integration issue remains.
+- Follow-up: T005/T006/T014/T015/T020-T025 may consume the component contract as an accepted baseline. If a later canonical model task normalizes specialized component capability blocks, it may tighten root extension policy without reopening T003 acceptance.
