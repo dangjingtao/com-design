@@ -41,7 +41,7 @@
 | T007 | Web Adapter V2 | Web / Adapter | TODO | V2 first-stage | T004、T005 |
 | T008 | Native Mobile Adapter V2 | iOS / Android / Adapter | TODO | V2 first-stage | T002、T004、T005 |
 | T009 | WeChat Mini Program Minimum Viable Adapter | Mini Program / Adapter | TODO | V2 first-stage | T002、T004、T005、T010 |
-| T010 | Platform Environment Contract | Architecture / Platform | TODO | V2 first-stage | T002 |
+| T010 | Platform Environment Contract | Architecture / Platform | PASS | V2 first-stage | T002 |
 | T011 | Motion Foundation V2 | Foundation / Motion | TODO | V2 first-stage | T002 |
 | T012 | Responsive Layout + Input Modality Foundation | Foundation / Layout | TODO | V2 first-stage | T002 |
 | T013 | Icon Registry → Provider → Adapter | Foundation / Icon | TODO | V2 first-stage | - |
