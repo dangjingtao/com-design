@@ -124,3 +124,45 @@ test('rejects hand-maintained catalog totals', () => {
   const result = validateSourceIntegrity(fixture.root);
   assert.ok(result.errors.some((error) => error.includes('manifest.counts must not contain hand-maintained catalog totals')));
 });
+
+test('rejects missing required catalog mappings', () => {
+  const fixture = makeFixture();
+  delete fixture.manifest.catalogs.corePatterns;
+  writeManifest(fixture.manifestPath, fixture.manifest);
+
+  const result = validateSourceIntegrity(fixture.root);
+  assert.ok(result.errors.some((error) => error.includes('required mapping: corePatterns')));
+});
+
+test('rejects canonical absolute paths', () => {
+  const fixture = makeFixture();
+  fixture.manifest.sources.foundation = path.join(fixture.root, 'design-source', 'colors_and_type.css');
+  writeManifest(fixture.manifestPath, fixture.manifest);
+
+  const result = validateSourceIntegrity(fixture.root);
+  assert.ok(result.errors.some((error) => error.includes('sources.foundation must be a relative repository path')));
+});
+
+test('rejects canonical traversal outside the repository', () => {
+  const fixture = makeFixture();
+  const externalFile = path.join(os.tmpdir(), `com-design-external-${process.pid}-${Date.now()}.json`);
+  fs.writeFileSync(externalFile, '{}\n');
+  fixture.manifest.sources.componentIndex = path.relative(path.dirname(fixture.manifestPath), externalFile);
+  writeManifest(fixture.manifestPath, fixture.manifest);
+
+  const result = validateSourceIntegrity(fixture.root);
+  assert.ok(result.errors.some((error) => error.includes('sources.componentIndex must stay inside the repository')));
+  fs.rmSync(externalFile, { force: true });
+});
+
+test('canonical foundation evidence follows the manifest declaration', () => {
+  const fixture = makeFixture();
+  const alternatePath = path.join(fixture.root, 'design-source', 'alternate-foundation.css');
+  fs.writeFileSync(alternatePath, ':root { --com-color-primary: #111111; }\n');
+  fixture.manifest.sources.foundation = '../alternate-foundation.css';
+  writeManifest(fixture.manifestPath, fixture.manifest);
+
+  const result = validateSourceIntegrity(fixture.root);
+  assert.deepEqual(result.errors, []);
+  assert.equal(result.evidence.canonicalSources.foundation.resolvedPath, fs.realpathSync(alternatePath));
+});
