@@ -1,0 +1,131 @@
+{
+  "$metadata": {
+    "name": "Com Design Cross-platform Platform Model",
+    "version": 2,
+    "status": "v2-first-stage",
+    "contextSchema": "../schemas/platform-context-v2.schema.json",
+    "owner": "T002"
+  },
+  "principles": {
+    "orthogonalAxes": true,
+    "platformDoesNotInferAxes": true,
+    "coreContractReplication": "forbidden",
+    "rule": "Platform identifies the execution family only. Viewport, input, motion, color scheme, and content scale are supplied independently and must not be inferred from platform name."
+  },
+  "platforms": [
+    {"id": "ios", "label": "iOS"},
+    {"id": "android", "label": "Android"},
+    {"id": "web", "label": "Web"},
+    {"id": "wechat-mini-program", "label": "WeChat Mini Program"}
+  ],
+  "axes": {
+    "platform": {
+      "required": true,
+      "values": ["ios", "android", "web", "wechat-mini-program"]
+    },
+    "viewport": {
+      "required": true,
+      "values": ["compact", "medium", "wide"],
+      "owner": "T012",
+      "note": "T002 defines the context vocabulary only; T012 owns responsive behavior."
+    },
+    "input": {
+      "required": true,
+      "values": ["touch", "pointer", "keyboard", "hybrid"],
+      "owner": "T012",
+      "note": "Input modality is explicit and never derived from platform."
+    },
+    "motion": {
+      "required": true,
+      "values": ["standard", "reduced"],
+      "owner": "T011",
+      "note": "T002 defines the context axis only; T011 owns semantic motion mapping."
+    },
+    "colorScheme": {
+      "required": true,
+      "contractName": "color-scheme",
+      "values": ["light", "dark"]
+    },
+    "contentScale": {
+      "required": true,
+      "contractName": "content-scale",
+      "values": ["standard", "enlarged", "platform-driven"],
+      "owner": "T010/T012",
+      "note": "T002 defines the context axis; environment hooks and reflow behavior are downstream contracts."
+    }
+  },
+  "uiOwnership": {
+    "systemChrome": {
+      "owner": "system",
+      "comDesignOwned": false,
+      "rule": "Operating-system chrome may constrain layout but is not a Com Design Core component and must not be recreated as product UI."
+    },
+    "hostChrome": {
+      "owner": "host",
+      "comDesignOwned": false,
+      "rule": "Host-owned chrome such as the WeChat Mini Program capsule may constrain layout but remains outside Com Design-owned UI."
+    },
+    "comDesignUi": {
+      "owner": "com-design",
+      "comDesignOwned": true,
+      "rule": "Com Design owns product UI intent and shared contracts. Platform adapters may change presentation only without redefining Core semantics."
+    }
+  },
+  "boundary": {
+    "environmentDetailsOwner": "T010",
+    "adapterImplementationOwners": ["T004", "T007", "T008", "T009"],
+    "coreContractRule": "Keep one platform-neutral Core contract. Do not fork Core contracts by platform."
+  },
+  "examples": {
+    "valid": [
+      {
+        "name": "ios-touch-compact",
+        "context": {"schemaVersion": 2, "platform": "ios", "viewport": "compact", "input": "touch", "motion": "standard", "colorScheme": "light", "contentScale": "platform-driven"}
+      },
+      {
+        "name": "android-keyboard-medium",
+        "context": {"schemaVersion": 2, "platform": "android", "viewport": "medium", "input": "keyboard", "motion": "reduced", "colorScheme": "dark", "contentScale": "enlarged"}
+      },
+      {
+        "name": "web-touch-compact",
+        "context": {"schemaVersion": 2, "platform": "web", "viewport": "compact", "input": "touch", "motion": "standard", "colorScheme": "dark", "contentScale": "standard"}
+      },
+      {
+        "name": "mini-program-keyboard-wide",
+        "context": {"schemaVersion": 2, "platform": "wechat-mini-program", "viewport": "wide", "input": "keyboard", "motion": "reduced", "colorScheme": "light", "contentScale": "enlarged"}
+      }
+    ],
+    "invalid": [
+      {
+        "name": "unknown-platform",
+        "context": {"schemaVersion": 2, "platform": "desktop", "viewport": "wide", "input": "pointer", "motion": "standard", "colorScheme": "light", "contentScale": "standard"},
+        "reason": "Unknown platform id."
+      },
+      {
+        "name": "invalid-viewport",
+        "context": {"schemaVersion": 2, "platform": "web", "viewport": "desktop", "input": "pointer", "motion": "standard", "colorScheme": "light", "contentScale": "standard"},
+        "reason": "Viewport must use the shared axis vocabulary."
+      },
+      {
+        "name": "invalid-input",
+        "context": {"schemaVersion": 2, "platform": "web", "viewport": "wide", "input": "mouse", "motion": "standard", "colorScheme": "light", "contentScale": "standard"},
+        "reason": "Input modality must use the shared axis vocabulary."
+      },
+      {
+        "name": "invalid-motion",
+        "context": {"schemaVersion": 2, "platform": "ios", "viewport": "compact", "input": "touch", "motion": "full", "colorScheme": "light", "contentScale": "standard"},
+        "reason": "Motion must be standard or reduced."
+      },
+      {
+        "name": "invalid-color-scheme",
+        "context": {"schemaVersion": 2, "platform": "android", "viewport": "compact", "input": "touch", "motion": "standard", "colorScheme": "sepia", "contentScale": "standard"},
+        "reason": "Color scheme must be light or dark."
+      },
+      {
+        "name": "invalid-content-scale",
+        "context": {"schemaVersion": 2, "platform": "wechat-mini-program", "viewport": "compact", "input": "touch", "motion": "standard", "colorScheme": "light", "contentScale": "huge"},
+        "reason": "Content scale must use the shared axis vocabulary."
+      }
+    ]
+  }
+}
