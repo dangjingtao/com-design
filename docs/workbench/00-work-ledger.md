@@ -44,7 +44,7 @@
 | T010 | Platform Environment Contract | Architecture / Platform | PASS | V2 first-stage | T002 |
 | T011 | Motion Foundation V2 | Foundation / Motion | TODO | V2 first-stage | T002 |
 | T012 | Responsive Layout + Input Modality Foundation | Foundation / Layout | TODO | V2 first-stage | T002 |
-| T013 | Icon Registry → Provider → Adapter | Foundation / Icon | REVIEW | V2 first-stage | - |
+| T013 | Icon Registry → Provider → Adapter | Foundation / Icon | PASS | V2 first-stage | - |
 | T014 | AI-readable / Executable / Verifiable Contract | AI / Contract | TODO | V2 first-stage | T003、T005、T010、T013 |
 | T015 | Penpot as Governed Downstream Consumer | Penpot / Tooling | TODO | V2 first-stage | T003、T005 |
 | T016 | Human Guide / Skill / Library-consumption Consistency | Docs / Consumption | TODO | V2 first-stage | T001、T007、T008、T009、T014、T015 |
