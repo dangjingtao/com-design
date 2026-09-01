@@ -22,6 +22,15 @@ test('repository environment contract, schema, platform model and manifest stay 
   assert.deepEqual(validatePlatformEnvironmentContract(contract, schema, platformModel, manifest), []);
 });
 
+test('platform environment schema keeps every canonical snapshot section required', () => {
+  const weakenedSchema = structuredClone(schema);
+  weakenedSchema.required = weakenedSchema.required.filter((key) => key !== 'focus');
+  assert.ok(
+    validatePlatformEnvironmentContract(contract, weakenedSchema, platformModel, manifest)
+      .some((error) => error.includes('schema must require focus')),
+  );
+});
+
 test('all four platform environment examples pass the schema contract', () => {
   assert.deepEqual(contract.examples.map((entry) => entry.platform).sort(), platformModel.axes.platform.values.slice().sort());
   for (const entry of contract.examples) {
@@ -59,6 +68,27 @@ test('platform name does not infer pointer capability', () => {
   const mini = example('wechat-mini-program');
   mini.pointer = { supported: true, hover: true, precision: 'fine' };
   assert.deepEqual(validatePlatformEnvironmentSnapshot(mini, schema), []);
+});
+
+test('back availability always exposes an actionable mechanism', () => {
+  const android = example('android');
+  android.back.available = true;
+  android.back.mechanisms = [];
+  assert.ok(
+    validatePlatformEnvironmentSnapshot(android, schema)
+      .some((error) => error.includes('must not be empty when back is available')),
+  );
+});
+
+test('reserved region identifiers are unique within a snapshot', () => {
+  const mini = example('wechat-mini-program');
+  const duplicate = structuredClone(mini.geometry.reservedRegions[0]);
+  duplicate.rect.x += 1;
+  mini.geometry.reservedRegions.push(duplicate);
+  assert.ok(
+    validatePlatformEnvironmentSnapshot(mini, schema)
+      .some((error) => error.includes(`duplicate id ${duplicate.id}`)),
+  );
 });
 
 test('invalid geometry, ownership, capability and unknown properties are rejected', () => {
