@@ -37,17 +37,19 @@
     "rule": "A Platform Adapter may choose a native or host-appropriate presentation from environment facts, but the chosen presentation must preserve Core task and state semantics."
   },
   "responsibilityBoundary": {
-    "T010": ["safe-area", "reserved-region", "system-host-chrome", "back-capability", "focus-capability", "keyboard-ime-capability", "pointer-capability", "gesture-capability", "overlay-dismissal-capability", "system-owned-ui-capability", "accessibility-hooks"],
+    "T010": ["safe-area", "reserved-region", "system-host-chrome", "back-capability", "focus-capability", "keyboard-ime-capability", "pointer-capability", "gesture-capability", "overlay-dismissal-capability", "externally-owned-ui-capability", "accessibility-hooks"],
     "T011": ["motion semantics", "standard-reduced motion mapping"],
     "T012": ["responsive layout behavior", "input-modality interaction-state behavior", "content-scale reflow"],
     "T020": ["top app bar", "side navigation", "navigation component presentation"],
     "note": "T010 exposes environment facts/capabilities only. It does not define motion choreography, responsive breakpoints, component interaction-state vocabulary, or concrete navigation components."
   },
   "measurementPolicy": {
-    "geometryUnit": "px",
+    "geometryUnit": "layout-unit",
     "runtimeProvided": true,
+    "adapterNormalized": true,
+    "physicalPixels": false,
     "exampleMeasurementsNormative": false,
-    "rule": "Insets and rectangles are runtime observations in the current app coordinate space. Example numbers demonstrate shape only and must never be copied as device constants."
+    "rule": "Insets and rectangles use an adapter-normalized logical layout coordinate space. Native points/dp, CSS pixels, Mini Program host coordinates, or other runtime units must be normalized by the Platform Adapter; example numbers demonstrate shape only and must never be copied as device constants."
   },
   "examples": [
     {
@@ -57,7 +59,7 @@
         "schemaVersion": 1,
         "platform": "ios",
         "geometry": {
-          "unit": "px",
+          "unit": "layout-unit",
           "safeAreaInsets": {"top": 59, "right": 0, "bottom": 34, "left": 0},
           "reservedRegions": [
             {"id": "ios-status-area", "owner": "system", "kind": "status-bar", "edge": "top", "rect": {"x": 0, "y": 0, "width": 393, "height": 59}, "affectsLayout": true, "comDesignOwned": false},
@@ -73,7 +75,7 @@
         "keyboardIme": {"supported": true, "composition": true, "viewportBehavior": "resize-or-overlay", "dismissal": ["system", "explicit"]},
         "pointer": {"supported": false, "hover": false, "precision": "none"},
         "gesture": {"supported": true, "backGesture": "edge-swipe", "systemReservedEdges": ["top", "bottom", "left"]},
-        "overlay": {"dismissalMechanisms": ["explicit", "tap-outside", "swipe", "system"], "systemOwnedUi": [{"kind": "picker", "owner": "system"}, {"kind": "share-sheet", "owner": "system"}]},
+        "overlay": {"dismissalMechanisms": ["explicit", "tap-outside", "swipe", "system"], "externallyOwnedUi": [{"kind": "picker", "owner": "system"}, {"kind": "share-sheet", "owner": "system"}]},
         "accessibility": {"contentScale": "platform-driven", "contentScaleHook": "system", "screenReaderHook": true}
       }
     },
@@ -84,7 +86,7 @@
         "schemaVersion": 1,
         "platform": "android",
         "geometry": {
-          "unit": "px",
+          "unit": "layout-unit",
           "safeAreaInsets": {"top": 24, "right": 0, "bottom": 24, "left": 0},
           "reservedRegions": [
             {"id": "android-status-area", "owner": "system", "kind": "status-bar", "edge": "top", "rect": {"x": 0, "y": 0, "width": 412, "height": 24}, "affectsLayout": true, "comDesignOwned": false},
@@ -100,7 +102,7 @@
         "keyboardIme": {"supported": true, "composition": true, "viewportBehavior": "resize-or-overlay", "dismissal": ["system", "back", "explicit"]},
         "pointer": {"supported": false, "hover": false, "precision": "none"},
         "gesture": {"supported": true, "backGesture": "system-predictive", "systemReservedEdges": ["top", "bottom", "left", "right"]},
-        "overlay": {"dismissalMechanisms": ["explicit", "tap-outside", "back", "swipe", "system"], "systemOwnedUi": [{"kind": "picker", "owner": "system"}, {"kind": "permission-prompt", "owner": "system"}]},
+        "overlay": {"dismissalMechanisms": ["explicit", "tap-outside", "back", "swipe", "system"], "externallyOwnedUi": [{"kind": "picker", "owner": "system"}, {"kind": "permission-prompt", "owner": "system"}]},
         "accessibility": {"contentScale": "platform-driven", "contentScaleHook": "system", "screenReaderHook": true}
       }
     },
@@ -110,14 +112,14 @@
       "snapshot": {
         "schemaVersion": 1,
         "platform": "web",
-        "geometry": {"unit": "px", "safeAreaInsets": {"top": 0, "right": 0, "bottom": 0, "left": 0}, "reservedRegions": []},
+        "geometry": {"unit": "layout-unit", "safeAreaInsets": {"top": 0, "right": 0, "bottom": 0, "left": 0}, "reservedRegions": []},
         "chrome": [],
         "back": {"available": true, "mechanisms": ["history", "app-action"], "predictive": false},
         "focus": {"supported": true, "focusVisible": "required", "programmatic": true},
         "keyboardIme": {"supported": true, "composition": true, "viewportBehavior": "resize-or-overlay", "dismissal": ["explicit", "tap-outside"]},
         "pointer": {"supported": true, "hover": true, "precision": "fine"},
         "gesture": {"supported": true, "backGesture": "none", "systemReservedEdges": []},
-        "overlay": {"dismissalMechanisms": ["explicit", "tap-outside", "escape"], "systemOwnedUi": [{"kind": "file-picker", "owner": "system"}]},
+        "overlay": {"dismissalMechanisms": ["explicit", "tap-outside", "escape"], "externallyOwnedUi": [{"kind": "file-picker", "owner": "system"}]},
         "accessibility": {"contentScale": "standard", "contentScaleHook": "css-user-agent", "screenReaderHook": true}
       }
     },
@@ -128,7 +130,7 @@
         "schemaVersion": 1,
         "platform": "wechat-mini-program",
         "geometry": {
-          "unit": "px",
+          "unit": "layout-unit",
           "safeAreaInsets": {"top": 47, "right": 0, "bottom": 0, "left": 0},
           "reservedRegions": [
             {"id": "wechat-capsule-region", "owner": "host", "kind": "host-capsule", "edge": "top-right", "rect": {"x": 286, "y": 7, "width": 87, "height": 32}, "affectsLayout": true, "comDesignOwned": false}
@@ -142,7 +144,7 @@
         "keyboardIme": {"supported": true, "composition": true, "viewportBehavior": "resize-or-overlay", "dismissal": ["system", "explicit", "back"]},
         "pointer": {"supported": false, "hover": false, "precision": "none"},
         "gesture": {"supported": true, "backGesture": "host-managed", "systemReservedEdges": ["top"]},
-        "overlay": {"dismissalMechanisms": ["explicit", "tap-outside", "back", "system"], "systemOwnedUi": [{"kind": "picker", "owner": "host"}, {"kind": "share-sheet", "owner": "host"}]},
+        "overlay": {"dismissalMechanisms": ["explicit", "tap-outside", "back", "system"], "externallyOwnedUi": [{"kind": "picker", "owner": "host"}, {"kind": "share-sheet", "owner": "host"}]},
         "accessibility": {"contentScale": "platform-driven", "contentScaleHook": "host", "screenReaderHook": true}
       }
     }
