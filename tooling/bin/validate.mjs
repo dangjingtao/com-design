@@ -1,21 +1,41 @@
 #!/usr/bin/env node
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { validateComponentCatalog } from '../src/component-contract.mjs';
 import { validateSourceIntegrity } from '../src/source-integrity.mjs';
 import { buildTokenModel, validateTokenModel } from '../src/token-model.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const sourceIntegrity = validateSourceIntegrity(repoRoot);
 const foundationPath = sourceIntegrity.evidence.canonicalSources.foundation?.resolvedPath;
+const componentIndexPath = sourceIntegrity.evidence.canonicalSources.componentIndex?.resolvedPath;
+const componentSchemaPath = sourceIntegrity.evidence.canonicalSources.componentSchema?.resolvedPath;
 let model = null;
 let tokenErrors = [];
+let componentValidation = {
+  errors: [],
+  evidence: { componentCount: 0 },
+};
 
 if (foundationPath) {
   model = buildTokenModel(foundationPath);
   tokenErrors = validateTokenModel(model);
 }
 
-const errors = [...sourceIntegrity.errors, ...tokenErrors];
+if (!componentIndexPath) {
+  componentValidation.errors.push('canonical componentIndex source is unavailable.');
+}
+if (!componentSchemaPath) {
+  componentValidation.errors.push('canonical componentSchema source is unavailable.');
+}
+if (componentIndexPath && componentSchemaPath) {
+  componentValidation = validateComponentCatalog(repoRoot, {
+    catalogPath: componentIndexPath,
+    schemaPath: componentSchemaPath,
+  });
+}
+
+const errors = [...sourceIntegrity.errors, ...tokenErrors, ...componentValidation.errors];
 
 if (errors.length) {
   console.error(`Com Design validation failed (${errors.length}).`);
@@ -35,4 +55,7 @@ console.log(
 const counts = sourceIntegrity.evidence.catalogCounts;
 console.log(
   `Source integrity passed: ${Object.keys(sourceIntegrity.evidence.canonicalSources).length} canonical sources; catalogs ${counts.coreComponents} components / ${counts.coreCompositeComponents} composites / ${counts.corePatterns} patterns.`,
+);
+console.log(
+  `Component contracts passed: ${componentValidation.evidence.componentCount} catalog entries validated against component-contract-v2 schema with contract/preview path and drift checks.`,
 );
