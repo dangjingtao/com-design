@@ -1,6 +1,6 @@
 # T004 · Adapter Modularization + Stable Registry
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: Tooling / Adapter
 - Owner: -
@@ -49,7 +49,7 @@
 
 ## Implementation record
 
-- Commit / PR: branch `task/T004-adapter-registry`; PR records this implementation against `dev`.
+- Commit / PR: branch `task/T004-adapter-registry`; PR #18 against `dev`.
 - Changed paths:
   - `tooling/src/adapters.mjs`
   - `tooling/src/adapters/*.mjs`
@@ -63,16 +63,18 @@
   - `family` is adapter organization metadata only; it is intentionally not a replacement for the canonical T002 Platform Model axis.
   - MCP and Penpot keep their existing independent build boundaries; this card does not redefine their platform semantics.
   - Registry validation rejects duplicate IDs, duplicate targets, conflicting output ownership, and declared/emitted output drift.
+  - Acceptance review found that registered adapter objects were externally mutable; registration now snapshots and freezes the adapter contract and its `outputPaths`, with a regression test proving post-registration mutation cannot alter stable mappings.
 
 ## Verification evidence
 
-- CI: GitHub pull-request checks execute repository tests, validation and build pipeline.
-- Regression tests: `tooling/test/adapter-registry.test.mjs` covers stable mapping, output compatibility, extension registration and registry failure cases; existing adapter imports remain compatible through the facade.
+- CI: PR #18 Design System Build run `33481769688`, job `verify`, completed successfully after the acceptance-review fix.
+- Regression tests: `tooling/test/adapter-registry.test.mjs` covers stable mapping, output compatibility, extension registration, immutable registered contracts and registry failure cases; existing adapter imports remain compatible through the facade.
 - Build outputs: registry preserves the six existing engineering paths under `dist/tailwind`, `dist/nativewind`, `dist/react-native` and `dist/build-manifest.json`; manifest `sourceHash` remains populated from the canonical token model.
+- Accepted-report protection: CI confirmed `report/design-system-v1/` remains untouched.
 
 ## Review
 
 - Reviewer: Mira
-- Result: REVIEW
-- Conclusion: Implementation is ready for repository-level review; builder does not self-promote the card to PASS.
-- Follow-up: T007/T008/T009 should register new adapter modules against this boundary rather than add target-specific branches back into central build plumbing.
+- Result: PASS
+- Conclusion: PASS. Adapter modules are independently extensible, central build plumbing no longer owns per-target output branching, stable ID/target/output ownership is enforced and immutable after registration, canonical-source traceability is preserved, and repository regression/build gates are green.
+- Follow-up: T007/T008/T009 must register new adapter modules against this boundary rather than add target-specific branches back into central build plumbing.
