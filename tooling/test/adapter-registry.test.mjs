@@ -64,6 +64,37 @@ test('built-in registry exposes stable adapter IDs and target mapping', () => {
   );
 });
 
+test('registry snapshots and freezes registered adapter contracts', () => {
+  const source = {
+    id: 'web.stable',
+    target: 'stable',
+    family: 'web',
+    outputPaths: ['dist/stable.txt'],
+    build() {
+      return new Map([['dist/stable.txt', 'stable\n']]);
+    },
+  };
+  const registry = createAdapterRegistry([source]);
+
+  source.target = 'mutated';
+  source.outputPaths.push('dist/extra.txt');
+
+  const registered = registry.getById('web.stable');
+  assert.equal(registered.target, 'stable');
+  assert.deepEqual(registered.outputPaths, ['dist/stable.txt']);
+  assert.equal(registry.getByTarget('stable')?.id, 'web.stable');
+  assert.equal(registry.getByTarget('mutated'), null);
+  assert.throws(() => {
+    registered.target = 'changed';
+  }, TypeError);
+  assert.throws(() => {
+    registered.outputPaths.push('dist/escape.txt');
+  }, TypeError);
+  assert.throws(() => {
+    registry.list()[0].outputPaths.push('dist/escape.txt');
+  }, TypeError);
+});
+
 test('registry preserves current engineering output paths and source revision evidence', () => {
   const files = createEngineeringAdapterRegistry().build(emptyModel());
 
