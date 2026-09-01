@@ -32,7 +32,7 @@
 
 | 卡片 | 主题 | 类型 | 状态 | 目标 | 前置 |
 | --- | --- | --- | --- | --- | --- |
-| T001 | Source Integrity + Manifest Gate | Architecture / Validation | TODO | V2 first-stage | - |
+| T001 | Source Integrity + Manifest Gate | Architecture / Validation | REVIEW | V2 first-stage | - |
 | T002 | Cross-platform Platform Model + Axes | Architecture | TODO | V2 first-stage | - |
 | T003 | Core Component Contract V2 Schema | Contract / Validation | TODO | V2 first-stage | - |
 | T004 | Adapter Modularization + Stable Registry | Tooling / Adapter | TODO | V2 first-stage | - |
