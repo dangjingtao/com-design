@@ -5,14 +5,26 @@ import { validateSourceIntegrity } from '../src/source-integrity.mjs';
 import { buildTokenModel, validateTokenModel } from '../src/token-model.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
-const sourcePath = path.join(repoRoot, 'design-source', 'colors_and_type.css');
-const model = buildTokenModel(sourcePath);
 const sourceIntegrity = validateSourceIntegrity(repoRoot);
-const errors = [...validateTokenModel(model), ...sourceIntegrity.errors];
+const foundationPath = sourceIntegrity.evidence.canonicalSources.foundation?.resolvedPath;
+let model = null;
+let tokenErrors = [];
+
+if (foundationPath) {
+  model = buildTokenModel(foundationPath);
+  tokenErrors = validateTokenModel(model);
+}
+
+const errors = [...sourceIntegrity.errors, ...tokenErrors];
 
 if (errors.length) {
   console.error(`Com Design validation failed (${errors.length}).`);
   for (const error of errors) console.error(`- ${error}`);
+  process.exit(1);
+}
+
+if (!model) {
+  console.error('Com Design validation failed: canonical foundation source is unavailable.');
   process.exit(1);
 }
 
