@@ -1,6 +1,6 @@
 # T002 · Cross-platform Platform Model + Axes
 
-- Status: TODO
+- Status: REVIEW
 - Target version: V2 first-stage
 - Impact: Architecture / Cross-platform
 - Owner: -
@@ -34,11 +34,11 @@ V1 当前工程轴主要围绕 iOS / Android。V2 要把 Android、iOS、Web、�
 
 ## Acceptance
 
-- [ ] 四个平台都能形成合法 context。
-- [ ] viewport / input / motion / color scheme / content scale 可独立组合。
-- [ ] 未知平台或非法轴值会被 schema 拒绝。
-- [ ] Web 不被定义成 pointer-only，小程序不被永久定义成 touch-only。
-- [ ] Core contract 不因平台差异复制四份。
+- [x] 四个平台都能形成合法 context。
+- [x] viewport / input / motion / color scheme / content scale 可独立组合。
+- [x] 未知平台或非法轴值会被 schema 拒绝。
+- [x] Web 不被定义成 pointer-only，小程序不被永久定义成 touch-only。
+- [x] Core contract 不因平台差异复制四份。
 
 ## Risks / Dependencies
 
@@ -47,19 +47,19 @@ V1 当前工程轴主要围绕 iOS / Android。V2 要把 Android、iOS、Web、�
 
 ## Implementation record
 
-- Commit / PR:
-- Changed paths:
-- Notes:
+- Commit / PR: PR #15; final implementation head `78c34b2914c428970dcbee1c49ff5f4a4aec4b29`; current branch `task/T002-cross-platform-platform-model`
+- Changed paths: `design-source/specs/platform-model-v2.json`, `design-source/schemas/platform-context-v2.schema.json`, `design-source/specs/design-system-v1.json`, `tooling/src/platform-context.mjs`, `tooling/test/platform-context.test.mjs`, `tooling/bin/validate.mjs`, plus this task card and work-ledger status.
+- Notes: canonical model now declares iOS / Android / Web / WeChat Mini Program plus six required orthogonal context axes. System chrome and host chrome are explicitly outside Com Design-owned UI. T010 retains detailed environment behavior; T011/T012 retain motion/layout/input behavior; platform adapters remain downstream tasks.
 
 ## Verification evidence
 
-- CI:
-- Schema tests:
-- Other evidence:
+- CI: Design System Build run #112 (`33470452970`) — PASS on final implementation head `78c34b2914c428970dcbee1c49ff5f4a4aec4b29`. Unit tests, `build:all`, accepted-report unchanged check, engineering adapter artifact upload, and Penpot manifest upload all passed.
+- Schema tests: `platform-context.test.mjs` covers all four platforms, all 576 legal Cartesian axis combinations, explicit `web + touch` and `wechat-mini-program + keyboard`, invalid enum rejection, unknown-axis rejection, and UI ownership separation.
+- Other evidence: repository `validate` now requires canonical `platformModel` and `platformContextSchema` sources, validates model/schema parity, and hard-gates the manifest copy against the canonical model before build succeeds; PR diff is limited to the T002 platform contract, validator/tests, manifest integration, and ledger/task evidence.
 
 ## Review
 
-- Reviewer:
-- Result: REVIEW / PASS / BLOCKED
-- Conclusion:
-- Follow-up:
+- Reviewer: Mira
+- Result: REVIEW
+- Conclusion: Implementation and deterministic CI evidence are complete. Independent design-system review is still required before PASS; builder does not self-approve.
+- Follow-up: T005/T008-T012/T014/T018 may consume this contract after T002 review passes.

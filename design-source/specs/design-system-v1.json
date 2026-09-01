@@ -12,19 +12,93 @@
     "rule": "Only entries under sources are canonical. plannedSources never become authoritative until promoted by a later task and validated."
   },
   "systemModel": {
-    "layers": ["primitive", "semantic", "component", "composite-component", "pattern"],
+    "layers": [
+      "primitive",
+      "semantic",
+      "component",
+      "composite-component",
+      "pattern"
+    ],
+    "platformContextSource": "sources.platformModel",
     "axes": {
-      "theme": {"default":"light", "supported":["light","dark"]},
-      "density": {"default":"compact", "supported":["compact","comfortable"]},
-      "platform": {"supported":["ios","android"]},
-      "motion": {"default":"standard", "supported":["standard","reduced"]}
+      "density": {
+        "default": "compact",
+        "supported": [
+          "compact",
+          "comfortable"
+        ]
+      },
+      "platform": {
+        "supported": [
+          "ios",
+          "android",
+          "web",
+          "wechat-mini-program"
+        ]
+      },
+      "viewport": {
+        "supported": [
+          "compact",
+          "medium",
+          "wide"
+        ]
+      },
+      "input": {
+        "supported": [
+          "touch",
+          "pointer",
+          "keyboard",
+          "hybrid"
+        ]
+      },
+      "motion": {
+        "default": "standard",
+        "supported": [
+          "standard",
+          "reduced"
+        ]
+      },
+      "colorScheme": {
+        "default": "light",
+        "supported": [
+          "light",
+          "dark"
+        ]
+      },
+      "contentScale": {
+        "default": "platform-driven",
+        "supported": [
+          "standard",
+          "enlarged",
+          "platform-driven"
+        ]
+      }
     },
-    "resolutionOrder": ["foundation", "theme", "density", "platform", "motion", "component", "composite-component", "pattern", "product-extension"]
+    "axisPolicy": "Platform context axes are orthogonal. Platform identifies the execution family only and must not imply viewport, input modality, motion, color scheme, or content scale.",
+    "resolutionOrder": [
+      "foundation",
+      "colorScheme",
+      "density",
+      "platform",
+      "viewport",
+      "input",
+      "motion",
+      "contentScale",
+      "component",
+      "composite-component",
+      "pattern",
+      "product-extension"
+    ]
   },
   "platformStatus": {
-    "targets": ["ios", "android", "web", "wechat-mini-program"],
-    "currentModelAxis": "systemModel.axes.platform.supported",
-    "note": "V2 targets and current adapter maturity are intentionally separate. T002 owns the four-platform axis model; T001 does not claim that work is already complete.",
+    "targets": [
+      "ios",
+      "android",
+      "web",
+      "wechat-mini-program"
+    ],
+    "currentModelAxis": "sources.platformModel.axes.platform.values",
+    "note": "V2 targets and current adapter maturity are intentionally separate. T002 establishes the four-platform context model; adapter maturity remains downstream work.",
     "adapterMaturity": {
       "ios": {
         "status": "partial",
@@ -49,6 +123,8 @@
     "componentIndex": "../components/index.json",
     "compositeSchema": "../schemas/composite-contract-v1.schema.json",
     "patternSchema": "../schemas/pattern-contract-v1.schema.json",
+    "platformContextSchema": "../schemas/platform-context-v2.schema.json",
+    "platformModel": "./platform-model-v2.json",
     "coreComposites": "./core-composites.json",
     "corePatterns": "./core-patterns.json"
   },
@@ -80,13 +156,22 @@
     "legacyTokenJsonBundle": {
       "status": "non-canonical",
       "canonical": false,
-      "pathHints": ["../tokens/tokens.json", "../tokens/theme-dark.json", "../tokens/motion.json"],
+      "pathHints": [
+        "../tokens/tokens.json",
+        "../tokens/theme-dark.json",
+        "../tokens/motion.json"
+      ],
       "reason": "These paths were declared by the old manifest but do not exist on dev. colors_and_type.css is the current build truth."
     },
     "legacySplitComponentSpecs": {
       "status": "non-canonical",
       "canonical": false,
-      "pathHints": ["./actions-forms.json", "./navigation-information.json", "./feedback-overlay-progress.json", "./search-menu.json"],
+      "pathHints": [
+        "./actions-forms.json",
+        "./navigation-information.json",
+        "./feedback-overlay-progress.json",
+        "./search-menu.json"
+      ],
       "reason": "These files do not exist on dev. components/index.json is the current component catalog entrypoint."
     },
     "themeOverlaySchema": {
@@ -139,8 +224,12 @@
   },
   "modeResolution": {
     "density": "resolve density variables from the normalized model built from colors_and_type.css",
-    "platform": "current V1 platform mapping resolves iOS/Android touch-target variables from colors_and_type.css; T002 owns the V2 four-platform model",
-    "motion": "resolve current motion consumer values from colors_and_type.css; T011 owns the V2 platform-neutral motion contract"
+    "platform": "read the V2 platform family from sources.platformModel; platform name does not imply input, viewport, motion, color scheme, or content scale",
+    "viewport": "T002 defines the context axis; T012 owns responsive behavior and layout rules",
+    "input": "T002 defines the explicit modality axis; T012 owns interaction-state and responsive input behavior",
+    "motion": "T002 defines standard/reduced context selection; current consumer values still resolve from colors_and_type.css until T011 introduces the platform-neutral motion contract",
+    "colorScheme": "light/dark context selects the existing themeResolution path",
+    "contentScale": "T002 defines standard/enlarged/platform-driven context selection; downstream environment/layout contracts own platform hooks and reflow behavior"
   },
   "governance": {
     "componentToPrimitiveReference": "forbidden",
