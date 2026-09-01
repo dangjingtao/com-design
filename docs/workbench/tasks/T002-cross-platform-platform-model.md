@@ -47,19 +47,19 @@ V1 当前工程轴主要围绕 iOS / Android。V2 要把 Android、iOS、Web、�
 
 ## Implementation record
 
-- Commit / PR: PR #15; final implementation head `78c34b2914c428970dcbee1c49ff5f4a4aec4b29`; current branch `task/T002-cross-platform-platform-model`
-- Changed paths: `design-source/specs/platform-model-v2.json`, `design-source/schemas/platform-context-v2.schema.json`, `design-source/specs/design-system-v1.json`, `tooling/src/platform-context.mjs`, `tooling/test/platform-context.test.mjs`, `tooling/bin/validate.mjs`, plus this task card and work-ledger status.
-- Notes: canonical model now declares iOS / Android / Web / WeChat Mini Program plus six required orthogonal context axes. System chrome and host chrome are explicitly outside Com Design-owned UI. T010 retains detailed environment behavior; T011/T012 retain motion/layout/input behavior; platform adapters remain downstream tasks.
+- Commit / PR: PR #15 merged to `dev` as `ef5808bb51aa9e201972ec5e6fb74c7397264ba8`; T002 + T003 shared manifest/validator integration merged via PR #17 as `e7918e5557e3f2de7b9ac8a7036ddfee18111687`.
+- Changed paths: `design-source/specs/platform-model-v2.json`, `design-source/schemas/platform-context-v2.schema.json`, `design-source/specs/design-system-v1.json`, `tooling/src/platform-context.mjs`, `tooling/test/platform-context.test.mjs`, `tooling/bin/validate.mjs`, plus task/ledger evidence.
+- Notes: canonical model declares iOS / Android / Web / WeChat Mini Program plus six required orthogonal context axes. System chrome and host chrome remain outside Com Design-owned UI. T010 retains detailed environment behavior; T011/T012 retain motion/layout/input behavior; platform adapters remain downstream tasks. Integration with T003 preserves both validator paths rather than overwriting either contract.
 
 ## Verification evidence
 
-- CI: Design System Build run #112 (`33470452970`) — PASS on final implementation head `78c34b2914c428970dcbee1c49ff5f4a4aec4b29`. Unit tests, `build:all`, accepted-report unchanged check, engineering adapter artifact upload, and Penpot manifest upload all passed.
-- Schema tests: `platform-context.test.mjs` covers all four platforms, all 576 legal Cartesian axis combinations, explicit `web + touch` and `wechat-mini-program + keyboard`, invalid enum rejection, unknown-axis rejection, and UI ownership separation.
-- Other evidence: repository `validate` now requires canonical `platformModel` and `platformContextSchema` sources, validates model/schema parity, and hard-gates the manifest copy against the canonical model before build succeeds; PR diff is limited to the T002 platform contract, validator/tests, manifest integration, and ledger/task evidence.
+- CI: original T002 Design System Build run #112 (`33470452970`) PASS; integrated PR run #120 (`33478385306`) PASS; post-merge `dev` Design System Build run #123 (`33478494618`) PASS.
+- Schema tests: integrated suite confirms all four platforms, all 576 legal Cartesian axis combinations, explicit `web + touch` and `wechat-mini-program + keyboard`, invalid enum rejection, unknown-axis rejection, and UI ownership separation.
+- Other evidence: merged `dev` validation reports `Source integrity passed: 9 canonical sources; catalogs 33 components / 4 composites / 6 patterns`, `Platform model passed: 4 platforms, 6 orthogonal context axes with manifest parity`, and the T003 component-contract gate in the same run. Human acceptance report protection and Engineering/Penpot artifact upload also passed; Human Docs Pages build/publish succeeded after merge.
 
 ## Review
 
 - Reviewer: Mira
 - Result: REVIEW
-- Conclusion: Implementation and deterministic CI evidence are complete. Independent design-system review is still required before PASS; builder does not self-approve.
-- Follow-up: T005/T008-T012/T014/T018 may consume this contract after T002 review passes.
+- Conclusion: T002 is merged and has been verified on the same `dev` baseline as T003. The shared manifest/validator conflict was resolved semantically in PR #17 and post-merge CI is green. Merge does not itself imply PASS.
+- Follow-up: T005/T008-T012/T014/T018 may consume this contract after formal PASS.
