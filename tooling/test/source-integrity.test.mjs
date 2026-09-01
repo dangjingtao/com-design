@@ -15,6 +15,7 @@ test('repository manifest resolves canonical sources and derives real catalog co
     coreComponents: 33,
     coreCompositeComponents: 4,
     corePatterns: 6,
+    coreIcons: 11,
   });
 });
 
