@@ -1,3 +1,17 @@
+const REQUIRED_SNAPSHOT_FIELDS = [
+  'schemaVersion',
+  'platform',
+  'geometry',
+  'chrome',
+  'back',
+  'focus',
+  'keyboardIme',
+  'pointer',
+  'gesture',
+  'overlay',
+  'accessibility',
+];
+
 function isPlainObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
@@ -100,6 +114,15 @@ export function validatePlatformEnvironmentSnapshot(snapshot, schema) {
   if (!isPlainObject(snapshot) || errors.length) return errors;
 
   const reservedRegions = snapshot.geometry?.reservedRegions ?? [];
+  const seenRegionIds = new Set();
+  for (const region of reservedRegions) {
+    if (seenRegionIds.has(region.id)) {
+      errors.push(`environment.geometry.reservedRegions must not contain duplicate id ${region.id}.`);
+      continue;
+    }
+    seenRegionIds.add(region.id);
+  }
+
   const regionById = new Map(reservedRegions.map((region) => [region.id, region]));
   for (const chrome of snapshot.chrome ?? []) {
     for (const regionId of chrome.reservedRegionIds ?? []) {
@@ -123,6 +146,9 @@ export function validatePlatformEnvironmentSnapshot(snapshot, schema) {
   if (snapshot.back?.available === false && (snapshot.back?.mechanisms?.length ?? 0) > 0) {
     errors.push('environment.back.mechanisms must be empty when back is unavailable.');
   }
+  if (snapshot.back?.available === true && (snapshot.back?.mechanisms?.length ?? 0) === 0) {
+    errors.push('environment.back.mechanisms must not be empty when back is available.');
+  }
   if (snapshot.back?.predictive === true && !snapshot.back?.available) {
     errors.push('environment.back.predictive requires back availability.');
   }
@@ -142,6 +168,12 @@ export function validatePlatformEnvironmentContract(contract, schema, platformMo
   }
   if (schema.properties?.schemaVersion?.const !== 1) {
     errors.push('platform environment schemaVersion must be const 1.');
+  }
+  const requiredKeys = schema.required ?? [];
+  for (const key of REQUIRED_SNAPSHOT_FIELDS) {
+    if (!requiredKeys.includes(key)) {
+      errors.push(`platform environment schema must require ${key}.`);
+    }
   }
   if (schema.additionalProperties !== false) {
     errors.push('platform environment schema must reject unknown top-level properties.');
