@@ -1,6 +1,6 @@
 # T013 · Icon Registry → Provider → Adapter
 
-- Status: TODO
+- Status: REVIEW
 - Target version: V2 first-stage
 - Impact: Foundation / Iconography
 - Owner: -
@@ -36,11 +36,11 @@ V2 readiness audit 发现 manifest 曾引用不存在的 iconography source/sche
 
 ## Acceptance
 
-- [ ] registry/schema/source 均真实存在并可被 manifest 引用。
-- [ ] Core / Product namespace 不冲突。
-- [ ] missing / duplicate / illegal override 会失败或明确 fallback。
-- [ ] Lucide provider 可映射稳定 icon names。
-- [ ] focused tests 通过。
+- [x] registry/schema/source 均真实存在并可被 manifest 引用。
+- [x] Core / Product namespace 不冲突。
+- [x] missing / duplicate / illegal override 会失败或明确 fallback。
+- [x] Lucide provider 可映射稳定 icon names。
+- [x] focused tests 通过。
 
 ## Risks / Dependencies
 
@@ -50,19 +50,36 @@ V2 readiness audit 发现 manifest 曾引用不存在的 iconography source/sche
 
 ## Implementation record
 
-- Commit / PR:
+- Commit / PR: branch `task/T013-icon-registry-provider-adapter`; PR #20 against `dev`.
 - Changed paths:
+  - `design-source/schemas/iconography-contract-v1.schema.json`
+  - `design-source/specs/iconography.json`
+  - `design-source/specs/design-system-v1.json`
+  - `tooling/src/iconography.mjs`
+  - `tooling/bin/validate.mjs`
+  - `tooling/test/iconography.test.mjs`
+  - `tooling/test/source-integrity.test.mjs`
+  - `docs/workbench/00-work-ledger.md`
+  - this task card
 - Notes:
+  - Canonical stable names are fully namespaced (`core.*` / `product.<namespace>.*`); Product Extension may reuse a local label such as `search` only inside its own namespace, but cannot register or replace any `core.*` provider/icon.
+  - `lucide-core` is the default Core provider. The canonical source maps 11 common stable names while provider-specific export names stay behind the adapter boundary.
+  - Shared geometry is `0 0 24 24`, optical-center, stroke width 2; supported visual sizes are exactly 16 / 20 / 24.
+  - Missing icons explicitly fall back to `core.help` with a warning unless strict resolution is requested; missing providers and invalid Core overrides are hard failures.
+  - Product/Company custom icons are represented as namespaced SVG providers and remain Product Extension rather than Core.
+  - Interactive icons that require an accessible name fail resolution when none is supplied.
+  - Acceptance review found `decorativeAllowed: false` was initially metadata-only. Resolver now rejects decorative rendering for those icons and requires an accessible name when they are exposed non-decoratively; regression coverage was added.
+  - T013 was replayed onto the latest `dev` after T010 merged, preserving the canonical Platform Environment sources and validator path.
 
 ## Verification evidence
 
-- CI:
-- Registry validation:
-- Provider sample:
+- CI: PR #20 Design System Build was green before the acceptance-review fix; final-head CI is required before PASS.
+- Registry validation: canonical schema/source are promoted from `plannedSources` into manifest `sources`; source-integrity derives `coreIcons: 11`, and the unified validator executes `validateIconographyContract` alongside T010 Platform Environment validation.
+- Provider sample: `core.search → lucide-core / Search`; Product SVG sample `product.academy.campus → academy-icons / campus`; unknown names explicitly resolve to `core.help` unless strict mode is selected.
 
 ## Review
 
-- Reviewer:
-- Result: REVIEW / PASS / BLOCKED
-- Conclusion:
-- Follow-up:
+- Reviewer: Mira
+- Result: REVIEW
+- Conclusion: Architecture and namespace/provider boundaries are acceptable after fixing the accessibility enforcement defect. Final PASS is pending deterministic CI on the rebased/fixed head.
+- Follow-up: T014 and T020 may consume this registry/provider/adapter boundary after PASS; downstream platform adapters should map the provider-neutral result rather than hard-code SVG assets or Lucide names in product components.
