@@ -47,18 +47,13 @@
   "sources": {
     "foundation": "../colors_and_type.css",
     "componentIndex": "../components/index.json",
+    "componentSchema": "../schemas/component-contract-v2.schema.json",
     "compositeSchema": "../schemas/composite-contract-v1.schema.json",
     "patternSchema": "../schemas/pattern-contract-v1.schema.json",
     "coreComposites": "./core-composites.json",
     "corePatterns": "./core-patterns.json"
   },
   "plannedSources": {
-    "componentSchema": {
-      "status": "planned",
-      "canonical": false,
-      "owner": "T003",
-      "pathHint": "../schemas/component-contract-v2.schema.json"
-    },
     "motionContract": {
       "status": "planned",
       "canonical": false,
