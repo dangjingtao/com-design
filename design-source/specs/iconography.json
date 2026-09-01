@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "name": "Com Design Iconography Registry",
+  "namespacePolicy": {
+    "corePrefix": "core.",
+    "productPrefix": "product.",
+    "productNamespacePattern": "^product\\.[a-z0-9]+(?:-[a-z0-9]+)*$",
+    "productMayOverrideCore": false
+  },
+  "visualSizes": [16, 20, 24],
+  "geometry": {
+    "viewBox": "0 0 24 24",
+    "alignment": "optical-center",
+    "strokeWidth": 2,
+    "lineCap": "round",
+    "lineJoin": "round"
+  },
+  "providerKinds": ["lucide", "svg"],
+  "defaultCoreProvider": "lucide-core",
+  "providers": [
+    {
+      "id": "lucide-core",
+      "kind": "lucide",
+      "namespace": "core",
+      "source": "lucide",
+      "versionPolicy": "consumer-resolved-compatible-version"
+    }
+  ],
+  "fallback": {
+    "stableName": "core.help",
+    "missingIcon": "fallback-with-warning",
+    "missingProvider": "error"
+  },
+  "icons": [
+    {"stableName":"core.back","namespace":"core","provider":"lucide-core","providerName":"ArrowLeft","semanticName":"back","sizes":[16,20,24],"viewBox":"0 0 24 24","alignment":"optical-center","strokeWidth":2,"a11y":{"decorativeAllowed":true,"interactiveAccessibleNameRequired":true}},
+    {"stableName":"core.close","namespace":"core","provider":"lucide-core","providerName":"X","semanticName":"close","sizes":[16,20,24],"viewBox":"0 0 24 24","alignment":"optical-center","strokeWidth":2,"a11y":{"decorativeAllowed":true,"interactiveAccessibleNameRequired":true}},
+    {"stableName":"core.search","namespace":"core","provider":"lucide-core","providerName":"Search","semanticName":"search","sizes":[16,20,24],"viewBox":"0 0 24 24","alignment":"optical-center","strokeWidth":2,"a11y":{"decorativeAllowed":true,"interactiveAccessibleNameRequired":true}},
+    {"stableName":"core.filter","namespace":"core","provider":"lucide-core","providerName":"Filter","semanticName":"filter","sizes":[16,20,24],"viewBox":"0 0 24 24","alignment":"optical-center","strokeWidth":2,"a11y":{"decorativeAllowed":true,"interactiveAccessibleNameRequired":true}},
+    {"stableName":"core.more-horizontal","namespace":"core","provider":"lucide-core","providerName":"Ellipsis","semanticName":"more","sizes":[16,20,24],"viewBox":"0 0 24 24","alignment":"optical-center","strokeWidth":2,"a11y":{"decorativeAllowed":true,"interactiveAccessibleNameRequired":true}},
+    {"stableName":"core.home","namespace":"core","provider":"lucide-core","providerName":"House","semanticName":"home","sizes":[16,20,24],"viewBox":"0 0 24 24","alignment":"optical-center","strokeWidth":2,"a11y":{"decorativeAllowed":true,"interactiveAccessibleNameRequired":true}},
+    {"stableName":"core.settings","namespace":"core","provider":"lucide-core","providerName":"Settings","semanticName":"settings","sizes":[16,20,24],"viewBox":"0 0 24 24","alignment":"optical-center","strokeWidth":2,"a11y":{"decorativeAllowed":true,"interactiveAccessibleNameRequired":true}},
+    {"stableName":"core.user","namespace":"core","provider":"lucide-core","providerName":"User","semanticName":"user","sizes":[16,20,24],"viewBox":"0 0 24 24","alignment":"optical-center","strokeWidth":2,"a11y":{"decorativeAllowed":true,"interactiveAccessibleNameRequired":true}},
+    {"stableName":"core.chevron-right","namespace":"core","provider":"lucide-core","providerName":"ChevronRight","semanticName":"navigate-next","sizes":[16,20,24],"viewBox":"0 0 24 24","alignment":"optical-center","strokeWidth":2,"a11y":{"decorativeAllowed":true,"interactiveAccessibleNameRequired":true}},
+    {"stableName":"core.menu","namespace":"core","provider":"lucide-core","providerName":"Menu","semanticName":"menu","sizes":[16,20,24],"viewBox":"0 0 24 24","alignment":"optical-center","strokeWidth":2,"a11y":{"decorativeAllowed":true,"interactiveAccessibleNameRequired":true}},
+    {"stableName":"core.help","namespace":"core","provider":"lucide-core","providerName":"CircleHelp","semanticName":"unknown-or-help","sizes":[16,20,24],"viewBox":"0 0 24 24","alignment":"optical-center","strokeWidth":2,"a11y":{"decorativeAllowed":true,"interactiveAccessibleNameRequired":true}}
+  ]
+}
