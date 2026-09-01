@@ -2,15 +2,18 @@
 
 > Primary planning ledger: `../V2_PLANNING.md`  
 > Formal PRD: `v2-prd.md`  
-> Dispatched execution ledger: `v2-task-ledger.md`  
+> Formal execution ledger: `../../docs/workbench/00-work-ledger.md`  
+> Task cards: `../../docs/workbench/tasks/Txxx-*.md`  
 > Purpose: 给 V2 专项规划、产品定义与施工任务建立统一入口，避免上下文再次散落。
 
-`V2_PLANNING.md` 保留规划历史；`v2-prd.md` 是当前 V2 产品定义；进入施工后，以 `v2-task-ledger.md` 的 Task Contract + 当前仓库事实作为执行入口。专项文档提供长篇设计/架构依据，但不能覆盖更新后的 PRD、任务合同或当前代码事实。
+`V2_PLANNING.md` 保留规划历史；`v2-prd.md` 是当前 V2 产品定义；进入施工后，以 `docs/workbench/00-work-ledger.md` + 对应 `Txxx` 独立任务卡 + 当前仓库事实作为正式执行入口。专项文档提供长篇设计 / 架构依据，但不能覆盖更新后的 PRD、任务合同或当前代码事实。
 
 ## Execution
 
 - `v2-prd.md` — V2 正式 PRD：跨端目标、消费者、责任边界、治理与第一周完成标准。
-- `v2-task-ledger.md` — 第一周 26 张已派任务卡、依赖图、并行批次、文件所有权与验收规则。
+- `../../docs/workbench/00-work-ledger.md` — 正式任务总台账、状态、依赖与施工波次。
+- `../../docs/workbench/tasks/T001-*.md` ... `T026-*.md` — 一卡一文件的正式施工合同；状态、Implementation record、Verification evidence 与 Review 都在卡内维护。
+- `v2-task-ledger.md` — 早期 V2 依赖拆解稿。它保留规划来源价值，但**不再是正式派卡入口，也不再使用其中 `V2-xxx` 编号施工**。
 
 ## Current specialized notes
 
@@ -32,8 +35,9 @@
 1. 新的简短确定需求仍先记录进 `../V2_PLANNING.md`；
 2. 专项内容过长时可以创建本目录文档，但必须加入本索引；
 3. `v2-prd.md` 已收口的产品决策优先于早期 Candidate 讨论；
-4. 已派任务必须读取 `v2-task-ledger.md` 对应 Task Contract，并在施工前重新核对当前 `dev` HEAD；
-5. 任务卡不能覆盖更新后的仓库事实；冲突必须先报告，不得脑补施工；
-6. 四端相关决策优先检查 `four-platform-readiness-audit.md` 与 Platform Adapter contracts，避免单个平台实现反向污染 Core；
-7. 并行以语义竞态为准，不以“文件不同”作为充分条件；共享 schema / adapter registry / validator / CI / token source 必须遵守任务卡文件所有权；
-8. Mira 负责跨卡架构一致性、证据审查和最终 approve / revise / reject；CI 全绿是必要条件，不是自动放行。
+4. 已派任务必须读取 `docs/workbench/tasks/Txxx-*.md` 对应 Task Contract，并在施工前重新核对当前 `dev` HEAD；
+5. `docs/workbench/00-work-ledger.md` 负责总状态，独立任务卡负责完整施工与评审证据；两者状态变化应同步；
+6. 任务卡不能覆盖更新后的仓库事实；冲突必须先报告，不得脑补施工；
+7. 四端相关决策优先检查 `four-platform-readiness-audit.md` 与 Platform Adapter contracts，避免单个平台实现反向污染 Core；
+8. 并行以语义竞态为准，不以“文件不同”作为充分条件；共享 schema / adapter registry / validator / CI / token source 必须遵守任务卡依赖；
+9. Mira 负责跨卡架构一致性、证据审查和最终 approve / revise / reject；CI 全绿是必要条件，不是自动放行。
