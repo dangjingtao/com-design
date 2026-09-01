@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const PLANNED_STATUSES = new Set(['planned', 'deferred', 'non-canonical']);
 const MATURITY_STATUSES = new Set(['planned', 'partial', 'implemented', 'verified']);
+const REQUIRED_CATALOGS = ['coreComponents', 'coreCompositeComponents', 'corePatterns'];
 
 function readJson(filePath) {
   const raw = fs.readFileSync(filePath, 'utf8');
@@ -20,6 +21,43 @@ function parseCanonicalSource(filePath) {
   const raw = fs.readFileSync(filePath, 'utf8');
   if (!raw.trim()) throw new Error(`${filePath}: source is empty`);
   return raw;
+}
+
+function isPathInside(rootPath, candidatePath) {
+  const relative = path.relative(rootPath, candidatePath);
+  return relative === '' || (!relative.startsWith(`..${path.sep}`) && relative !== '..' && !path.isAbsolute(relative));
+}
+
+function resolveRepositorySource(repoRoot, manifestDir, sourceKey, declaredPath, errors) {
+  if (path.isAbsolute(declaredPath)) {
+    errors.push(`sources.${sourceKey} must be a relative repository path: ${declaredPath}`);
+    return null;
+  }
+
+  const resolvedPath = path.resolve(manifestDir, declaredPath);
+  const absoluteRepoRoot = path.resolve(repoRoot);
+  if (!isPathInside(absoluteRepoRoot, resolvedPath)) {
+    errors.push(`sources.${sourceKey} must stay inside the repository: ${declaredPath}`);
+    return null;
+  }
+
+  if (!fs.existsSync(resolvedPath)) {
+    errors.push(`sources.${sourceKey} points to missing path: ${declaredPath}`);
+    return null;
+  }
+  if (!fs.statSync(resolvedPath).isFile()) {
+    errors.push(`sources.${sourceKey} must point to a file: ${declaredPath}`);
+    return null;
+  }
+
+  const realRepoRoot = fs.realpathSync(absoluteRepoRoot);
+  const realResolvedPath = fs.realpathSync(resolvedPath);
+  if (!isPathInside(realRepoRoot, realResolvedPath)) {
+    errors.push(`sources.${sourceKey} resolves outside the repository: ${declaredPath}`);
+    return null;
+  }
+
+  return { resolvedPath, realResolvedPath };
 }
 
 export function validateSourceIntegrity(repoRoot, options = {}) {
@@ -55,21 +93,14 @@ export function validateSourceIntegrity(repoRoot, options = {}) {
         continue;
       }
 
-      const resolvedPath = path.resolve(manifestDir, declaredPath);
-      if (!fs.existsSync(resolvedPath)) {
-        errors.push(`sources.${sourceKey} points to missing path: ${declaredPath}`);
-        continue;
-      }
-      if (!fs.statSync(resolvedPath).isFile()) {
-        errors.push(`sources.${sourceKey} must point to a file: ${declaredPath}`);
-        continue;
-      }
+      const resolved = resolveRepositorySource(repoRoot, manifestDir, sourceKey, declaredPath, errors);
+      if (!resolved) continue;
 
       try {
         evidence.canonicalSources[sourceKey] = {
           path: declaredPath,
-          resolvedPath,
-          value: parseCanonicalSource(resolvedPath),
+          resolvedPath: resolved.realResolvedPath,
+          value: parseCanonicalSource(resolved.realResolvedPath),
         };
       } catch (error) {
         errors.push(`sources.${sourceKey} cannot be parsed: ${error.message}`);
@@ -99,6 +130,12 @@ export function validateSourceIntegrity(repoRoot, options = {}) {
   if (!catalogs || typeof catalogs !== 'object' || Array.isArray(catalogs)) {
     errors.push('manifest.catalogs must declare catalog source + collection mappings.');
   } else {
+    for (const requiredCatalog of REQUIRED_CATALOGS) {
+      if (!Object.hasOwn(catalogs, requiredCatalog)) {
+        errors.push(`manifest.catalogs must declare required mapping: ${requiredCatalog}.`);
+      }
+    }
+
     for (const [catalogKey, declaration] of Object.entries(catalogs)) {
       const sourceKey = declaration?.source;
       const collection = declaration?.collection;
