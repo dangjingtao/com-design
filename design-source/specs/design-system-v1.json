@@ -48,13 +48,13 @@
     "platformModel": "./platform-model-v2.json",
     "platformEnvironmentSchema": "../schemas/platform-environment-v1.schema.json",
     "platformEnvironment": "./platform-environment-v1.json",
+    "iconographySchema": "../schemas/iconography-contract-v1.schema.json",
+    "iconography": "./iconography.json",
     "coreComposites": "./core-composites.json",
     "corePatterns": "./core-patterns.json"
   },
   "plannedSources": {
     "motionContract": { "status": "planned", "canonical": false, "owner": "T011", "pathHint": "../tokens/motion.json" },
-    "iconography": { "status": "planned", "canonical": false, "owner": "T013", "pathHint": "./iconography.json" },
-    "iconographySchema": { "status": "planned", "canonical": false, "owner": "T013", "pathHint": "../schemas/iconography-contract-v1.schema.json" },
     "legacyTokenJsonBundle": {
       "status": "non-canonical",
       "canonical": false,
@@ -73,7 +73,8 @@
   "catalogs": {
     "coreComponents": { "source": "componentIndex", "collection": "components", "identityField": "slug" },
     "coreCompositeComponents": { "source": "coreComposites", "collection": "composites", "identityField": "id" },
-    "corePatterns": { "source": "corePatterns", "collection": "patterns", "identityField": "id" }
+    "corePatterns": { "source": "corePatterns", "collection": "patterns", "identityField": "id" },
+    "coreIcons": { "source": "iconography", "collection": "icons", "identityField": "stableName" }
   },
   "compositePolicy": {
     "countedAsCoreComponents": false,
