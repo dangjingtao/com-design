@@ -1,6 +1,6 @@
 # T011 · Motion Foundation V2
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: Foundation / Motion
 - Owner: -
@@ -48,19 +48,21 @@ V2 已确认 Motion 需要统一语义意图，而不是强迫四端使用完全
 
 ## Implementation record
 
-- Commit / PR: PR #23; squash merge `3dd8487f51eca3197043c9067a6623de2770ae08`
-- Changed paths: `design-source/schemas/motion-foundation-v2.schema.json`, `design-source/specs/motion-foundation-v2.json`, `tooling/src/motion-foundation.mjs`, `tooling/test/motion-foundation.test.mjs`
-- Notes: 统一语义意图与 Reduced Motion contract；不修改 T007/T008/T009 平台 adapter。
+- Commit / PR: PR #23; squash merge `3dd8487f51eca3197043c9067a6623de2770ae08`; formal review hardening PR #26, squash merge `1c5747dcc112edab6304e04c73c284c7d46c6d88`
+- Changed paths: `design-source/schemas/motion-foundation-v2.schema.json`, `design-source/specs/motion-foundation-v2.json`, `design-source/specs/design-system-v1.json`, `tooling/src/motion-foundation.mjs`, `tooling/test/motion-foundation.test.mjs`
+- Notes: 统一语义意图与 Reduced Motion contract；正式提升为 canonical source；不修改 T007/T008/T009 平台 adapter。
 
 ## Verification evidence
 
-- CI: Design System Build run `33650167866` — success (`npm test` + `build:all`).
+- Original CI: Design System Build run `33650167866` — success。
+- Formal combined review CI: run `33652886819` — success；76 tests PASS，`build:all` PASS。
 - Motion contract examples: `motion.transition.micro`, `motion.transition.overlay`, `motion.transition.navigation-spatial`, `motion.transition.continuous-ambient`。
 - Reduced-motion evidence: decorative remove；large spatial cross-fade；essential progress simplify；ambient loop stop-by-default。
+- Canonical evidence: manifest `sources.motionSchema` / `sources.motionContract` 已纳入 Canonical Design Model provenance。
 
 ## Review
 
-- Reviewer: Mira pending final review
-- Result: REVIEW
-- Conclusion: Implementation and CI evidence ready for design-system review.
-- Follow-up: T018 may consume this contract after PASS.
+- Reviewer: Mira
+- Result: PASS
+- Conclusion: UX / interaction review passed. Motion prioritizes state clarity, native host navigation/gesture behavior, interruption/reversibility, focus and collection-position stability over spectacle. Reduced Motion is first-class and Mini Program avoids frame-by-frame `setData`. The initial review found the motion contract was not yet canonical; PR #26 corrected that governance gap and the combined regression gate passed.
+- Follow-up: T018 may consume this contract as its motion smoke baseline. Concrete duration/easing values remain subject to later real-device validation as intentionally scoped.
