@@ -13,9 +13,12 @@ import {
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
-test('T015 Penpot manifest carries canonical authority and source revision', () => {
+test('T015 Penpot manifest carries canonical authority and exact source revision', () => {
   const model = buildCanonicalDesignModel(repoRoot);
   const sampleCanonicalToken = model.tokens.entries[0];
+  const sampleTheme = Object.values(model.tokens.themes)[0];
+  assert.ok(sampleTheme);
+
   const tokens = enrichCanonicalTokens([
     {
       set: 'light',
@@ -31,6 +34,13 @@ test('T015 Penpot manifest carries canonical authority and source revision', () 
       type: 'color',
       value: '#5B5EF7',
     },
+    {
+      set: `${sampleTheme.name}-light`,
+      name: sampleCanonicalToken.name,
+      sourceId: sampleCanonicalToken.name,
+      type: 'color',
+      value: sampleTheme.light[sampleCanonicalToken.name],
+    },
   ], model);
   const manifest = {
     canonical: {
@@ -45,9 +55,19 @@ test('T015 Penpot manifest carries canonical authority and source revision', () 
   assert.equal(manifest.canonical.conflictPolicy, 'canonical-source-wins');
   assert.equal(manifest.canonical.writeBack, 'proposal-only');
   assert.equal(manifest.canonical.sourceHash, model.sourceHash);
+
   assert.equal(manifest.tokens[0].canonicalId, sampleCanonicalToken.id);
   assert.equal(manifest.tokens[0].sourceRevision, sampleCanonicalToken.provenance.sourceHash);
+  assert.equal(manifest.tokens[0].provenanceKind, 'canonical-model');
+
+  const foundation = model.provenance.canonicalSources.find((source) => source.id === 'source:foundation');
   assert.equal(manifest.tokens[1].provenanceKind, 'canonical-foundation-source');
+  assert.equal(manifest.tokens[1].sourceRevision, foundation.sourceHash);
+
+  assert.equal(manifest.tokens[2].provenanceKind, 'canonical-theme-overlay');
+  assert.equal(manifest.tokens[2].sourceRevision, sampleTheme.provenance.sourceHash);
+  assert.equal(manifest.tokens[2].sourcePath, sampleTheme.provenance.sourcePath);
+
   assert.equal(manifest.canonical.tokenCoverage.representedCanonicalTokenCount, 1);
   assert.deepEqual(assertPenpotCanonicalParity(manifest, model), []);
   assert.ok(manifest.components.every((component) => component.sourceId?.startsWith('component:')));
