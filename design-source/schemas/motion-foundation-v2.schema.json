@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "com-design:motion-foundation:v2",
+  "type": "object",
+  "required": ["schemaVersion", "id", "intents", "reducedMotion", "platforms"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "id": { "const": "com-design:motion-foundation:v2" },
+    "intents": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "required": ["id", "category", "purpose", "interruptible", "reversible", "reducedMotion"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^motion\\.transition\\." },
+          "category": { "enum": ["micro", "enter-exit", "expand-collapse", "overlay", "navigation-spatial", "collection-change", "continuous-ambient"] },
+          "purpose": { "type": "array", "minItems": 1, "items": { "enum": ["continuity", "hierarchy", "feedback", "orientation", "attention", "progress"] } },
+          "interruptible": { "type": "boolean" },
+          "reversible": { "type": "boolean" },
+          "reducedMotion": { "enum": ["remove", "instant", "cross-fade", "simplify", "stop-by-default"] },
+          "notes": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "reducedMotion": {
+      "type": "object",
+      "required": ["firstClass", "rules"],
+      "properties": {
+        "firstClass": { "const": true },
+        "rules": {
+          "type": "object",
+          "required": ["decorative", "largeSpatial", "essentialProgress", "stateConfirmation", "ambientLoop"],
+          "properties": {
+            "decorative": { "const": "remove" },
+            "largeSpatial": { "enum": ["cross-fade", "instant", "reduce"] },
+            "essentialProgress": { "const": "simplify" },
+            "stateConfirmation": { "const": "preserve-non-motion-cue" },
+            "ambientLoop": { "const": "stop-by-default" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "platforms": {
+      "type": "object",
+      "required": ["ios", "android", "wechat-mini-program", "web"],
+      "additionalProperties": {
+        "type": "object",
+        "required": ["hostMotionPriority", "reducedMotionSignal", "capabilities", "constraints"],
+        "properties": {
+          "hostMotionPriority": { "type": "boolean" },
+          "reducedMotionSignal": { "type": "string", "minLength": 1 },
+          "capabilities": { "type": "array", "items": { "type": "string" } },
+          "constraints": { "type": "array", "items": { "type": "string" } }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
