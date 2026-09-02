@@ -1,6 +1,6 @@
 # T014 · AI-readable / Executable / Verifiable Contract
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: AI / Contract / Tooling
 - Owner: -
@@ -48,19 +48,21 @@ V2 已确定 AI / Agent 是第一消费接口优先级，并允许 Agent 直接�
 
 ## Implementation record
 
-- Commit / PR: PR #24; squash merge `44ef3922cdaba2456ca42de4e655d5d4c2a5f13f`
-- Changed paths: `tooling/src/agent-contract.mjs`, `tooling/bin/build.mjs`, `tooling/test/agent-contract.test.mjs`
-- Notes: machine contract 直接由 Canonical Design Model V2 生成，并附带 icon registry 与 platform adapter maturity；最终 release 决策仍留给人。
+- Commit / PR: PR #24; squash merge `44ef3922cdaba2456ca42de4e655d5d4c2a5f13f`; formal review hardening PR #26, squash merge `1c5747dcc112edab6304e04c73c284c7d46c6d88`
+- Changed paths: `tooling/src/agent-contract.mjs`, `tooling/bin/build.mjs`, `tooling/test/agent-contract.test.mjs`, canonical motion source linkage from T011 review hardening。
+- Notes: machine contract 由 Canonical Design Model V2 生成；target context 必须通过 canonical schema；adapter 未完成时明确输出 incomplete + owner task，不允许复制 Web / shared output 猜测成正式平台实现。
 
 ## Verification evidence
 
-- CI: Design System Build run `33650310064` — success (`npm test` + `build:all`).
-- Machine contract sample: `dist/agent/contract.json`，支持 target platform/context。
+- Original CI: Design System Build run `33650310064` — success。
+- Formal combined review CI: run `33652886819` — success；76 tests PASS，`build:all` PASS。
+- Machine contract sample: `dist/agent/contract.json`，支持 validated platform/context、motion contract、registered engineering outputs 与 implementation readiness。
+- Negative evidence: invalid viewport、platform/context 冲突会被拒绝；WeChat Mini Program 在 T009 前明确为 `incomplete`，不会伪装 ready。
 - Agent compliance sample: hardCompliance 与 warnings/evidence/exceptions 分离，humanDecision 固定要求人工裁决。
 
 ## Review
 
-- Reviewer: Mira pending final review
-- Result: REVIEW
-- Conclusion: Implementation and CI evidence ready for design-system review.
-- Follow-up: T016/T017/T019 may consume this output after PASS.
+- Reviewer: Mira
+- Result: PASS
+- Conclusion: Formal review initially found that context was accepted without schema validation and the supposed implementation path could still encourage inference. PR #26 corrected both: context is now canonical-schema validated, contradictions fail deterministically, motion is exposed canonically, and incomplete platform adapters explicitly escalate to their owner task. This meets the AI-readable / executable / verifiable boundary without allowing Agent to invent platform completion or release judgement.
+- Follow-up: T016/T017/T019 may consume this output. Platform readiness will improve as T007/T008/T009 move from partial/planned to implemented/verified.
