@@ -6,6 +6,7 @@ import { validateSourceIntegrity } from '../src/source-integrity.mjs';
 import { buildCanonicalDesignModel, writeCanonicalDesignModel } from '../src/design-model.mjs';
 import { writeRegisteredEngineeringOutputs } from '../src/adapters/registry.mjs';
 import { writeMcpOutput } from '../src/mcp-adapter.mjs';
+import { writeAgentContract } from '../src/agent-contract.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const sourceIntegrity = validateSourceIntegrity(repoRoot);
@@ -34,6 +35,7 @@ if (errors.length) {
 const designModel = buildCanonicalDesignModel(repoRoot);
 const files = [
   writeCanonicalDesignModel(repoRoot, designModel),
+  writeAgentContract(repoRoot),
   ...writeRegisteredEngineeringOutputs(repoRoot, model),
   ...writeMcpOutput(repoRoot, model),
 ];
