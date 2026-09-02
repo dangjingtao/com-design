@@ -1,6 +1,6 @@
 # T014 · AI-readable / Executable / Verifiable Contract
 
-- Status: TODO
+- Status: REVIEW
 - Target version: V2 first-stage
 - Impact: AI / Contract / Tooling
 - Owner: -
@@ -35,11 +35,11 @@ V2 已确定 AI / Agent 是第一消费接口优先级，并允许 Agent 直接�
 
 ## Acceptance
 
-- [ ] Agent 能读取一个目标平台的合法实现路径。
-- [ ] 能区分 Core / Product Extension / Platform Adapter。
-- [ ] 能产生结构化 compliance + evidence。
-- [ ] 无法自动判定的问题会升级为 warning / human decision，而不是伪装 PASS。
-- [ ] focused tests / sample agent consumption 通过。
+- [x] Agent 能读取一个目标平台的合法实现路径。
+- [x] 能区分 Core / Product Extension / Platform Adapter。
+- [x] 能产生结构化 compliance + evidence。
+- [x] 无法自动判定的问题会升级为 warning / human decision，而不是伪装 PASS。
+- [x] focused tests / sample agent consumption 通过。
 
 ## Risks / Dependencies
 
@@ -48,19 +48,19 @@ V2 已确定 AI / Agent 是第一消费接口优先级，并允许 Agent 直接�
 
 ## Implementation record
 
-- Commit / PR:
-- Changed paths:
-- Notes:
+- Commit / PR: PR #24; squash merge `44ef3922cdaba2456ca42de4e655d5d4c2a5f13f`
+- Changed paths: `tooling/src/agent-contract.mjs`, `tooling/bin/build.mjs`, `tooling/test/agent-contract.test.mjs`
+- Notes: machine contract 直接由 Canonical Design Model V2 生成，并附带 icon registry 与 platform adapter maturity；最终 release 决策仍留给人。
 
 ## Verification evidence
 
-- CI:
-- Machine contract sample:
-- Agent compliance sample:
+- CI: Design System Build run `33650310064` — success (`npm test` + `build:all`).
+- Machine contract sample: `dist/agent/contract.json`，支持 target platform/context。
+- Agent compliance sample: hardCompliance 与 warnings/evidence/exceptions 分离，humanDecision 固定要求人工裁决。
 
 ## Review
 
-- Reviewer:
-- Result: REVIEW / PASS / BLOCKED
-- Conclusion:
-- Follow-up:
+- Reviewer: Mira pending final review
+- Result: REVIEW
+- Conclusion: Implementation and CI evidence ready for design-system review.
+- Follow-up: T016/T017/T019 may consume this output after PASS.
