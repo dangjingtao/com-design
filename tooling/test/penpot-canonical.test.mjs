@@ -55,6 +55,8 @@ test('T015 Penpot manifest carries canonical authority and exact source revision
   assert.equal(manifest.canonical.conflictPolicy, 'canonical-source-wins');
   assert.equal(manifest.canonical.writeBack, 'proposal-only');
   assert.equal(manifest.canonical.sourceHash, model.sourceHash);
+  assert.equal(manifest.canonical.platformContext.platforms.length, 4);
+  assert.ok(manifest.canonical.platformContext.sourceRevision);
 
   assert.equal(manifest.tokens[0].canonicalId, sampleCanonicalToken.id);
   assert.equal(manifest.tokens[0].sourceRevision, sampleCanonicalToken.provenance.sourceHash);
@@ -74,4 +76,9 @@ test('T015 Penpot manifest carries canonical authority and exact source revision
   assert.ok(manifest.components.every((component) => component.sourceRevision));
   assert.ok(manifest.components.every((component) => Array.isArray(component.platformPresentationRefs)));
   assert.ok(manifest.components.every((component) => Array.isArray(component.platformExceptionRefs)));
+
+  const button = manifest.components.find((component) => component.slug === 'button');
+  assert.ok(button.states.includes('pressed'));
+  assert.ok(button.states.includes('disabled'));
+  assert.ok(button.representativeVariants.length > 0);
 });
