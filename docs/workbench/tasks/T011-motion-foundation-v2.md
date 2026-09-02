@@ -1,6 +1,6 @@
 # T011 · Motion Foundation V2
 
-- Status: TODO
+- Status: REVIEW
 - Target version: V2 first-stage
 - Impact: Foundation / Motion
 - Owner: -
@@ -35,11 +35,11 @@ V2 已确认 Motion 需要统一语义意图，而不是强迫四端使用完全
 
 ## Acceptance
 
-- [ ] Motion intent 可机器读取。
-- [ ] Reduced Motion 有明确降级行为。
-- [ ] 四端可以映射不同物理实现但保持意图一致。
-- [ ] Mini Program contract 不要求高频 frame-by-frame `setData`。
-- [ ] focused tests 通过。
+- [x] Motion intent 可机器读取。
+- [x] Reduced Motion 有明确降级行为。
+- [x] 四端可以映射不同物理实现但保持意图一致。
+- [x] Mini Program contract 不要求高频 frame-by-frame `setData`。
+- [x] focused tests 通过。
 
 ## Risks / Dependencies
 
@@ -48,19 +48,19 @@ V2 已确认 Motion 需要统一语义意图，而不是强迫四端使用完全
 
 ## Implementation record
 
-- Commit / PR:
-- Changed paths:
-- Notes:
+- Commit / PR: PR #23; squash merge `3dd8487f51eca3197043c9067a6623de2770ae08`
+- Changed paths: `design-source/schemas/motion-foundation-v2.schema.json`, `design-source/specs/motion-foundation-v2.json`, `tooling/src/motion-foundation.mjs`, `tooling/test/motion-foundation.test.mjs`
+- Notes: 统一语义意图与 Reduced Motion contract；不修改 T007/T008/T009 平台 adapter。
 
 ## Verification evidence
 
-- CI:
-- Motion contract examples:
-- Reduced-motion evidence:
+- CI: Design System Build run `33650167866` — success (`npm test` + `build:all`).
+- Motion contract examples: `motion.transition.micro`, `motion.transition.overlay`, `motion.transition.navigation-spatial`, `motion.transition.continuous-ambient`。
+- Reduced-motion evidence: decorative remove；large spatial cross-fade；essential progress simplify；ambient loop stop-by-default。
 
 ## Review
 
-- Reviewer:
-- Result: REVIEW / PASS / BLOCKED
-- Conclusion:
-- Follow-up:
+- Reviewer: Mira pending final review
+- Result: REVIEW
+- Conclusion: Implementation and CI evidence ready for design-system review.
+- Follow-up: T018 may consume this contract after PASS.
