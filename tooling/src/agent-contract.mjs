@@ -16,7 +16,7 @@ export function createAgentContract(repoRoot, options = {}) {
   const requestedPlatform = normalizePlatform(options.platform);
   const platforms = model.platform?.platforms ?? [];
   const platform = requestedPlatform
-    ? platforms.find((entry) => normalizePlatform(entry.key ?? entry.name ?? entry.id?.split(':').at(-1)) === requestedPlatform)
+    ? platforms.find((entry) => normalizePlatform(entry.platform) === requestedPlatform)
     : null;
 
   if (requestedPlatform && !platform) {
