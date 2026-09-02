@@ -1,0 +1,50 @@
+{
+  "$schema": "../schemas/motion-foundation-v2.schema.json",
+  "schemaVersion": 2,
+  "id": "com-design:motion-foundation:v2",
+  "intents": [
+    { "id": "motion.transition.micro", "category": "micro", "purpose": ["feedback"], "interruptible": true, "reversible": true, "reducedMotion": "instant", "notes": "Press, selection and compact state feedback must never block direct manipulation." },
+    { "id": "motion.transition.enter-exit", "category": "enter-exit", "purpose": ["continuity", "feedback"], "interruptible": true, "reversible": false, "reducedMotion": "cross-fade", "notes": "Transient surfaces may establish origin on enter; exit must not delay the next action." },
+    { "id": "motion.transition.expand-collapse", "category": "expand-collapse", "purpose": ["continuity", "orientation"], "interruptible": true, "reversible": true, "reducedMotion": "instant", "notes": "Preserve trigger/content relationship, focus and scroll position." },
+    { "id": "motion.transition.overlay", "category": "overlay", "purpose": ["hierarchy", "orientation"], "interruptible": true, "reversible": true, "reducedMotion": "cross-fade", "notes": "Prefer mature host sheet/dialog motion when the platform owns the interaction physics." },
+    { "id": "motion.transition.navigation-spatial", "category": "navigation-spatial", "purpose": ["continuity", "orientation"], "interruptible": true, "reversible": true, "reducedMotion": "cross-fade", "notes": "Hierarchy transitions and peer-view changes must remain semantically distinct." },
+    { "id": "motion.transition.collection-change", "category": "collection-change", "purpose": ["orientation"], "interruptible": true, "reversible": false, "reducedMotion": "instant", "notes": "Position, scroll restoration and frame stability take priority over decorative movement." },
+    { "id": "motion.transition.continuous-ambient", "category": "continuous-ambient", "purpose": ["progress", "attention"], "interruptible": true, "reversible": false, "reducedMotion": "stop-by-default", "notes": "Continuous motion requires a stop condition; essential progress keeps a simplified non-spatial cue." }
+  ],
+  "reducedMotion": {
+    "firstClass": true,
+    "rules": {
+      "decorative": "remove",
+      "largeSpatial": "cross-fade",
+      "essentialProgress": "simplify",
+      "stateConfirmation": "preserve-non-motion-cue",
+      "ambientLoop": "stop-by-default"
+    }
+  },
+  "platforms": {
+    "ios": {
+      "hostMotionPriority": true,
+      "reducedMotionSignal": "UIAccessibility.isReduceMotionEnabled / host accessibility setting",
+      "capabilities": ["interactive-navigation", "interactive-dismissal", "native-sheet"],
+      "constraints": ["do-not-override-mature-native-navigation-physics", "avoid-large-spatial-motion-under-reduced-motion"]
+    },
+    "android": {
+      "hostMotionPriority": true,
+      "reducedMotionSignal": "system animator/accessibility duration setting",
+      "capabilities": ["predictive-back", "interactive-navigation", "native-container-motion"],
+      "constraints": ["authoritative-back-gesture-may-drive-progress", "large-lists-prioritize-frame-stability"]
+    },
+    "wechat-mini-program": {
+      "hostMotionPriority": true,
+      "reducedMotionSignal": "adapter capability/policy fallback",
+      "capabilities": ["wxss-transition", "wxss-animation", "host-navigation", "bounded-js-animation"],
+      "constraints": ["no-high-frequency-frame-by-frame-setData", "avoid-mass-node-animation", "do-not-replay-stale-ambient-motion-after-resume"]
+    },
+    "web": {
+      "hostMotionPriority": false,
+      "reducedMotionSignal": "prefers-reduced-motion",
+      "capabilities": ["css-transition", "web-animations", "pointer-and-keyboard-input"],
+      "constraints": ["focus-indication-must-not-be-delayed", "critical-state-must-not-depend-on-hover-or-motion"]
+    }
+  }
+}
