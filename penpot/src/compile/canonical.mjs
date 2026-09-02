@@ -3,6 +3,7 @@ export function compileCanonicalTrace(model) {
     throw new Error('Penpot compiler requires Canonical Design Model V2.');
   }
 
+  const platformModelSource = model.platform?.platforms?.[0]?.provenance?.model ?? null;
   return {
     authority: 'design-source/',
     modelId: model.id,
@@ -12,6 +13,13 @@ export function compileCanonicalTrace(model) {
     conflictPolicy: 'canonical-source-wins',
     editableConsumer: true,
     writeBack: 'proposal-only',
+    platformContext: {
+      schemaVersion: model.platform?.schemaVersion ?? null,
+      platforms: model.platform?.platforms ?? [],
+      axes: model.platform?.axes ?? [],
+      sourceRevision: platformModelSource?.sourceHash ?? null,
+      sourcePath: platformModelSource?.sourcePath ?? null,
+    },
   };
 }
 
@@ -88,7 +96,8 @@ export function compileCanonicalComponents(model) {
     sourceRevision: component.provenance?.contract?.sourceHash ?? null,
     contractPath: component.provenance?.contract?.sourcePath ?? null,
     variantDimensions: component.contract?.variantDimensions ?? {},
-    states: component.contract?.states ?? [],
+    states: component.contract?.states ?? component.contract?.variantDimensions?.state ?? [],
+    representativeVariants: component.contract?.representativeVariants ?? [],
     platformPresentationRefs: component.contract?.platformPresentationRefs ?? [],
     platformExceptionRefs: component.contract?.platformExceptionRefs ?? [],
   }));
@@ -98,6 +107,14 @@ export function assertPenpotCanonicalParity(manifest, model) {
   const errors = [];
   if (manifest.canonical?.sourceHash !== model.sourceHash) {
     errors.push('Penpot manifest sourceHash must match Canonical Design Model V2.');
+  }
+
+  const platformModelSource = model.platform?.platforms?.[0]?.provenance?.model ?? null;
+  if (
+    manifest.canonical?.platformContext?.sourceRevision !== (platformModelSource?.sourceHash ?? null)
+    || manifest.canonical?.platformContext?.sourcePath !== (platformModelSource?.sourcePath ?? null)
+  ) {
+    errors.push('Penpot manifest platform context provenance must match Canonical Design Model V2.');
   }
 
   const canonicalTokenById = new Map((model.tokens?.entries ?? []).map((token) => [token.id, token]));
