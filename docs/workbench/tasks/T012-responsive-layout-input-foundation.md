@@ -1,6 +1,6 @@
 # T012 · Responsive Layout + Input Modality Foundation
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: Foundation / Layout / Input
 - Owner: -
@@ -35,11 +35,11 @@ V2 需要真正支持 Web desktop/tablet，同时不能把 Web 变成第二套�
 
 ## Acceptance
 
-- [ ] 同一 semantic component 可在窄屏 / 宽屏共享合同。
-- [ ] layout decision 由 viewport / input context 驱动。
-- [ ] Stack / Center / Grid 有明确机器可读 contract。
-- [ ] keyboard / pointer / touch 状态不被平台名硬编码。
-- [ ] schema / examples / tests 通过。
+- [x] 同一 semantic component 可在窄屏 / 宽屏共享合同。
+- [x] layout decision 由 viewport / input context 驱动。
+- [x] Stack / Center / Grid 有明确机器可读 contract。
+- [x] keyboard / pointer / touch 状态不被平台名硬编码。
+- [x] schema / examples / tests 通过。
 
 ## Risks / Dependencies
 
@@ -63,13 +63,13 @@ V2 需要真正支持 Web desktop/tablet，同时不能把 Web 变成第二套�
 
 - Preflight: candidate contract/schema passed an isolated mirror of the repository's current `validateJsonSchemaValue` behavior.
 - Focused preflight: 8/8 T012 tests passed before repository write.
-- CI: initial Design System Build #172 succeeded before T006 landed. Final replayed-head verification pending.
+- CI: final replayed implementation head `366949ebb74b2f8cb45570a131bd65f2ca42a28e` passed Design System Build #180 (`33819841087`): unit tests, `build:all`, accepted-report protection, engineering adapter upload, and Penpot manifest upload all succeeded.
 - Responsive examples: compact touch Web and Mini Program resolve the same Stack layout; wide keyboard Web and iOS resolve the same Grid layout; enlarged wide Web reflows to one-track Stack without changing the semantic task.
 - Input examples: touch forbids hover dependency; pointer/hybrid may add hover; keyboard/hybrid require focus-visible; authoritative selected/checked/open state remains modality-independent.
 
 ## Review
 
 - Reviewer: Mira
-- Result: REVIEW
-- Conclusion: independent review found one P2 planning-coverage gap (Stack align/justify, Center dual-axis, Grid adaptive/stable-gap responsibilities) and a concurrent T006 validation-orchestrator integration requirement. Both are corrected on the replayed branch; final gates pending.
-- Follow-up: T018 / T020 / T021 / T022 may consume this contract only after T012 reaches PASS.
+- Result: PASS
+- Conclusion: independent acceptance passed. Review found and fixed one P2 planning-coverage gap (Stack align/justify, Center dual-axis, Grid adaptive/stable-gap responsibilities), three P2 validation gaps (direct engineering-build bypass, activation-mode mapping drift, false enlarged-reflow evidence), and the concurrent T006 orchestrator integration race. All findings now have regression coverage, all review threads are resolved, the branch is based on the latest dev baseline, and final deterministic gates are green.
+- Follow-up: T018 / T020 / T021 / T022 may consume T012 as an accepted baseline. T014 does not yet expose layout/input as a first-class agent catalog; Canonical Model source/provenance and hard validation already include T012, so this is a downstream consumption enhancement rather than a T012 blocker.
