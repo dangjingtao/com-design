@@ -1,0 +1,553 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "com-design:layout-input-foundation:v2",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "metadata",
+    "principles",
+    "axes",
+    "foundations",
+    "viewportRules",
+    "inputRules",
+    "interactionStatePolicy",
+    "contentScaleRules",
+    "adaptation",
+    "integrationHooks",
+    "examples"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 2
+    },
+    "id": {
+      "const": "com-design:layout-input-foundation:v2"
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "owner",
+        "status",
+        "purpose"
+      ],
+      "properties": {
+        "owner": {
+          "const": "T012"
+        },
+        "status": {
+          "const": "v2-first-stage"
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "principles": {
+      "type": "object",
+      "required": [
+        "platformDoesNotInferLayout",
+        "viewportAndInputAreOrthogonal",
+        "semanticComponentsStayShared",
+        "layoutFoundationsAreNotCoreComponents",
+        "contentScaleReflowsBeforeClipping",
+        "criticalInteractionNeverDependsOnHoverOnly"
+      ],
+      "properties": {
+        "platformDoesNotInferLayout": {
+          "const": true
+        },
+        "viewportAndInputAreOrthogonal": {
+          "const": true
+        },
+        "semanticComponentsStayShared": {
+          "const": true
+        },
+        "layoutFoundationsAreNotCoreComponents": {
+          "const": true
+        },
+        "contentScaleReflowsBeforeClipping": {
+          "const": true
+        },
+        "criticalInteractionNeverDependsOnHoverOnly": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "axes": {
+      "type": "object",
+      "required": [
+        "viewport",
+        "input",
+        "contentScale"
+      ],
+      "properties": {
+        "viewport": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "compact",
+              "medium",
+              "wide"
+            ]
+          }
+        },
+        "input": {
+          "type": "array",
+          "minItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "touch",
+              "pointer",
+              "keyboard",
+              "hybrid"
+            ]
+          }
+        },
+        "contentScale": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "standard",
+              "enlarged",
+              "platform-driven"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "foundations": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "intent",
+          "capabilities",
+          "constraints"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^layout\\."
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "stack",
+              "center",
+              "grid"
+            ]
+          },
+          "intent": {
+            "type": "string",
+            "minLength": 1
+          },
+          "capabilities": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "constraints": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "viewportRules": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "defaultComposition",
+          "allowedFoundations",
+          "guidance"
+        ],
+        "properties": {
+          "defaultComposition": {
+            "type": "string",
+            "minLength": 1
+          },
+          "allowedFoundations": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "stack",
+                "center",
+                "grid"
+              ]
+            }
+          },
+          "guidance": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "inputRules": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "hoverMayAffectPresentation",
+          "focusVisibleRequired",
+          "activationModes",
+          "rules"
+        ],
+        "properties": {
+          "hoverMayAffectPresentation": {
+            "type": "boolean"
+          },
+          "focusVisibleRequired": {
+            "type": "boolean"
+          },
+          "activationModes": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "direct-touch",
+                "pointer-activation",
+                "keyboard-activation"
+              ]
+            }
+          },
+          "rules": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "interactionStatePolicy": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "appliesToInput",
+          "rule"
+        ],
+        "properties": {
+          "appliesToInput": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "touch",
+                "pointer",
+                "keyboard",
+                "hybrid"
+              ]
+            }
+          },
+          "rule": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "contentScaleRules": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "reflowRequired",
+          "criticalContentMayClip",
+          "rules"
+        ],
+        "properties": {
+          "reflowRequired": {
+            "const": true
+          },
+          "criticalContentMayClip": {
+            "const": false
+          },
+          "rules": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "adaptation": {
+      "type": "object",
+      "required": [
+        "invariants",
+        "rules"
+      ],
+      "properties": {
+        "invariants": {
+          "type": "object",
+          "required": [
+            "coreSemanticsMutable",
+            "actionHierarchyMutable",
+            "taskResultMutable",
+            "authoritativeStateMutable",
+            "semanticOrderMutable"
+          ],
+          "properties": {
+            "coreSemanticsMutable": {
+              "const": false
+            },
+            "actionHierarchyMutable": {
+              "const": false
+            },
+            "taskResultMutable": {
+              "const": false
+            },
+            "authoritativeStateMutable": {
+              "const": false
+            },
+            "semanticOrderMutable": {
+              "const": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "rules": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "triggerAxes",
+              "allowed",
+              "forbidden"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^adapt\\."
+              },
+              "triggerAxes": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "viewport",
+                    "input",
+                    "contentScale"
+                  ]
+                }
+              },
+              "allowed": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "forbidden": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "integrationHooks": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "classification",
+          "owner",
+          "coreComponent",
+          "rule"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^layout\\."
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "foundation-hook",
+              "downstream-hook"
+            ]
+          },
+          "owner": {
+            "type": "string",
+            "minLength": 1
+          },
+          "coreComponent": {
+            "const": false
+          },
+          "rule": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "examples": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "semanticTask",
+          "context",
+          "resolvedLayout"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "semanticTask": {
+            "type": "string",
+            "minLength": 1
+          },
+          "context": {
+            "type": "object",
+            "required": [
+              "platform",
+              "viewport",
+              "input",
+              "contentScale"
+            ],
+            "properties": {
+              "platform": {
+                "type": "string",
+                "enum": [
+                  "ios",
+                  "android",
+                  "web",
+                  "wechat-mini-program"
+                ]
+              },
+              "viewport": {
+                "type": "string",
+                "enum": [
+                  "compact",
+                  "medium",
+                  "wide"
+                ]
+              },
+              "input": {
+                "type": "string",
+                "enum": [
+                  "touch",
+                  "pointer",
+                  "keyboard",
+                  "hybrid"
+                ]
+              },
+              "contentScale": {
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "enlarged",
+                  "platform-driven"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "resolvedLayout": {
+            "type": "object",
+            "required": [
+              "foundation",
+              "tracks",
+              "composition",
+              "decision"
+            ],
+            "properties": {
+              "foundation": {
+                "type": "string",
+                "enum": [
+                  "stack",
+                  "center",
+                  "grid"
+                ]
+              },
+              "tracks": {
+                "type": "integer"
+              },
+              "composition": {
+                "type": "string",
+                "minLength": 1
+              },
+              "decision": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
