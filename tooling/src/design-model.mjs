@@ -9,6 +9,7 @@ import {
   validateJsonSchemaValue,
 } from './component-contract.mjs';
 import { validatePlatformModel } from './platform-context.mjs';
+import { validateLayoutInputFoundationContract } from './layout-input-foundation.mjs';
 
 const MODEL_SCHEMA_VERSION = 2;
 const MODEL_ID = 'com-design:canonical-model:v2';
@@ -156,6 +157,17 @@ function validateRequiredInputs(repoRoot, sourceIntegrity, manifest) {
   errors.push(
     ...validatePlatformModel(platformModel, platformSchema, manifest)
       .map((error) => `platform model: ${error}`),
+  );
+
+  const layoutInputFoundation = requireCanonicalSource(sourceIntegrity, 'layoutInputFoundation').value;
+  const layoutInputSchema = requireCanonicalSource(sourceIntegrity, 'layoutInputSchema').value;
+  errors.push(
+    ...validateLayoutInputFoundationContract(
+      layoutInputFoundation,
+      layoutInputSchema,
+      platformModel,
+      manifest,
+    ).map((error) => `layout/input foundation: ${error}`),
   );
 
   const foundationPath = requireCanonicalSource(sourceIntegrity, 'foundation').resolvedPath;
