@@ -53,9 +53,9 @@
 
 ## Verification evidence
 
-- CI: Design System Build run `33818715141` — success；81/81 tests PASS；`build:all` PASS；acceptance report unchanged gate PASS；engineering / Penpot artifact upload PASS。CI 的 `build:all` 执行与 `npm run validate` 相同的 `tooling/bin/validate.mjs` 入口。
+- CI: Design System Build run `33818810632` — success；81/81 tests PASS；`build:all` PASS；acceptance report unchanged gate PASS；engineering / Penpot artifact upload PASS。CI 的 `build:all` 执行与 `npm run validate` 相同的 `tooling/bin/validate.mjs` 入口。
 - Negative fixtures: 缺失 canonical foundation 会同时产生 source-integrity / token-model blocking failure 并令 overall result=fail；另有 warning/error 结构分离、deterministic evidence、稳定 artifact path 回归测试。
-- Evidence sample: 8 checks PASS / 0 warnings；Canonical source SHA-256 `304f7390cf06e33c05204d05b54969bc0e6fb1e0916a670594c402a3c035a32b`；输出 `dist/validation/evidence.json`，随 engineering artifact 上传（artifact ID `9917462094`）。
+- Evidence sample: 8 checks PASS / 0 warnings；Canonical source SHA-256 `304f7390cf06e33c05204d05b54969bc0e6fb1e0916a670594c402a3c035a32b`；输出 `dist/validation/evidence.json`，随 engineering artifact 上传（artifact ID `9917499047`）。
 
 ## Review
 
