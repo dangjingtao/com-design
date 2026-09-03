@@ -1,6 +1,6 @@
 # T006 · Validation Orchestrator + Evidence Output
 
-- Status: TODO
+- Status: REVIEW
 - Target version: V2 first-stage
 - Impact: Validation / Tooling
 - Owner: -
@@ -35,11 +35,11 @@
 
 ## Acceptance
 
-- [ ] 一条 validate 命令覆盖 V2 确定性基础门禁。
-- [ ] 任一硬门禁失败整体 exit non-zero。
-- [ ] warning 与 error 可机器区分。
-- [ ] evidence 可被 T017/T019/AI consumer 读取。
-- [ ] `npm test`、`npm run validate`、`npm run build:all` 通过。
+- [x] 一条 validate 命令覆盖 V2 确定性基础门禁。
+- [x] 任一硬门禁失败整体 exit non-zero。
+- [x] warning 与 error 可机器区分。
+- [x] evidence 可被 T017/T019/AI consumer 读取。
+- [x] `npm test`、`npm run validate`、`npm run build:all` 通过。
 
 ## Risks / Dependencies
 
@@ -47,19 +47,19 @@
 
 ## Implementation record
 
-- Commit / PR:
-- Changed paths:
-- Notes:
+- Commit / PR: PR #27，分支 `task/T006-validation-orchestrator-evidence`。
+- Changed paths: `tooling/src/validation-orchestrator.mjs`、`tooling/bin/validate.mjs`、`tooling/test/validation-orchestrator.test.mjs`。
+- Notes: 保留并复用已有 validator，不复制 canonical 规则；统一编排 source integrity、token、platform model/environment、motion、component、iconography 与 Canonical Design Model 共 8 个确定性检查。机器证据固定写入 `dist/validation/evidence.json`，包含 source SHA-256、per-check status/evidence、summary、blocking errors 与 non-blocking warnings。未修改 GitHub Actions，未把视觉主观判断写入硬门禁。
 
 ## Verification evidence
 
-- CI:
-- Negative fixtures:
-- Evidence sample:
+- CI: Design System Build run `33818715141` — success；81/81 tests PASS；`build:all` PASS；acceptance report unchanged gate PASS；engineering / Penpot artifact upload PASS。CI 的 `build:all` 执行与 `npm run validate` 相同的 `tooling/bin/validate.mjs` 入口。
+- Negative fixtures: 缺失 canonical foundation 会同时产生 source-integrity / token-model blocking failure 并令 overall result=fail；另有 warning/error 结构分离、deterministic evidence、稳定 artifact path 回归测试。
+- Evidence sample: 8 checks PASS / 0 warnings；Canonical source SHA-256 `304f7390cf06e33c05204d05b54969bc0e6fb1e0916a670594c402a3c035a32b`；输出 `dist/validation/evidence.json`，随 engineering artifact 上传（artifact ID `9917462094`）。
 
 ## Review
 
-- Reviewer:
-- Result: REVIEW / PASS / BLOCKED
-- Conclusion:
-- Follow-up:
+- Reviewer: Mira pending final review
+- Result: REVIEW
+- Conclusion: Builder implementation and CI evidence are complete; task is ready for independent design-system review. No PASS self-approval.
+- Follow-up: T017 may consume `dist/validation/evidence.json` as the deterministic CI evidence artifact and decide upload/retention behavior for failed runs.
