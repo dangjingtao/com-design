@@ -57,14 +57,18 @@ export function buildValidationEvidence({
   manifestSha256 = null,
   sourceSha256 = null,
 }) {
-  const normalizedChecks = checks.map((check) => ({
-    id: check.id,
-    hardGate: check.hardGate !== false,
-    status: check.status,
-    errors: normalizeMessages(check.errors),
-    warnings: normalizeMessages(check.warnings),
-    evidence: check.evidence ?? {},
-  }));
+  const normalizedChecks = checks.map((check) => {
+    const errors = normalizeMessages(check.errors);
+    const warnings = normalizeMessages(check.warnings);
+    return {
+      id: check.id,
+      hardGate: check.hardGate !== false,
+      status: errors.length ? 'fail' : warnings.length ? 'warn' : 'pass',
+      errors,
+      warnings,
+      evidence: check.evidence ?? {},
+    };
+  });
 
   const errors = normalizedChecks.flatMap((check) =>
     check.errors.map((message) => ({ checkId: check.id, message })),
