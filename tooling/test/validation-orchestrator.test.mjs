@@ -28,7 +28,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
   assert.equal(evidence.result, 'pass');
   assert.equal(evidence.summary.failed, 0);
   assert.equal(evidence.summary.blockingErrors, 0);
-  assert.equal(evidence.summary.checksRun, 8);
+  assert.equal(evidence.summary.checksRun, 9);
   assert.deepEqual(
     evidence.checks.map((check) => check.id),
     [
@@ -36,6 +36,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
       'token-model',
       'platform-model',
       'platform-environment',
+      'layout-input-foundation',
       'motion-foundation',
       'component-contracts',
       'iconography',
@@ -45,6 +46,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
   assert.ok(evidence.checks.every((check) => check.hardGate === true));
   assert.match(evidence.source.manifestSha256, /^[a-f0-9]{64}$/);
   assert.match(evidence.source.sourceSha256, /^[a-f0-9]{64}$/);
+  assert.equal(evidence.checks.find((check) => check.id === 'layout-input-foundation').evidence.foundationCount, 3);
   assert.equal(evidence.checks.find((check) => check.id === 'component-contracts').evidence.componentCount, 33);
   assert.equal(evidence.checks.find((check) => check.id === 'canonical-design-model').evidence.platformCount, 4);
   assert.equal(JSON.stringify(evidence).includes(repoRoot), false);
@@ -166,4 +168,23 @@ test('writes evidence to a stable generated artifact path', () => {
   assert.equal(relativePath, 'dist/validation/evidence.json');
   const written = JSON.parse(fs.readFileSync(path.join(fixture, relativePath), 'utf8'));
   assert.deepEqual(written, evidence);
+});
+
+test('validates the manifest-selected canonical layout/input contract', () => {
+  const fixture = copyDesignSourceFixture();
+  const manifestPath = path.join(fixture, 'design-source', 'specs', 'design-system-v1.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  const originalPath = path.join(fixture, 'design-source', 'specs', 'layout-input-foundation-v2.json');
+  const alternatePath = path.join(fixture, 'design-source', 'specs', 'layout-input-foundation-review-fixture.json');
+  const contract = JSON.parse(fs.readFileSync(originalPath, 'utf8'));
+  contract.principles.platformDoesNotInferLayout = false;
+  fs.writeFileSync(alternatePath, `${JSON.stringify(contract, null, 2)}\n`);
+  manifest.sources.layoutInputFoundation = './layout-input-foundation-review-fixture.json';
+  fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+  const evidence = runRepositoryValidation(fixture);
+  const layoutInput = evidence.checks.find((check) => check.id === 'layout-input-foundation');
+  assert.equal(evidence.result, 'fail');
+  assert.equal(layoutInput.status, 'fail');
+  assert.ok(layoutInput.errors.some((error) => error.includes('platformDoesNotInferLayout')));
 });
