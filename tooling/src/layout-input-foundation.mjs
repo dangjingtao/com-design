@@ -5,6 +5,12 @@ import { validateJsonSchemaValue } from './component-contract.mjs';
 const REQUIRED_FOUNDATIONS = ['stack', 'center', 'grid'];
 const REQUIRED_INTERACTION_STATES = ['hover', 'focus-visible', 'pressed', 'disabled', 'selected-checked-open'];
 const REQUIRED_HOOKS = ['layout.container', 'layout.app-shell', 'layout.side-navigation'];
+const REQUIRED_ACTIVATION_MODES = Object.freeze({
+  touch: ['direct-touch'],
+  pointer: ['pointer-activation'],
+  keyboard: ['keyboard-activation'],
+  hybrid: ['direct-touch', 'pointer-activation', 'keyboard-activation'],
+});
 const REQUIRED_FOUNDATION_CAPABILITIES = Object.freeze({
   stack: ['vertical', 'horizontal', 'align', 'justify', 'wrap', 'semantic-gap'],
   center: ['inline-center', 'block-center-when-safe', 'both-axis-center'],
@@ -129,6 +135,11 @@ export function validateLayoutInputFoundationContract(contract, schema, platform
   if (!sameArray(contract.interactionStatePolicy?.['focus-visible']?.appliesToInput, ['keyboard', 'hybrid'])) {
     errors.push('focus-visible state must apply to keyboard and hybrid input contexts.');
   }
+  for (const [input, expectedModes] of Object.entries(REQUIRED_ACTIVATION_MODES)) {
+    if (!sameArray(contract.inputRules?.[input]?.activationModes, expectedModes)) {
+      errors.push(`inputRules.${input}.activationModes must equal: ${expectedModes.join(', ')}.`);
+    }
+  }
 
   for (const contentScale of platformModel.axes?.contentScale?.values ?? []) {
     const rule = contract.contentScaleRules?.[contentScale];
@@ -210,7 +221,7 @@ export function validateLayoutInputFoundationContract(contract, schema, platform
       && candidate.context?.viewport === enlarged.context?.viewport
       && candidate.context?.input === enlarged.context?.input
       && candidate.context?.contentScale === 'standard');
-    if (standard && enlarged.resolvedLayout?.tracks <= standard.resolvedLayout?.tracks) {
+    if (standard && enlarged.resolvedLayout?.tracks < standard.resolvedLayout?.tracks) {
       enlargedReflowEvidence = true;
     }
   }
