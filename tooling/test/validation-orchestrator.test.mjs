@@ -75,6 +75,46 @@ test('hard-gate failure is machine-readable and fails the overall result', () =>
   assert.ok(evidence.checks.some((check) => check.id === 'token-model' && check.status === 'fail'));
 });
 
+test('validates the manifest-selected canonical motion contract instead of a hard-coded path', () => {
+  const fixture = copyDesignSourceFixture();
+  const manifestPath = path.join(fixture, 'design-source', 'specs', 'design-system-v1.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  const originalMotionPath = path.join(fixture, 'design-source', 'specs', 'motion-foundation-v2.json');
+  const alternateMotionPath = path.join(fixture, 'design-source', 'specs', 'motion-foundation-review-fixture.json');
+  const contract = JSON.parse(fs.readFileSync(originalMotionPath, 'utf8'));
+  contract.reducedMotion.firstClass = false;
+  fs.writeFileSync(alternateMotionPath, `${JSON.stringify(contract, null, 2)}\n`);
+  manifest.sources.motionContract = './motion-foundation-review-fixture.json';
+  fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+  const evidence = runRepositoryValidation(fixture);
+  const motion = evidence.checks.find((check) => check.id === 'motion-foundation');
+  assert.equal(evidence.result, 'fail');
+  assert.equal(motion.status, 'fail');
+  assert.ok(motion.errors.some((error) => error.includes('reduced motion must be first-class')));
+});
+
+test('failure evidence is checkout-location independent and repository-relative', () => {
+  const firstFixture = copyDesignSourceFixture();
+  const secondFixture = copyDesignSourceFixture();
+  for (const fixture of [firstFixture, secondFixture]) {
+    fs.writeFileSync(
+      path.join(fixture, 'design-source', 'components', 'index.json'),
+      '{ broken json',
+    );
+  }
+
+  const first = runRepositoryValidation(firstFixture);
+  const second = runRepositoryValidation(secondFixture);
+
+  assert.deepEqual(second, first);
+  assert.equal(JSON.stringify(first).includes(firstFixture), false);
+  assert.equal(JSON.stringify(second).includes(secondFixture), false);
+  assert.ok(
+    first.errors.some((entry) => entry.message.includes('design-source/components/index.json')),
+  );
+});
+
 test('warnings and blocking errors remain structurally distinct', () => {
   const evidence = buildValidationEvidence({
     checks: [
