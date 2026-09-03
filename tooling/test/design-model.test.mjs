@@ -196,3 +196,15 @@ test('writes the normalized model as a generated dist artifact', () => {
   assert.deepEqual(written, model);
   assert.equal(written.$metadata.editable, false);
 });
+
+test('rejects invalid canonical layout/input contract before model emission', () => {
+  const fixture = copyDesignSourceFixture();
+  const layoutInput = readFixtureJson(fixture, 'specs/layout-input-foundation-v2.json');
+  layoutInput.schemaVersion = 99;
+  writeFixtureJson(fixture, 'specs/layout-input-foundation-v2.json', layoutInput);
+
+  assert.throws(
+    () => buildCanonicalDesignModel(fixture),
+    /layout\/input foundation: layoutInputFoundation\.schemaVersion: must equal 2/,
+  );
+});

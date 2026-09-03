@@ -1,6 +1,6 @@
 # T012 · Responsive Layout + Input Modality Foundation
 
-- Status: TODO
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: Foundation / Layout / Input
 - Owner: -
@@ -35,11 +35,11 @@ V2 需要真正支持 Web desktop/tablet，同时不能把 Web 变成第二套�
 
 ## Acceptance
 
-- [ ] 同一 semantic component 可在窄屏 / 宽屏共享合同。
-- [ ] layout decision 由 viewport / input context 驱动。
-- [ ] Stack / Center / Grid 有明确机器可读 contract。
-- [ ] keyboard / pointer / touch 状态不被平台名硬编码。
-- [ ] schema / examples / tests 通过。
+- [x] 同一 semantic component 可在窄屏 / 宽屏共享合同。
+- [x] layout decision 由 viewport / input context 驱动。
+- [x] Stack / Center / Grid 有明确机器可读 contract。
+- [x] keyboard / pointer / touch 状态不被平台名硬编码。
+- [x] schema / examples / tests 通过。
 
 ## Risks / Dependencies
 
@@ -48,19 +48,28 @@ V2 需要真正支持 Web desktop/tablet，同时不能把 Web 变成第二套�
 
 ## Implementation record
 
-- Commit / PR:
+- Commit / PR: PR #28 (`task/T012-responsive-layout-input-foundation` → `dev`); initial implementation head `b605fbea99044dde5a9d671e68e55655ebb1afe6`; replayed onto T006-enabled dev baseline `63306b2f4944e864a80497cb077dde1b13564bf5` during independent review.
 - Changed paths:
-- Notes:
+  - `design-source/specs/layout-input-foundation-v2.json`
+  - `design-source/schemas/layout-input-foundation-v2.schema.json`
+  - `design-source/specs/design-system-v1.json`
+  - `tooling/src/layout-input-foundation.mjs`
+  - `tooling/test/layout-input-foundation.test.mjs`
+  - `tooling/bin/validate.mjs`
+  - this task card and work ledger
+- Notes: T012 consumes T002 viewport/input/content-scale vocabulary and T010 runtime capability/content-scale hooks. It does not infer layout from platform identity, implement adapters, or promote Container/App Shell/Side Navigation into Core.
 
 ## Verification evidence
 
-- CI:
-- Responsive examples:
-- Input examples:
+- Preflight: candidate contract/schema passed an isolated mirror of the repository's current `validateJsonSchemaValue` behavior.
+- Focused preflight: 8/8 T012 tests passed before repository write.
+- CI: final replayed implementation head `366949ebb74b2f8cb45570a131bd65f2ca42a28e` passed Design System Build #180 (`33819841087`): unit tests, `build:all`, accepted-report protection, engineering adapter upload, and Penpot manifest upload all succeeded.
+- Responsive examples: compact touch Web and Mini Program resolve the same Stack layout; wide keyboard Web and iOS resolve the same Grid layout; enlarged wide Web reflows to one-track Stack without changing the semantic task.
+- Input examples: touch forbids hover dependency; pointer/hybrid may add hover; keyboard/hybrid require focus-visible; authoritative selected/checked/open state remains modality-independent.
 
 ## Review
 
-- Reviewer:
-- Result: REVIEW / PASS / BLOCKED
-- Conclusion:
-- Follow-up:
+- Reviewer: Mira
+- Result: PASS
+- Conclusion: independent acceptance passed. Review found and fixed one P2 planning-coverage gap (Stack align/justify, Center dual-axis, Grid adaptive/stable-gap responsibilities), three P2 validation gaps (direct engineering-build bypass, activation-mode mapping drift, false enlarged-reflow evidence), and the concurrent T006 orchestrator integration race. All findings now have regression coverage, all review threads are resolved, the branch is based on the latest dev baseline, and final deterministic gates are green.
+- Follow-up: T018 / T020 / T021 / T022 may consume T012 as an accepted baseline. T014 does not yet expose layout/input as a first-class agent catalog; Canonical Model source/provenance and hard validation already include T012, so this is a downstream consumption enhancement rather than a T012 blocker.

@@ -15,6 +15,7 @@
     "layers": ["primitive", "semantic", "component", "composite-component", "pattern"],
     "platformContextSource": "sources.platformModel",
     "platformEnvironmentSource": "sources.platformEnvironment",
+    "layoutInputFoundationSource": "sources.layoutInputFoundation",
     "axes": {
       "density": { "default": "compact", "supported": ["compact", "comfortable"] },
       "platform": { "supported": ["ios", "android", "web", "wechat-mini-program"] },
@@ -34,7 +35,7 @@
     "adapterMaturity": {
       "ios": { "status": "partial", "basis": "Shared React Native token output and iOS touch-target mapping exist; native platform/component contract remains V2 work." },
       "android": { "status": "partial", "basis": "Shared React Native/NativeWind outputs and Android touch-target mapping exist; native platform/component contract remains V2 work." },
-      "web": { "status": "partial", "basis": "Tailwind adapter output exists; V2 responsive/input/platform contract remains pending." },
+      "web": { "status": "partial", "basis": "Tailwind adapter output exists and the canonical responsive/input foundation is defined by T012; Web Adapter V2 remains downstream T007 work." },
       "wechat-mini-program": { "status": "planned", "basis": "No Mini Program adapter exists on dev; T009 owns the minimum viable adapter." }
     }
   },
@@ -48,6 +49,8 @@
     "platformModel": "./platform-model-v2.json",
     "platformEnvironmentSchema": "../schemas/platform-environment-v1.schema.json",
     "platformEnvironment": "./platform-environment-v1.json",
+    "layoutInputSchema": "../schemas/layout-input-foundation-v2.schema.json",
+    "layoutInputFoundation": "./layout-input-foundation-v2.json",
     "motionSchema": "../schemas/motion-foundation-v2.schema.json",
     "motionContract": "./motion-foundation-v2.json",
     "iconographySchema": "../schemas/iconography-contract-v1.schema.json",
@@ -99,11 +102,11 @@
   "modeResolution": {
     "density": "resolve density variables from the normalized model built from colors_and_type.css",
     "platform": "read the V2 platform family from sources.platformModel; platform name does not imply input, viewport, motion, color scheme, content scale, or environment capabilities",
-    "viewport": "T002 defines the context axis; T012 owns responsive behavior and layout rules",
-    "input": "T002 defines the explicit modality axis; T010 exposes runtime input capabilities while T012 owns interaction-state and responsive input behavior",
+    "viewport": "T002 defines the context axis; T012 resolves responsive behavior and layout rules through sources.layoutInputFoundation",
+    "input": "T002 defines the explicit modality axis; T010 exposes runtime input capabilities while T012 resolves interaction-state and responsive input behavior through sources.layoutInputFoundation",
     "motion": "T002 selects the standard/reduced context axis; semantic motion intent and per-platform reduced-motion/interruption policy resolve through sources.motionContract while concrete duration/easing tokens remain foundation values until later validation.",
     "colorScheme": "light/dark context selects the existing themeResolution path",
-    "contentScale": "T002 defines standard/enlarged/platform-driven context selection; T010 exposes the platform/host hook while T012 owns reflow behavior",
+    "contentScale": "T002 defines standard/enlarged/platform-driven context selection; T010 exposes the platform/host hook while T012 resolves reflow behavior through sources.layoutInputFoundation",
     "environment": "T010 resolves runtime safe area, reserved regions, system/host chrome, back, focus, keyboard/IME, pointer, gesture, overlay dismissal/system UI, and accessibility hooks through sources.platformEnvironment"
   },
   "governance": {
@@ -124,6 +127,7 @@
       "themeLightDarkMapped",
       "densityCompactComfortableMapped",
       "platformTouchTargetsMapped",
+      "layoutInputFoundationMapped",
       "motionStandardReducedMapped",
       "iconographyContractMapped",
       "sharedIconScaleMapped",

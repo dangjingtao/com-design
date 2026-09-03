@@ -4,6 +4,7 @@ import path from 'node:path';
 import { buildCanonicalDesignModel } from './design-model.mjs';
 import { validateComponentCatalog } from './component-contract.mjs';
 import { validateIconographyContract } from './iconography.mjs';
+import { validateLayoutInputFoundationContract } from './layout-input-foundation.mjs';
 import { validateMotionFoundationContract } from './motion-foundation.mjs';
 import { validatePlatformEnvironmentContract } from './platform-environment.mjs';
 import { validatePlatformModel } from './platform-context.mjs';
@@ -205,6 +206,29 @@ export function runRepositoryValidation(repoRoot) {
       evidence: {
         exampleCount: environment.examples?.length ?? 0,
         platforms: (environment.examples ?? []).map((example) => example.platform).filter(Boolean).sort(),
+      },
+    };
+  }));
+
+  checks.push(runCheck('layout-input-foundation', () => {
+    const contract = canonicalSources.layoutInputFoundation?.value;
+    const schema = canonicalSources.layoutInputSchema?.value;
+    const platformModel = canonicalSources.platformModel?.value;
+    const errors = [];
+    if (!contract) errors.push('canonical layoutInputFoundation source is unavailable.');
+    if (!schema) errors.push('canonical layoutInputSchema source is unavailable.');
+    if (!platformModel) errors.push('canonical platformModel source is unavailable.');
+    if (!manifest) errors.push('canonical manifest is unavailable.');
+    if (errors.length) return { errors };
+
+    return {
+      errors: validateLayoutInputFoundationContract(contract, schema, platformModel, manifest),
+      evidence: {
+        schemaVersion: contract.schemaVersion ?? null,
+        foundationCount: contract.foundations?.length ?? 0,
+        exampleCount: contract.examples?.length ?? 0,
+        inputModes: contract.axes?.input ?? [],
+        contentScaleModes: contract.axes?.contentScale ?? [],
       },
     };
   }));
