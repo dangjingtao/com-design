@@ -14,12 +14,12 @@ export function loadMotionFoundation(repoRoot) {
   return { contractPath, schemaPath, contract, schema };
 }
 
-export function validateMotionFoundation(repoRoot) {
-  const { contract, schema } = loadMotionFoundation(repoRoot);
-  const { $schema: _schema, ...value } = contract;
+export function validateMotionFoundationContract(contract, schema) {
+  const { $schema: _schema, ...value } = contract ?? {};
   const errors = validateJsonSchemaValue(value, schema, 'motionFoundation');
 
-  const categories = new Set(contract.intents.map((intent) => intent.category));
+  const intents = Array.isArray(contract?.intents) ? contract.intents : [];
+  const categories = new Set(intents.map((intent) => intent?.category));
   const requiredCategories = [
     'micro',
     'enter-exit',
@@ -33,13 +33,19 @@ export function validateMotionFoundation(repoRoot) {
     if (!categories.has(category)) errors.push(`motionFoundation: missing semantic category ${category}.`);
   }
 
-  const miniProgram = contract.platforms['wechat-mini-program'];
-  if (!miniProgram.constraints.includes('no-high-frequency-frame-by-frame-setData')) {
+  const miniProgram = contract?.platforms?.['wechat-mini-program'];
+  if (!Array.isArray(miniProgram?.constraints)
+    || !miniProgram.constraints.includes('no-high-frequency-frame-by-frame-setData')) {
     errors.push('motionFoundation: WeChat Mini Program must prohibit high-frequency frame-by-frame setData.');
   }
-  if (contract.reducedMotion?.firstClass !== true) {
+  if (contract?.reducedMotion?.firstClass !== true) {
     errors.push('motionFoundation: reduced motion must be first-class.');
   }
 
   return errors;
+}
+
+export function validateMotionFoundation(repoRoot) {
+  const { contract, schema } = loadMotionFoundation(repoRoot);
+  return validateMotionFoundationContract(contract, schema);
 }

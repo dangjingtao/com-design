@@ -1,6 +1,6 @@
 # T006 · Validation Orchestrator + Evidence Output
 
-- Status: TODO
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: Validation / Tooling
 - Owner: -
@@ -35,11 +35,11 @@
 
 ## Acceptance
 
-- [ ] 一条 validate 命令覆盖 V2 确定性基础门禁。
-- [ ] 任一硬门禁失败整体 exit non-zero。
-- [ ] warning 与 error 可机器区分。
-- [ ] evidence 可被 T017/T019/AI consumer 读取。
-- [ ] `npm test`、`npm run validate`、`npm run build:all` 通过。
+- [x] 一条 validate 命令覆盖 V2 确定性基础门禁。
+- [x] 任一硬门禁失败整体 exit non-zero。
+- [x] warning 与 error 可机器区分。
+- [x] evidence 可被 T017/T019/AI consumer 读取。
+- [x] `npm test`、`npm run validate`、`npm run build:all` 通过。
 
 ## Risks / Dependencies
 
@@ -47,19 +47,19 @@
 
 ## Implementation record
 
-- Commit / PR:
-- Changed paths:
-- Notes:
+- Commit / PR: PR #27，分支 `task/T006-validation-orchestrator-evidence`。
+- Changed paths: `tooling/src/validation-orchestrator.mjs`、`tooling/src/motion-foundation.mjs`、`tooling/bin/validate.mjs`、`tooling/test/validation-orchestrator.test.mjs`。
+- Notes: 保留并复用已有 validator，不复制 canonical 规则；统一编排 source integrity、token、platform model/environment、motion、component、iconography 与 Canonical Design Model 共 8 个确定性检查。机器证据固定写入 `dist/validation/evidence.json`，包含 source SHA-256、per-check status/evidence、summary、blocking errors 与 non-blocking warnings。未修改 GitHub Actions，未把视觉主观判断写入硬门禁。
 
 ## Verification evidence
 
-- CI:
-- Negative fixtures:
-- Evidence sample:
+- CI: Design System Build run `33819486243` — success；83/83 tests PASS；`build:all` PASS；acceptance report unchanged gate PASS；engineering / Penpot artifact upload PASS。CI 的 `build:all` 执行与 `npm run validate` 相同的 `tooling/bin/validate.mjs` 入口。
+- Negative fixtures: 缺失 canonical foundation 会同时产生 source-integrity / token-model blocking failure并令 overall result=fail；manifest 改指向无效 motion contract 会由 canonical-selected motion gate 拒绝；同一 malformed source 在不同 checkout root 生成完全一致、仅仓库相对路径的 failure evidence；另有 warning/error 结构分离、deterministic evidence、稳定 artifact path 回归测试。
+- Evidence sample: 8 checks PASS / 0 warnings；Canonical source SHA-256 `304f7390cf06e33c05204d05b54969bc0e6fb1e0916a670594c402a3c035a32b`；输出 `dist/validation/evidence.json`，随 engineering artifact 上传（artifact ID `9917499047`）。
 
 ## Review
 
-- Reviewer:
-- Result: REVIEW / PASS / BLOCKED
-- Conclusion:
-- Follow-up:
+- Reviewer: Mira
+- Result: PASS
+- Conclusion: 独立验收发现并修复 1 个 P1 与 1 个 P2：motion gate 原先未跟随 manifest-selected canonical source；failure evidence 原先可能泄露 checkout 绝对路径并破坏跨环境确定性。两项均补定向回归测试，最终 83/83 tests 与完整 build 全绿。统一 validate 现覆盖既有确定性基础门禁，并输出可供后续 CI / AI / release governance 消费的机器证据；未发现剩余 blocker。
+- Follow-up: T017 可消费 `dist/validation/evidence.json` 作为 deterministic CI evidence artifact，并负责失败 run 的 upload / retention 行为。
