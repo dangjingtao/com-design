@@ -1,0 +1,406 @@
+{
+  "$schema": "../schemas/layout-input-foundation-v2.schema.json",
+  "schemaVersion": 2,
+  "id": "com-design:layout-input-foundation:v2",
+  "metadata": {
+    "owner": "T012",
+    "status": "v2-first-stage",
+    "purpose": "Shared responsive layout, input-modality behavior, interaction-state policy, and content-scale reflow contract."
+  },
+  "principles": {
+    "platformDoesNotInferLayout": true,
+    "viewportAndInputAreOrthogonal": true,
+    "semanticComponentsStayShared": true,
+    "layoutFoundationsAreNotCoreComponents": true,
+    "contentScaleReflowsBeforeClipping": true,
+    "criticalInteractionNeverDependsOnHoverOnly": true
+  },
+  "axes": {
+    "viewport": [
+      "compact",
+      "medium",
+      "wide"
+    ],
+    "input": [
+      "touch",
+      "pointer",
+      "keyboard",
+      "hybrid"
+    ],
+    "contentScale": [
+      "standard",
+      "enlarged",
+      "platform-driven"
+    ]
+  },
+  "foundations": [
+    {
+      "id": "layout.stack",
+      "kind": "stack",
+      "intent": "Linear flow that preserves semantic reading and action order while spacing remains token-driven.",
+      "capabilities": [
+        "vertical",
+        "horizontal",
+        "wrap",
+        "align",
+        "justify",
+        "semantic-gap"
+      ],
+      "constraints": [
+        "gap-from-token-scale",
+        "semantic-order-preserved",
+        "no-platform-name-branching"
+      ]
+    },
+    {
+      "id": "layout.center",
+      "kind": "center",
+      "intent": "Center a bounded content region without hard-coding a product page width.",
+      "capabilities": [
+        "inline-center",
+        "block-center-when-safe",
+        "max-inline-size-hook",
+        "both-axis-center"
+      ],
+      "constraints": [
+        "content-remains-scrollable",
+        "no-critical-content-clipping",
+        "no-platform-name-branching"
+      ]
+    },
+    {
+      "id": "layout.grid",
+      "kind": "grid",
+      "intent": "Responsive multi-track layout whose track count follows available space, content scale, and task constraints.",
+      "capabilities": [
+        "single-track-fallback",
+        "multi-track",
+        "auto-fit-hook",
+        "explicit-span-hook",
+        "adaptive-track-count",
+        "semantic-gap"
+      ],
+      "constraints": [
+        "semantic-order-preserved",
+        "no-fixed-desktop-column-count-in-core",
+        "no-platform-name-branching"
+      ]
+    }
+  ],
+  "viewportRules": {
+    "compact": {
+      "defaultComposition": "single-primary-flow",
+      "allowedFoundations": [
+        "stack",
+        "center",
+        "grid"
+      ],
+      "guidance": [
+        "Prefer one dominant reading and action flow.",
+        "Multi-track content must reduce tracks before readability, target size, or required actions degrade.",
+        "Compact viewport does not imply a mobile platform or a specific navigation component."
+      ]
+    },
+    "medium": {
+      "defaultComposition": "adaptive-primary-plus-supporting",
+      "allowedFoundations": [
+        "stack",
+        "center",
+        "grid"
+      ],
+      "guidance": [
+        "Allow supporting regions or multiple tracks only when task hierarchy stays obvious.",
+        "A rail or app-shell hook may become eligible, but viewport class alone does not select a concrete navigation component.",
+        "Content scale may force a compact-like composition without changing semantic component identity."
+      ]
+    },
+    "wide": {
+      "defaultComposition": "multi-region-eligible",
+      "allowedFoundations": [
+        "stack",
+        "center",
+        "grid"
+      ],
+      "guidance": [
+        "Allow persistent supporting regions and multi-track composition when content benefits from them.",
+        "Do not inflate action hierarchy or duplicate the same semantic control just because space is available.",
+        "Side-navigation and app-shell hooks remain downstream presentation choices."
+      ]
+    }
+  },
+  "inputRules": {
+    "touch": {
+      "hoverMayAffectPresentation": false,
+      "focusVisibleRequired": false,
+      "activationModes": [
+        "direct-touch"
+      ],
+      "rules": [
+        "Critical actions and information must never require hover.",
+        "Touch-safe target sizing remains a platform-adapter responsibility and must not be reduced by responsive compaction.",
+        "Spacing, wrapping, and hit regions must tolerate imprecise direct manipulation."
+      ]
+    },
+    "pointer": {
+      "hoverMayAffectPresentation": true,
+      "focusVisibleRequired": false,
+      "activationModes": [
+        "pointer-activation"
+      ],
+      "rules": [
+        "Hover is additive feedback only and never the sole discoverability mechanism.",
+        "Pointer contexts may use denser presentation when readability and target requirements remain valid.",
+        "Pointer presence does not change Core semantics or authoritative state."
+      ]
+    },
+    "keyboard": {
+      "hoverMayAffectPresentation": false,
+      "focusVisibleRequired": true,
+      "activationModes": [
+        "keyboard-activation"
+      ],
+      "rules": [
+        "Focus order follows semantic reading and action order rather than visual column tricks.",
+        "Responsive recomposition must keep the focused control reachable and visible.",
+        "Every critical action in a keyboard-capable context requires an operable keyboard path."
+      ]
+    },
+    "hybrid": {
+      "hoverMayAffectPresentation": true,
+      "focusVisibleRequired": true,
+      "activationModes": [
+        "direct-touch",
+        "pointer-activation",
+        "keyboard-activation"
+      ],
+      "rules": [
+        "Touch, pointer, and keyboard interaction remain simultaneously valid.",
+        "Pointer availability must not remove touch-safe targets or keyboard focus treatment.",
+        "Last-used modality may tune transient feedback, never semantic state or action hierarchy."
+      ]
+    }
+  },
+  "interactionStatePolicy": {
+    "hover": {
+      "appliesToInput": [
+        "pointer",
+        "hybrid"
+      ],
+      "rule": "Optional enhancement only; required meaning or action cannot be hover-only."
+    },
+    "focus-visible": {
+      "appliesToInput": [
+        "keyboard",
+        "hybrid"
+      ],
+      "rule": "Must remain perceivable after responsive recomposition and cannot be delayed by motion."
+    },
+    "pressed": {
+      "appliesToInput": [
+        "touch",
+        "pointer",
+        "keyboard",
+        "hybrid"
+      ],
+      "rule": "Transient activation feedback only; it does not replace selected, checked, open, loading, disabled, or authoritative state."
+    },
+    "disabled": {
+      "appliesToInput": [
+        "touch",
+        "pointer",
+        "keyboard",
+        "hybrid"
+      ],
+      "rule": "Must preserve the underlying value/selection meaning while clearly removing operability."
+    },
+    "selected-checked-open": {
+      "appliesToInput": [
+        "touch",
+        "pointer",
+        "keyboard",
+        "hybrid"
+      ],
+      "rule": "Authoritative component state stays modality-independent and must not be inferred from hover, focus, or press."
+    }
+  },
+  "contentScaleRules": {
+    "standard": {
+      "reflowRequired": true,
+      "criticalContentMayClip": false,
+      "rules": [
+        "Use the viewport contract normally while retaining semantic reading order.",
+        "Fixed control geometry may remain only when text/content is not clipped."
+      ]
+    },
+    "enlarged": {
+      "reflowRequired": true,
+      "criticalContentMayClip": false,
+      "rules": [
+        "Wrap or grow before truncating required labels, body text, or actions.",
+        "Reduce grid track count or fall back to Stack before clipping or overlapping content.",
+        "Fixed content heights must yield unless the region is intentionally and independently scrollable."
+      ]
+    },
+    "platform-driven": {
+      "reflowRequired": true,
+      "criticalContentMayClip": false,
+      "rules": [
+        "Consume the T010 platform/host content-scale hook instead of assuming a numeric scale from platform name.",
+        "Resolve to runtime reflow without changing semantic component identity or action hierarchy.",
+        "When the concrete scale is unknown, choose the safer layout that preserves content rather than clipping."
+      ]
+    }
+  },
+  "adaptation": {
+    "invariants": {
+      "coreSemanticsMutable": false,
+      "actionHierarchyMutable": false,
+      "taskResultMutable": false,
+      "authoritativeStateMutable": false,
+      "semanticOrderMutable": false
+    },
+    "rules": [
+      {
+        "id": "adapt.compact-to-wide",
+        "triggerAxes": [
+          "viewport",
+          "input"
+        ],
+        "allowed": [
+          "stack-to-grid",
+          "supporting-region-persistence",
+          "navigation-presentation-hook"
+        ],
+        "forbidden": [
+          "change-primary-action",
+          "drop-required-state",
+          "platform-name-only-branch"
+        ]
+      },
+      {
+        "id": "adapt.content-scale-reflow",
+        "triggerAxes": [
+          "contentScale",
+          "viewport"
+        ],
+        "allowed": [
+          "reduce-track-count",
+          "wrap",
+          "grow",
+          "stack",
+          "independent-scroll-region"
+        ],
+        "forbidden": [
+          "clip-critical-content",
+          "hide-required-action",
+          "change-semantic-order"
+        ]
+      }
+    ]
+  },
+  "integrationHooks": [
+    {
+      "id": "layout.container",
+      "classification": "foundation-hook",
+      "owner": "T012",
+      "coreComponent": false,
+      "rule": "Expose bounded-content and inline-size hooks without declaring a universal Container Core Component."
+    },
+    {
+      "id": "layout.app-shell",
+      "classification": "downstream-hook",
+      "owner": "future-layout-consumer",
+      "coreComponent": false,
+      "rule": "Expose region/offset hooks without promoting App Shell to Core before independent evidence and review."
+    },
+    {
+      "id": "layout.side-navigation",
+      "classification": "downstream-hook",
+      "owner": "T020",
+      "coreComponent": false,
+      "rule": "T020 may map the shared navigation model to Side Navigation/Rail using viewport and environment context."
+    }
+  ],
+  "examples": [
+    {
+      "name": "compact-touch-web",
+      "semanticTask": "browse-filtered-collection",
+      "context": {
+        "platform": "web",
+        "viewport": "compact",
+        "input": "touch",
+        "contentScale": "standard"
+      },
+      "resolvedLayout": {
+        "foundation": "stack",
+        "tracks": 1,
+        "composition": "single-primary-flow",
+        "decision": "compact-primary-flow"
+      }
+    },
+    {
+      "name": "compact-touch-mini-program",
+      "semanticTask": "browse-filtered-collection",
+      "context": {
+        "platform": "wechat-mini-program",
+        "viewport": "compact",
+        "input": "touch",
+        "contentScale": "standard"
+      },
+      "resolvedLayout": {
+        "foundation": "stack",
+        "tracks": 1,
+        "composition": "single-primary-flow",
+        "decision": "compact-primary-flow"
+      }
+    },
+    {
+      "name": "wide-keyboard-web",
+      "semanticTask": "browse-filtered-collection",
+      "context": {
+        "platform": "web",
+        "viewport": "wide",
+        "input": "keyboard",
+        "contentScale": "standard"
+      },
+      "resolvedLayout": {
+        "foundation": "grid",
+        "tracks": 3,
+        "composition": "multi-region-eligible",
+        "decision": "wide-collection-grid"
+      }
+    },
+    {
+      "name": "wide-keyboard-ios",
+      "semanticTask": "browse-filtered-collection",
+      "context": {
+        "platform": "ios",
+        "viewport": "wide",
+        "input": "keyboard",
+        "contentScale": "standard"
+      },
+      "resolvedLayout": {
+        "foundation": "grid",
+        "tracks": 3,
+        "composition": "multi-region-eligible",
+        "decision": "wide-collection-grid"
+      }
+    },
+    {
+      "name": "wide-keyboard-enlarged-web",
+      "semanticTask": "browse-filtered-collection",
+      "context": {
+        "platform": "web",
+        "viewport": "wide",
+        "input": "keyboard",
+        "contentScale": "enlarged"
+      },
+      "resolvedLayout": {
+        "foundation": "stack",
+        "tracks": 1,
+        "composition": "adaptive-primary-plus-supporting",
+        "decision": "wide-enlarged-reflow"
+      }
+    }
+  ]
+}
