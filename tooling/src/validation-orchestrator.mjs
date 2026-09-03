@@ -4,7 +4,7 @@ import path from 'node:path';
 import { buildCanonicalDesignModel } from './design-model.mjs';
 import { validateComponentCatalog } from './component-contract.mjs';
 import { validateIconographyContract } from './iconography.mjs';
-import { loadMotionFoundation, validateMotionFoundation } from './motion-foundation.mjs';
+import { validateMotionFoundationContract } from './motion-foundation.mjs';
 import { validatePlatformEnvironmentContract } from './platform-environment.mjs';
 import { validatePlatformModel } from './platform-context.mjs';
 import { validateSourceIntegrity } from './source-integrity.mjs';
@@ -24,6 +24,23 @@ function sha256File(filePath) {
 
 function normalizeMessages(messages) {
   return [...new Set((messages ?? []).filter((message) => typeof message === 'string' && message.trim()))];
+}
+
+function normalizeRepositoryMessage(repoRoot, message) {
+  let normalized = String(message).replaceAll('\\', '/');
+  const roots = new Set([path.resolve(repoRoot)]);
+  try {
+    roots.add(fs.realpathSync(repoRoot));
+  } catch {
+    // A missing fixture root will already fail a repository-owned hard gate.
+  }
+
+  for (const root of roots) {
+    const portableRoot = root.replaceAll('\\', '/').replace(/\/+$/, '');
+    normalized = normalized.split(`${portableRoot}/`).join('');
+    if (normalized === portableRoot) normalized = '.';
+  }
+  return normalized;
 }
 
 function runCheck(id, runner) {
@@ -193,9 +210,15 @@ export function runRepositoryValidation(repoRoot) {
   }));
 
   checks.push(runCheck('motion-foundation', () => {
-    const { contract } = loadMotionFoundation(repoRoot);
+    const contract = canonicalSources.motionContract?.value;
+    const schema = canonicalSources.motionSchema?.value;
+    const errors = [];
+    if (!contract) errors.push('canonical motionContract source is unavailable.');
+    if (!schema) errors.push('canonical motionSchema source is unavailable.');
+    if (errors.length) return { errors };
+
     return {
-      errors: validateMotionFoundation(repoRoot),
+      errors: validateMotionFoundationContract(contract, schema),
       evidence: {
         schemaVersion: contract.schemaVersion ?? null,
         intentCount: contract.intents?.length ?? 0,
@@ -264,8 +287,14 @@ export function runRepositoryValidation(repoRoot) {
     // The source-integrity check already explains why the manifest is unreadable.
   }
 
+  const portableChecks = checks.map((check) => ({
+    ...check,
+    errors: check.errors.map((message) => normalizeRepositoryMessage(repoRoot, message)),
+    warnings: check.warnings.map((message) => normalizeRepositoryMessage(repoRoot, message)),
+  }));
+
   return buildValidationEvidence({
-    checks,
+    checks: portableChecks,
     productVersion: manifest?.$metadata?.version ?? null,
     manifestSha256,
     sourceSha256: canonicalModel?.sourceHash ?? null,
