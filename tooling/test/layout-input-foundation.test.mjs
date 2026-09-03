@@ -119,3 +119,23 @@ test('validator rejects regression of confirmed Stack/Center/Grid responsibiliti
   const errors = validateLayoutInputFoundationContract(invalid, schema, platformModel, manifest);
   assert.ok(errors.some((error) => error.includes('confirmed capability justify')));
 });
+
+test('validator locks modality-specific activation modes', () => {
+  const invalid = clone(contract);
+  invalid.inputRules.touch.activationModes = ['keyboard-activation'];
+  invalid.inputRules.keyboard.activationModes = ['direct-touch'];
+  invalid.inputRules.hybrid.activationModes = ['pointer-activation'];
+  const errors = validateLayoutInputFoundationContract(invalid, schema, platformModel, manifest);
+  assert.ok(errors.some((error) => error.includes('inputRules.touch.activationModes')));
+  assert.ok(errors.some((error) => error.includes('inputRules.keyboard.activationModes')));
+  assert.ok(errors.some((error) => error.includes('inputRules.hybrid.activationModes')));
+});
+
+test('validator requires actual enlarged-scale reflow evidence', () => {
+  const invalid = clone(contract);
+  const standard = invalid.examples.find((example) => example.name === 'wide-keyboard-web');
+  const enlarged = invalid.examples.find((example) => example.name === 'wide-keyboard-enlarged-web');
+  enlarged.resolvedLayout = clone(standard.resolvedLayout);
+  const errors = validateLayoutInputFoundationContract(invalid, schema, platformModel, manifest);
+  assert.ok(errors.some((error) => error.includes('enlarged content scale reflowing')));
+});
