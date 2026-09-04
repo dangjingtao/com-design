@@ -23,6 +23,10 @@ function evaluateCommonJs(source) {
   return module.exports;
 }
 
+function readPath(value, dottedPath) {
+  return dottedPath.split('.').reduce((current, key) => current?.[key], value);
+}
+
 test('WeChat Mini Program adapter emits a directly consumable semantic token module', () => {
   const context = buildContext();
   const files = wechatMiniProgramAdapter.build(null, context);
@@ -66,6 +70,13 @@ test('WeChat Mini Program adapter exposes platform/context and T010 host environ
     evidence.environment.referenceSnapshot.snapshot.chrome[0].comDesignOwned,
     false,
   );
+  for (const hook of Object.values(evidence.environment.runtimeHooks)) {
+    assert.notEqual(
+      readPath(evidence.environment.referenceSnapshot.snapshot, hook),
+      undefined,
+      `runtime hook must exist in T010 environment shape: ${hook}`,
+    );
+  }
 });
 
 test('WeChat Mini Program adapter consumes canonical reduced-motion and platform constraints', () => {
