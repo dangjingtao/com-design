@@ -88,11 +88,11 @@ V2 已确认 Top App Bar、Side Navigation / Rail、递归多级导航需要共�
   - CI #211 暴露 manifest 漏写 `navigationFoundationMapped` release gate，已修复。
   - CI #212 暴露 T013 默认 fallback 会让错误 canonical icon 逃过验证，已改 strict resolution；同时 validation-orchestrator 从 9 个 hard gate 正式扩展为 10 个。
   - Codex review 提出 3 项：release gate、strict icon、active parent 可保持 expanded。三项均确认有效并完成修复，review threads 已 resolve。
-  - CodeRabbit 自动 review 已在 PR #34 触发；其最终队列状态不作为 T020 hard gate，最终放行以 repository hard gates + independent acceptance 为准。
+  - CodeRabbit 对 PR #34 最终给出 4 条 actionable comments：active parent + expanded state 与 sample-tree depth 两项在 review 返回前已于 accepted head 修复；preview 语义控件与 invalid T013 dependency error composition 两项由 follow-up PR #35 修复并新增 regression。
 
 ## Review
 
 - Reviewer: Mira
 - Result: PASS
-- Conclusion: T020 满足全部验收条件。Navigation Foundation 已成为 canonical machine contract，并进入 Canonical Design Model、Validation Evidence 与 Agent Contract；递归、多端 presentation、Host Chrome 边界及 input/a11y 均有真实 machine evidence。实现没有把微信 Capsule、App Shell 或未经验证的 Side Navigation API 误升为 Core Component。
+- Conclusion: T020 满足全部验收条件，并经 PR #35 完成 CodeRabbit follow-up hardening。Navigation Foundation 已成为 canonical machine contract，并进入 Canonical Design Model、Validation Evidence 与 Agent Contract；递归、多端 presentation、Host Chrome 边界及 input/a11y 均有真实 machine evidence。Preview 交互证据现使用可键盘操作的 link/button，且 validator 在 T013 dependency 非法时仍返回可组合错误。实现没有把微信 Capsule、App Shell 或未经验证的 Side Navigation API 误升为 Core Component。
 - Follow-up: T026 总验收应把 Navigation Foundation 纳入 V2 RC readiness；后续若 Side Navigation / Rail 在多个产品形成稳定 anatomy/API，再按 composite promotion rule 决定是否提升为独立 Core Composite。
