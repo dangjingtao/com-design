@@ -5,9 +5,9 @@ export const buildManifestAdapter = Object.freeze({
   target: 'build-manifest',
   family: 'meta',
   outputPaths: Object.freeze(['dist/build-manifest.json']),
-  build(model) {
+  build(model, context = {}) {
     return new Map([
-      ['dist/build-manifest.json', createBuildManifest(model)],
+      ['dist/build-manifest.json', createBuildManifest(model, context)],
     ]);
   },
 });
