@@ -206,7 +206,7 @@ export function createBuildManifest(model) {
       schemaVersion: 1,
       source: 'design-source/colors_and_type.css',
       sourceHash: model.sourceHash,
-      targets: ['tailwind', 'nativewind', 'react-native', 'mcp'],
+      targets: ['tailwind', 'native-mobile', 'nativewind', 'react-native', 'mcp'],
       tokenCount: model.consumer.length,
       themes: Object.values(model.themes ?? {}).map((theme) => theme.name),
     }) + '\n'

@@ -41,7 +41,8 @@ export function parseNamedScope(source, selector) {
   const re = new RegExp(BLOCK_RE.source, 'g');
   let block;
   while ((block = re.exec(source)) !== null) {
-    const selectors = block[1].split(',').map((item) => item.trim());
+    const selectorText = block[1].replace(/\/\*[\s\S]*?\*\//g, ' ').trim();
+    const selectors = selectorText.split(',').map((item) => item.trim());
     if (!selectors.includes(selector)) continue;
     Object.assign(output, parseDeclarations(block[2]));
   }

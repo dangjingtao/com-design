@@ -51,6 +51,13 @@ test('builds Canonical Design Model V2 from accepted canonical sources', () => {
   assert.equal(model.platform.platforms.length, 4);
   assert.equal(model.layoutInput.id, 'com-design:layout-input-foundation:v2');
   assert.equal(model.layoutInput.schemaVersion, 2);
+  assert.equal(model.motion.id, 'com-design:motion-foundation:v2');
+  assert.equal(model.motion.schemaVersion, 2);
+  assert.equal(model.motion.contract.reducedMotion.firstClass, true);
+  assert.equal(
+    model.motion.provenance.sourcePath,
+    'design-source/specs/motion-foundation-v2.json',
+  );
   assert.deepEqual(
     model.layoutInput.contract.axes.input,
     ['touch', 'pointer', 'keyboard', 'hybrid'],
@@ -89,8 +96,8 @@ test('preserves declared adapter maturity instead of inferring implementation st
   );
 
   assert.deepEqual(maturity, {
-    ios: 'partial',
-    android: 'partial',
+    ios: 'implemented',
+    android: 'implemented',
     web: 'implemented',
     'wechat-mini-program': 'planned',
   });
@@ -221,5 +228,18 @@ test('rejects invalid canonical layout/input contract before model emission', ()
   assert.throws(
     () => buildCanonicalDesignModel(fixture),
     /layout\/input foundation: layoutInputFoundation\.schemaVersion: must equal 2/,
+  );
+});
+
+
+test('rejects invalid canonical motion contract before model emission', () => {
+  const fixture = copyDesignSourceFixture();
+  const motion = readFixtureJson(fixture, 'specs/motion-foundation-v2.json');
+  delete motion.reducedMotion;
+  writeFixtureJson(fixture, 'specs/motion-foundation-v2.json', motion);
+
+  assert.throws(
+    () => buildCanonicalDesignModel(fixture),
+    /motion foundation: motionFoundation\.reducedMotion: is required/,
   );
 });

@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { tailwindAdapter } from './tailwind.mjs';
+import { nativeMobileAdapter } from './native-mobile.mjs';
 import { nativeWindAdapter } from './nativewind.mjs';
 import { reactNativeAdapter } from './react-native.mjs';
 import { buildManifestAdapter } from './build-manifest.mjs';
@@ -145,6 +146,7 @@ export function createAdapterRegistry(initialAdapters = []) {
 
 export const builtInEngineeringAdapters = Object.freeze([
   tailwindAdapter,
+  nativeMobileAdapter,
   nativeWindAdapter,
   reactNativeAdapter,
   buildManifestAdapter,
