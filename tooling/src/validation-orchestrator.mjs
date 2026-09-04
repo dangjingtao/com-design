@@ -24,6 +24,14 @@ function sha256File(filePath) {
   return crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
 }
 
+function navigationTreeDepth(nodes, depth = 1) {
+  let result = 0;
+  for (const node of nodes ?? []) {
+    result = Math.max(result, depth, navigationTreeDepth(node?.children, depth + 1));
+  }
+  return result;
+}
+
 function normalizeMessages(messages) {
   return [...new Set((messages ?? []).filter((message) => typeof message === 'string' && message.trim()))];
 }
@@ -266,7 +274,7 @@ export function runRepositoryValidation(repoRoot) {
       ),
       evidence: {
         schemaVersion: contract.schemaVersion ?? null,
-        sampleTreeDepth: 4,
+        sampleTreeDepth: navigationTreeDepth(contract.sampleTree),
         exampleCount: contract.examples?.length ?? 0,
         responsivePresentations: Object.fromEntries(
           Object.entries(contract.responsiveMapping ?? {}).map(([viewport, rule]) => [
