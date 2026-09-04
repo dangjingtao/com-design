@@ -99,7 +99,7 @@ test('preserves declared adapter maturity instead of inferring implementation st
     ios: 'implemented',
     android: 'implemented',
     web: 'implemented',
-    'wechat-mini-program': 'planned',
+    'wechat-mini-program': 'implemented',
   });
 });
 
