@@ -5,6 +5,7 @@ import { buildCanonicalDesignModel } from './design-model.mjs';
 import { validateComponentCatalog } from './component-contract.mjs';
 import { validateIconographyContract } from './iconography.mjs';
 import { validateLayoutInputFoundationContract } from './layout-input-foundation.mjs';
+import { validateNavigationFoundationContract } from './navigation-foundation.mjs';
 import { validateMotionFoundationContract } from './motion-foundation.mjs';
 import { validatePlatformEnvironmentContract } from './platform-environment.mjs';
 import { validatePlatformModel } from './platform-context.mjs';
@@ -233,6 +234,51 @@ export function runRepositoryValidation(repoRoot) {
     };
   }));
 
+  checks.push(runCheck('navigation-foundation', () => {
+    const contract = canonicalSources.navigationFoundation?.value;
+    const schema = canonicalSources.navigationSchema?.value;
+    const platformModel = canonicalSources.platformModel?.value;
+    const layoutInputFoundation = canonicalSources.layoutInputFoundation?.value;
+    const platformEnvironment = canonicalSources.platformEnvironment?.value;
+    const iconography = canonicalSources.iconography?.value;
+    const iconographySchema = canonicalSources.iconographySchema?.value;
+    const errors = [];
+    if (!contract) errors.push('canonical navigationFoundation source is unavailable.');
+    if (!schema) errors.push('canonical navigationSchema source is unavailable.');
+    if (!platformModel) errors.push('canonical platformModel source is unavailable.');
+    if (!layoutInputFoundation) errors.push('canonical layoutInputFoundation source is unavailable.');
+    if (!platformEnvironment) errors.push('canonical platformEnvironment source is unavailable.');
+    if (!iconography) errors.push('canonical iconography source is unavailable.');
+    if (!iconographySchema) errors.push('canonical iconographySchema source is unavailable.');
+    if (!manifest) errors.push('canonical manifest is unavailable.');
+    if (errors.length) return { errors };
+
+    return {
+      errors: validateNavigationFoundationContract(
+        contract,
+        schema,
+        platformModel,
+        layoutInputFoundation,
+        platformEnvironment,
+        iconography,
+        iconographySchema,
+        manifest,
+      ),
+      evidence: {
+        schemaVersion: contract.schemaVersion ?? null,
+        sampleTreeDepth: 4,
+        exampleCount: contract.examples?.length ?? 0,
+        responsivePresentations: Object.fromEntries(
+          Object.entries(contract.responsiveMapping ?? {}).map(([viewport, rule]) => [
+            viewport,
+            rule.defaultPresentation,
+          ]),
+        ),
+        hostChromeIsCore: contract.topAppBar?.hostChromeIsCoreComponent ?? null,
+      },
+    };
+  }));
+
   checks.push(runCheck('motion-foundation', () => {
     const contract = canonicalSources.motionContract?.value;
     const schema = canonicalSources.motionSchema?.value;
@@ -299,6 +345,7 @@ export function runRepositoryValidation(repoRoot) {
         componentCount: canonicalModel.components?.length ?? 0,
         compositeCount: canonicalModel.composites?.length ?? 0,
         patternCount: canonicalModel.patterns?.length ?? 0,
+        navigationFoundationId: canonicalModel.navigation?.id ?? null,
         platformCount: canonicalModel.platform?.platforms?.length ?? 0,
       },
     };
