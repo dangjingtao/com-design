@@ -36,7 +36,7 @@
       "ios": { "status": "implemented", "basis": "Native Mobile Adapter V2 provides explicit iOS platform/context semantics, 44-point touch policy, native-safe shadow/motion/typography structures, environment evidence, and a migration path for existing React Native/NativeWind consumers." },
       "android": { "status": "implemented", "basis": "Native Mobile Adapter V2 provides explicit Android platform/context semantics, 48-dp touch policy, native-safe shadow/motion/typography structures, environment evidence, and a migration path for existing React Native/NativeWind consumers." },
       "web": { "status": "implemented", "basis": "Web Tailwind output is derived from Canonical Design Model V2 with explicit Web platform/context evidence and environment-backed pointer, keyboard and focus capability mapping; responsive/input behavior is consumed from the accepted T012 foundation." },
-      "wechat-mini-program": { "status": "planned", "basis": "No Mini Program adapter exists on dev; T009 owns the minimum viable adapter." }
+      "wechat-mini-program": { "status": "implemented", "basis": "T009 provides a generated CommonJS semantic-token module plus platform/context metadata backed by Canonical Design Model V2, T010 environment hooks and T011 reduced-motion policy; a full Core Component package remains outside first-stage scope." }
     }
   },
   "sources": {

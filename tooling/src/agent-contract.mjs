@@ -24,7 +24,7 @@ const PLATFORM_SUPPORTING_FAMILY = Object.freeze({
   web: 'web',
   ios: 'native-mobile',
   android: 'native-mobile',
-  'wechat-mini-program': 'wechat-mini-program',
+  'wechat-mini-program': 'mini-program',
 });
 
 function implementationPath(platform, registeredAdapters) {

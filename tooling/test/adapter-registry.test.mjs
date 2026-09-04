@@ -61,6 +61,15 @@ test('built-in registry exposes stable adapter IDs and target mapping', () => {
         outputPaths: ['dist/native-mobile/adapter.json'],
       },
       {
+        id: 'mini-program.wechat',
+        target: 'wechat-mini-program',
+        family: 'mini-program',
+        outputPaths: [
+          'dist/wechat-mini-program/tokens.js',
+          'dist/wechat-mini-program/adapter.json',
+        ],
+      },
+      {
         id: 'native-mobile.nativewind',
         target: 'nativewind',
         family: 'native-mobile',
@@ -130,6 +139,8 @@ test('registry preserves current engineering output paths and source revision ev
     'dist/tailwind/theme.css',
     'dist/tailwind/adapter.json',
     'dist/native-mobile/adapter.json',
+    'dist/wechat-mini-program/tokens.js',
+    'dist/wechat-mini-program/adapter.json',
     'dist/nativewind/preset.cjs',
     'dist/nativewind/theme.css',
     'dist/react-native/tokens.ts',
@@ -142,7 +153,19 @@ test('registry preserves current engineering output paths and source revision ev
 
   const manifest = JSON.parse(files.get('dist/build-manifest.json'));
   assert.equal(manifest.sourceHash, 'fixture-source-revision');
-  assert.deepEqual(manifest.targets, ['tailwind', 'native-mobile', 'nativewind', 'react-native', 'mcp']);
+  assert.deepEqual(manifest.targets, [
+    'tailwind',
+    'native-mobile',
+    'wechat-mini-program',
+    'nativewind',
+    'react-native',
+    'mcp',
+  ]);
+  assert.equal(
+    manifest.canonicalSourceHash,
+    webBuildContext().canonicalModel.sourceHash,
+  );
+  assert.equal(manifest.platformMaturity['wechat-mini-program'], 'implemented');
 });
 
 test('new platform adapter can be registered without changing central build plumbing', () => {

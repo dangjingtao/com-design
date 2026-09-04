@@ -47,9 +47,12 @@ test('T014 rejects invalid or contradictory platform context instead of guessing
   const mini = createAgentContract(repoRoot, {
     context: { ...webContext, platform: 'wechat-mini-program', viewport: 'compact', input: 'touch' },
   });
-  assert.equal(mini.target.implementationPath.readiness, 'incomplete');
+  assert.equal(mini.target.implementationPath.readiness, 'ready');
   assert.equal(mini.target.implementationPath.ownerTask, 'T009');
-  assert.deepEqual(mini.target.implementationPath.supportingOutputs, []);
+  assert.deepEqual(
+    mini.target.implementationPath.supportingOutputs.map((entry) => entry.id),
+    ['mini-program.wechat'],
+  );
 });
 
 test('T014 keeps hard compliance separate from human judgement', () => {
