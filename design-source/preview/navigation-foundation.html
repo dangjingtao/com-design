@@ -17,9 +17,12 @@
   .side { width: 220px; padding: var(--space-12); border-right: 1px solid var(--color-border-subtle); }
   .rail { width: 72px; padding: var(--space-12) var(--space-8); border-right: 1px solid var(--color-border-subtle); }
   .content { flex: 1; padding: var(--space-20); color: var(--color-text-secondary); font: var(--type-body); }
-  .nav-item { display: flex; align-items: center; min-height: 40px; padding: 0 var(--space-12); gap: var(--space-8); border-radius: var(--radius-control); font: var(--type-label); }
+  .nav-row { display: flex; align-items: center; color: var(--color-text-primary); }
+  .nav-item { display: flex; align-items: center; min-height: 40px; padding: 0 var(--space-12); gap: var(--space-8); border: 0; border-radius: var(--radius-control); background: transparent; color: inherit; font: var(--type-label); text-decoration: none; }
+  .nav-row .nav-item { flex: 1; min-width: 0; }
   .nav-item.active { background: var(--color-surface-selected); color: var(--color-text-brand); }
-  .nav-item.ancestor { color: var(--color-text-primary); }
+  .disclosure { width: 40px; min-height: 40px; border: 0; border-radius: var(--radius-control); background: transparent; color: inherit; font: inherit; }
+  .nav-item:focus-visible, .disclosure:focus-visible, .bottom-item:focus-visible, .action:focus-visible { outline: 2px solid var(--color-focus-ring); outline-offset: 2px; }
   .indent-1 { padding-left: var(--space-24); }
   .indent-2 { padding-left: var(--space-32); }
   .indent-3 { padding-left: calc(var(--space-32) + var(--space-8)); }
@@ -29,14 +32,14 @@
   .mobile { position: relative; width: 100%; min-height: 270px; padding-bottom: 64px; }
   .mobile-content { padding: var(--space-20); color: var(--color-text-secondary); }
   .bottom-nav { position: absolute; inset: auto 0 0; min-height: 64px; display: flex; border-top: 1px solid var(--color-border-subtle); background: var(--color-surface); }
-  .bottom-item { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: var(--space-4); font: var(--type-label-small); color: var(--color-text-tertiary); }
+  .bottom-item { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: var(--space-4); border: 0; background: transparent; font: var(--type-label-small); color: var(--color-text-tertiary); text-decoration: none; }
   .bottom-item.active { color: var(--color-text-brand); }
   .wechat { position: relative; min-height: 270px; background: var(--color-surface); }
   .host-zone { height: 47px; background: var(--color-background-secondary); position: relative; }
   .capsule { position: absolute; right: 17px; top: 7px; width: 87px; height: 32px; border: 1px dashed var(--color-border-strong); border-radius: var(--radius-pill); display: flex; align-items: center; justify-content: center; color: var(--color-text-tertiary); font: var(--type-label-small); }
   .app-bar { min-height: var(--size-control-height-lg); display: grid; grid-template-columns: 44px minmax(0, 1fr) 104px; align-items: center; padding: 0 var(--space-16); border-bottom: 1px solid var(--color-border-subtle); }
   .app-title { text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--type-heading); }
-  .action { min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+  .action { min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; border: 0; background: transparent; color: inherit; font: inherit; }
   .reserved-note { margin: var(--space-16); padding: var(--space-12); border-radius: var(--radius-control); background: var(--color-surface-selected); color: var(--color-text-secondary); font: var(--type-body-small); }
 </style>
 </head>
@@ -47,11 +50,20 @@
     <div class="caption">wide → Side Navigation · recursive active ancestor chain</div>
     <div class="shell">
       <nav class="side" aria-label="Primary">
-        <div class="nav-item"><span class="dot"></span><span>Home</span></div>
-        <div class="nav-item ancestor"><span class="dot"></span><span>Workspace</span><span aria-hidden="true">▾</span></div>
-        <div class="nav-item indent-1 ancestor">Settings <span aria-hidden="true">▾</span></div>
-        <div class="nav-item indent-2 ancestor">Security <span aria-hidden="true">▾</span></div>
-        <div class="nav-item indent-3 active" aria-current="page">Audit history</div>
+        <a class="nav-item" href="#home"><span class="dot"></span><span>Home</span></a>
+        <div class="nav-row">
+          <a class="nav-item" href="#workspace"><span class="dot"></span><span>Workspace</span></a>
+          <button class="disclosure" type="button" aria-label="Collapse Workspace" aria-expanded="true">▾</button>
+        </div>
+        <div class="nav-row indent-1">
+          <a class="nav-item" href="#settings">Settings</a>
+          <button class="disclosure" type="button" aria-label="Collapse Settings" aria-expanded="true">▾</button>
+        </div>
+        <div class="nav-row indent-2">
+          <a class="nav-item" href="#security">Security</a>
+          <button class="disclosure" type="button" aria-label="Collapse Security" aria-expanded="true">▾</button>
+        </div>
+        <a class="nav-item indent-3 active" href="#audit-history" aria-current="page">Audit history</a>
       </nav>
       <main class="content">Destination state and disclosure state are separate; active ancestors remain visible.</main>
     </div>
@@ -61,9 +73,9 @@
     <div class="caption">medium → Navigation Rail · icon-first with accessible labels</div>
     <div class="shell">
       <nav class="rail" aria-label="Primary">
-        <div class="nav-item active" aria-current="page"><span class="dot"></span><span class="label">Home</span></div>
-        <div class="nav-item"><span class="dot"></span><span class="label">Workspace</span></div>
-        <div class="nav-item"><span class="dot"></span><span class="label">Settings</span></div>
+        <a class="nav-item active" href="#rail-home" aria-current="page"><span class="dot"></span><span class="label">Home</span></a>
+        <a class="nav-item" href="#rail-workspace"><span class="dot"></span><span class="label">Workspace</span></a>
+        <a class="nav-item" href="#rail-settings"><span class="dot"></span><span class="label">Settings</span></a>
       </nav>
       <main class="content">Rail is a compact presentation candidate, not a new destination model.</main>
     </div>
@@ -74,10 +86,10 @@
     <div class="mobile">
       <div class="mobile-content">Deep destinations move to Drawer/Sheet multi-level navigation instead of growing the bottom bar.</div>
       <nav class="bottom-nav" aria-label="Primary">
-        <div class="bottom-item active" aria-current="page"><span class="dot"></span>Home</div>
-        <div class="bottom-item"><span class="dot"></span>Work</div>
-        <div class="bottom-item"><span class="dot"></span>Settings</div>
-        <div class="bottom-item"><span class="dot"></span>Profile</div>
+        <a class="bottom-item active" href="#mobile-home" aria-current="page"><span class="dot"></span>Home</a>
+        <a class="bottom-item" href="#mobile-work"><span class="dot"></span>Work</a>
+        <a class="bottom-item" href="#mobile-settings"><span class="dot"></span>Settings</a>
+        <a class="bottom-item" href="#mobile-profile"><span class="dot"></span>Profile</a>
       </nav>
     </div>
   </section>
@@ -89,9 +101,9 @@
         <div class="capsule" aria-label="Host-owned capsule reserved region">Host Capsule</div>
       </div>
       <header class="app-bar">
-        <div class="action" aria-label="Back">←</div>
+        <button class="action" type="button" aria-label="Back">←</button>
         <div class="app-title">安全区域内居中标题</div>
-        <div class="action" aria-label="Search">⌕</div>
+        <button class="action" type="button" aria-label="Search">⌕</button>
       </header>
       <div class="reserved-note">Capsule is evidence of a T010 reserved region, not a Com Design Core component. Trailing actions reduce/overflow before overlap.</div>
     </div>
