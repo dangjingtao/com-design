@@ -124,10 +124,6 @@ function validateSampleTree(contract, iconRegistry) {
       errors.push(`stateExample.expandedNodeIds contains non-expandable node: ${id}`);
     }
   }
-  if (state.activeDestinationId && (state.expandedNodeIds ?? []).includes(state.activeDestinationId)) {
-    errors.push('active destination state and expansion state must remain separate identifiers.');
-  }
-
   return errors;
 }
 
