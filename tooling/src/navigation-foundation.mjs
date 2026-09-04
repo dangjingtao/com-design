@@ -89,7 +89,7 @@ function validateSampleTree(contract, iconRegistry) {
     if (node.destination && Array.isArray(node.children) && node.children.length) {
       parentDestinationWithChildren = true;
     }
-    if (typeof node.icon === 'string') {
+    if (typeof node.icon === 'string' && iconRegistry) {
       try {
         iconRegistry.resolve(node.icon, { decorative: true, strict: true });
       } catch (error) {
@@ -165,7 +165,12 @@ export function validateNavigationFoundationContract(
     if (value !== true) errors.push(`navigation principle ${key} must remain true.`);
   }
 
-  const iconRegistry = createIconRegistry(iconography, iconographySchema);
+  let iconRegistry = null;
+  try {
+    iconRegistry = createIconRegistry(iconography, iconographySchema);
+  } catch (error) {
+    errors.push(`T013 iconography dependency is invalid: ${error instanceof Error ? error.message : String(error)}`);
+  }
   errors.push(...validateSampleTree(contract, iconRegistry));
 
   const canonicalViewports = axisValues(platformModel, 'viewport');
@@ -223,6 +228,7 @@ export function validateNavigationFoundationContract(
     }
 
     for (const action of example.topAppBarActions ?? []) {
+      if (!iconRegistry) continue;
       try {
         iconRegistry.adapt(action.icon, {
           size: 20,
