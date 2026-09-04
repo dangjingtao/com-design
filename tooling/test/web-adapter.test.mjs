@@ -27,7 +27,7 @@ test('Web Adapter V2 preserves the Tailwind semantic consumer path from Canonica
   assert.match(preset, /"background": "var\\(--cd-color-background\\)"/);
   assert.match(themeCss, /--cd-color-primary:/);
   assert.match(themeCss, /\\.theme-premium-gold/);
-  assert.match(themeCss, /\\[data-com-theme="premium-gold"\\]/);
+  assert.ok(themeCss.includes('[data-com-theme="premium-gold"]'));
 });
 
 test('Web Adapter V2 emits explicit platform, context and input capability evidence', () => {
