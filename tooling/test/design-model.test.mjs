@@ -96,8 +96,8 @@ test('preserves declared adapter maturity instead of inferring implementation st
   );
 
   assert.deepEqual(maturity, {
-    ios: 'partial',
-    android: 'partial',
+    ios: 'implemented',
+    android: 'implemented',
     web: 'implemented',
     'wechat-mini-program': 'planned',
   });
