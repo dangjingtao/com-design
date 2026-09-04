@@ -16,6 +16,7 @@
     "platformContextSource": "sources.platformModel",
     "platformEnvironmentSource": "sources.platformEnvironment",
     "layoutInputFoundationSource": "sources.layoutInputFoundation",
+    "navigationFoundationSource": "sources.navigationFoundation",
     "axes": {
       "density": { "default": "compact", "supported": ["compact", "comfortable"] },
       "platform": { "supported": ["ios", "android", "web", "wechat-mini-program"] },
@@ -51,6 +52,8 @@
     "platformEnvironment": "./platform-environment-v1.json",
     "layoutInputSchema": "../schemas/layout-input-foundation-v2.schema.json",
     "layoutInputFoundation": "./layout-input-foundation-v2.json",
+    "navigationSchema": "../schemas/navigation-foundation-v2.schema.json",
+    "navigationFoundation": "./navigation-foundation-v2.json",
     "motionSchema": "../schemas/motion-foundation-v2.schema.json",
     "motionContract": "./motion-foundation-v2.json",
     "iconographySchema": "../schemas/iconography-contract-v1.schema.json",
