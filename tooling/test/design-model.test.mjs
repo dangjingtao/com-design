@@ -49,6 +49,16 @@ test('builds Canonical Design Model V2 from accepted canonical sources', () => {
   assert.equal(model.composites.length, 4);
   assert.equal(model.patterns.length, 6);
   assert.equal(model.platform.platforms.length, 4);
+  assert.equal(model.layoutInput.id, 'com-design:layout-input-foundation:v2');
+  assert.equal(model.layoutInput.schemaVersion, 2);
+  assert.deepEqual(
+    model.layoutInput.contract.axes.input,
+    ['touch', 'pointer', 'keyboard', 'hybrid'],
+  );
+  assert.equal(
+    model.layoutInput.provenance.sourcePath,
+    'design-source/specs/layout-input-foundation-v2.json',
+  );
   assert.deepEqual(validateCanonicalDesignModel(model), []);
 
   assert.ok(model.tokens.entries.length > 0);
