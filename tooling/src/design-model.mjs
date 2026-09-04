@@ -280,6 +280,7 @@ function normalizeTokens(repoRoot, tokenModel, foundationSource) {
         {
           id: `theme:${theme.name}`,
           name: theme.name,
+          selector: theme.selector,
           dataSelector: theme.dataSelector,
           light: theme.light,
           dark: theme.dark,
