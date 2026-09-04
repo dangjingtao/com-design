@@ -43,26 +43,77 @@ test('Web Adapter V2 emits explicit platform, context and input capability evide
   assert.equal(evidence.targetPlatform.maturity.status, 'implemented');
   assert.deepEqual(evidence.context.axes.input, ['touch', 'pointer', 'keyboard', 'hybrid']);
   assert.equal(evidence.context.platformDoesNotInferAxes, true);
+  assert.equal(
+    evidence.responsiveInput.id,
+    'com-design:layout-input-foundation:v2',
+  );
+  assert.deepEqual(
+    evidence.responsiveInput.viewportRules,
+    context.canonicalModel.layoutInput.contract.viewportRules,
+  );
+  assert.deepEqual(
+    evidence.responsiveInput.inputRules,
+    context.canonicalModel.layoutInput.contract.inputRules,
+  );
+  assert.deepEqual(
+    evidence.responsiveInput.interactionStatePolicy,
+    context.canonicalModel.layoutInput.contract.interactionStatePolicy,
+  );
+  assert.deepEqual(
+    evidence.responsiveInput.contentScaleRules,
+    context.canonicalModel.layoutInput.contract.contentScaleRules,
+  );
 
   assert.equal(evidence.capabilities.pointer.supported, true);
   assert.equal(evidence.capabilities.pointer.hover, true);
-  assert.deepEqual(evidence.capabilities.pointer.activeWhen, ['pointer', 'hybrid']);
+  assert.deepEqual(
+    evidence.capabilities.pointer.activeWhen,
+    context.canonicalModel.layoutInput.contract.interactionStatePolicy.hover
+      .appliesToInput,
+  );
   assert.equal(evidence.capabilities.pointer.coreSemanticFork, false);
 
   assert.equal(evidence.capabilities.keyboard.supported, true);
   assert.equal(evidence.capabilities.keyboard.composition, true);
-  assert.deepEqual(evidence.capabilities.keyboard.activeWhen, ['keyboard', 'hybrid']);
+  assert.deepEqual(
+    evidence.capabilities.keyboard.activeWhen,
+    Object.entries(context.canonicalModel.layoutInput.contract.inputRules)
+      .filter(([, rule]) => rule.activationModes.includes('keyboard-activation'))
+      .map(([input]) => input),
+  );
   assert.equal(evidence.capabilities.keyboard.coreSemanticFork, false);
 
   assert.equal(evidence.capabilities.focus.supported, true);
   assert.equal(evidence.capabilities.focus.focusVisible, 'required');
   assert.deepEqual(
     evidence.capabilities.focus.focusVisibleRequiredFor,
-    ['keyboard', 'hybrid'],
+    context.canonicalModel.layoutInput.contract.interactionStatePolicy[
+      'focus-visible'
+    ].appliesToInput,
   );
   assert.equal(evidence.capabilities.focus.coreSemanticFork, false);
   assert.equal(evidence.contract.coreSemanticFork, false);
   assert.equal(evidence.contract.domCssStructureRequired, false);
+});
+
+test('Web Adapter V2 carries future canonical T012 rule changes instead of hard-coding Web policy', () => {
+  const context = buildContext();
+  const mutatedModel = structuredClone(context.canonicalModel);
+  mutatedModel.layoutInput.contract.viewportRules.wide.guidance.push(
+    'review-fixture-rule-proves-canonical-consumption',
+  );
+
+  const files = tailwindAdapter.build(null, {
+    ...context,
+    canonicalModel: mutatedModel,
+  });
+  const evidence = JSON.parse(files.get('dist/tailwind/adapter.json'));
+
+  assert.ok(
+    evidence.responsiveInput.viewportRules.wide.guidance.includes(
+      'review-fixture-rule-proves-canonical-consumption',
+    ),
+  );
 });
 
 test('Web Tailwind generation does not interpret platform-neutral component CSS or DOM strings', () => {
@@ -100,6 +151,16 @@ test('Web Adapter V2 rejects missing canonical or environment evidence instead o
   );
 
   const context = buildContext();
+  assert.throws(
+    () => tailwindAdapter.build(null, {
+      canonicalModel: {
+        ...context.canonicalModel,
+        layoutInput: null,
+      },
+      platformEnvironment: context.platformEnvironment,
+    }),
+    /requires canonical T012 layout\/input foundation/,
+  );
   assert.throws(
     () => tailwindAdapter.build(null, {
       canonicalModel: context.canonicalModel,
