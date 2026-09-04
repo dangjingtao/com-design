@@ -161,6 +161,21 @@ test('T020 consumes real T010 WeChat reserved regions and T013 stable icons', ()
   );
 });
 
+test('T020 returns composable navigation errors when the T013 dependency is invalid', () => {
+  const value = sources();
+  value.iconography.icons.push(structuredClone(value.iconography.icons[0]));
+  value.contract.stateExample.activeAncestorIds = ['workspace'];
+
+  const errors = validate(value);
+  assert.ok(
+    errors.some((error) => error.includes('T013 iconography dependency is invalid')),
+  );
+  assert.ok(
+    errors.some((error) =>
+      error.includes('must equal the derived active destination ancestor chain')),
+  );
+});
+
 test('T020 keyboard/touch rules are downstream of T012 rather than platform guesses', () => {
   const value = sources();
   assert.equal(
@@ -300,4 +315,9 @@ test('T020 keeps focused preview evidence for wide, Rail, compact and WeChat hos
   }
   assert.match(preview, /Host Capsule/);
   assert.match(preview, /not a Com Design Core component/);
+  assert.match(preview, /<a class="nav-item" href="#home">/);
+  assert.match(preview, /<button class="disclosure"[^>]+aria-expanded="true">/);
+  assert.match(preview, /<a class="bottom-item active"[^>]+aria-current="page">/);
+  assert.match(preview, /<button class="action" type="button" aria-label="Back">/);
+  assert.match(preview, /<button class="action" type="button" aria-label="Search">/);
 });
