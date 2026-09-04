@@ -47,6 +47,24 @@ function axisValues(model, name) {
   return [...axis.values];
 }
 
+function requireLayoutInputFoundation(model) {
+  const layoutInput = model?.layoutInput;
+  if (
+    layoutInput?.id !== 'com-design:layout-input-foundation:v2'
+    || layoutInput?.schemaVersion !== 2
+    || !layoutInput?.contract
+  ) {
+    throw new Error('web.tailwind requires canonical T012 layout/input foundation.');
+  }
+  return layoutInput;
+}
+
+function inputContextsWithActivation(inputRules, activationMode) {
+  return Object.entries(inputRules ?? {})
+    .filter(([, rule]) => (rule?.activationModes ?? []).includes(activationMode))
+    .map(([input]) => input);
+}
+
 function requireWebEnvironment(platformEnvironment) {
   const example = platformEnvironment?.examples?.find((entry) => entry.platform === 'web');
   if (!example?.snapshot) {
@@ -62,6 +80,17 @@ function createWebAdapterEvidence(model, platformEnvironment) {
   }
 
   const snapshot = requireWebEnvironment(platformEnvironment);
+  const layoutInput = requireLayoutInputFoundation(model);
+  const layoutContract = layoutInput.contract;
+  const hoverInputs =
+    layoutContract.interactionStatePolicy?.hover?.appliesToInput ?? [];
+  const focusVisibleInputs =
+    layoutContract.interactionStatePolicy?.['focus-visible']?.appliesToInput ?? [];
+  const keyboardInputs = inputContextsWithActivation(
+    layoutContract.inputRules,
+    'keyboard-activation',
+  );
+
   return {
     schemaVersion: 2,
     id: 'com-design:web-adapter:v2',
@@ -101,7 +130,7 @@ function createWebAdapterEvidence(model, platformEnvironment) {
       pointer: {
         ...snapshot.pointer,
         contextAxis: 'input',
-        activeWhen: ['pointer', 'hybrid'],
+        activeWhen: [...hoverInputs],
         coreSemanticFork: false,
       },
       keyboard: {
@@ -109,21 +138,34 @@ function createWebAdapterEvidence(model, platformEnvironment) {
         composition: snapshot.keyboardIme?.composition === true,
         viewportBehavior: snapshot.keyboardIme?.viewportBehavior ?? null,
         contextAxis: 'input',
-        activeWhen: ['keyboard', 'hybrid'],
+        activeWhen: keyboardInputs,
         coreSemanticFork: false,
       },
       focus: {
         ...snapshot.focus,
         contextAxis: 'input',
-        focusVisibleRequiredFor: ['keyboard', 'hybrid'],
+        focusVisibleRequiredFor: [...focusVisibleInputs],
         coreSemanticFork: false,
       },
+    },
+    responsiveInput: {
+      id: layoutInput.id,
+      schemaVersion: layoutInput.schemaVersion,
+      provenance: layoutInput.provenance,
+      foundations: layoutContract.foundations,
+      viewportRules: layoutContract.viewportRules,
+      inputRules: layoutContract.inputRules,
+      interactionStatePolicy: layoutContract.interactionStatePolicy,
+      contentScaleRules: layoutContract.contentScaleRules,
+      adaptation: layoutContract.adaptation,
+      integrationHooks: layoutContract.integrationHooks,
     },
     contract: {
       coreSemanticFork: false,
       presentationOwnedBy: 'web-adapter',
       componentContractConsumption: 'none-for-tailwind-token-generation',
       domCssStructureRequired: false,
+      responsiveInputSource: 'canonical-model.layoutInput',
     },
   };
 }
