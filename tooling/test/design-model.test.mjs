@@ -49,9 +49,24 @@ test('builds Canonical Design Model V2 from accepted canonical sources', () => {
   assert.equal(model.composites.length, 4);
   assert.equal(model.patterns.length, 6);
   assert.equal(model.platform.platforms.length, 4);
+  assert.equal(model.layoutInput.id, 'com-design:layout-input-foundation:v2');
+  assert.equal(model.layoutInput.schemaVersion, 2);
+  assert.deepEqual(
+    model.layoutInput.contract.axes.input,
+    ['touch', 'pointer', 'keyboard', 'hybrid'],
+  );
+  assert.equal(
+    model.layoutInput.provenance.sourcePath,
+    'design-source/specs/layout-input-foundation-v2.json',
+  );
   assert.deepEqual(validateCanonicalDesignModel(model), []);
 
   assert.ok(model.tokens.entries.length > 0);
+  assert.equal(model.tokens.themes.premiumGold.selector, '.theme-premium-gold');
+  assert.equal(
+    model.tokens.themes.premiumGold.dataSelector,
+    '[data-com-theme="premium-gold"]',
+  );
   assert.ok(model.tokens.entries.every((entry) => entry.id === `token:${entry.name}`));
   assert.ok(model.components.every((entry) => entry.id === `component:${entry.slug}`));
   assert.ok(model.composites.every((entry) => entry.id === `composite:${entry.sourceId}`));
@@ -76,7 +91,7 @@ test('preserves declared adapter maturity instead of inferring implementation st
   assert.deepEqual(maturity, {
     ios: 'partial',
     android: 'partial',
-    web: 'partial',
+    web: 'implemented',
     'wechat-mini-program': 'planned',
   });
 });

@@ -99,11 +99,11 @@ export function createAdapterRegistry(initialAdapters = []) {
       return adapters.map(publicDescriptor);
     },
 
-    build(model) {
+    build(model, context = {}) {
       const files = new Map();
 
       for (const adapter of adapters) {
-        const built = adapter.build(model);
+        const built = adapter.build(model, context);
         if (!(built instanceof Map)) {
           throw new TypeError(`adapter ${adapter.id} build(model) must return a Map.`);
         }
@@ -163,8 +163,9 @@ export function writeRegisteredEngineeringOutputs(
   repoRoot,
   model,
   registry = engineeringAdapterRegistry,
+  context = {},
 ) {
-  const files = registry.build(model);
+  const files = registry.build(model, context);
 
   for (const [relativePath, content] of files) {
     const target = path.join(repoRoot, relativePath);

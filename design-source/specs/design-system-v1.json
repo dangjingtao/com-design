@@ -35,7 +35,7 @@
     "adapterMaturity": {
       "ios": { "status": "partial", "basis": "Shared React Native token output and iOS touch-target mapping exist; native platform/component contract remains V2 work." },
       "android": { "status": "partial", "basis": "Shared React Native/NativeWind outputs and Android touch-target mapping exist; native platform/component contract remains V2 work." },
-      "web": { "status": "partial", "basis": "Tailwind adapter output exists and the canonical responsive/input foundation is defined by T012; Web Adapter V2 remains downstream T007 work." },
+      "web": { "status": "implemented", "basis": "Web Tailwind output is derived from Canonical Design Model V2 with explicit Web platform/context evidence and environment-backed pointer, keyboard and focus capability mapping; responsive/input behavior is consumed from the accepted T012 foundation." },
       "wechat-mini-program": { "status": "planned", "basis": "No Mini Program adapter exists on dev; T009 owns the minimum viable adapter." }
     }
   },

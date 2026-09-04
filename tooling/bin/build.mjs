@@ -36,7 +36,11 @@ const designModel = buildCanonicalDesignModel(repoRoot);
 const files = [
   writeCanonicalDesignModel(repoRoot, designModel),
   writeAgentContract(repoRoot),
-  ...writeRegisteredEngineeringOutputs(repoRoot, model),
+  ...writeRegisteredEngineeringOutputs(repoRoot, model, undefined, {
+    canonicalModel: designModel,
+    platformEnvironment:
+      sourceIntegrity.evidence.canonicalSources.platformEnvironment?.value ?? null,
+  }),
   ...writeMcpOutput(repoRoot, model),
 ];
 console.log(

@@ -3,12 +3,26 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   createAdapterRegistry,
   createEngineeringAdapterRegistry,
   engineeringAdapterRegistry,
   writeRegisteredEngineeringOutputs,
 } from '../src/adapters/registry.mjs';
+import { buildCanonicalDesignModel } from '../src/design-model.mjs';
+import { validateSourceIntegrity } from '../src/source-integrity.mjs';
+
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+
+function webBuildContext() {
+  const sourceIntegrity = validateSourceIntegrity(repoRoot);
+  return {
+    canonicalModel: buildCanonicalDesignModel(repoRoot),
+    platformEnvironment:
+      sourceIntegrity.evidence.canonicalSources.platformEnvironment?.value ?? null,
+  };
+}
 
 const emptyModel = () => ({
   byType: {},
@@ -34,7 +48,11 @@ test('built-in registry exposes stable adapter IDs and target mapping', () => {
         id: 'web.tailwind',
         target: 'tailwind',
         family: 'web',
-        outputPaths: ['dist/tailwind/preset.cjs', 'dist/tailwind/theme.css'],
+        outputPaths: [
+          'dist/tailwind/preset.cjs',
+          'dist/tailwind/theme.css',
+          'dist/tailwind/adapter.json',
+        ],
       },
       {
         id: 'native-mobile.nativewind',
@@ -96,16 +114,24 @@ test('registry snapshots and freezes registered adapter contracts', () => {
 });
 
 test('registry preserves current engineering output paths and source revision evidence', () => {
-  const files = createEngineeringAdapterRegistry().build(emptyModel());
+  const files = createEngineeringAdapterRegistry().build(
+    emptyModel(),
+    webBuildContext(),
+  );
 
   assert.deepEqual([...files.keys()], [
     'dist/tailwind/preset.cjs',
     'dist/tailwind/theme.css',
+    'dist/tailwind/adapter.json',
     'dist/nativewind/preset.cjs',
     'dist/nativewind/theme.css',
     'dist/react-native/tokens.ts',
     'dist/build-manifest.json',
   ]);
+
+  const webEvidence = JSON.parse(files.get('dist/tailwind/adapter.json'));
+  assert.equal(webEvidence.id, 'com-design:web-adapter:v2');
+  assert.equal(webEvidence.targetPlatform.platform, 'web');
 
   const manifest = JSON.parse(files.get('dist/build-manifest.json'));
   assert.equal(manifest.sourceHash, 'fixture-source-revision');
