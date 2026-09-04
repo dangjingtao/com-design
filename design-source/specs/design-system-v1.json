@@ -12,112 +12,31 @@
     "rule": "Only entries under sources are canonical. plannedSources never become authoritative until promoted by a later task and validated."
   },
   "systemModel": {
-    "layers": [
-      "primitive",
-      "semantic",
-      "component",
-      "composite-component",
-      "pattern"
-    ],
+    "layers": ["primitive", "semantic", "component", "composite-component", "pattern"],
     "platformContextSource": "sources.platformModel",
     "platformEnvironmentSource": "sources.platformEnvironment",
     "layoutInputFoundationSource": "sources.layoutInputFoundation",
     "axes": {
-      "density": {
-        "default": "compact",
-        "supported": [
-          "compact",
-          "comfortable"
-        ]
-      },
-      "platform": {
-        "supported": [
-          "ios",
-          "android",
-          "web",
-          "wechat-mini-program"
-        ]
-      },
-      "viewport": {
-        "supported": [
-          "compact",
-          "medium",
-          "wide"
-        ]
-      },
-      "input": {
-        "supported": [
-          "touch",
-          "pointer",
-          "keyboard",
-          "hybrid"
-        ]
-      },
-      "motion": {
-        "default": "standard",
-        "supported": [
-          "standard",
-          "reduced"
-        ]
-      },
-      "colorScheme": {
-        "default": "light",
-        "supported": [
-          "light",
-          "dark"
-        ]
-      },
-      "contentScale": {
-        "default": "platform-driven",
-        "supported": [
-          "standard",
-          "enlarged",
-          "platform-driven"
-        ]
-      }
+      "density": { "default": "compact", "supported": ["compact", "comfortable"] },
+      "platform": { "supported": ["ios", "android", "web", "wechat-mini-program"] },
+      "viewport": { "supported": ["compact", "medium", "wide"] },
+      "input": { "supported": ["touch", "pointer", "keyboard", "hybrid"] },
+      "motion": { "default": "standard", "supported": ["standard", "reduced"] },
+      "colorScheme": { "default": "light", "supported": ["light", "dark"] },
+      "contentScale": { "default": "platform-driven", "supported": ["standard", "enlarged", "platform-driven"] }
     },
     "axisPolicy": "Platform context axes are orthogonal. Platform identifies the execution family only and must not imply viewport, input modality, motion, color scheme, or content scale.",
-    "resolutionOrder": [
-      "foundation",
-      "colorScheme",
-      "density",
-      "platform",
-      "viewport",
-      "input",
-      "motion",
-      "contentScale",
-      "component",
-      "composite-component",
-      "pattern",
-      "product-extension"
-    ]
+    "resolutionOrder": ["foundation", "colorScheme", "density", "platform", "viewport", "input", "motion", "contentScale", "component", "composite-component", "pattern", "product-extension"]
   },
   "platformStatus": {
-    "targets": [
-      "ios",
-      "android",
-      "web",
-      "wechat-mini-program"
-    ],
+    "targets": ["ios", "android", "web", "wechat-mini-program"],
     "currentModelAxis": "sources.platformModel.axes.platform.values",
     "note": "V2 targets and current adapter maturity are intentionally separate. T002 establishes the four-platform context model; adapter maturity remains downstream work.",
     "adapterMaturity": {
-      "ios": {
-        "status": "partial",
-        "basis": "Shared React Native token output and iOS touch-target mapping exist; native platform/component contract remains V2 work."
-      },
-      "android": {
-        "status": "partial",
-        "basis": "Shared React Native/NativeWind outputs and Android touch-target mapping exist; native platform/component contract remains V2 work."
-      },
-      "web": {
-        "status": "implemented",
-        "basis": "Web Tailwind output is derived from Canonical Design Model V2 with explicit Web platform/context evidence and environment-backed pointer, keyboard and focus capability mapping; responsive behavior remains owned by T012."
-      },
-      "wechat-mini-program": {
-        "status": "planned",
-        "basis": "No Mini Program adapter exists on dev; T009 owns the minimum viable adapter."
-      }
+      "ios": { "status": "partial", "basis": "Shared React Native token output and iOS touch-target mapping exist; native platform/component contract remains V2 work." },
+      "android": { "status": "partial", "basis": "Shared React Native/NativeWind outputs and Android touch-target mapping exist; native platform/component contract remains V2 work." },
+      "web": { "status": "implemented", "basis": "Web Tailwind output is derived from Canonical Design Model V2 with explicit Web platform/context evidence and environment-backed pointer, keyboard and focus capability mapping; responsive/input behavior is consumed from the accepted T012 foundation." },
+      "wechat-mini-program": { "status": "planned", "basis": "No Mini Program adapter exists on dev; T009 owns the minimum viable adapter." }
     }
   },
   "sources": {
@@ -143,51 +62,22 @@
     "legacyTokenJsonBundle": {
       "status": "non-canonical",
       "canonical": false,
-      "pathHints": [
-        "../tokens/tokens.json",
-        "../tokens/theme-dark.json",
-        "../tokens/motion.json"
-      ],
+      "pathHints": ["../tokens/tokens.json", "../tokens/theme-dark.json", "../tokens/motion.json"],
       "reason": "These paths were declared by the old manifest but do not exist on dev. colors_and_type.css is the current build truth."
     },
     "legacySplitComponentSpecs": {
       "status": "non-canonical",
       "canonical": false,
-      "pathHints": [
-        "./actions-forms.json",
-        "./navigation-information.json",
-        "./feedback-overlay-progress.json",
-        "./search-menu.json"
-      ],
+      "pathHints": ["./actions-forms.json", "./navigation-information.json", "./feedback-overlay-progress.json", "./search-menu.json"],
       "reason": "These files do not exist on dev. components/index.json is the current component catalog entrypoint."
     },
-    "themeOverlaySchema": {
-      "status": "deferred",
-      "canonical": false,
-      "pathHint": "../schemas/theme-overlay-v1.schema.json"
-    }
+    "themeOverlaySchema": { "status": "deferred", "canonical": false, "pathHint": "../schemas/theme-overlay-v1.schema.json" }
   },
   "catalogs": {
-    "coreComponents": {
-      "source": "componentIndex",
-      "collection": "components",
-      "identityField": "slug"
-    },
-    "coreCompositeComponents": {
-      "source": "coreComposites",
-      "collection": "composites",
-      "identityField": "id"
-    },
-    "corePatterns": {
-      "source": "corePatterns",
-      "collection": "patterns",
-      "identityField": "id"
-    },
-    "coreIcons": {
-      "source": "iconography",
-      "collection": "icons",
-      "identityField": "stableName"
-    }
+    "coreComponents": { "source": "componentIndex", "collection": "components", "identityField": "slug" },
+    "coreCompositeComponents": { "source": "coreComposites", "collection": "composites", "identityField": "id" },
+    "corePatterns": { "source": "corePatterns", "collection": "patterns", "identityField": "id" },
+    "coreIcons": { "source": "iconography", "collection": "icons", "identityField": "stableName" }
   },
   "compositePolicy": {
     "countedAsCoreComponents": false,
