@@ -4,17 +4,50 @@
   "name": "Top App Bar",
   "sourceKind": "structured-spec",
   "confidence": "high",
-  "semanticTypeCandidates": ["navigation-information", "page-level-navigation"],
+  "semanticTypeCandidates": [
+    "navigation-information",
+    "page-level-navigation"
+  ],
   "variantDimensions": {
-    "state": ["default", "scrolled"],
-    "variant": ["title-only", "with-actions"]
+    "state": [
+      "default",
+      "scrolled"
+    ],
+    "variant": [
+      "title-only",
+      "with-actions"
+    ]
   },
   "representativeVariants": [
-    { "variant": "title-only", "title": "设置" },
-    { "variant": "with-actions", "title": "工作台", "actions": ["search", "notifications"] },
-    { "variant": "with-actions", "state": "scrolled", "title": "消息设置", "actions": ["more"] }
+    {
+      "variant": "title-only",
+      "title": "设置"
+    },
+    {
+      "variant": "with-actions",
+      "title": "工作台",
+      "actions": [
+        "core.search",
+        "core.more-horizontal"
+      ]
+    },
+    {
+      "variant": "with-actions",
+      "state": "scrolled",
+      "title": "消息设置",
+      "leadingAction": "core.back",
+      "actions": [
+        "core.more-horizontal"
+      ]
+    }
   ],
-  "anatomy": ["container", "leadingAction?", "title", "trailingActions?", "overflow?"],
+  "anatomy": [
+    "container",
+    "leadingAction?",
+    "title",
+    "trailingActions?",
+    "overflow?"
+  ],
   "traits": {
     "contentMinHeight": "var(--size-control-height-lg)",
     "iconSize": "var(--size-icon-lg)",
@@ -24,7 +57,9 @@
     "titleFont": "var(--type-heading)",
     "titleColor": "var(--color-text-primary)",
     "actionMaxVisible": 2,
-    "gap": "var(--space-12)"
+    "gap": "var(--space-12)",
+    "navigationFoundationRef": "sources.navigationFoundation.topAppBar",
+    "trailingActionIconSource": "sources.iconography"
   },
   "structurePatterns": [
     "horizontal row: optional leading back/close action | title (grows, single-line ellipsis) | trailing icon actions",
@@ -37,6 +72,36 @@
     "icon actions require accessible names",
     "title truncates with ellipsis rather than wrapping"
   ],
-  "doNotInvent": ["no default shadow", "no gradient", "no brand-filled background"],
-  "unknowns": []
+  "doNotInvent": [
+    "no default shadow",
+    "no gradient",
+    "no brand-filled background"
+  ],
+  "unknowns": [],
+  "interactionContract": [
+    "leading destination/back action and trailing actions are independent hit targets",
+    "title layout uses the available safe navigation region supplied by the Platform Adapter",
+    "trailing actions overflow or reduce before entering a platform reserved region"
+  ],
+  "keyboardContract": [
+    "all operable leading/trailing actions remain keyboard reachable when the input context supports keyboard",
+    "focus-visible treatment follows T012 input policy and does not depend on hover"
+  ],
+  "accessibilityContract": [
+    "icon actions require accessible names",
+    "title remains exposed as the page-level navigation heading/label without being duplicated into host chrome",
+    "host/system chrome is not represented as Top App Bar anatomy"
+  ],
+  "platformPresentationRefs": [
+    {
+      "ref": "sources.navigationFoundation.topAppBar",
+      "context": "all",
+      "note": "Safe Area, reserved regions and host chrome are resolved outside Core."
+    },
+    {
+      "ref": "sources.platformEnvironment",
+      "context": "wechat-mini-program",
+      "note": "WeChat Capsule remains host-owned chrome and only constrains the available safe navigation region."
+    }
+  ]
 }
