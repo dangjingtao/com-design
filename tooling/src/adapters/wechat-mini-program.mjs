@@ -205,7 +205,11 @@ function createAdapterEvidence(model, platformEnvironment) {
         model.platform?.principles?.platformDoesNotInferAxes === true,
     },
     environment: {
-      runtimeContract: 'com-design:platform-environment:v1',
+      runtimeContract: {
+        name: platformEnvironment?.$metadata?.name ?? null,
+        version: platformEnvironment?.$metadata?.version ?? null,
+        owner: platformEnvironment?.$metadata?.owner ?? null,
+      },
       runtimeHooks: {
         safeAreaInsets: 'geometry.safeAreaInsets',
         reservedRegions: 'geometry.reservedRegions',
@@ -235,7 +239,7 @@ function createAdapterEvidence(model, platformEnvironment) {
     consumption: {
       tokenModule: 'dist/wechat-mini-program/tokens.js',
       moduleFormat: 'commonjs',
-      themeModePolicy: 'select color.light/color.dark at runtime; optional themes remain downstream selectors, not new source truth',
+      themeModePolicy: 'select color.light/color.dark at runtime; optional themes remain generated named token maps, not new source truth',
       wxssSourceOfTruth: false,
       generatedWxssRequired: false,
     },
