@@ -51,6 +51,12 @@ test('builds Canonical Design Model V2 from accepted canonical sources', () => {
   assert.equal(model.platform.platforms.length, 4);
   assert.equal(model.layoutInput.id, 'com-design:layout-input-foundation:v2');
   assert.equal(model.layoutInput.schemaVersion, 2);
+  assert.equal(model.navigation.id, 'com-design:navigation-foundation:v2');
+  assert.equal(model.navigation.schemaVersion, 2);
+  assert.equal(
+    model.navigation.provenance.sourcePath,
+    'design-source/specs/navigation-foundation-v2.json',
+  );
   assert.equal(model.motion.id, 'com-design:motion-foundation:v2');
   assert.equal(model.motion.schemaVersion, 2);
   assert.equal(model.motion.contract.reducedMotion.firstClass, true);
@@ -231,6 +237,18 @@ test('rejects invalid canonical layout/input contract before model emission', ()
   );
 });
 
+
+test('rejects invalid canonical navigation foundation before model emission', () => {
+  const fixture = copyDesignSourceFixture();
+  const navigation = readFixtureJson(fixture, 'specs/navigation-foundation-v2.json');
+  navigation.stateExample.activeAncestorIds = ['workspace'];
+  writeFixtureJson(fixture, 'specs/navigation-foundation-v2.json', navigation);
+
+  assert.throws(
+    () => buildCanonicalDesignModel(fixture),
+    /navigation foundation: stateExample\.activeAncestorIds must equal the derived active destination ancestor chain/,
+  );
+});
 
 test('rejects invalid canonical motion contract before model emission', () => {
   const fixture = copyDesignSourceFixture();
