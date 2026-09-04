@@ -10,6 +10,7 @@ import {
 } from './component-contract.mjs';
 import { validatePlatformModel } from './platform-context.mjs';
 import { validateLayoutInputFoundationContract } from './layout-input-foundation.mjs';
+import { validateNavigationFoundationContract } from './navigation-foundation.mjs';
 import { validateMotionFoundationContract } from './motion-foundation.mjs';
 
 const MODEL_SCHEMA_VERSION = 2;
@@ -169,6 +170,24 @@ function validateRequiredInputs(repoRoot, sourceIntegrity, manifest) {
       platformModel,
       manifest,
     ).map((error) => `layout/input foundation: ${error}`),
+  );
+
+  const navigationFoundation = requireCanonicalSource(sourceIntegrity, 'navigationFoundation').value;
+  const navigationSchema = requireCanonicalSource(sourceIntegrity, 'navigationSchema').value;
+  const platformEnvironment = requireCanonicalSource(sourceIntegrity, 'platformEnvironment').value;
+  const iconography = requireCanonicalSource(sourceIntegrity, 'iconography').value;
+  const iconographySchema = requireCanonicalSource(sourceIntegrity, 'iconographySchema').value;
+  errors.push(
+    ...validateNavigationFoundationContract(
+      navigationFoundation,
+      navigationSchema,
+      platformModel,
+      layoutInputFoundation,
+      platformEnvironment,
+      iconography,
+      iconographySchema,
+      manifest,
+    ).map((error) => `navigation foundation: ${error}`),
   );
 
   const motionContract = requireCanonicalSource(sourceIntegrity, 'motionContract').value;
@@ -359,6 +378,16 @@ function normalizeLayoutInput(contract, source) {
   };
 }
 
+function normalizeNavigation(contract, source) {
+  const { $schema: _schema, ...value } = contract;
+  return {
+    id: value.id,
+    schemaVersion: value.schemaVersion,
+    contract: value,
+    provenance: provenance(source),
+  };
+}
+
 function normalizeMotion(contract, source) {
   const { $schema: _schema, ...value } = contract;
   return {
@@ -472,6 +501,12 @@ export function validateCanonicalDesignModel(model) {
   if (!model?.layoutInput?.provenance || typeof model.layoutInput.provenance !== 'object') {
     errors.push('canonical layout/input foundation must carry source provenance.');
   }
+  if (model?.navigation?.id !== 'com-design:navigation-foundation:v2' || model?.navigation?.schemaVersion !== 2) {
+    errors.push('canonical design model must expose the accepted navigation foundation.');
+  }
+  if (!model?.navigation?.provenance || typeof model.navigation.provenance !== 'object') {
+    errors.push('canonical navigation foundation must carry source provenance.');
+  }
   if (model?.motion?.id !== 'com-design:motion-foundation:v2' || model?.motion?.schemaVersion !== 2) {
     errors.push('canonical design model must expose the accepted motion foundation.');
   }
@@ -510,6 +545,7 @@ export function buildCanonicalDesignModel(repoRoot) {
   const platformEvidence = requireCanonicalSource(sourceIntegrity, 'platformModel');
   const platformSchemaEvidence = requireCanonicalSource(sourceIntegrity, 'platformContextSchema');
   const layoutInputEvidence = requireCanonicalSource(sourceIntegrity, 'layoutInputFoundation');
+  const navigationEvidence = requireCanonicalSource(sourceIntegrity, 'navigationFoundation');
   const motionEvidence = requireCanonicalSource(sourceIntegrity, 'motionContract');
 
   const manifestSource = sourceDescriptor(repoRoot, 'source:manifest', manifest.__path, 'manifest');
@@ -523,6 +559,11 @@ export function buildCanonicalDesignModel(repoRoot) {
     repoRoot,
     'source:layoutInputFoundation',
     layoutInputEvidence.resolvedPath,
+  );
+  const navigationSource = sourceDescriptor(
+    repoRoot,
+    'source:navigationFoundation',
+    navigationEvidence.resolvedPath,
   );
   const motionSource = sourceDescriptor(
     repoRoot,
@@ -558,6 +599,7 @@ export function buildCanonicalDesignModel(repoRoot) {
     composites,
     patterns,
     layoutInput: normalizeLayoutInput(layoutInputEvidence.value, layoutInputSource),
+    navigation: normalizeNavigation(navigationEvidence.value, navigationSource),
     motion: normalizeMotion(motionEvidence.value, motionSource),
     platform: normalizePlatforms(
       platformEvidence.value,

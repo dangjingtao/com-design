@@ -27,6 +27,20 @@ const PLATFORM_SUPPORTING_FAMILY = Object.freeze({
   'wechat-mini-program': 'mini-program',
 });
 
+function navigationPresentation(model, context) {
+  if (!context?.viewport) return null;
+  const rule = model.navigation?.contract?.responsiveMapping?.[context.viewport];
+  if (!rule) return null;
+  return {
+    foundationId: model.navigation.id,
+    viewport: context.viewport,
+    defaultPresentation: rule.defaultPresentation,
+    rules: rule.rules,
+    platformDoesNotSelectPresentation:
+      model.navigation.contract?.principles?.platformDoesNotInferPresentation === true,
+  };
+}
+
 function implementationPath(platform, registeredAdapters) {
   if (!platform) return null;
   const maturity = platform.maturity ?? { status: 'planned', basis: 'No adapter maturity declared.' };
@@ -98,12 +112,14 @@ export function createAgentContract(repoRoot, options = {}) {
       platform: platform ?? null,
       context,
       implementationPath: targetImplementation,
+      navigationPresentation: navigationPresentation(model, context),
     },
     catalogs: {
       tokens: model.tokens.entries,
       components: model.components,
       composites: model.composites,
       patterns: model.patterns,
+      navigation: model.navigation,
       motion,
       platformAdapters: platforms,
       registeredEngineeringOutputs: registeredAdapters,
@@ -116,7 +132,7 @@ export function createAgentContract(repoRoot, options = {}) {
     },
     layers: {
       core: {
-        catalogs: ['tokens', 'components', 'composites', 'patterns', 'motion'],
+        catalogs: ['tokens', 'components', 'composites', 'patterns', 'navigation', 'motion'],
         rule: 'Core semantics remain platform-neutral and cannot be forked by a consumer.',
       },
       productExtension: {

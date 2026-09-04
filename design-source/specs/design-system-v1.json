@@ -12,31 +12,113 @@
     "rule": "Only entries under sources are canonical. plannedSources never become authoritative until promoted by a later task and validated."
   },
   "systemModel": {
-    "layers": ["primitive", "semantic", "component", "composite-component", "pattern"],
+    "layers": [
+      "primitive",
+      "semantic",
+      "component",
+      "composite-component",
+      "pattern"
+    ],
     "platformContextSource": "sources.platformModel",
     "platformEnvironmentSource": "sources.platformEnvironment",
     "layoutInputFoundationSource": "sources.layoutInputFoundation",
+    "navigationFoundationSource": "sources.navigationFoundation",
     "axes": {
-      "density": { "default": "compact", "supported": ["compact", "comfortable"] },
-      "platform": { "supported": ["ios", "android", "web", "wechat-mini-program"] },
-      "viewport": { "supported": ["compact", "medium", "wide"] },
-      "input": { "supported": ["touch", "pointer", "keyboard", "hybrid"] },
-      "motion": { "default": "standard", "supported": ["standard", "reduced"] },
-      "colorScheme": { "default": "light", "supported": ["light", "dark"] },
-      "contentScale": { "default": "platform-driven", "supported": ["standard", "enlarged", "platform-driven"] }
+      "density": {
+        "default": "compact",
+        "supported": [
+          "compact",
+          "comfortable"
+        ]
+      },
+      "platform": {
+        "supported": [
+          "ios",
+          "android",
+          "web",
+          "wechat-mini-program"
+        ]
+      },
+      "viewport": {
+        "supported": [
+          "compact",
+          "medium",
+          "wide"
+        ]
+      },
+      "input": {
+        "supported": [
+          "touch",
+          "pointer",
+          "keyboard",
+          "hybrid"
+        ]
+      },
+      "motion": {
+        "default": "standard",
+        "supported": [
+          "standard",
+          "reduced"
+        ]
+      },
+      "colorScheme": {
+        "default": "light",
+        "supported": [
+          "light",
+          "dark"
+        ]
+      },
+      "contentScale": {
+        "default": "platform-driven",
+        "supported": [
+          "standard",
+          "enlarged",
+          "platform-driven"
+        ]
+      }
     },
     "axisPolicy": "Platform context axes are orthogonal. Platform identifies the execution family only and must not imply viewport, input modality, motion, color scheme, or content scale.",
-    "resolutionOrder": ["foundation", "colorScheme", "density", "platform", "viewport", "input", "motion", "contentScale", "component", "composite-component", "pattern", "product-extension"]
+    "resolutionOrder": [
+      "foundation",
+      "colorScheme",
+      "density",
+      "platform",
+      "viewport",
+      "input",
+      "motion",
+      "contentScale",
+      "component",
+      "composite-component",
+      "pattern",
+      "product-extension"
+    ]
   },
   "platformStatus": {
-    "targets": ["ios", "android", "web", "wechat-mini-program"],
+    "targets": [
+      "ios",
+      "android",
+      "web",
+      "wechat-mini-program"
+    ],
     "currentModelAxis": "sources.platformModel.axes.platform.values",
     "note": "V2 targets and current adapter maturity are intentionally separate. T002 establishes the four-platform context model; adapter maturity remains downstream work.",
     "adapterMaturity": {
-      "ios": { "status": "implemented", "basis": "Native Mobile Adapter V2 provides explicit iOS platform/context semantics, 44-point touch policy, native-safe shadow/motion/typography structures, environment evidence, and a migration path for existing React Native/NativeWind consumers." },
-      "android": { "status": "implemented", "basis": "Native Mobile Adapter V2 provides explicit Android platform/context semantics, 48-dp touch policy, native-safe shadow/motion/typography structures, environment evidence, and a migration path for existing React Native/NativeWind consumers." },
-      "web": { "status": "implemented", "basis": "Web Tailwind output is derived from Canonical Design Model V2 with explicit Web platform/context evidence and environment-backed pointer, keyboard and focus capability mapping; responsive/input behavior is consumed from the accepted T012 foundation." },
-      "wechat-mini-program": { "status": "implemented", "basis": "T009 provides a generated CommonJS semantic-token module plus platform/context metadata backed by Canonical Design Model V2, T010 environment hooks and T011 reduced-motion policy; a full Core Component package remains outside first-stage scope." }
+      "ios": {
+        "status": "implemented",
+        "basis": "Native Mobile Adapter V2 provides explicit iOS platform/context semantics, 44-point touch policy, native-safe shadow/motion/typography structures, environment evidence, and a migration path for existing React Native/NativeWind consumers."
+      },
+      "android": {
+        "status": "implemented",
+        "basis": "Native Mobile Adapter V2 provides explicit Android platform/context semantics, 48-dp touch policy, native-safe shadow/motion/typography structures, environment evidence, and a migration path for existing React Native/NativeWind consumers."
+      },
+      "web": {
+        "status": "implemented",
+        "basis": "Web Tailwind output is derived from Canonical Design Model V2 with explicit Web platform/context evidence and environment-backed pointer, keyboard and focus capability mapping; responsive/input behavior is consumed from the accepted T012 foundation."
+      },
+      "wechat-mini-program": {
+        "status": "implemented",
+        "basis": "T009 provides a generated CommonJS semantic-token module plus platform/context metadata backed by Canonical Design Model V2, T010 environment hooks and T011 reduced-motion policy; a full Core Component package remains outside first-stage scope."
+      }
     }
   },
   "sources": {
@@ -51,6 +133,8 @@
     "platformEnvironment": "./platform-environment-v1.json",
     "layoutInputSchema": "../schemas/layout-input-foundation-v2.schema.json",
     "layoutInputFoundation": "./layout-input-foundation-v2.json",
+    "navigationSchema": "../schemas/navigation-foundation-v2.schema.json",
+    "navigationFoundation": "./navigation-foundation-v2.json",
     "motionSchema": "../schemas/motion-foundation-v2.schema.json",
     "motionContract": "./motion-foundation-v2.json",
     "iconographySchema": "../schemas/iconography-contract-v1.schema.json",
@@ -62,22 +146,51 @@
     "legacyTokenJsonBundle": {
       "status": "non-canonical",
       "canonical": false,
-      "pathHints": ["../tokens/tokens.json", "../tokens/theme-dark.json", "../tokens/motion.json"],
+      "pathHints": [
+        "../tokens/tokens.json",
+        "../tokens/theme-dark.json",
+        "../tokens/motion.json"
+      ],
       "reason": "These paths were declared by the old manifest but do not exist on dev. colors_and_type.css is the current build truth."
     },
     "legacySplitComponentSpecs": {
       "status": "non-canonical",
       "canonical": false,
-      "pathHints": ["./actions-forms.json", "./navigation-information.json", "./feedback-overlay-progress.json", "./search-menu.json"],
+      "pathHints": [
+        "./actions-forms.json",
+        "./navigation-information.json",
+        "./feedback-overlay-progress.json",
+        "./search-menu.json"
+      ],
       "reason": "These files do not exist on dev. components/index.json is the current component catalog entrypoint."
     },
-    "themeOverlaySchema": { "status": "deferred", "canonical": false, "pathHint": "../schemas/theme-overlay-v1.schema.json" }
+    "themeOverlaySchema": {
+      "status": "deferred",
+      "canonical": false,
+      "pathHint": "../schemas/theme-overlay-v1.schema.json"
+    }
   },
   "catalogs": {
-    "coreComponents": { "source": "componentIndex", "collection": "components", "identityField": "slug" },
-    "coreCompositeComponents": { "source": "coreComposites", "collection": "composites", "identityField": "id" },
-    "corePatterns": { "source": "corePatterns", "collection": "patterns", "identityField": "id" },
-    "coreIcons": { "source": "iconography", "collection": "icons", "identityField": "stableName" }
+    "coreComponents": {
+      "source": "componentIndex",
+      "collection": "components",
+      "identityField": "slug"
+    },
+    "coreCompositeComponents": {
+      "source": "coreComposites",
+      "collection": "composites",
+      "identityField": "id"
+    },
+    "corePatterns": {
+      "source": "corePatterns",
+      "collection": "patterns",
+      "identityField": "id"
+    },
+    "coreIcons": {
+      "source": "iconography",
+      "collection": "icons",
+      "identityField": "stableName"
+    }
   },
   "compositePolicy": {
     "countedAsCoreComponents": false,
@@ -107,7 +220,8 @@
     "motion": "T002 selects the standard/reduced context axis; semantic motion intent and per-platform reduced-motion/interruption policy resolve through sources.motionContract while concrete duration/easing tokens remain foundation values until later validation.",
     "colorScheme": "light/dark context selects the existing themeResolution path",
     "contentScale": "T002 defines standard/enlarged/platform-driven context selection; T010 exposes the platform/host hook while T012 resolves reflow behavior through sources.layoutInputFoundation",
-    "environment": "T010 resolves runtime safe area, reserved regions, system/host chrome, back, focus, keyboard/IME, pointer, gesture, overlay dismissal/system UI, and accessibility hooks through sources.platformEnvironment"
+    "environment": "T010 resolves runtime safe area, reserved regions, system/host chrome, back, focus, keyboard/IME, pointer, gesture, overlay dismissal/system UI, and accessibility hooks through sources.platformEnvironment",
+    "navigation": "T020 resolves shared recursive destination state and viewport-driven Side Navigation / Rail / compact mappings through sources.navigationFoundation; platform identity alone does not choose presentation."
   },
   "governance": {
     "componentToPrimitiveReference": "forbidden",
@@ -128,6 +242,7 @@
       "densityCompactComfortableMapped",
       "platformTouchTargetsMapped",
       "layoutInputFoundationMapped",
+      "navigationFoundationMapped",
       "motionStandardReducedMapped",
       "iconographyContractMapped",
       "sharedIconScaleMapped",
