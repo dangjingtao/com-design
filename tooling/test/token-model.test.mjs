@@ -43,10 +43,12 @@ function fixture() {
       --com-neutral-50: #10131E;
       --com-neutral-800: #F7F8FC;
     }
+    /* Real design source keeps explanatory comments immediately before named scopes. */
     .density-comfortable {
       --density-control-height: 44px;
       --density-control-height-lg: 56px;
     }
+    /* Android platform override. */
     .platform-android {
       --platform-touch-min: 48px;
     }`,
