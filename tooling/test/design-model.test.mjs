@@ -230,3 +230,16 @@ test('rejects invalid canonical layout/input contract before model emission', ()
     /layout\/input foundation: layoutInputFoundation\.schemaVersion: must equal 2/,
   );
 });
+
+
+test('rejects invalid canonical motion contract before model emission', () => {
+  const fixture = copyDesignSourceFixture();
+  const motion = readFixtureJson(fixture, 'specs/motion-foundation-v2.json');
+  delete motion.reducedMotion;
+  writeFixtureJson(fixture, 'specs/motion-foundation-v2.json', motion);
+
+  assert.throws(
+    () => buildCanonicalDesignModel(fixture),
+    /motion foundation: motionFoundation\.reducedMotion: is required/,
+  );
+});
