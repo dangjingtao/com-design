@@ -1,6 +1,6 @@
 # T007 · Web Adapter V2
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: Web / Adapter
 - Owner: -
@@ -64,13 +64,13 @@ Web/Tailwind 目前是最成熟工程输出，但 V2 不允许它继续充当其
 
 ## Verification evidence
 
-- CI: Design System Build run `33820394112` (#185) — success on code head `5bbeda379b29cfb0eb779e57fe24c2cd3b6644ac`; 100/100 tests PASS; validation 9 checks / 0 warnings; `build:all` PASS; accepted human report unchanged gate PASS; Engineering and Penpot artifact uploads PASS.
-- Adapter snapshot: `dist/tailwind/adapter.json` emitted in engineering artifact `9918051162`; build produced 22 engineering artifacts from 138 consumer tokens and Canonical Design Model V2.
-- Other evidence: focused Web tests prove Tailwind semantic token compatibility, explicit Web platform/context + pointer/keyboard/focus evidence, rejection of missing canonical/environment inputs, and independence from component CSS/DOM strings.
+- CI: final reviewed code head `8e0350337b650a8c8fe8b7e3ea02bcacd0b853ff` passed Design System Build run `33825084563` (#188): 101/101 tests PASS; validation 9 checks / 0 warnings; `build:all` PASS; accepted human report unchanged gate PASS; Engineering and Penpot artifact uploads PASS.
+- Adapter snapshot: `dist/tailwind/adapter.json` emitted in engineering artifact `9919633706`; build produced 22 engineering artifacts from 138 consumer tokens and Canonical Design Model V2.
+- Other evidence: focused Web tests prove Tailwind semantic token compatibility, explicit Web platform/context + pointer/keyboard/focus evidence, rejection of missing canonical/environment inputs, independence from component CSS/DOM strings, and direct propagation of future T012 responsive/input rule changes through `canonical-model.layoutInput`.
 
 ## Review
 
-- Reviewer: Mira (pending independent review)
-- Result: REVIEW
-- Conclusion: Builder implementation and deterministic repository gates are complete; no PASS is self-declared. Independent design-system acceptance remains required before merge.
-- Follow-up: Review PR #29 against T007 acceptance and confirm the Web adapter boundary does not pre-empt T008/T009 or reintroduce Web as the implicit cross-platform definition.
+- Reviewer: Mira
+- Result: PASS
+- Conclusion: Independent acceptance completed. Review found two issues before PASS: one P1 test-regex defect that prevented the first CI run, and one substantive P2 consumption gap where Web was marked implemented/ready while only consuming T012 axis vocabulary rather than its responsive/input rules. The P1 was replaced with literal selector assertions. The P2 was fixed by exposing the validated T012 foundation with provenance in Canonical Design Model V2 and deriving Web `viewportRules`, `inputRules`, `interactionStatePolicy`, content-scale policy and modality mappings from that canonical field. Regression coverage proves future T012 guidance flows into `adapter.json` rather than being hard-coded. Both review threads are resolved, 101/101 tests and all repository gates pass, Web remains a downstream adapter rather than a cross-platform truth source, and T008/T009 ownership is untouched.
+- Follow-up: T016/T017/T018 may consume T007 as an accepted dependency. T008/T009 must follow the same registry/canonical-consumer boundary without copying Web presentation semantics.
