@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://com-design.local/schemas/navigation-foundation-v2.schema.json",
+  "title": "Com Design Navigation Foundation V2",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "metadata",
+    "principles",
+    "navigationModel",
+    "responsiveMapping",
+    "topAppBar",
+    "inputAccessibility",
+    "sampleTree",
+    "stateExample",
+    "examples"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "id": { "const": "com-design:navigation-foundation:v2" },
+    "metadata": {
+      "type": "object",
+      "required": ["owner", "status", "purpose"],
+      "properties": {
+        "owner": { "const": "T020" },
+        "status": { "type": "string", "minLength": 1 },
+        "purpose": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "principles": {
+      "type": "object",
+      "required": [
+        "sharedDestinationSemantics",
+        "recursiveWithoutCoreDepthLimit",
+        "platformDoesNotInferPresentation",
+        "hostChromeIsNotCore",
+        "appShellLayoutIsSeparate"
+      ],
+      "additionalProperties": { "type": "boolean" }
+    },
+    "navigationModel": {
+      "type": "object",
+      "required": [
+        "childrenField",
+        "recursive",
+        "hardDepthLimit",
+        "parentDestinationAndDisclosureSeparated",
+        "state"
+      ],
+      "properties": {
+        "childrenField": { "const": "children" },
+        "recursive": { "const": true },
+        "hardDepthLimit": { "const": false },
+        "parentDestinationAndDisclosureSeparated": { "const": true },
+        "state": {
+          "type": "object",
+          "required": ["activeDestinationId", "activeAncestorIds", "expandedNodeIds", "rules"],
+          "properties": {
+            "activeDestinationId": { "type": "string", "minLength": 1 },
+            "activeAncestorIds": { "type": "string", "minLength": 1 },
+            "expandedNodeIds": { "type": "string", "minLength": 1 },
+            "rules": { "type": "array", "minItems": 3, "items": { "type": "string", "minLength": 1 } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "responsiveMapping": {
+      "type": "object",
+      "required": ["wide", "medium", "compact"],
+      "additionalProperties": {
+        "type": "object",
+        "required": ["defaultPresentation", "rules"],
+        "properties": {
+          "defaultPresentation": { "type": "string", "minLength": 1 },
+          "rules": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+        },
+        "additionalProperties": true
+      }
+    },
+    "topAppBar": {
+      "type": "object",
+      "required": [
+        "component",
+        "safeAreaOwnedByPlatform",
+        "reservedRegionSource",
+        "hostChromeSource",
+        "hostChromeIsCoreComponent",
+        "titleCentering",
+        "trailingActions"
+      ],
+      "properties": {
+        "component": { "const": "top-app-bar" },
+        "safeAreaOwnedByPlatform": { "const": true },
+        "reservedRegionSource": { "type": "string", "minLength": 1 },
+        "hostChromeSource": { "type": "string", "minLength": 1 },
+        "hostChromeIsCoreComponent": { "const": false },
+        "titleCentering": { "type": "string", "minLength": 1 },
+        "trailingActions": {
+          "type": "object",
+          "required": ["iconRegistrySource", "stableNamesOnly", "providerImportsForbidden", "overflowBeforeOverlap"],
+          "properties": {
+            "iconRegistrySource": { "const": "sources.iconography" },
+            "stableNamesOnly": { "const": true },
+            "providerImportsForbidden": { "const": true },
+            "overflowBeforeOverlap": { "const": true }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "inputAccessibility": {
+      "type": "object",
+      "required": ["inputRuleSource", "touch", "keyboard", "accessibility"],
+      "properties": {
+        "inputRuleSource": { "const": "sources.layoutInputFoundation.inputRules" },
+        "touch": { "type": "object" },
+        "keyboard": { "type": "object" },
+        "accessibility": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "sampleTree": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "type": "object" }
+    },
+    "stateExample": {
+      "type": "object",
+      "required": ["activeDestinationId", "activeAncestorIds", "expandedNodeIds"],
+      "properties": {
+        "activeDestinationId": { "type": "string", "minLength": 1 },
+        "activeAncestorIds": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "expandedNodeIds": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "examples": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["name", "context", "presentation"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "context": { "type": "object" },
+          "presentation": { "type": "string", "minLength": 1 },
+          "hostEnvironmentExample": { "type": "string", "minLength": 1 },
+          "reservedRegionIds": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "topAppBarActions": { "type": "array", "items": { "type": "object" } }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
