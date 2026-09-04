@@ -83,7 +83,7 @@ test('T020 canonical Navigation Foundation validates and proves recursive destin
   );
 });
 
-test('T020 rejects fake two-level navigation and state/disclosure drift', () => {
+test('T020 rejects fake two-level navigation and active-ancestor drift', () => {
   const shallow = sources();
   shallow.contract.sampleTree[1].children[1].children = [];
   assert.ok(
@@ -98,14 +98,17 @@ test('T020 rejects fake two-level navigation and state/disclosure drift', () => 
       error.includes('must equal the derived active destination ancestor chain')),
   );
 
-  const conflatedState = sources();
-  conflatedState.contract.stateExample.expandedNodeIds.push(
-    conflatedState.contract.stateExample.activeDestinationId,
-  );
-  assert.ok(
-    validate(conflatedState).some((error) =>
-      error.includes('active destination state and expansion state must remain separate')),
-  );
+});
+
+test('T020 allows a navigable parent to be active while its disclosure remains expanded', () => {
+  const value = sources();
+  value.contract.stateExample = {
+    activeDestinationId: 'workspace',
+    activeAncestorIds: [],
+    expandedNodeIds: ['workspace'],
+  };
+
+  assert.deepEqual(validate(value), []);
 });
 
 test('T020 consumes real T010 WeChat reserved regions and T013 stable icons', () => {
