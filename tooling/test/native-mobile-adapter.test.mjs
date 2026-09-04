@@ -28,6 +28,12 @@ test('Native Mobile Adapter V2 makes iOS and Android first-class platform contra
   assert.equal(evidence.platforms.android.targetPlatform.platform, 'android');
   assert.equal(evidence.platforms.ios.touch.minimum, 44);
   assert.equal(evidence.platforms.android.touch.minimum, 48);
+  assert.equal(evidence.platforms.ios.touch.source.scope, 'base');
+  assert.equal(evidence.platforms.android.touch.source.scope, 'platformAndroid');
+  assert.deepEqual(evidence.platforms.ios.context.axes.input, ['touch', 'pointer', 'keyboard', 'hybrid']);
+  assert.deepEqual(evidence.platforms.android.context.axes.viewport, ['compact', 'medium', 'wide']);
+  assert.equal(evidence.platforms.ios.context.platformDoesNotInferAxes, true);
+  assert.equal(evidence.platforms.android.context.platformDoesNotInferAxes, true);
   assert.equal(evidence.platforms.ios.unit, 'logical-point');
   assert.equal(evidence.platforms.android.unit, 'density-independent-pixel');
   assert.equal(evidence.contract.reactNativeIsPlatformDefinition, false);
