@@ -157,7 +157,11 @@ function normalizeMotionTokens(model) {
 function touchPolicy(model, platform) {
   const touch = tokenEntries(model, 'platform').find((token) => token.key === 'touch-min');
   if (!touch) throw new Error('native-mobile.contract requires platform touch-min token.');
-  const androidOverride = model.tokens.scopes?.platformAndroid?.['platform-touch-min'];
+  const androidScope = model.tokens.scopes?.platformAndroid ?? {};
+  const androidEntry = Object.entries(androidScope).find(
+    ([name]) => name === 'platform-touch-min' || name.endsWith('touch-min'),
+  );
+  const androidOverride = androidEntry?.[1];
   return {
     minimum: pxToNumber(platform === 'android' ? androidOverride ?? touch.light : touch.light),
     source: {
@@ -165,6 +169,7 @@ function touchPolicy(model, platform) {
       scope: platform === 'android' && androidOverride !== undefined
         ? 'platformAndroid'
         : 'base',
+      scopeKey: platform === 'android' ? androidEntry?.[0] ?? null : null,
     },
   };
 }
