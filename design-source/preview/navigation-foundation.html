@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navigation Foundation · Com Design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: var(--space-24); background: var(--color-background); color: var(--color-text-primary); font-family: var(--font-family-base); }
+  h1 { margin: 0 0 var(--space-20); font: var(--type-heading); }
+  h2 { margin: 0 0 var(--space-12); font: var(--type-label); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-20); }
+  .sample { background: var(--color-surface); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-container); overflow: hidden; min-height: 320px; }
+  .caption { padding: var(--space-12) var(--space-16); border-bottom: 1px solid var(--color-border-subtle); color: var(--color-text-secondary); font: var(--type-body-small); }
+  .shell { display: flex; min-height: 270px; }
+  .side { width: 220px; padding: var(--space-12); border-right: 1px solid var(--color-border-subtle); }
+  .rail { width: 72px; padding: var(--space-12) var(--space-8); border-right: 1px solid var(--color-border-subtle); }
+  .content { flex: 1; padding: var(--space-20); color: var(--color-text-secondary); font: var(--type-body); }
+  .nav-item { display: flex; align-items: center; min-height: 40px; padding: 0 var(--space-12); gap: var(--space-8); border-radius: var(--radius-control); font: var(--type-label); }
+  .nav-item.active { background: var(--color-surface-selected); color: var(--color-text-brand); }
+  .nav-item.ancestor { color: var(--color-text-primary); }
+  .indent-1 { padding-left: var(--space-24); }
+  .indent-2 { padding-left: var(--space-32); }
+  .indent-3 { padding-left: 40px; }
+  .rail .nav-item { justify-content: center; padding: 0; }
+  .rail .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .dot { width: 20px; height: 20px; border: 2px solid currentColor; border-radius: var(--radius-pill); flex: 0 0 auto; }
+  .mobile { position: relative; width: 100%; min-height: 270px; padding-bottom: 64px; }
+  .mobile-content { padding: var(--space-20); color: var(--color-text-secondary); }
+  .bottom-nav { position: absolute; inset: auto 0 0; min-height: 64px; display: flex; border-top: 1px solid var(--color-border-subtle); background: var(--color-surface); }
+  .bottom-item { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: var(--space-4); font: var(--type-label-small); color: var(--color-text-tertiary); }
+  .bottom-item.active { color: var(--color-text-brand); }
+  .wechat { position: relative; min-height: 270px; background: var(--color-surface); }
+  .host-zone { height: 47px; background: var(--color-background-secondary); position: relative; }
+  .capsule { position: absolute; right: 17px; top: 7px; width: 87px; height: 32px; border: 1px dashed var(--color-border-strong); border-radius: var(--radius-pill); display: flex; align-items: center; justify-content: center; color: var(--color-text-tertiary); font: var(--type-label-small); }
+  .app-bar { min-height: var(--size-control-height-lg); display: grid; grid-template-columns: 44px minmax(0, 1fr) 104px; align-items: center; padding: 0 var(--space-16); border-bottom: 1px solid var(--color-border-subtle); }
+  .app-title { text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--type-heading); }
+  .action { min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+  .reserved-note { margin: var(--space-16); padding: var(--space-12); border-radius: var(--radius-control); background: var(--color-surface-selected); color: var(--color-text-secondary); font: var(--type-body-small); }
+</style>
+</head>
+<body>
+<h1>Navigation Foundation · T020</h1>
+<div class="grid">
+  <section class="sample" data-evidence-sample="wide-side-navigation">
+    <div class="caption">wide → Side Navigation · recursive active ancestor chain</div>
+    <div class="shell">
+      <nav class="side" aria-label="Primary">
+        <div class="nav-item"><span class="dot"></span><span>Home</span></div>
+        <div class="nav-item ancestor"><span class="dot"></span><span>Workspace</span><span aria-hidden="true">▾</span></div>
+        <div class="nav-item indent-1 ancestor">Settings <span aria-hidden="true">▾</span></div>
+        <div class="nav-item indent-2 ancestor">Security <span aria-hidden="true">▾</span></div>
+        <div class="nav-item indent-3 active" aria-current="page">Audit history</div>
+      </nav>
+      <main class="content">Destination state and disclosure state are separate; active ancestors remain visible.</main>
+    </div>
+  </section>
+
+  <section class="sample" data-evidence-sample="medium-navigation-rail">
+    <div class="caption">medium → Navigation Rail · icon-first with accessible labels</div>
+    <div class="shell">
+      <nav class="rail" aria-label="Primary">
+        <div class="nav-item active" aria-current="page"><span class="dot"></span><span class="label">Home</span></div>
+        <div class="nav-item"><span class="dot"></span><span class="label">Workspace</span></div>
+        <div class="nav-item"><span class="dot"></span><span class="label">Settings</span></div>
+      </nav>
+      <main class="content">Rail is a compact presentation candidate, not a new destination model.</main>
+    </div>
+  </section>
+
+  <section class="sample" data-evidence-sample="compact-bottom-navigation">
+    <div class="caption">compact · 3–5 stable top-level destinations → Bottom Navigation</div>
+    <div class="mobile">
+      <div class="mobile-content">Deep destinations move to Drawer/Sheet multi-level navigation instead of growing the bottom bar.</div>
+      <nav class="bottom-nav" aria-label="Primary">
+        <div class="bottom-item active" aria-current="page"><span class="dot"></span>Home</div>
+        <div class="bottom-item"><span class="dot"></span>Work</div>
+        <div class="bottom-item"><span class="dot"></span>Settings</div>
+        <div class="bottom-item"><span class="dot"></span>Profile</div>
+      </nav>
+    </div>
+  </section>
+
+  <section class="sample" data-evidence-sample="wechat-host-reserved-region">
+    <div class="caption">WeChat Mini Program · host Capsule constrains Core Top App Bar</div>
+    <div class="wechat">
+      <div class="host-zone">
+        <div class="capsule" aria-label="Host-owned capsule reserved region">Host Capsule</div>
+      </div>
+      <header class="app-bar">
+        <div class="action" aria-label="Back">←</div>
+        <div class="app-title">安全区域内居中标题</div>
+        <div class="action" aria-label="Search">⌕</div>
+      </header>
+      <div class="reserved-note">Capsule is evidence of a T010 reserved region, not a Com Design Core component. Trailing actions reduce/overflow before overlap.</div>
+    </div>
+  </section>
+</div>
+</body>
+</html>
