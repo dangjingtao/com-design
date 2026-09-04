@@ -341,6 +341,16 @@ function normalizePatterns(sourceValue, source) {
   }));
 }
 
+function normalizeLayoutInput(contract, source) {
+  const { $schema: _schema, ...value } = contract;
+  return {
+    id: value.id,
+    schemaVersion: value.schemaVersion,
+    contract: value,
+    provenance: provenance(source),
+  };
+}
+
 function normalizePlatforms(platformModel, manifest, platformSource, schemaSource, manifestSource) {
   const platforms = platformModel.platforms.map((entry) => ({
     id: `platform:${entry.id}`,
@@ -438,6 +448,13 @@ export function validateCanonicalDesignModel(model) {
     }
   }
 
+  if (model?.layoutInput?.id !== 'com-design:layout-input-foundation:v2') {
+    errors.push('canonical design model must expose the accepted layout/input foundation.');
+  }
+  if (!model?.layoutInput?.provenance || typeof model.layoutInput.provenance !== 'object') {
+    errors.push('canonical layout/input foundation must carry source provenance.');
+  }
+
   for (const platform of model?.platform?.platforms ?? []) {
     if (!MATURITY_STATUSES.has(platform.maturity?.status)) {
       errors.push(`${platform.id}: invalid adapter maturity status.`);
@@ -468,6 +485,7 @@ export function buildCanonicalDesignModel(repoRoot) {
   const patternsEvidence = requireCanonicalSource(sourceIntegrity, 'corePatterns');
   const platformEvidence = requireCanonicalSource(sourceIntegrity, 'platformModel');
   const platformSchemaEvidence = requireCanonicalSource(sourceIntegrity, 'platformContextSchema');
+  const layoutInputEvidence = requireCanonicalSource(sourceIntegrity, 'layoutInputFoundation');
 
   const manifestSource = sourceDescriptor(repoRoot, 'source:manifest', manifest.__path, 'manifest');
   const foundationSource = sourceDescriptor(repoRoot, 'source:foundation', foundationEvidence.resolvedPath);
@@ -476,6 +494,11 @@ export function buildCanonicalDesignModel(repoRoot) {
   const patternsSource = sourceDescriptor(repoRoot, 'source:corePatterns', patternsEvidence.resolvedPath);
   const platformSource = sourceDescriptor(repoRoot, 'source:platformModel', platformEvidence.resolvedPath);
   const platformSchemaSource = sourceDescriptor(repoRoot, 'source:platformContextSchema', platformSchemaEvidence.resolvedPath);
+  const layoutInputSource = sourceDescriptor(
+    repoRoot,
+    'source:layoutInputFoundation',
+    layoutInputEvidence.resolvedPath,
+  );
 
   const tokenModel = buildTokenModel(foundationEvidence.resolvedPath);
   const components = normalizeComponents(repoRoot, componentIndexEvidence.value, componentIndexSource);
@@ -504,6 +527,7 @@ export function buildCanonicalDesignModel(repoRoot) {
     components,
     composites,
     patterns,
+    layoutInput: normalizeLayoutInput(layoutInputEvidence.value, layoutInputSource),
     platform: normalizePlatforms(
       platformEvidence.value,
       manifest,
