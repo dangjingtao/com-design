@@ -21,7 +21,7 @@ test('T014 exposes canonical implementation catalogs for a validated target cont
   assert.equal(contract.target.platform.platform, 'web');
   assert.equal(contract.target.context.input, 'pointer');
   assert.equal(contract.target.implementationPath.ownerTask, 'T007');
-  assert.equal(contract.target.implementationPath.readiness, 'incomplete');
+  assert.equal(contract.target.implementationPath.readiness, 'ready');
   assert.ok(contract.catalogs.tokens.length > 0);
   assert.ok(contract.catalogs.components.length > 0);
   assert.ok(contract.catalogs.composites.length > 0);
