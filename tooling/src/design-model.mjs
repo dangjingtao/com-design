@@ -10,6 +10,7 @@ import {
 } from './component-contract.mjs';
 import { validatePlatformModel } from './platform-context.mjs';
 import { validateLayoutInputFoundationContract } from './layout-input-foundation.mjs';
+import { validateMotionFoundationContract } from './motion-foundation.mjs';
 
 const MODEL_SCHEMA_VERSION = 2;
 const MODEL_ID = 'com-design:canonical-model:v2';
@@ -168,6 +169,13 @@ function validateRequiredInputs(repoRoot, sourceIntegrity, manifest) {
       platformModel,
       manifest,
     ).map((error) => `layout/input foundation: ${error}`),
+  );
+
+  const motionContract = requireCanonicalSource(sourceIntegrity, 'motionContract').value;
+  const motionSchema = requireCanonicalSource(sourceIntegrity, 'motionSchema').value;
+  errors.push(
+    ...validateMotionFoundationContract(motionContract, motionSchema)
+      .map((error) => `motion foundation: ${error}`),
   );
 
   const foundationPath = requireCanonicalSource(sourceIntegrity, 'foundation').resolvedPath;
