@@ -4,18 +4,55 @@
   "name": "Bottom Navigation",
   "sourceKind": "structured-spec",
   "confidence": "high",
-  "semanticTypeCandidates": ["navigation-information", "top-level-destination", "tab-bar"],
+  "semanticTypeCandidates": [
+    "navigation-information",
+    "top-level-destination",
+    "tab-bar"
+  ],
   "variantDimensions": {
-    "state": ["active", "inactive", "pressed"],
-    "badge": ["none", "dot", "count"]
+    "state": [
+      "active",
+      "inactive",
+      "pressed"
+    ],
+    "badge": [
+      "none",
+      "dot",
+      "count"
+    ]
   },
   "representativeVariants": [
-    { "label": "首页", "active": true, "icon": "home" },
-    { "label": "发现", "active": false, "icon": "compass" },
-    { "label": "消息", "active": false, "icon": "bell", "badge": "count", "count": "8" },
-    { "label": "我的", "active": false, "icon": "user", "badge": "dot" }
+    {
+      "label": "首页",
+      "active": true,
+      "icon": "core.home"
+    },
+    {
+      "label": "工作台",
+      "active": false,
+      "icon": "core.menu"
+    },
+    {
+      "label": "设置",
+      "active": false,
+      "icon": "core.settings",
+      "badge": "count",
+      "count": "8"
+    },
+    {
+      "label": "我的",
+      "active": false,
+      "icon": "core.user",
+      "badge": "dot"
+    }
   ],
-  "anatomy": ["container", "destinationItem", "icon", "label", "badge?"],
+  "anatomy": [
+    "container",
+    "destinationItem",
+    "icon",
+    "label",
+    "badge?"
+  ],
   "traits": {
     "contentMinHeight": "56px",
     "iconSize": "var(--size-icon-lg)",
@@ -29,7 +66,9 @@
     "badgeDotSize": "8px",
     "badgeCountMinSize": "18px",
     "badgeBackground": "var(--color-danger)",
-    "badgeColor": "var(--color-text-inverse)"
+    "badgeColor": "var(--color-text-inverse)",
+    "navigationFoundationRef": "sources.navigationFoundation.responsiveMapping.compact",
+    "iconSource": "sources.iconography"
   },
   "structurePatterns": [
     "horizontal flex container, each destination is a vertical flex (icon over label)",
@@ -48,5 +87,28 @@
     "no default shadow (hairline divider is the boundary)",
     "no accent-cyan active state"
   ],
-  "unknowns": ["haptic/animation selection timing defined by motion contract, not visualized here"]
+  "unknowns": [
+    "haptic/animation selection timing defined by motion contract, not visualized here"
+  ],
+  "interactionContract": [
+    "represents direct navigation among 3–5 stable top-level destinations only",
+    "active destination is authoritative navigation state and is separate from pressed/transient feedback",
+    "deep or numerous destinations move to Drawer/Sheet multi-level navigation rather than expanding Bottom Navigation hierarchy"
+  ],
+  "keyboardContract": [
+    "when keyboard input is available, every destination remains reachable in semantic destination order",
+    "focus-visible treatment follows T012 input policy"
+  ],
+  "accessibilityContract": [
+    "active destination exposes current-page/current-destination semantics without relying on color alone",
+    "every icon has a visible label in the default Bottom Navigation presentation",
+    "badges supplement rather than replace destination labels"
+  ],
+  "platformPresentationRefs": [
+    {
+      "ref": "sources.navigationFoundation.responsiveMapping.compact",
+      "context": "compact",
+      "note": "Preferred for 3–5 stable top-level destinations; not a generic deep-navigation container."
+    }
+  ]
 }
