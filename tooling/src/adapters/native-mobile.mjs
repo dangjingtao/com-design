@@ -45,6 +45,14 @@ function requirePlatform(model, platform) {
   return entry;
 }
 
+function axisValues(model, name) {
+  const axis = model.platform?.axes?.find((entry) => entry.name === name);
+  if (!axis || !Array.isArray(axis.values) || axis.values.length === 0) {
+    throw new Error(`native-mobile.contract requires canonical platform axis: ${name}`);
+  }
+  return [...axis.values];
+}
+
 function parseColor(value) {
   const match = String(value ?? '').trim().match(
     /^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)$/,
@@ -146,24 +154,40 @@ function normalizeMotionTokens(model) {
   return { durationsMs, easingCurves };
 }
 
-function touchMinimum(model, platform) {
+function touchPolicy(model, platform) {
   const touch = tokenEntries(model, 'platform').find((token) => token.key === 'touch-min');
   if (!touch) throw new Error('native-mobile.contract requires platform touch-min token.');
-  if (platform === 'android') {
-    return pxToNumber(model.tokens.scopes?.platformAndroid?.['platform-touch-min'] ?? touch.light);
-  }
-  return pxToNumber(touch.light);
+  const androidOverride = model.tokens.scopes?.platformAndroid?.['platform-touch-min'];
+  return {
+    minimum: pxToNumber(platform === 'android' ? androidOverride ?? touch.light : touch.light),
+    source: {
+      tokenId: touch.id,
+      scope: platform === 'android' && androidOverride !== undefined
+        ? 'platformAndroid'
+        : 'base',
+    },
+  };
 }
 
 function platformContract(model, platformEnvironment, platform) {
   const environment = requireEnvironment(platformEnvironment, platform);
   return {
     targetPlatform: requirePlatform(model, platform),
-    unit: platform === 'ios' ? 'logical-point' : 'density-independent-pixel',
-    touch: {
-      minimum: touchMinimum(model, platform),
-      policySource: 'canonical-token:platform.touch-min',
+    context: {
+      schemaVersion: model.platform?.schemaVersion ?? null,
+      platform,
+      axes: {
+        viewport: axisValues(model, 'viewport'),
+        input: axisValues(model, 'input'),
+        motion: axisValues(model, 'motion'),
+        colorScheme: axisValues(model, 'colorScheme'),
+        contentScale: axisValues(model, 'contentScale'),
+      },
+      platformDoesNotInferAxes:
+        model.platform?.principles?.platformDoesNotInferAxes === true,
     },
+    unit: platform === 'ios' ? 'logical-point' : 'density-independent-pixel',
+    touch: touchPolicy(model, platform),
     environment: {
       back: environment.back,
       keyboardIme: environment.keyboardIme,
