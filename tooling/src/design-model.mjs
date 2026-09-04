@@ -351,6 +351,16 @@ function normalizeLayoutInput(contract, source) {
   };
 }
 
+function normalizeMotion(contract, source) {
+  const { $schema: _schema, ...value } = contract;
+  return {
+    id: value.id,
+    schemaVersion: value.schemaVersion,
+    contract: value,
+    provenance: provenance(source),
+  };
+}
+
 function normalizePlatforms(platformModel, manifest, platformSource, schemaSource, manifestSource) {
   const platforms = platformModel.platforms.map((entry) => ({
     id: `platform:${entry.id}`,
@@ -454,6 +464,12 @@ export function validateCanonicalDesignModel(model) {
   if (!model?.layoutInput?.provenance || typeof model.layoutInput.provenance !== 'object') {
     errors.push('canonical layout/input foundation must carry source provenance.');
   }
+  if (model?.motion?.id !== 'com-design:motion-foundation:v2' || model?.motion?.schemaVersion !== 2) {
+    errors.push('canonical design model must expose the accepted motion foundation.');
+  }
+  if (!model?.motion?.provenance || typeof model.motion.provenance !== 'object') {
+    errors.push('canonical motion foundation must carry source provenance.');
+  }
 
   for (const platform of model?.platform?.platforms ?? []) {
     if (!MATURITY_STATUSES.has(platform.maturity?.status)) {
@@ -486,6 +502,7 @@ export function buildCanonicalDesignModel(repoRoot) {
   const platformEvidence = requireCanonicalSource(sourceIntegrity, 'platformModel');
   const platformSchemaEvidence = requireCanonicalSource(sourceIntegrity, 'platformContextSchema');
   const layoutInputEvidence = requireCanonicalSource(sourceIntegrity, 'layoutInputFoundation');
+  const motionEvidence = requireCanonicalSource(sourceIntegrity, 'motionContract');
 
   const manifestSource = sourceDescriptor(repoRoot, 'source:manifest', manifest.__path, 'manifest');
   const foundationSource = sourceDescriptor(repoRoot, 'source:foundation', foundationEvidence.resolvedPath);
@@ -498,6 +515,11 @@ export function buildCanonicalDesignModel(repoRoot) {
     repoRoot,
     'source:layoutInputFoundation',
     layoutInputEvidence.resolvedPath,
+  );
+  const motionSource = sourceDescriptor(
+    repoRoot,
+    'source:motionContract',
+    motionEvidence.resolvedPath,
   );
 
   const tokenModel = buildTokenModel(foundationEvidence.resolvedPath);
@@ -528,6 +550,7 @@ export function buildCanonicalDesignModel(repoRoot) {
     composites,
     patterns,
     layoutInput: normalizeLayoutInput(layoutInputEvidence.value, layoutInputSource),
+    motion: normalizeMotion(motionEvidence.value, motionSource),
     platform: normalizePlatforms(
       platformEvidence.value,
       manifest,
