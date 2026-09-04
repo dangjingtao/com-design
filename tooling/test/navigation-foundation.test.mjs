@@ -161,6 +161,37 @@ test('T020 consumes real T010 WeChat reserved regions and T013 stable icons', ()
   );
 });
 
+test('T020 rejects malformed navigation icon and accessibility invariant values', () => {
+  const badNodeIcon = sources();
+  badNodeIcon.contract.sampleTree[0].icon = 42;
+  assert.ok(
+    validate(badNodeIcon).some((error) =>
+      error.includes('icon must be a T013 stable-name string')),
+  );
+
+  const badAction = sources();
+  badAction.contract.examples.find(
+    (example) => example.context.platform === 'wechat-mini-program',
+  ).topAppBarActions[0].icon = 42;
+  assert.ok(
+    validate(badAction).some((error) =>
+      error.includes('Top App Bar action icon must be a non-empty T013 stable-name string')),
+  );
+
+  const badAccessibility = sources();
+  badAccessibility.contract.inputAccessibility.touch.hoverOnlyDiscovery = true;
+  badAccessibility.contract.inputAccessibility.accessibility.activeDestinationExposed = false;
+  const accessibilityErrors = validate(badAccessibility);
+  assert.ok(
+    accessibilityErrors.some((error) =>
+      error.includes('touch navigation invariants must forbid hover-only discovery')),
+  );
+  assert.ok(
+    accessibilityErrors.some((error) =>
+      error.includes('navigation accessibility invariants must expose only the active destination')),
+  );
+});
+
 test('T020 returns composable navigation errors when the T013 dependency is invalid', () => {
   const value = sources();
   value.iconography.icons.push(structuredClone(value.iconography.icons[0]));
