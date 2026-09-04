@@ -1,0 +1,210 @@
+{
+  "$schema": "../schemas/navigation-foundation-v2.schema.json",
+  "schemaVersion": 2,
+  "id": "com-design:navigation-foundation:v2",
+  "metadata": {
+    "owner": "T020",
+    "status": "v2-first-stage",
+    "purpose": "Shared recursive destination model plus responsive, host-aware and accessibility-safe navigation presentation rules."
+  },
+  "principles": {
+    "sharedDestinationSemantics": true,
+    "recursiveWithoutCoreDepthLimit": true,
+    "platformDoesNotInferPresentation": true,
+    "hostChromeIsNotCore": true,
+    "appShellLayoutIsSeparate": true
+  },
+  "navigationModel": {
+    "childrenField": "children",
+    "recursive": true,
+    "hardDepthLimit": false,
+    "parentDestinationAndDisclosureSeparated": true,
+    "state": {
+      "activeDestinationId": "single authoritative destination id",
+      "activeAncestorIds": "derived ancestor chain for the active destination; never a substitute for active destination",
+      "expandedNodeIds": "independent disclosure state; may include active ancestors but remains separately mutable",
+      "rules": [
+        "Selecting a destination changes activeDestinationId without implicitly toggling disclosure.",
+        "Activating a disclosure target changes expandedNodeIds without navigating the parent destination.",
+        "Active ancestors remain visually identifiable even when a user manually collapses their descendants."
+      ]
+    }
+  },
+  "responsiveMapping": {
+    "wide": {
+      "defaultPresentation": "side-navigation-expanded",
+      "rules": [
+        "Use persistent label-first Side Navigation when the product benefits from a stable navigation region.",
+        "The navigation region may scroll independently while App Shell owns content offset and resize.",
+        "Recursive children remain available without a Core depth cap."
+      ]
+    },
+    "medium": {
+      "defaultPresentation": "navigation-rail-compact",
+      "rules": [
+        "Navigation Rail is eligible as an icon-first compact presentation when every destination retains an accessible label.",
+        "A user or product may keep expanded Side Navigation when task clarity needs labels; viewport alone does not force Rail.",
+        "Nested destinations use disclosure, flyout, drawer or an expanded navigation surface rather than becoming hover-only."
+      ]
+    },
+    "compact": {
+      "defaultPresentation": "adaptive-mobile-navigation",
+      "rules": [
+        "For 3–5 stable top-level destinations, Bottom Navigation is the preferred direct-destination presentation.",
+        "For deep or numerous destinations, use Drawer or Sheet multi-level collapsible navigation instead of a horizontally scrolling destination strip.",
+        "Top App Bar owns page-level navigation UI only; host/system chrome remains outside Core."
+      ],
+      "topLevel3To5": "bottom-navigation",
+      "deepOrMany": "drawer-or-sheet-multilevel"
+    }
+  },
+  "topAppBar": {
+    "component": "top-app-bar",
+    "safeAreaOwnedByPlatform": true,
+    "reservedRegionSource": "platformEnvironment.geometry.reservedRegions",
+    "hostChromeSource": "platformEnvironment.chrome",
+    "hostChromeIsCoreComponent": false,
+    "titleCentering": "center within the available safe navigation region after leading actions, trailing actions and platform reserved regions are excluded",
+    "titleWidthRule": "derive from available safe navigation region; never overlap leading/trailing actions or host reserved regions",
+    "trailingActions": {
+      "iconRegistrySource": "sources.iconography",
+      "stableNamesOnly": true,
+      "providerImportsForbidden": true,
+      "overflowBeforeOverlap": true
+    }
+  },
+  "inputAccessibility": {
+    "inputRuleSource": "sources.layoutInputFoundation.inputRules",
+    "touch": {
+      "hoverOnlyDiscovery": false,
+      "destinationAndDisclosureHitTargetsSeparated": true,
+      "targetSizingOwner": "platform-adapter",
+      "rule": "Both destination and disclosure remain independently operable touch targets when a parent is also navigable."
+    },
+    "keyboard": {
+      "destinationAndDisclosureOperable": true,
+      "focusVisibleRequired": true,
+      "focusOrder": "semantic navigation order",
+      "focusRestoreAfterCollapse": "restore to the disclosure owner when a focused descendant becomes hidden",
+      "activeOrFocusedItemMustRemainVisible": true,
+      "semanticRolePolicy": "Use navigation/list semantics for ordinary destination navigation; use tree semantics only when the interaction actually implements tree behavior."
+    },
+    "accessibility": {
+      "activeDestinationExposed": true,
+      "activeAncestorNotReportedAsCurrentPage": true,
+      "railIconOnlyItemsRequireAccessibleLabel": true,
+      "truncatedLabelsNeedAccessibleFullLabel": true,
+      "criticalMeaningNeverColorOnly": true
+    }
+  },
+  "sampleTree": [
+    {
+      "id": "home",
+      "label": "Home",
+      "destination": "/home",
+      "icon": "core.home"
+    },
+    {
+      "id": "workspace",
+      "label": "Workspace",
+      "destination": "/workspace",
+      "icon": "core.menu",
+      "children": [
+        {
+          "id": "projects",
+          "label": "Projects",
+          "destination": "/workspace/projects"
+        },
+        {
+          "id": "settings",
+          "label": "Settings",
+          "destination": "/workspace/settings",
+          "icon": "core.settings",
+          "children": [
+            {
+              "id": "security",
+              "label": "Security",
+              "destination": "/workspace/settings/security",
+              "children": [
+                {
+                  "id": "security-audit-history",
+                  "label": "Audit history",
+                  "destination": "/workspace/settings/security/audit-history"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "profile",
+      "label": "Profile",
+      "destination": "/profile",
+      "icon": "core.user"
+    }
+  ],
+  "stateExample": {
+    "activeDestinationId": "security-audit-history",
+    "activeAncestorIds": ["workspace", "settings", "security"],
+    "expandedNodeIds": ["workspace", "settings", "security"]
+  },
+  "examples": [
+    {
+      "name": "wide-web-side-navigation",
+      "context": {
+        "platform": "web",
+        "viewport": "wide",
+        "input": "keyboard",
+        "motion": "standard",
+        "colorScheme": "light",
+        "contentScale": "standard"
+      },
+      "presentation": "side-navigation-expanded"
+    },
+    {
+      "name": "medium-web-navigation-rail",
+      "context": {
+        "platform": "web",
+        "viewport": "medium",
+        "input": "hybrid",
+        "motion": "standard",
+        "colorScheme": "light",
+        "contentScale": "standard"
+      },
+      "presentation": "navigation-rail-compact"
+    },
+    {
+      "name": "compact-ios-adaptive-navigation",
+      "context": {
+        "platform": "ios",
+        "viewport": "compact",
+        "input": "touch",
+        "motion": "standard",
+        "colorScheme": "light",
+        "contentScale": "standard"
+      },
+      "presentation": "bottom-navigation+drawer-sheet-multilevel"
+    },
+    {
+      "name": "compact-wechat-host-aware-top-app-bar",
+      "context": {
+        "platform": "wechat-mini-program",
+        "viewport": "compact",
+        "input": "touch",
+        "motion": "reduced",
+        "colorScheme": "light",
+        "contentScale": "platform-driven"
+      },
+      "presentation": "top-app-bar+drawer-sheet-multilevel",
+      "hostEnvironmentExample": "wechat-mini-program-runtime",
+      "reservedRegionIds": ["wechat-capsule-region"],
+      "topAppBarActions": [
+        {
+          "icon": "core.search",
+          "accessibleName": "Search"
+        }
+      ]
+    }
+  ]
+}
