@@ -39,7 +39,7 @@
 | T005 | Canonical Design Model V2 | Architecture / Tooling | PASS | V2 first-stage | T001、T002、T003 |
 | T006 | Validation Orchestrator + Evidence Output | Validation | PASS | V2 first-stage | T001、T003、T005 |
 | T007 | Web Adapter V2 | Web / Adapter | PASS | V2 first-stage | T004、T005 |
-| T008 | Native Mobile Adapter V2 | iOS / Android / Adapter | TODO | V2 first-stage | T002、T004、T005 |
+| T008 | Native Mobile Adapter V2 | iOS / Android / Adapter | PASS | V2 first-stage | T002、T004、T005 |
 | T009 | WeChat Mini Program Minimum Viable Adapter | Mini Program / Adapter | TODO | V2 first-stage | T002、T004、T005、T010 |
 | T010 | Platform Environment Contract | Architecture / Platform | PASS | V2 first-stage | T002 |
 | T011 | Motion Foundation V2 | Foundation / Motion | PASS | V2 first-stage | T002 |
