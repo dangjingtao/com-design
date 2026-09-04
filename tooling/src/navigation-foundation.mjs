@@ -91,7 +91,7 @@ function validateSampleTree(contract, iconRegistry) {
     }
     if (typeof node.icon === 'string') {
       try {
-        iconRegistry.resolve(node.icon, { decorative: true });
+        iconRegistry.resolve(node.icon, { decorative: true, strict: true });
       } catch (error) {
         errors.push(`navigation node ${node.id ?? '<unknown>'} icon ${node.icon} is not consumable through T013: ${error.message}`);
       }
@@ -232,6 +232,7 @@ export function validateNavigationFoundationContract(
           size: 20,
           interactive: true,
           accessibleName: action.accessibleName,
+          strict: true,
         });
       } catch (error) {
         errors.push(`example ${example.name} Top App Bar action must resolve through T013: ${error.message}`);
