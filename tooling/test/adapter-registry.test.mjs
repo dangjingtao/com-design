@@ -55,6 +55,12 @@ test('built-in registry exposes stable adapter IDs and target mapping', () => {
         ],
       },
       {
+        id: 'native-mobile.contract',
+        target: 'native-mobile',
+        family: 'native-mobile',
+        outputPaths: ['dist/native-mobile/adapter.json'],
+      },
+      {
         id: 'native-mobile.nativewind',
         target: 'nativewind',
         family: 'native-mobile',
@@ -123,6 +129,7 @@ test('registry preserves current engineering output paths and source revision ev
     'dist/tailwind/preset.cjs',
     'dist/tailwind/theme.css',
     'dist/tailwind/adapter.json',
+    'dist/native-mobile/adapter.json',
     'dist/nativewind/preset.cjs',
     'dist/nativewind/theme.css',
     'dist/react-native/tokens.ts',
@@ -135,7 +142,7 @@ test('registry preserves current engineering output paths and source revision ev
 
   const manifest = JSON.parse(files.get('dist/build-manifest.json'));
   assert.equal(manifest.sourceHash, 'fixture-source-revision');
-  assert.deepEqual(manifest.targets, ['tailwind', 'nativewind', 'react-native', 'mcp']);
+  assert.deepEqual(manifest.targets, ['tailwind', 'native-mobile', 'nativewind', 'react-native', 'mcp']);
 });
 
 test('new platform adapter can be registered without changing central build plumbing', () => {
