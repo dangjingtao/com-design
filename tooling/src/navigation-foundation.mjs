@@ -89,7 +89,9 @@ function validateSampleTree(contract, iconRegistry) {
     if (node.destination && Array.isArray(node.children) && node.children.length) {
       parentDestinationWithChildren = true;
     }
-    if (typeof node.icon === 'string' && iconRegistry) {
+    if (node.icon !== undefined && typeof node.icon !== 'string') {
+      errors.push(`navigation node ${node.id ?? '<unknown>'} icon must be a T013 stable-name string when present.`);
+    } else if (typeof node.icon === 'string' && iconRegistry) {
       try {
         iconRegistry.resolve(node.icon, { decorative: true, strict: true });
       } catch (error) {
@@ -198,15 +200,27 @@ export function validateNavigationFoundationContract(
       || layoutInputFoundation?.inputRules?.hybrid?.focusVisibleRequired !== true) {
     errors.push('navigation foundation requires T012 keyboard/hybrid focus-visible support.');
   }
-  if (contract.inputAccessibility?.touch?.destinationAndDisclosureHitTargetsSeparated !== true) {
-    errors.push('touch navigation must separate destination and disclosure hit targets.');
+  const touch = contract.inputAccessibility?.touch;
+  if (touch?.hoverOnlyDiscovery !== false
+      || touch?.destinationAndDisclosureHitTargetsSeparated !== true
+      || touch?.targetSizingOwner !== 'platform-adapter') {
+    errors.push('touch navigation invariants must forbid hover-only discovery, separate destination/disclosure targets, and keep sizing with the platform adapter.');
   }
-  if (contract.inputAccessibility?.keyboard?.destinationAndDisclosureOperable !== true
-      || contract.inputAccessibility?.keyboard?.focusVisibleRequired !== true) {
-    errors.push('keyboard navigation must keep destination and disclosure independently operable with visible focus.');
+
+  const keyboard = contract.inputAccessibility?.keyboard;
+  if (keyboard?.destinationAndDisclosureOperable !== true
+      || keyboard?.focusVisibleRequired !== true
+      || keyboard?.activeOrFocusedItemMustRemainVisible !== true) {
+    errors.push('keyboard navigation invariants must keep destination/disclosure operable, focus visible, and active/focused items visible.');
   }
-  if (contract.inputAccessibility?.accessibility?.railIconOnlyItemsRequireAccessibleLabel !== true) {
-    errors.push('Navigation Rail icon-only items must require accessible labels.');
+
+  const accessibility = contract.inputAccessibility?.accessibility;
+  if (accessibility?.activeDestinationExposed !== true
+      || accessibility?.activeAncestorNotReportedAsCurrentPage !== true
+      || accessibility?.railIconOnlyItemsRequireAccessibleLabel !== true
+      || accessibility?.truncatedLabelsNeedAccessibleFullLabel !== true
+      || accessibility?.criticalMeaningNeverColorOnly !== true) {
+    errors.push('navigation accessibility invariants must expose only the active destination as current, label compact/truncated items, and never rely on color alone.');
   }
 
   let wideEvidence = false;
@@ -228,6 +242,14 @@ export function validateNavigationFoundationContract(
     }
 
     for (const action of example.topAppBarActions ?? []) {
+      if (typeof action?.icon !== 'string' || !action.icon.trim()) {
+        errors.push(`example ${example.name} Top App Bar action icon must be a non-empty T013 stable-name string.`);
+        continue;
+      }
+      if (typeof action?.accessibleName !== 'string' || !action.accessibleName.trim()) {
+        errors.push(`example ${example.name} Top App Bar action must carry a non-empty accessibleName.`);
+        continue;
+      }
       if (!iconRegistry) continue;
       try {
         iconRegistry.adapt(action.icon, {
