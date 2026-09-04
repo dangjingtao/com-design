@@ -23,10 +23,10 @@ test('Web Adapter V2 preserves the Tailwind semantic consumer path from Canonica
   const preset = files.get('dist/tailwind/preset.cjs');
   const themeCss = files.get('dist/tailwind/theme.css');
 
-  assert.match(preset, /"primary": "var\\(--cd-color-primary\\)"/);
-  assert.match(preset, /"background": "var\\(--cd-color-background\\)"/);
+  assert.ok(preset.includes('"primary": "var(--cd-color-primary)"'));
+  assert.ok(preset.includes('"background": "var(--cd-color-background)"'));
   assert.match(themeCss, /--cd-color-primary:/);
-  assert.match(themeCss, /\\.theme-premium-gold/);
+  assert.ok(themeCss.includes('.theme-premium-gold'));
   assert.ok(themeCss.includes('[data-com-theme="premium-gold"]'));
 });
 
