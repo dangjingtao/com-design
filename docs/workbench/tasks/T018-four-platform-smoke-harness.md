@@ -1,6 +1,6 @@
 # T018 · Representative Four-platform Smoke Harness
 
-- Status: TODO
+- Status: DOING
 - Target version: V2 first-stage
 - Impact: QA / Cross-platform
 - Owner: -
