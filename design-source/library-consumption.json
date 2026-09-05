@@ -1,42 +1,107 @@
 {
-  "schemaVersion": 1,
-  "tokenSource": "css.json",
-  "componentIndex": "components/index.json",
-  "compositeGuide": "COMPOSITE_COMPONENTS.md",
-  "compositeSource": "specs/core-composites.json",
-  "compositePreview": "preview/core-composite-components.html",
-  "patternGuide": "UX_PATTERNS.md",
-  "patternSource": "specs/core-patterns.json",
-  "patternPreview": "preview/core-ux-patterns.html",
-  "recommendedReadOrder": [
-    "SKILL.md",
-    "README.md",
-    "css.json",
-    "colors_and_type.css",
-    "components/index.json",
-    "components/{slug}.json",
-    "COMPOSITE_COMPONENTS.md",
-    "specs/core-composites.json",
-    "preview/core-composite-components.html",
-    "UX_PATTERNS.md",
-    "specs/core-patterns.json",
-    "preview/core-ux-patterns.html",
-    "preview/component-{slug}.html"
+  "schemaVersion": 2,
+  "id": "com-design:library-consumption:v2",
+  "scope": "four-platform",
+  "authority": {
+    "canonicalManifest": "specs/design-system-v1.json",
+    "canonicalSourceRoot": "design-source/",
+    "generatedAgentContract": "dist/agent/contract.json",
+    "rule": "Canonical machine contracts define Com Design semantics. Generated consumers, Human Guide, Penpot and Preview are downstream and never become upstream truth."
+  },
+  "consumerPriority": [
+    "ai-agent",
+    "engineering",
+    "design"
   ],
-  "coreComponents": ["button","input","list-item","card","tag","bottom-navigation"],
-  "coreCompositeComponents": [
-    "carousel",
-    "filterBar",
-    "tabbedActionBar",
-    "groupedList"
-  ],
-  "corePatterns": [
-    "statusComposition",
-    "searchPattern",
-    "collectionFilter",
-    "stateToAction",
-    "intentContinuity",
-    "contextualNextStep"
-  ],
-  "supportComponents": []
+  "catalogs": {
+    "coreComponents": {
+      "source": "components/index.json",
+      "collection": "components",
+      "contractTemplate": "components/{slug}.json"
+    },
+    "coreCompositeComponents": {
+      "source": "specs/core-composites.json",
+      "collection": "composites"
+    },
+    "corePatterns": {
+      "source": "specs/core-patterns.json",
+      "collection": "patterns"
+    }
+  },
+  "recommendedReadOrder": {
+    "canonicalMachine": [
+      "specs/design-system-v1.json",
+      "components/index.json",
+      "components/{slug}.json",
+      "specs/core-composites.json",
+      "specs/core-patterns.json",
+      "specs/platform-model-v2.json",
+      "specs/platform-environment-v1.json",
+      "specs/layout-input-foundation-v2.json",
+      "specs/navigation-foundation-v2.json",
+      "specs/motion-foundation-v2.json",
+      "specs/iconography.json",
+      "specs/release-governance-v1.json"
+    ],
+    "aiAgent": [
+      "dist/agent/contract.json",
+      "design-source/specs/design-system-v1.json",
+      "design-source/components/{slug}.json"
+    ],
+    "human": [
+      "README.md",
+      "design-source/README.md",
+      "design-source/SKILL.md",
+      "design-source/BUILD_PIPELINE.md"
+    ]
+  },
+  "platformAdapters": {
+    "web": {
+      "contract": "dist/tailwind/adapter.json",
+      "engineeringConsumers": [
+        "dist/tailwind/preset.cjs",
+        "dist/tailwind/theme.css"
+      ]
+    },
+    "ios": {
+      "contract": "dist/native-mobile/adapter.json",
+      "engineeringConsumers": [
+        "dist/nativewind/preset.cjs",
+        "dist/nativewind/theme.css",
+        "dist/react-native/tokens.ts"
+      ]
+    },
+    "android": {
+      "contract": "dist/native-mobile/adapter.json",
+      "engineeringConsumers": [
+        "dist/nativewind/preset.cjs",
+        "dist/nativewind/theme.css",
+        "dist/react-native/tokens.ts"
+      ]
+    },
+    "wechat-mini-program": {
+      "contract": "dist/wechat-mini-program/adapter.json",
+      "engineeringConsumers": [
+        "dist/wechat-mini-program/tokens.js"
+      ]
+    }
+  },
+  "downstreamConsumers": {
+    "penpot": {
+      "manifest": "penpot/build/manifest.json",
+      "editableWorkspace": true,
+      "upstreamAuthority": false
+    },
+    "humanGuide": {
+      "acceptedReport": "report/design-system-v1/",
+      "acceptanceEvidence": true,
+      "upstreamAuthority": false
+    }
+  },
+  "previewPolicy": {
+    "root": "design-source/preview/",
+    "referenceOnly": true,
+    "productionSource": false,
+    "rule": "Preview may illustrate a contract in a platform context. Production implementations must consume canonical contracts and the target Platform Adapter; non-Web platforms must never copy Preview DOM/CSS as implementation truth."
+  }
 }
