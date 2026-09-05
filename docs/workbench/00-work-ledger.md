@@ -49,7 +49,7 @@
 | T015 | Penpot as Governed Downstream Consumer | Penpot / Tooling | PASS | V2 first-stage | T003、T005 |
 | T016 | Human Guide / Skill / Library-consumption Consistency | Docs / Consumption | TODO | V2 first-stage | T001、T007、T008、T009、T014、T015 |
 | T017 | Deterministic CI Hard Gate + Evidence Artifact | CI / Validation | PASS | V2 first-stage | T006、T007、T008、T009、T014、T015 |
-| T018 | Representative Four-platform Smoke Harness | QA / Cross-platform | TODO | V2 first-stage | T007、T008、T009、T010、T011、T012 |
+| T018 | Representative Four-platform Smoke Harness | QA / Cross-platform | DOING | V2 first-stage | T007、T008、T009、T010、T011、T012 |
 | T019 | Release Governance + Conditional AI Review Gate | CI / Review | TODO | V2 first-stage | T017 |
 | T020 | Navigation Foundation | Component / Navigation | PASS | V2 first-stage | T003、T010、T012、T013 |
 | T021 | Mobile Search + Filter Workflow Contract | UX Pattern | TODO | V2 first-stage | T003、T010、T012 |
