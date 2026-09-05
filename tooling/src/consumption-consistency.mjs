@@ -148,10 +148,61 @@ export function validateConsumptionConsistency(repoRoot) {
     }
   }
 
+  const canonicalReadOrder = library.recommendedReadOrder?.canonicalMachine ?? [];
+  if (!Array.isArray(canonicalReadOrder) || canonicalReadOrder.length === 0) {
+    errors.push('canonical machine read order must be a non-empty array.');
+  } else {
+    const componentSlugs = canonicalSources.componentIndex?.value?.components
+      ?.map((entry) => entry?.slug)
+      .filter(Boolean) ?? [];
+    for (const relativePath of canonicalReadOrder) {
+      if (relativePath === 'components/{slug}.json') {
+        for (const slug of componentSlugs) {
+          requireFile(
+            repoRoot,
+            path.join('design-source', 'components', slug + '.json'),
+            errors,
+            'canonical machine read order',
+          );
+        }
+        continue;
+      }
+      requireFile(
+        repoRoot,
+        path.join('design-source', relativePath),
+        errors,
+        'canonical machine read order',
+      );
+    }
+  }
+
+  const aiReadOrder = library.recommendedReadOrder?.aiAgent ?? [];
+  if (aiReadOrder[0] !== 'dist/agent/contract.json') {
+    errors.push('AI / Agent read order must start from the generated T014 agent contract.');
+  }
+  for (const relativePath of aiReadOrder.slice(1)) {
+    if (relativePath === 'design-source/components/{slug}.json') continue;
+    requireFile(repoRoot, relativePath, errors, 'AI / Agent read order');
+  }
+
   const humanPaths = library.recommendedReadOrder?.human ?? [];
   for (const relativePath of humanPaths) {
     requireFile(repoRoot, relativePath, errors, 'human read order');
   }
+
+  if (
+    library.downstreamConsumers?.penpot?.manifest !== 'penpot/build/manifest.json'
+    || library.downstreamConsumers?.penpot?.upstreamAuthority !== false
+  ) {
+    errors.push('Penpot must remain a governed downstream consumer at penpot/build/manifest.json.');
+  }
+  if (
+    library.downstreamConsumers?.humanGuide?.acceptedReport !== 'report/design-system-v1/'
+    || library.downstreamConsumers?.humanGuide?.upstreamAuthority !== false
+  ) {
+    errors.push('Human Guide must remain downstream acceptance evidence at report/design-system-v1/.');
+  }
+
   requireFile(repoRoot, 'report/design-system-v1', errors, 'accepted human report');
   requireFile(repoRoot, 'design-source/preview', errors, 'preview root');
 
