@@ -29,20 +29,31 @@
       {
         "id": "explicit-review-request",
         "match": {
-          "forceAiReview": [true]
+          "forceAiReview": [
+            true
+          ]
         }
       },
       {
         "id": "agent-medium-plus",
         "match": {
-          "actorKinds": ["agent"],
-          "riskLevels": ["medium", "high", "critical"]
+          "actorKinds": [
+            "agent",
+            "mixed"
+          ],
+          "riskLevels": [
+            "medium",
+            "high",
+            "critical"
+          ]
         }
       },
       {
         "id": "critical-change",
         "match": {
-          "riskLevels": ["critical"]
+          "riskLevels": [
+            "critical"
+          ]
         }
       }
     ],
@@ -57,15 +68,26 @@
         "warnings",
         "evidence"
       ],
-      "decisions": ["pass", "revise", "reject"],
-      "reviewerKinds": ["ai", "human", "service"]
+      "decisions": [
+        "pass",
+        "revise",
+        "reject"
+      ],
+      "reviewerKinds": [
+        "ai",
+        "service"
+      ]
     }
   },
   "miraJudgment": {
     "role": "Mira",
     "requiredForRelease": true,
     "finalVeto": true,
-    "decisions": ["approve", "revise", "reject"]
+    "decisions": [
+      "approve",
+      "revise",
+      "reject"
+    ]
   },
   "versioning": {
     "strategy": "semver",
