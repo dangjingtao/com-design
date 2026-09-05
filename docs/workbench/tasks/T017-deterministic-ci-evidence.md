@@ -1,6 +1,6 @@
 # T017 · Deterministic CI Hard Gate + Evidence Artifact
 
-- Status: TODO
+- Status: DOING
 - Target version: V2 first-stage
 - Impact: CI / Validation / Evidence
 - Owner: -
