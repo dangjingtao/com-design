@@ -13,7 +13,9 @@ function nonEmptyArray(value) {
 }
 
 function semverLike(value) {
-  return /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(String(value ?? ''));
+  return /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/.test(
+    String(value ?? ''),
+  );
 }
 
 function readJson(filePath) {
@@ -275,7 +277,7 @@ function compatibilityEvaluation(policy, request) {
   };
 }
 
-function hardGateEvaluation(policy, hardGate) {
+function hardGateEvaluation(policy, hardGate, release = {}) {
   const errors = [];
   if (hardGate?.id !== policy.deterministicHardGate.requiredEvidenceId) {
     errors.push('deterministic hard gate evidence id must match T017.');
@@ -285,6 +287,11 @@ function hardGateEvaluation(policy, hardGate) {
   }
   if (typeof hardGate?.source?.headSha !== 'string' || hardGate.source.headSha.length === 0) {
     errors.push('deterministic hard gate evidence must record the tested head SHA.');
+  }
+  if (typeof release.targetSha !== 'string' || release.targetSha.length === 0) {
+    errors.push('release.targetSha is required for formal revision binding.');
+  } else if (hardGate?.source?.headSha !== release.targetSha) {
+    errors.push('deterministic hard gate evidence head SHA must match release.targetSha.');
   }
   if (hardGate?.summary?.failed !== 0 || hardGate?.summary?.targetFailures !== 0) {
     errors.push('deterministic hard gate summary must report zero failed checks and target failures.');
@@ -348,7 +355,7 @@ export function evaluateReleaseGovernance(policy, request) {
     throw new Error('Invalid release governance policy:\n- ' + policyErrors.join('\n- '));
   }
 
-  const hardGate = hardGateEvaluation(policy, request.hardGate);
+  const hardGate = hardGateEvaluation(policy, request.hardGate, request.release ?? {});
   const changeMetadata = changeMetadataEvaluation(request.change ?? {});
   const compatibility = compatibilityEvaluation(policy, request);
   const aiRequirement = resolveAiReviewRequirement(policy, request.change ?? {});
@@ -406,6 +413,7 @@ export function evaluateReleaseGovernance(policy, request) {
     release: {
       version: request.release?.version ?? null,
       changeLevel: request.release?.changeLevel ?? null,
+      targetSha: request.release?.targetSha ?? null,
     },
     change: {
       actorKind: request.change?.actorKind ?? null,
@@ -454,6 +462,7 @@ export function buildGovernanceDryRun(policy, hardGate, {
     release: {
       version,
       changeLevel: 'patch',
+      targetSha: hardGate?.source?.headSha ?? null,
     },
     change: {
       actorKind: 'human',
