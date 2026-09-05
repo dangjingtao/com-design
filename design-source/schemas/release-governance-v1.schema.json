@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://com-design.local/schemas/release-governance-v1.schema.json",
+  "title": "Com Design Release Governance V1",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "$metadata",
+    "pipeline",
+    "deterministicHardGate",
+    "aiReviewGate",
+    "miraJudgment",
+    "versioning",
+    "consumerVersionPolicy"
+  ],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schemaVersion": {"const": 1},
+    "id": {"const": "com-design:release-governance:v1"},
+    "$metadata": {
+      "type": "object",
+      "required": ["name", "version", "status", "owner", "canonical"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "version": {"const": 1},
+        "status": {"type": "string", "minLength": 1},
+        "owner": {"const": "T019"},
+        "canonical": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "pipeline": {
+      "type": "array",
+      "const": [
+        "deterministic-hard-gates",
+        "conditional-ai-review",
+        "mira-judgment",
+        "release-eligibility",
+        "consumer-explicit-upgrade"
+      ]
+    },
+    "deterministicHardGate": {
+      "type": "object",
+      "required": ["requiredEvidenceId", "requiredResult", "canBeOverridden"],
+      "properties": {
+        "requiredEvidenceId": {"const": "com-design:ci-evidence:v1"},
+        "requiredResult": {"const": "pass"},
+        "canBeOverridden": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "aiReviewGate": {
+      "type": "object",
+      "required": [
+        "vendorNeutral",
+        "defaultMode",
+        "passingDecision",
+        "triggerRules",
+        "evidenceContract"
+      ],
+      "properties": {
+        "vendorNeutral": {"const": true},
+        "defaultMode": {"const": "optional"},
+        "passingDecision": {"const": "pass"},
+        "triggerRules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "match"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "match": {
+                "type": "object",
+                "properties": {
+                  "forceAiReview": {"type": "array", "items": {"type": "boolean"}},
+                  "actorKinds": {"type": "array", "items": {"type": "string", "minLength": 1}},
+                  "riskLevels": {"type": "array", "items": {"type": "string", "enum": ["low", "medium", "high", "critical"]}}
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "evidenceContract": {
+          "type": "object",
+          "required": ["schemaVersion", "requiredFields", "decisions", "reviewerKinds"],
+          "properties": {
+            "schemaVersion": {"const": 1},
+            "requiredFields": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+            "decisions": {"type": "array", "const": ["pass", "revise", "reject"]},
+            "reviewerKinds": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "miraJudgment": {
+      "type": "object",
+      "required": ["role", "requiredForRelease", "finalVeto", "decisions"],
+      "properties": {
+        "role": {"const": "Mira"},
+        "requiredForRelease": {"const": true},
+        "finalVeto": {"const": true},
+        "decisions": {"type": "array", "const": ["approve", "revise", "reject"]}
+      },
+      "additionalProperties": false
+    },
+    "versioning": {
+      "type": "object",
+      "required": ["strategy", "levels", "majorRequirements"],
+      "properties": {
+        "strategy": {"const": "semver"},
+        "levels": {"type": "object"},
+        "majorRequirements": {
+          "type": "array",
+          "const": ["breakingSurface", "migration", "impactEvidence"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "consumerVersionPolicy": {
+      "type": "object",
+      "required": [
+        "defaultMode",
+        "autoUpgrade",
+        "explicitUpgradeRequired",
+        "upgradeEvidenceRequired",
+        "majorImpactConfirmationRequired"
+      ],
+      "properties": {
+        "defaultMode": {"const": "pinned"},
+        "autoUpgrade": {"const": false},
+        "explicitUpgradeRequired": {"const": true},
+        "upgradeEvidenceRequired": {"const": true},
+        "majorImpactConfirmationRequired": {"const": true}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

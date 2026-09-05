@@ -140,7 +140,9 @@
     "iconographySchema": "../schemas/iconography-contract-v1.schema.json",
     "iconography": "./iconography.json",
     "coreComposites": "./core-composites.json",
-    "corePatterns": "./core-patterns.json"
+    "corePatterns": "./core-patterns.json",
+    "releaseGovernanceSchema": "../schemas/release-governance-v1.schema.json",
+    "releaseGovernance": "./release-governance-v1.json"
   },
   "plannedSources": {
     "legacyTokenJsonBundle": {

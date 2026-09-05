@@ -84,6 +84,10 @@ jobs:
           GATE_ACCEPTED_REPORT: ${{ steps.accepted_report.outcome }}
         run: npm run ci:evidence
 
+      - name: Run release governance dry-run
+        if: always()
+        run: npm run governance:dry-run
+
       - name: Upload deterministic evidence package
         if: always()
         uses: actions/upload-artifact@v4
@@ -91,6 +95,7 @@ jobs:
           name: com-design-evidence-${{ github.sha }}
           path: |
             dist/ci/evidence.json
+            dist/governance/evidence.json
             dist/validation/evidence.json
             dist/design-model-v2.json
             dist/build-manifest.json

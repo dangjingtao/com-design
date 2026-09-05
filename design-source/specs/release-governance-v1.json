@@ -1,0 +1,121 @@
+{
+  "$schema": "../schemas/release-governance-v1.schema.json",
+  "schemaVersion": 1,
+  "id": "com-design:release-governance:v1",
+  "$metadata": {
+    "name": "Com Design Release Governance",
+    "version": 1,
+    "status": "v2-first-stage",
+    "owner": "T019",
+    "canonical": true
+  },
+  "pipeline": [
+    "deterministic-hard-gates",
+    "conditional-ai-review",
+    "mira-judgment",
+    "release-eligibility",
+    "consumer-explicit-upgrade"
+  ],
+  "deterministicHardGate": {
+    "requiredEvidenceId": "com-design:ci-evidence:v1",
+    "requiredResult": "pass",
+    "canBeOverridden": false
+  },
+  "aiReviewGate": {
+    "vendorNeutral": true,
+    "defaultMode": "optional",
+    "passingDecision": "pass",
+    "triggerRules": [
+      {
+        "id": "explicit-review-request",
+        "match": {
+          "forceAiReview": [
+            true
+          ]
+        }
+      },
+      {
+        "id": "agent-medium-plus",
+        "match": {
+          "actorKinds": [
+            "agent",
+            "mixed"
+          ],
+          "riskLevels": [
+            "medium",
+            "high",
+            "critical"
+          ]
+        }
+      },
+      {
+        "id": "critical-change",
+        "match": {
+          "riskLevels": [
+            "critical"
+          ]
+        }
+      }
+    ],
+    "evidenceContract": {
+      "schemaVersion": 1,
+      "requiredFields": [
+        "schemaVersion",
+        "reviewId",
+        "reviewer",
+        "decision",
+        "findings",
+        "warnings",
+        "evidence"
+      ],
+      "decisions": [
+        "pass",
+        "revise",
+        "reject"
+      ],
+      "reviewerKinds": [
+        "ai",
+        "service"
+      ]
+    }
+  },
+  "miraJudgment": {
+    "role": "Mira",
+    "requiredForRelease": true,
+    "finalVeto": true,
+    "decisions": [
+      "approve",
+      "revise",
+      "reject"
+    ]
+  },
+  "versioning": {
+    "strategy": "semver",
+    "levels": {
+      "patch": {
+        "breakingAllowed": false,
+        "consumerCodeChangeExpected": false
+      },
+      "minor": {
+        "breakingAllowed": false,
+        "consumerCodeChangeExpected": false
+      },
+      "major": {
+        "breakingAllowed": true,
+        "consumerCodeChangeExpected": true
+      }
+    },
+    "majorRequirements": [
+      "breakingSurface",
+      "migration",
+      "impactEvidence"
+    ]
+  },
+  "consumerVersionPolicy": {
+    "defaultMode": "pinned",
+    "autoUpgrade": false,
+    "explicitUpgradeRequired": true,
+    "upgradeEvidenceRequired": true,
+    "majorImpactConfirmationRequired": true
+  }
+}
