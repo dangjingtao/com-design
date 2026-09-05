@@ -56,7 +56,7 @@ function mira(decision = 'approve') {
 
 function request(overrides = {}) {
   return {
-    release: { version: '2.1.0', changeLevel: 'minor' },
+    release: { version: '2.1.0', changeLevel: 'minor', targetSha: 'head-sha' },
     change: {
       actorKind: 'human',
       riskLevel: 'low',
@@ -171,7 +171,11 @@ test('T019 Mira revise/reject formally blocks release', () => {
 test('T019 patch/minor cannot hide a breaking consumer change', () => {
   for (const changeLevel of ['patch', 'minor']) {
     const result = evaluateReleaseGovernance(policy, request({
-      release: { version: changeLevel === 'patch' ? '2.0.1' : '2.1.0', changeLevel },
+      release: {
+        version: changeLevel === 'patch' ? '2.0.1' : '2.1.0',
+        changeLevel,
+        targetSha: 'head-sha',
+      },
       change: {
         actorKind: 'human',
         riskLevel: 'low',
@@ -189,7 +193,7 @@ test('T019 patch/minor cannot hide a breaking consumer change', () => {
 
 test('T019 major release requires breaking surface, migration and impact evidence', () => {
   const incomplete = evaluateReleaseGovernance(policy, request({
-    release: { version: '3.0.0', changeLevel: 'major' },
+    release: { version: '3.0.0', changeLevel: 'major', targetSha: 'head-sha' },
     change: {
       actorKind: 'human',
       riskLevel: 'high',
@@ -205,7 +209,7 @@ test('T019 major release requires breaking surface, migration and impact evidenc
   assert.equal(incomplete.releaseEligibility.eligible, false);
 
   const complete = evaluateReleaseGovernance(policy, request({
-    release: { version: '3.0.0', changeLevel: 'major' },
+    release: { version: '3.0.0', changeLevel: 'major', targetSha: 'head-sha' },
     change: {
       actorKind: 'human',
       riskLevel: 'high',
@@ -319,4 +323,63 @@ test('T019 Mira approve requires cited evidence', () => {
   assert.equal(result.miraJudgment.status, 'invalid');
   assert.equal(result.releaseEligibility.eligible, false);
   assert.ok(result.releaseEligibility.blockers.includes('mira-judgment'));
+});
+
+
+test('T019 rejects stale passing hard-gate evidence from a different release SHA', () => {
+  const result = evaluateReleaseGovernance(policy, request({
+    release: {
+      version: '2.1.0',
+      changeLevel: 'minor',
+      targetSha: 'new-head-sha',
+    },
+    hardGate: hardGate('pass'),
+  }));
+
+  assert.equal(result.hardCompliance, 'fail');
+  assert.equal(result.releaseEligibility.eligible, false);
+  assert.ok(
+    result.hardGate.errors.some((error) => error.includes('release.targetSha')),
+  );
+});
+
+test('T019 enforces SemVer 2.0.0 grammar for formal versions', () => {
+  const invalidVersions = [
+    '01.0.0',
+    '1.01.0',
+    '1.0.01',
+    '1.0.0-a..b',
+    '1.0.0-01',
+    '1.0',
+    'v1.0.0',
+  ];
+
+  for (const version of invalidVersions) {
+    const result = evaluateReleaseGovernance(policy, request({
+      release: {
+        version,
+        changeLevel: 'patch',
+        targetSha: 'head-sha',
+      },
+    }));
+    assert.equal(result.compatibility.status, 'fail', version);
+    assert.equal(result.releaseEligibility.eligible, false, version);
+  }
+
+  for (const version of [
+    '1.0.0',
+    '1.0.0-alpha',
+    '1.0.0-alpha.1',
+    '1.0.0+build.001',
+    '1.0.0-rc.2+build.7',
+  ]) {
+    const result = evaluateReleaseGovernance(policy, request({
+      release: {
+        version,
+        changeLevel: 'patch',
+        targetSha: 'head-sha',
+      },
+    }));
+    assert.equal(result.compatibility.status, 'pass', version);
+  }
 });
