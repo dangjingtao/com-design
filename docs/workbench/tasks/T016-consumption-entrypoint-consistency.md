@@ -1,6 +1,6 @@
 # T016 · Human Guide / Skill / Library-consumption Consistency
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: Docs / Consumption / AI
 - Owner: -
@@ -72,13 +72,13 @@
 
 ## Verification evidence
 
-- CI: Design System Build #253, run `33975366296` — success on `add8e9e251ebfaf1de68b37127272519f4ef03b9`; 160/160 tests PASS; V2 validation 11 checks / 0 warnings; engineering build, Penpot build, accepted-report guard, T019 governance dry-run and T017 deterministic hard-gate enforcement all PASS.
+- CI: Design System Build #256, run `33975478221` — success on `231883cb33eb2d0fa3aa9677f9e0a1be7da9486e`; 163/163 tests PASS; V2 validation 11 checks / 0 warnings; engineering build, Penpot build, accepted-report guard, T019 governance dry-run and T017 deterministic hard-gate enforcement all PASS.
 - Link / catalog consistency: repository gate resolves real canonical counts as 33 Core Components / 4 Core Composite Components / 6 Core UX Patterns; expands every `components/{slug}.json` read-order template against the real component catalog; validates static canonical/human links; validates all four Platform Adapter contract paths against the registered engineering adapter outputs.
-- Other evidence: focused negative tests reject partial hand-maintained catalogs, Preview promoted to production source, invalid platform adapter paths, Mobile-only public wording, stale public count claims, broken canonical read-order paths, and Penpot/Human Guide promoted to upstream authority. The first PR run #250 failed only because the stale-count negative fixture replaced one of multiple valid 33-count occurrences; the fixture was corrected, not the product rule, and subsequent #251/#253 runs are green.
+- Other evidence: focused negative tests reject partial hand-maintained catalogs, Preview promoted to production source, invalid/unregistered platform paths, registered outputs owned by the wrong Platform Adapter, cross-family engineering consumers, Mobile-only public wording, contradictory/stale public count claims, broken canonical machine read-order paths, broken AI Agent primary contract paths, and Penpot/Human Guide promoted to upstream authority. Codex P1/P2/P2 review threads were resolved after these fixes.
 
 ## Review
 
 - Reviewer: Mira
-- Result: REVIEW
-- Conclusion: Construction and deterministic verification complete. Codex reviewed the initial head without actionable findings. CodeRabbit is processing the hardened current head; per project rule, final acceptance may proceed by independent review if no actionable automated finding arrives.
-- Follow-up: Final review should confirm public facts derive from canonical catalogs, four-platform implementation paths resolve through registered adapters, and no downstream consumer/Preview can become upstream truth.
+- Result: PASS
+- Conclusion: Independent acceptance passed after automated review hardening. Codex raised three valid findings on an earlier head: contradictory public catalog counts could coexist with one correct claim; any registered adapter output could be assigned to the wrong platform; canonical machine / AI Agent read orders were insufficiently validated. The current implementation rejects all three classes. Final substantive head `231883cb33eb2d0fa3aa9677f9e0a1be7da9486e` passed Design System Build #256 with 163/163 tests, 11 deterministic validation checks / 0 warnings, and T017 hard-gate enforcement PASS. CodeRabbit produced no actionable finding on the current patch beyond generic finishing touches.
+- Follow-up: T026 may now treat T016 as accepted consumption-consistency evidence. Future catalog or adapter changes must update canonical sources/registry first; the T016 gate will force public entrypoints to follow rather than drift.
