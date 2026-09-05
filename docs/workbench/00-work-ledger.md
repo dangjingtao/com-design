@@ -50,7 +50,7 @@
 | T016 | Human Guide / Skill / Library-consumption Consistency | Docs / Consumption | TODO | V2 first-stage | T001、T007、T008、T009、T014、T015 |
 | T017 | Deterministic CI Hard Gate + Evidence Artifact | CI / Validation | PASS | V2 first-stage | T006、T007、T008、T009、T014、T015 |
 | T018 | Representative Four-platform Smoke Harness | QA / Cross-platform | PASS | V2 first-stage | T007、T008、T009、T010、T011、T012 |
-| T019 | Release Governance + Conditional AI Review Gate | CI / Review | TODO | V2 first-stage | T017 |
+| T019 | Release Governance + Conditional AI Review Gate | CI / Review | DOING | V2 first-stage | T017 |
 | T020 | Navigation Foundation | Component / Navigation | PASS | V2 first-stage | T003、T010、T012、T013 |
 | T021 | Mobile Search + Filter Workflow Contract | UX Pattern | TODO | V2 first-stage | T003、T010、T012 |
 | T022 | Incremental Loading / Infinite List Pattern | UX Pattern | TODO | V2 first-stage | T003、T012 |
