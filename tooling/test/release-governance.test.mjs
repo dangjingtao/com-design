@@ -1,0 +1,233 @@
+import assert from 'node:assert/strict';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import test from 'node:test';
+import {
+  evaluateReleaseGovernance,
+  loadReleaseGovernancePolicy,
+  resolveAiReviewRequirement,
+  validateReleaseGovernancePolicy,
+} from '../src/release-governance.mjs';
+
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+const { policy } = loadReleaseGovernancePolicy(repoRoot);
+
+function hardGate(result = 'pass') {
+  return {
+    schemaVersion: 1,
+    id: 'com-design:ci-evidence:v1',
+    result,
+    source: { headSha: 'head-sha' },
+  };
+}
+
+function aiReview(decision = 'pass') {
+  return {
+    schemaVersion: 1,
+    reviewId: 'review-1',
+    reviewer: { kind: 'ai', name: 'independent-reviewer', provider: 'configurable' },
+    decision,
+    findings: [],
+    warnings: [],
+    evidence: ['review-evidence'],
+  };
+}
+
+function mira(decision = 'approve') {
+  return {
+    reviewer: 'Mira',
+    decision,
+    rationale: 'Recorded release judgment for governance test.',
+    evidence: ['mira-review-evidence'],
+  };
+}
+
+function request(overrides = {}) {
+  return {
+    release: { version: '2.1.0', changeLevel: 'minor' },
+    change: {
+      actorKind: 'human',
+      riskLevel: 'low',
+      forceAiReview: false,
+      requiresConsumerCodeChange: false,
+      breakingSurface: [],
+      impactEvidence: [],
+    },
+    hardGate: hardGate(),
+    aiReview: null,
+    miraJudgment: mira(),
+    ...overrides,
+  };
+}
+
+test('T019 canonical policy fixes governance order, vendor neutrality, and pinned consumers', () => {
+  assert.deepEqual(validateReleaseGovernancePolicy(policy), []);
+  assert.equal(policy.aiReviewGate.vendorNeutral, true);
+  assert.equal(policy.consumerVersionPolicy.defaultMode, 'pinned');
+  assert.equal(policy.consumerVersionPolicy.autoUpgrade, false);
+  assert.equal(policy.consumerVersionPolicy.explicitUpgradeRequired, true);
+  assert.deepEqual(policy.pipeline, [
+    'deterministic-hard-gates',
+    'conditional-ai-review',
+    'mira-judgment',
+    'release-eligibility',
+    'consumer-explicit-upgrade',
+  ]);
+});
+
+test('T019 hard gate failure cannot be overridden by AI or Mira approval', () => {
+  const result = evaluateReleaseGovernance(policy, request({
+    hardGate: hardGate('fail'),
+    aiReview: aiReview('pass'),
+  }));
+
+  assert.equal(result.hardCompliance, 'fail');
+  assert.equal(result.miraJudgment.status, 'approve');
+  assert.equal(result.releaseEligibility.eligible, false);
+  assert.ok(result.releaseEligibility.blockers.includes('deterministic-hard-gate'));
+});
+
+test('T019 requires AI review for agent medium-plus risk without binding a vendor', () => {
+  const requirement = resolveAiReviewRequirement(policy, {
+    actorKind: 'agent',
+    riskLevel: 'medium',
+    forceAiReview: false,
+  });
+  assert.equal(requirement.required, true);
+  assert.ok(requirement.matchedRules.includes('agent-medium-plus'));
+
+  const result = evaluateReleaseGovernance(policy, request({
+    change: {
+      actorKind: 'agent',
+      riskLevel: 'medium',
+      forceAiReview: false,
+      requiresConsumerCodeChange: false,
+      breakingSurface: [],
+      impactEvidence: [],
+    },
+    aiReview: null,
+  }));
+  assert.equal(result.aiReview.status, 'missing');
+  assert.equal(result.releaseEligibility.eligible, false);
+  assert.ok(result.releaseEligibility.blockers.includes('ai-review'));
+});
+
+test('T019 accepts compatible minor release only after required AI pass and Mira approve', () => {
+  const result = evaluateReleaseGovernance(policy, request({
+    change: {
+      actorKind: 'agent',
+      riskLevel: 'high',
+      forceAiReview: false,
+      requiresConsumerCodeChange: false,
+      breakingSurface: [],
+      impactEvidence: [],
+    },
+    aiReview: aiReview('pass'),
+    miraJudgment: mira('approve'),
+  }));
+
+  assert.equal(result.hardCompliance, 'pass');
+  assert.equal(result.aiReview.status, 'pass');
+  assert.equal(result.miraJudgment.status, 'approve');
+  assert.equal(result.compatibility.status, 'pass');
+  assert.equal(result.releaseEligibility.eligible, true);
+  assert.deepEqual(result.releaseEligibility.blockers, []);
+});
+
+test('T019 AI revise/reject cannot be ignored even when Mira approves', () => {
+  for (const decision of ['revise', 'reject']) {
+    const result = evaluateReleaseGovernance(policy, request({
+      aiReview: aiReview(decision),
+    }));
+    assert.equal(result.aiReview.status, decision);
+    assert.equal(result.releaseEligibility.eligible, false);
+    assert.ok(result.releaseEligibility.blockers.includes('ai-review'));
+  }
+});
+
+test('T019 Mira revise/reject formally blocks release', () => {
+  for (const decision of ['revise', 'reject']) {
+    const result = evaluateReleaseGovernance(policy, request({
+      miraJudgment: mira(decision),
+    }));
+    assert.equal(result.miraJudgment.status, decision);
+    assert.equal(result.releaseEligibility.eligible, false);
+    assert.ok(result.releaseEligibility.blockers.includes('mira-judgment'));
+  }
+});
+
+test('T019 patch/minor cannot hide a breaking consumer change', () => {
+  for (const changeLevel of ['patch', 'minor']) {
+    const result = evaluateReleaseGovernance(policy, request({
+      release: { version: changeLevel === 'patch' ? '2.0.1' : '2.1.0', changeLevel },
+      change: {
+        actorKind: 'human',
+        riskLevel: 'low',
+        forceAiReview: false,
+        requiresConsumerCodeChange: true,
+        breakingSurface: ['component:button.api'],
+        impactEvidence: [],
+      },
+    }));
+    assert.equal(result.compatibility.status, 'fail');
+    assert.equal(result.releaseEligibility.eligible, false);
+    assert.ok(result.releaseEligibility.blockers.includes('compatibility'));
+  }
+});
+
+test('T019 major release requires breaking surface, migration and impact evidence', () => {
+  const incomplete = evaluateReleaseGovernance(policy, request({
+    release: { version: '3.0.0', changeLevel: 'major' },
+    change: {
+      actorKind: 'human',
+      riskLevel: 'high',
+      forceAiReview: true,
+      requiresConsumerCodeChange: true,
+      breakingSurface: ['adapter:web.api'],
+      migration: null,
+      impactEvidence: [],
+    },
+    aiReview: aiReview('pass'),
+  }));
+  assert.equal(incomplete.compatibility.status, 'fail');
+  assert.equal(incomplete.releaseEligibility.eligible, false);
+
+  const complete = evaluateReleaseGovernance(policy, request({
+    release: { version: '3.0.0', changeLevel: 'major' },
+    change: {
+      actorKind: 'human',
+      riskLevel: 'high',
+      forceAiReview: true,
+      requiresConsumerCodeChange: true,
+      breakingSurface: ['adapter:web.api'],
+      migration: {
+        summary: 'Move consumer from old adapter API to the new versioned API.',
+        steps: ['Pin current version', 'Apply migration', 'Run product smoke', 'Update version lock'],
+      },
+      impactEvidence: ['representative-consumer-build', 'migration-smoke'],
+    },
+    aiReview: aiReview('pass'),
+    miraJudgment: mira('approve'),
+  }));
+  assert.equal(complete.compatibility.status, 'pass');
+  assert.equal(complete.releaseEligibility.eligible, true);
+  assert.ok(complete.evidence.some((entry) => entry.kind === 'impact'));
+});
+
+test('T019 records findings, warnings, evidence and decision status in one audit artifact', () => {
+  const review = aiReview('pass');
+  review.findings = [{ id: 'finding-1', severity: 'info' }];
+  review.warnings = [{ id: 'warning-1', message: 'soft quality note' }];
+  review.evidence = ['ai-evidence-1'];
+
+  const result = evaluateReleaseGovernance(policy, request({ aiReview: review }));
+
+  assert.equal(result.decisionStatus.hardCompliance, 'pass');
+  assert.equal(result.decisionStatus.aiReview, 'pass');
+  assert.equal(result.decisionStatus.mira, 'approve');
+  assert.equal(result.decisionStatus.release, 'eligible');
+  assert.deepEqual(result.findings, review.findings);
+  assert.deepEqual(result.warnings, review.warnings);
+  assert.ok(result.evidence.some((entry) => entry.kind === 'ai-review'));
+  assert.ok(result.evidence.some((entry) => entry.kind === 'mira-judgment'));
+});
