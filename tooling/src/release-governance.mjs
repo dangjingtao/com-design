@@ -84,6 +84,22 @@ export function validateReleaseGovernancePolicy(policy) {
   ) {
     errors.push('AI Review evidence contract must require findings, warnings, evidence, reviewer and decision status.');
   }
+  if (
+    !Array.isArray(ai?.evidenceContract?.reviewerKinds)
+    || ai.evidenceContract.reviewerKinds.includes('human')
+    || !ai.evidenceContract.reviewerKinds.includes('ai')
+  ) {
+    errors.push('AI Review Gate reviewer kinds must remain AI/service based, not substitute a human review.');
+  }
+  for (const rule of ai?.triggerRules ?? []) {
+    const match = rule?.match;
+    const hasPredicate = Array.isArray(match?.forceAiReview)
+      || Array.isArray(match?.actorKinds)
+      || Array.isArray(match?.riskLevels);
+    if (typeof rule?.id !== 'string' || rule.id.length === 0 || !hasPredicate) {
+      errors.push('Every AI Review trigger rule must have an id and at least one supported predicate.');
+    }
+  }
 
   const mira = policy.miraJudgment;
   if (
