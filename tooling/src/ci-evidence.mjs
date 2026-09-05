@@ -9,7 +9,11 @@ const DEFAULT_OUTPUT_PATH = path.join('dist', 'ci', 'evidence.json');
 function readJsonIfPresent(repoRoot, relativePath) {
   const filePath = path.join(repoRoot, relativePath);
   if (!fs.existsSync(filePath)) return null;
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch {
+    return null;
+  }
 }
 
 function sha256IfPresent(repoRoot, relativePath) {
@@ -55,7 +59,9 @@ function targetEvidence(repoRoot, definition, canonicalSourceHash) {
     : null;
   const sourceRevision = payload ? definition.readSourceRevision(payload) : null;
   const outputsPresent = outputs.every((entry) => entry.exists);
-  const sourceMatches = sourceRevision === canonicalSourceHash;
+  const sourceMatches = Boolean(sourceRevision)
+    && Boolean(canonicalSourceHash)
+    && sourceRevision === canonicalSourceHash;
   return {
     id: definition.id,
     kind: definition.kind,
