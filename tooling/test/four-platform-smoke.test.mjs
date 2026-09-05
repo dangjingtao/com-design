@@ -48,6 +48,11 @@ test('T018 covers Web pointer+keyboard, native touch/safe-area, and WeChat host 
   assert.equal(byPlatform.web.context.input, 'hybrid');
   assert.equal(byPlatform.web.presentationFacts.pointer.hover, true);
   assert.equal(byPlatform.web.presentationFacts.keyboardIme.supported, true);
+  assert.ok(byPlatform.web.presentationFacts.adapter.pointer.activeWhen.includes('hybrid'));
+  assert.ok(byPlatform.web.presentationFacts.adapter.keyboard.activeWhen.includes('hybrid'));
+  assert.ok(
+    byPlatform.web.presentationFacts.adapter.focus.focusVisibleRequiredFor.includes('hybrid'),
+  );
 
   assert.equal(byPlatform.ios.presentationFacts.adapter.touch.minimum, 44);
   assert.ok(byPlatform.ios.presentationFacts.safeArea.bottom > 0);
