@@ -28,11 +28,12 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
   assert.equal(evidence.result, 'pass');
   assert.equal(evidence.summary.failed, 0);
   assert.equal(evidence.summary.blockingErrors, 0);
-  assert.equal(evidence.summary.checksRun, 10);
+  assert.equal(evidence.summary.checksRun, 11);
   assert.deepEqual(
     evidence.checks.map((check) => check.id),
     [
       'source-integrity',
+      'consumption-consistency',
       'token-model',
       'platform-model',
       'platform-environment',
@@ -52,6 +53,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
     evidence.checks.find((check) => check.id === 'navigation-foundation').evidence.hostChromeIsCore,
     false,
   );
+  assert.equal(evidence.checks.find((check) => check.id === 'consumption-consistency').evidence.catalogCounts.coreComponents, 33);
   assert.equal(evidence.checks.find((check) => check.id === 'component-contracts').evidence.componentCount, 33);
   assert.equal(evidence.checks.find((check) => check.id === 'canonical-design-model').evidence.platformCount, 4);
   assert.equal(JSON.stringify(evidence).includes(repoRoot), false);
