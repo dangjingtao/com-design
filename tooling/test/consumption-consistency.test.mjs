@@ -99,3 +99,31 @@ test('T016 rejects stale public catalog counts', () => {
   const result = validateConsumptionConsistency(root);
   assert.ok(result.errors.some((error) => error.includes('33 Core Components')));
 });
+
+
+test('T016 rejects a broken canonical machine read-order path', () => {
+  const root = fixture();
+  mutateLibrary(root, (value) => {
+    value.recommendedReadOrder.canonicalMachine[0] = 'specs/missing-manifest.json';
+  });
+
+  const result = validateConsumptionConsistency(root);
+  assert.ok(
+    result.errors.some(
+      (error) => error.includes('canonical machine read order')
+        && error.includes('missing-manifest.json'),
+    ),
+  );
+});
+
+test('T016 keeps Penpot and Human Guide as downstream consumers', () => {
+  const root = fixture();
+  mutateLibrary(root, (value) => {
+    value.downstreamConsumers.penpot.upstreamAuthority = true;
+    value.downstreamConsumers.humanGuide.upstreamAuthority = true;
+  });
+
+  const result = validateConsumptionConsistency(root);
+  assert.ok(result.errors.some((error) => error.includes('Penpot must remain')));
+  assert.ok(result.errors.some((error) => error.includes('Human Guide must remain')));
+});
