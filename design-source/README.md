@@ -1,6 +1,6 @@
-# Com Design Mobile 设计系统
+# Com Design V2 设计系统
 
-Com Design Mobile 是一套公司级移动端 Design System（`1.0.0-rc.2`），不归属于任何单一业务产品，而是作为公司移动应用共同的视觉、交互与组合地基。
+Com Design 是公司级 Android / iOS / Web / WeChat Mini Program 四端 Design System（当前包版本 `1.0.0-rc.2`，V2 first-stage construction）。它不归属于任何单一业务产品，而是通过共享 Core contract + Platform Adapter 为多端产品提供同一设计语义。
 
 当前 Core 由三类可消费契约组成：
 
@@ -31,6 +31,42 @@ Primitive
 - **Core Composite Component**：结构和交互已稳定、可以直接实例化的组合，例如 Filter Bar、Grouped List。
 - **Core UX Pattern**：跨组件 / 跨状态 / 跨页面的任务规则，允许多种合法视觉实现。
 - **Product Extension**：业务领域专属的组件、内容、路由和状态表达，不反写 Core。
+
+---
+
+## V2 CONSUMPTION ENTRYPOINTS
+
+消费接口优先级为：
+
+```text
+1. AI / Agent
+2. Engineering / R&D
+3. Design
+```
+
+生产实现从 canonical machine contract 开始，而不是从 Human Guide 或 Preview 反推：
+
+```text
+specs/design-system-v1.json
+→ components / composites / patterns / foundations
+→ target platform + context
+→ Platform Adapter
+→ production implementation
+→ validation / evidence
+```
+
+四端正式 adapter：
+
+- Web：`../dist/tailwind/adapter.json`
+- iOS / Android：`../dist/native-mobile/adapter.json`
+- WeChat Mini Program：`../dist/wechat-mini-program/adapter.json`
+- AI / Agent：`../dist/agent/contract.json`
+
+Penpot `../penpot/build/manifest.json`、Human Guide `../report/design-system-v1/` 与本目录 Preview 都是同源下游消费者，不是第二真相源。
+
+`preview/**` 只用于视觉 / 交互参考。生产代码不得把 Preview DOM/CSS 当跨端实现合同，尤其不得由 Web specimen 反推 iOS、Android 或微信小程序结构。
+
+机器可读消费地图：`library-consumption.json`。
 
 ---
 
