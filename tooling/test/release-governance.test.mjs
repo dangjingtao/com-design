@@ -13,11 +13,23 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const { policy } = loadReleaseGovernancePolicy(repoRoot);
 
 function hardGate(result = 'pass') {
+  const passing = result === 'pass';
   return {
     schemaVersion: 1,
     id: 'com-design:ci-evidence:v1',
     result,
     source: { headSha: 'head-sha' },
+    summary: {
+      failed: passing ? 0 : 1,
+      targetFailures: 0,
+    },
+    checks: [
+      {
+        id: 'fixture-hard-gate',
+        hardGate: true,
+        status: passing ? 'pass' : 'fail',
+      },
+    ],
   };
 }
 
@@ -230,4 +242,81 @@ test('T019 records findings, warnings, evidence and decision status in one audit
   assert.deepEqual(result.warnings, review.warnings);
   assert.ok(result.evidence.some((entry) => entry.kind === 'ai-review'));
   assert.ok(result.evidence.some((entry) => entry.kind === 'mira-judgment'));
+});
+
+
+test('T019 missing risk/authorship metadata cannot bypass conditional AI review', () => {
+  const result = evaluateReleaseGovernance(policy, request({
+    change: {
+      forceAiReview: false,
+      requiresConsumerCodeChange: false,
+      breakingSurface: [],
+      impactEvidence: [],
+    },
+  }));
+
+  assert.equal(result.changeMetadata.status, 'fail');
+  assert.equal(result.releaseEligibility.eligible, false);
+  assert.ok(result.releaseEligibility.blockers.includes('change-metadata'));
+});
+
+test('T019 mixed agent-authored medium-risk change triggers independent AI review', () => {
+  const requirement = resolveAiReviewRequirement(policy, {
+    actorKind: 'mixed',
+    riskLevel: 'medium',
+    forceAiReview: false,
+  });
+
+  assert.equal(requirement.required, true);
+  assert.ok(requirement.matchedRules.includes('agent-medium-plus'));
+});
+
+test('T019 rejects hollow T017 evidence even when id/result claim pass', () => {
+  const result = evaluateReleaseGovernance(policy, request({
+    hardGate: {
+      schemaVersion: 1,
+      id: 'com-design:ci-evidence:v1',
+      result: 'pass',
+      source: { headSha: 'head-sha' },
+    },
+  }));
+
+  assert.equal(result.hardCompliance, 'fail');
+  assert.equal(result.releaseEligibility.eligible, false);
+  assert.ok(result.releaseEligibility.blockers.includes('deterministic-hard-gate'));
+});
+
+test('T019 AI pass requires auditable evidence and named reviewer', () => {
+  const review = aiReview('pass');
+  review.evidence = [];
+  review.reviewer = { kind: 'ai' };
+
+  const result = evaluateReleaseGovernance(policy, request({
+    change: {
+      actorKind: 'agent',
+      riskLevel: 'medium',
+      forceAiReview: false,
+      requiresConsumerCodeChange: false,
+      breakingSurface: [],
+      impactEvidence: [],
+    },
+    aiReview: review,
+  }));
+
+  assert.equal(result.aiReview.status, 'invalid');
+  assert.equal(result.releaseEligibility.eligible, false);
+  assert.ok(result.releaseEligibility.blockers.includes('ai-review'));
+});
+
+test('T019 Mira approve requires cited evidence', () => {
+  const judgment = mira('approve');
+  judgment.evidence = [];
+
+  const result = evaluateReleaseGovernance(policy, request({
+    miraJudgment: judgment,
+  }));
+
+  assert.equal(result.miraJudgment.status, 'invalid');
+  assert.equal(result.releaseEligibility.eligible, false);
+  assert.ok(result.releaseEligibility.blockers.includes('mira-judgment'));
 });
