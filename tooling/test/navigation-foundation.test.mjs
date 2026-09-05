@@ -350,11 +350,18 @@ test('T020 keeps focused preview evidence for wide, Rail, compact and WeChat hos
   assert.match(preview, /<a class="nav-item" href="#workspace">/);
   assert.match(preview, /<a class="nav-item" href="#settings">/);
   assert.match(preview, /<a class="nav-item" href="#security">/);
-  assert.match(preview, /<a class="nav-item active" href="#rail-home"[^>]+aria-current="page">/);
   assert.match(
     preview,
-    /<button class="disclosure"[^>]*type="button"[^>]*aria-label="Collapse [^"]+"[^>]*aria-expanded="true">/,
+    /<a class="nav-item active" href="#rail-home"[^>]+aria-current="page"><span class="dot"><\/span><span class="label">Home<\/span><\/a>/,
   );
+  for (const disclosure of ['Workspace', 'Settings', 'Security']) {
+    assert.match(
+      preview,
+      new RegExp(
+        `<button class="disclosure"[^>]*type="button"[^>]*aria-label="Collapse ${disclosure}"[^>]*aria-expanded="true">`,
+      ),
+    );
+  }
   assert.match(preview, /<a class="bottom-item active"[^>]+aria-current="page">/);
   assert.match(preview, /<button class="action" type="button" aria-label="Back">/);
   assert.match(preview, /<button class="action" type="button" aria-label="Search">/);
