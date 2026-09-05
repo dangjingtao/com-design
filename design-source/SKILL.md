@@ -1,30 +1,43 @@
 ---
 name: com-design-design
-description: Use this skill to generate branded mobile interfaces for Com Design Mobile — Electric Indigo, flat-first, compact core UI. Contains design guidelines, tokens, 33 Core Components, four Core Composite Components and six Core UX Patterns.
+description: Use this skill to consume Com Design V2 for Android, iOS, Web and WeChat Mini Program. Start from canonical machine contracts, select the target Platform Adapter, and verify implementation evidence. Contains 33 Core Components, 4 Core Composite Components and 6 Core UX Patterns.
 user-invocable: true
 ---
 
-# Com Design Mobile Design Skill
+# Com Design V2 Consumption Skill
 
-Read `README.md` for brand context, then consume `css.json` for structured tokens and `colors_and_type.css` as the runtime CSS variable source. For stable multi-component assemblies, read `COMPOSITE_COMPONENTS.md` and `specs/core-composites.json` before inventing product-local wrappers. For multi-state / multi-page task logic, read `UX_PATTERNS.md` and `specs/core-patterns.json`. Use `preview/core-composite-components.html` and `preview/core-ux-patterns.html` as visual references. For production code, link the token CSS; for visual prototypes, copy preview structures and keep business semantics in Product Extension.
+Com Design V2 is a four-platform system: Android / iOS / Web / WeChat Mini Program. For production work, start from `specs/design-system-v1.json` and the canonical machine contracts. If generated artifacts are available, `../dist/agent/contract.json` is the AI-executable consumer contract, but authority remains in `design-source/`.
+
+Select the target platform/context before implementation. Consume the corresponding Platform Adapter instead of inferring another platform from Web Preview or CSS. Preview files are visual/interaction references only; never treat Preview DOM/CSS as production truth.
 
 ## Quick map
 
-- `README.md` — brand narrative, foundations, component usage notes
-- `COMPOSITE_COMPONENTS.md` — human-readable Composite Component guide and Component/Composite/Pattern boundary
-- `UX_PATTERNS.md` — human-readable Core UX Pattern guide
-- `colors_and_type.css` — runtime CSS variables for color, type, radius, spacing, elevation
-- `css.json` — structured token understanding source
-- `components.css` — aggregated Core Component CSS extracted from previews
-- `components/index.json` — 33 Core Component index
-- `components/button.json`, `components/input.json`, `components/list-item.json`, `components/card.json`, `components/tag.json`, `components/bottom-navigation.json` — Core Component contracts for intent and variants
-- `preview/component-button.html`, `preview/component-input.html`, `preview/component-list-item.html`, `preview/component-card.html`, `preview/component-tag.html`, `preview/component-bottom-navigation.html` — DOM/CSS source; read preview first, component JSON for intent
-- `preview/core-composite-components.html` — visual and interaction reference for 4 Core Composite Components
-- `specs/core-composites.json` — canonical machine-readable Composite Component contracts
-- `preview/core-ux-patterns.html` — visual composition reference for all six Core UX Patterns
-- `specs/core-patterns.json` — canonical machine-readable Core UX Pattern contracts
-- `specs/design-system-v1.json` — structured design-system manifest
-- `library-consumption.json` — downstream read order
+- `specs/design-system-v1.json` — canonical manifest and source graph
+- `library-consumption.json` — governed consumer priority, read order and four-platform adapter map
+- `components/index.json` — canonical 33 Core Components catalog; read `components/{slug}.json` for a component contract
+- `specs/core-composites.json` — canonical 4 Core Composite Components
+- `specs/core-patterns.json` — canonical 6 Core UX Patterns
+- `specs/platform-model-v2.json` — Android / iOS / Web / WeChat Mini Program platform axes
+- `specs/platform-environment-v1.json` — Safe Area / Host Chrome / Back / Focus / IME / Pointer / Gesture environment facts
+- `specs/layout-input-foundation-v2.json` — responsive / input / content-scale foundation
+- `specs/navigation-foundation-v2.json` — shared navigation semantics and platform-context presentation rules
+- `specs/motion-foundation-v2.json` — shared motion intent and reduced-motion contract
+- `specs/iconography.json` — governed icon registry/provider contract
+- `specs/release-governance-v1.json` — hard gate → conditional AI review → Mira judgment → release eligibility
+- `../dist/agent/contract.json` — generated AI-readable / executable / verifiable consumer contract
+- `../penpot/build/manifest.json` — generated governed Penpot consumer
+- `preview/**` — visual reference only; never an upstream or production implementation source
+
+## Platform implementation path
+
+| Target | Contract / consumer path | Rule |
+|---|---|---|
+| Web | `../dist/tailwind/adapter.json` | Tailwind output is the Web adapter, not a cross-platform definition |
+| iOS | `../dist/native-mobile/adapter.json` | NativeWind / React Native may consume the contract but do not define iOS semantics |
+| Android | `../dist/native-mobile/adapter.json` | Use explicit Android context and 48dp policy; do not infer from iOS/RN defaults |
+| WeChat Mini Program | `../dist/wechat-mini-program/adapter.json` + `tokens.js` | Respect host-owned Capsule / Safe Area / runtime hooks; do not copy Web DOM or RN assumptions |
+
+For AI / Agent implementation, the order is: canonical contract → target platform/context → Platform Adapter → implementation → `npm run validate` / relevant smoke → evidence. Human Guide and Penpot are sibling downstream consumers of the same source.
 
 ## Essentials at a glance
 
@@ -38,7 +51,7 @@ Read `README.md` for brand context, then consume `css.json` for structured token
 - Cards default to borderless, shadowless grouping containers; add a border only when extra containment is needed, and use sections before cards in list layouts.
 - Voice is Chinese-first, professional, neutral, high information density; UI copy is short and direct, with no emoji and status expressed through icon shape plus text.
 - **Do not collapse Component, Composite and Pattern into one bucket.** Core Component = independent control/information unit; Composite = stable directly reusable assembly; Pattern = task/state/flow rule that may have more than one valid visual implementation.
-- When a screen starts growing local wrappers such as `MobileFilter`, `PageHeader`, `SettingsCard`, first map them against Core and Composite contracts. Reuse or promote only the part that is domain-neutral and stable across products.
+- When a product starts growing local wrappers such as `MobileFilter`, `PageHeader`, or `SettingsCard`, first map them against Core and Composite contracts. Reuse or promote only the domain-neutral, cross-product part; platform presentation differences belong in the Platform Adapter.
 
 ## Core Composite Components
 
