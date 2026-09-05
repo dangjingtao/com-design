@@ -1,6 +1,6 @@
 # T019 · Release Governance + Conditional AI Review Gate
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: CI / Review / Governance
 - Owner: -
@@ -72,13 +72,13 @@ V2 已确认：确定性规则由机器硬门禁守住；国产 AI 等 Agent 施
 
 ## Verification evidence
 
-- CI: Design System Build #243, run `33974683807` — success on `ab48b46c24b46fc09fd78e3db001a3269c238501`; full repository suite PASS, V2 validation/build/Penpot/report guard PASS, T017 deterministic hard gate PASS, governance dry-run artifact generated and uploaded.
+- CI: Design System Build #247, run `33974788126` — success on `6eb5bbe04caa28119d20268b7235865a9e084dac`; 152/152 tests PASS; V2 validation/build/Penpot/report guard PASS; T017 deterministic hard gate PASS (21 checks / 8 traced targets); governance dry-run artifact generated and uploaded.
 - Governance dry-run: `hard=pass; ai=not-required; mira=pending; release=blocked`. This proves CI green does not imply formal release eligibility.
-- AI review evidence sample: focused tests cover required AI review for Agent/mixed-Agent medium+ risk, AI `pass/revise/reject`, named reviewer + non-empty evidence, and unified findings/warnings/evidence/decisionStatus output. Negative tests also cover hard-gate override attempts, missing risk metadata, hollow T017 evidence, Mira approve without evidence, hidden Patch/Minor breaking changes, and incomplete Major migration evidence.
+- AI review evidence sample: focused tests cover required AI review for Agent/mixed-Agent medium+ risk, AI `pass/revise/reject`, named reviewer + non-empty evidence, and unified findings/warnings/evidence/decisionStatus output. Negative tests cover hard-gate override attempts, stale T017 evidence from a different release SHA, missing risk metadata, hollow T017 evidence, Mira approve without evidence, hidden Patch/Minor breaking changes, incomplete Major migration evidence, and invalid SemVer. Codex P1/P1/P2 review threads were resolved after these fixes.
 
 ## Review
 
 - Reviewer: Mira
-- Result: REVIEW
-- Conclusion: Construction and deterministic verification complete. CodeRabbit began review on an earlier head but had not produced actionable findings on the hardened final head at the time of this review; final acceptance proceeds by independent review per project rule.
-- Follow-up: Final review must confirm no path can turn CI green, missing AI evidence, invalid version evidence, or non-approve Mira judgment into release eligibility.
+- Result: PASS
+- Conclusion: Independent acceptance passed after automated review and regression hardening. Codex review identified three valid governance defects on the earlier implementation: stale/unbound T017 evidence could authorize a later release, missing AI-trigger metadata could bypass conditional review, and the version parser accepted invalid SemVer. All three were fixed. Final reviewed code head `6eb5bbe04caa28119d20268b7235865a9e084dac` passed Design System Build #247 with 152/152 tests, including explicit stale-SHA, missing-metadata, hollow-evidence, audit-evidence and SemVer regression cases. The governance dry-run remains intentionally `release=blocked` with `mira=pending`, proving CI green cannot self-authorize release.
+- Follow-up: T026 may consume this governance contract for final RC readiness. T016 remains responsible for stale Skill/Human Guide/library-consumption wording; consumer projects still choose when to update their pinned Com Design version.
