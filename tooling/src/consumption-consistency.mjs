@@ -28,13 +28,14 @@ function readTextIfPresent(filePath) {
   return fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf8') : null;
 }
 
-function adapterOutputSet() {
-  return new Set(
-    engineeringAdapterRegistry
-      .list()
-      .flatMap((adapter) => adapter.outputPaths)
-      .map(normalizeRepoPath),
-  );
+function adapterOutputOwners() {
+  const owners = new Map();
+  for (const adapter of engineeringAdapterRegistry.list()) {
+    for (const outputPath of adapter.outputPaths) {
+      owners.set(normalizeRepoPath(outputPath), adapter);
+    }
+  }
+  return owners;
 }
 
 function requireFile(repoRoot, relativePath, errors, label = relativePath) {
@@ -131,19 +132,41 @@ export function validateConsumptionConsistency(repoRoot) {
     errors.push('Preview policy must explicitly direct production code to Platform Adapters instead of DOM/CSS copying.');
   }
 
-  const outputPaths = adapterOutputSet();
+  const outputOwners = adapterOutputOwners();
+  const expectedPlatformAdapters = {
+    web: { contractAdapterId: 'web.tailwind', family: 'web' },
+    ios: { contractAdapterId: 'native-mobile.contract', family: 'native-mobile' },
+    android: { contractAdapterId: 'native-mobile.contract', family: 'native-mobile' },
+    'wechat-mini-program': { contractAdapterId: 'mini-program.wechat', family: 'mini-program' },
+  };
+
   for (const platform of EXPECTED_PLATFORMS) {
     const declaration = library.platformAdapters?.[platform];
+    const expected = expectedPlatformAdapters[platform];
     if (!declaration?.contract) {
       errors.push('library-consumption must declare a contract path for platform: ' + platform);
       continue;
     }
-    if (!outputPaths.has(normalizeRepoPath(declaration.contract))) {
+
+    const contractOwner = outputOwners.get(normalizeRepoPath(declaration.contract));
+    if (!contractOwner) {
       errors.push('platform adapter contract is not a registered engineering output for ' + platform + ': ' + declaration.contract);
+    } else if (contractOwner.id !== expected.contractAdapterId) {
+      errors.push(
+        'platform adapter contract for ' + platform + ' must be owned by '
+          + expected.contractAdapterId + ', not ' + contractOwner.id + '.',
+      );
     }
+
     for (const output of declaration.engineeringConsumers ?? []) {
-      if (!outputPaths.has(normalizeRepoPath(output))) {
+      const owner = outputOwners.get(normalizeRepoPath(output));
+      if (!owner) {
         errors.push('engineering consumer is not a registered adapter output for ' + platform + ': ' + output);
+      } else if (owner.family !== expected.family) {
+        errors.push(
+          'engineering consumer for ' + platform + ' must belong to adapter family '
+            + expected.family + ', not ' + owner.family + ': ' + output,
+        );
       }
     }
   }
@@ -248,8 +271,19 @@ export function validateConsumptionConsistency(repoRoot) {
       ['coreCompositeComponents', 'Core Composite Components'],
       ['corePatterns', 'Core UX Patterns'],
     ]) {
-      if (!text.includes(countPhrase(counts[catalogId], noun))) {
-        errors.push(label + ' must publish the canonical ' + countPhrase(counts[catalogId], noun) + ' fact.');
+      const expectedCount = counts[catalogId];
+      const matcher = new RegExp('\\b(\\d+)\\s+' + noun.replaceAll(' ', '\\s+') + '\\b', 'g');
+      const claims = [...text.matchAll(matcher)].map((match) => Number(match[1]));
+      if (claims.length === 0) {
+        errors.push(label + ' must publish the canonical ' + countPhrase(expectedCount, noun) + ' fact.');
+        continue;
+      }
+      const contradictory = [...new Set(claims.filter((count) => count !== expectedCount))];
+      if (contradictory.length > 0) {
+        errors.push(
+          label + ' contains non-canonical ' + noun + ' count claim(s): '
+            + contradictory.join(', ') + '; expected ' + expectedCount + '.',
+        );
       }
     }
   }
