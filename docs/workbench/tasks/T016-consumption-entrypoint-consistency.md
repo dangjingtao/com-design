@@ -1,6 +1,6 @@
 # T016 · Human Guide / Skill / Library-consumption Consistency
 
-- Status: TODO
+- Status: DOING
 - Target version: V2 first-stage
 - Impact: Docs / Consumption / AI
 - Owner: -
