@@ -10,6 +10,7 @@
     "build:engineering": "node tooling/bin/build.mjs",
     "build:penpot": "node penpot/bin/build.mjs",
     "build:all": "node tooling/bin/build-all.mjs",
+    "ci:evidence": "node tooling/bin/ci-evidence.mjs",
     "build": "npm run build:all"
   },
   "engines": {
