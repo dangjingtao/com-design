@@ -1,6 +1,6 @@
 # T018 · Representative Four-platform Smoke Harness
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: QA / Cross-platform
 - Owner: -
@@ -62,13 +62,13 @@ V2 第一阶段不要求一个真实产品同时上线四端，但必须用代�
 
 ## Verification evidence
 
-- CI: Design System Build #232, run `33973868517` — success on `a1e2b5658ee492fa3904241f97ea119a8f6bed0d`; 136/136 tests PASS; 10 V2 validation checks PASS with 0 warnings; T017 deterministic CI hard gate PASS (21 checks / 8 traced targets).
+- CI: Design System Build #232, run `33973868517` — initial success on `a1e2b5658ee492fa3904241f97ea119a8f6bed0d`; 136/136 tests PASS; 10 V2 validation checks PASS with 0 warnings; T017 deterministic CI hard gate PASS (21 checks / 8 traced targets). Final reviewed implementation head `8fa3f5eb206d88a4222b752a2f8f19630720c0e3` passed Design System Build #236, run `33973971497`, after the Web hybrid adapter-consumption hardening.
 - Android / iOS / Web / Mini results: all four representative platform paths PASS in the real-repository T018 test. Web verifies hybrid pointer+keyboard/focus; iOS resolves 44pt touch + Safe Area; Android resolves 48dp touch + predictive back; WeChat keeps Capsule host-owned and validates Safe Area/runtime hooks plus no high-frequency `setData` animation under its motion adapter path.
 - Other evidence: focused negative tests intentionally break a Button contract invariant, Web adapter source revision, and Web platform context; failures are respectively localized to `contract`, `adapter`, and `platform-context`.
 
 ## Review
 
 - Reviewer: Mira
-- Result: REVIEW
-- Conclusion: Construction and first CI verification complete. CodeRabbit is rate-limited on this PR, so final acceptance will use independent review plus repository evidence if no automated review becomes available.
-- Follow-up: Final review should verify the equivalence proof is architectural (canonical invariants + source-parity + no semantic fork), not a tautological pixel/snapshot comparison.
+- Result: PASS
+- Conclusion: Independent acceptance passed. CodeRabbit remained rate-limited and produced no actionable review, so final judgment used repository evidence and direct code review. Review found one real coverage gap: the Web path initially proved that the environment supported pointer/keyboard, but did not prove the T007 adapter had actually consumed T012 `hybrid` mappings for pointer, keyboard and focus-visible. That gap was fixed and locked by regression assertions. Design System Build #236 then passed all repository gates. The harness now proves a single canonical semantic source, T012 immutability, adapter source parity/no semantic fork, platform/environment-owned presentation differences, reduced-motion paths, and layer-localized failures without pretending pixel equality is the success criterion.
+- Follow-up: T026 may consume this harness as the representative four-platform integration acceptance path. T019 remains release-governance work and is not part of this card.
