@@ -172,19 +172,42 @@ export function validateAiReviewEvidence(policy, review) {
   }
   if (!isObject(review.reviewer)) {
     errors.push('AI review reviewer must be an object.');
-  } else if (
-    !policy.aiReviewGate.evidenceContract.reviewerKinds.includes(review.reviewer.kind)
-  ) {
-    errors.push('AI review reviewer.kind is not allowed by the evidence contract.');
+  } else {
+    if (!policy.aiReviewGate.evidenceContract.reviewerKinds.includes(review.reviewer.kind)) {
+      errors.push('AI review reviewer.kind is not allowed by the evidence contract.');
+    }
+    if (typeof review.reviewer.name !== 'string' || review.reviewer.name.length === 0) {
+      errors.push('AI review reviewer.name must be a non-empty string.');
+    }
   }
   if (!policy.aiReviewGate.evidenceContract.decisions.includes(review.decision)) {
     errors.push('AI review decision must be pass, revise, or reject.');
   }
   if (!Array.isArray(review.findings)) errors.push('AI review findings must be an array.');
   if (!Array.isArray(review.warnings)) errors.push('AI review warnings must be an array.');
-  if (!Array.isArray(review.evidence)) errors.push('AI review evidence must be an array.');
+  if (!nonEmptyArray(review.evidence)) errors.push('AI review evidence must be a non-empty array.');
 
   return errors;
+}
+
+function changeMetadataEvaluation(change = {}) {
+  const errors = [];
+  if (!['human', 'agent', 'mixed'].includes(change.actorKind)) {
+    errors.push('change.actorKind must be human, agent, or mixed.');
+  }
+  if (!['low', 'medium', 'high', 'critical'].includes(change.riskLevel)) {
+    errors.push('change.riskLevel must be low, medium, high, or critical.');
+  }
+  if (typeof change.forceAiReview !== 'boolean') {
+    errors.push('change.forceAiReview must be an explicit boolean.');
+  }
+  return {
+    status: errors.length ? 'fail' : 'pass',
+    actorKind: change.actorKind ?? null,
+    riskLevel: change.riskLevel ?? null,
+    forceAiReview: change.forceAiReview === true,
+    errors,
+  };
 }
 
 function compatibilityEvaluation(policy, request) {
@@ -237,15 +260,31 @@ function compatibilityEvaluation(policy, request) {
 }
 
 function hardGateEvaluation(policy, hardGate) {
-  const pass = hardGate?.id === policy.deterministicHardGate.requiredEvidenceId
-    && hardGate?.result === policy.deterministicHardGate.requiredResult;
+  const errors = [];
+  if (hardGate?.id !== policy.deterministicHardGate.requiredEvidenceId) {
+    errors.push('deterministic hard gate evidence id must match T017.');
+  }
+  if (hardGate?.result !== policy.deterministicHardGate.requiredResult) {
+    errors.push('deterministic hard gate evidence result must be pass.');
+  }
+  if (typeof hardGate?.source?.headSha !== 'string' || hardGate.source.headSha.length === 0) {
+    errors.push('deterministic hard gate evidence must record the tested head SHA.');
+  }
+  if (hardGate?.summary?.failed !== 0 || hardGate?.summary?.targetFailures !== 0) {
+    errors.push('deterministic hard gate summary must report zero failed checks and target failures.');
+  }
+  if (
+    !nonEmptyArray(hardGate?.checks)
+    || hardGate.checks.some((entry) => entry?.hardGate !== true || entry?.status !== 'pass')
+  ) {
+    errors.push('deterministic hard gate evidence must contain only passing hard-gate checks.');
+  }
   return {
-    status: pass ? 'pass' : 'fail',
+    status: errors.length ? 'fail' : 'pass',
     evidenceId: hardGate?.id ?? null,
     evidenceResult: hardGate?.result ?? null,
-    errors: pass
-      ? []
-      : ['deterministic hard gate evidence must be T017 evidence with result=pass.'],
+    headSha: hardGate?.source?.headSha ?? null,
+    errors,
   };
 }
 
@@ -273,6 +312,8 @@ function miraEvaluation(policy, judgment) {
   }
   if (!Array.isArray(judgment.evidence)) {
     errors.push('Mira judgment evidence must be an array.');
+  } else if (judgment.decision === 'approve' && judgment.evidence.length === 0) {
+    errors.push('Mira approve judgment must cite at least one evidence item.');
   }
 
   return {
@@ -292,6 +333,7 @@ export function evaluateReleaseGovernance(policy, request) {
   }
 
   const hardGate = hardGateEvaluation(policy, request.hardGate);
+  const changeMetadata = changeMetadataEvaluation(request.change ?? {});
   const compatibility = compatibilityEvaluation(policy, request);
   const aiRequirement = resolveAiReviewRequirement(policy, request.change ?? {});
 
@@ -329,6 +371,7 @@ export function evaluateReleaseGovernance(policy, request) {
 
   const blockers = [];
   if (hardGate.status !== 'pass') blockers.push('deterministic-hard-gate');
+  if (changeMetadata.status !== 'pass') blockers.push('change-metadata');
   if (compatibility.status !== 'pass') blockers.push('compatibility');
   if (!aiSatisfied) blockers.push('ai-review');
   if (!miraApproved) blockers.push('mira-judgment');
@@ -355,6 +398,7 @@ export function evaluateReleaseGovernance(policy, request) {
     },
     hardCompliance: hardGate.status,
     hardGate,
+    changeMetadata,
     compatibility,
     aiReview,
     miraJudgment: mira,
