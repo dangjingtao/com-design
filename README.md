@@ -1,111 +1,130 @@
 # com-design
 
-公司级移动端设计系统。`design-source/` 是唯一可编辑的设计真相源；Penpot、人类文档以及后续 Tailwind / NativeWind / React Native 工程配置都应由同一真相源构建或适配生成。
+Com Design 是公司级 **Android / iOS / Web / WeChat Mini Program** 四端设计系统。V2 以 `design-source/` 为唯一可编辑设计真相源，通过 Canonical Design Model、Machine Contract 与 Platform Adapter 向 AI / Agent、研发、设计工具和人类文档提供同源消费路径。
 
-## 目录结构
-
-```text
-design-source/   设计系统真相源：颜色、字体、间距、圆角、组件契约、预览与规范
-penpot/          已实现的 Node.js 编译同步器：design-source -> Penpot manifest -> MCP
-report/          人类可读设计系统报告；历史版本见 report/archive/
-dist/            规划中的工程构建产物：Tailwind / NativeWind / React Native（尚未实现）
-```
-
-## 当前状态
-
-目前已经实现：
+当前消费优先级：
 
 ```text
-design-source
--> penpot/bin/build.mjs
--> penpot/build/manifest.json
--> Penpot MCP sync
+1. AI / Agent
+2. Engineering / R&D
+3. Design
 ```
 
-Tailwind、NativeWind、React Native tokens，以及“与工程配置同源生成的人类文档”属于下一阶段构建目标，**当前尚未实现**。
+这不是组织价值排序，而是接口建设优先级：机器消费者必须先能确定地读 contract、选择平台路径并验证结果，随后工程与设计工具消费同一来源。
 
-完整构建契约：`design-source/BUILD_PIPELINE.md`。
+## V2 架构
 
-## 工作流
+```text
+design-source/                         Canonical editable source
+  specs/design-system-v1.json         Canonical manifest
+  components/*.json                   Core Component contracts
+  specs/core-composites.json          Composite contracts
+  specs/core-patterns.json            UX Pattern contracts
+  specs/platform-*.json               Platform / Environment contracts
+        |
+        v
+Canonical Design Model V2
+        |
+        +-- dist/agent/contract.json               AI / Agent consumer
+        +-- dist/tailwind/                         Web adapter
+        +-- dist/native-mobile/adapter.json        iOS / Android adapter contract
+        +-- dist/nativewind/ + react-native/       compatible native engineering consumers
+        +-- dist/wechat-mini-program/              WeChat Mini Program adapter
+        +-- penpot/build/manifest.json             governed Penpot consumer
+        +-- report/design-system-v1/               accepted human-guide evidence
+```
 
-### 1. 修改真相源
+**生成物和下游工作区都不是第二真相源。** Penpot、Human Guide、Preview、Tailwind、NativeWind、React Native 与 Mini Program 输出发生冲突时，回到 canonical source 修正。
 
-设计系统改动统一进入 `design-source/`：
+## 当前事实
 
-- `colors_and_type.css`：颜色、字体、间距、圆角、阴影、密度、平台尺寸等 token
-- `components/*.json`：组件契约
-- `specs/*.json`：结构化规范
-- `preview/`、`ui_kits/`：组件预览与 UI kit
+当前 V2 canonical catalog 由验证器从真实 source 解析：
 
-不要在生成产物中反向维护 token。
+```text
+33 Core Components
+4 Core Composite Components
+6 Core UX Patterns
+```
 
-### 2. 当前 Penpot 构建
+正式目标平台：
+
+```text
+Android
+iOS
+Web
+WeChat Mini Program
+```
+
+当前第一阶段已有正式 Platform Adapter 路径：
+
+- Web：`dist/tailwind/adapter.json`
+- iOS / Android：`dist/native-mobile/adapter.json`
+- WeChat Mini Program：`dist/wechat-mini-program/adapter.json`
+- AI / Agent：`dist/agent/contract.json`
+- Penpot：`penpot/build/manifest.json`
+
+React Native / NativeWind 是可继续使用的工程消费者，但**不是 iOS / Android 平台语义本身**。
+
+## 消费规则
+
+生产实现先读 machine contract，再选择目标 Platform Adapter：
+
+```text
+canonical contract
+→ target platform/context
+→ Platform Adapter
+→ production implementation
+→ validation / evidence
+```
+
+`design-source/preview/` 只用于视觉和交互参考。它不是生产实现源，尤其不能把 Web Preview 的 DOM/CSS 直接复制成 iOS、Android 或微信小程序实现。
+
+统一消费地图：`design-source/library-consumption.json`。
+
+AI / Agent 详细入口：`design-source/SKILL.md`。
+
+## 常用命令
 
 ```bash
-cd penpot
-npm install
-npm run build      # 输出 penpot/build/manifest.json
+npm test
+npm run validate
+npm run build:engineering
+npm run build:penpot
+npm run build:all
+npm run smoke:four-platform
+npm run governance:dry-run
 ```
 
-### 3. 同步到 Penpot
+其中：
 
-在 Penpot 中打开目标文件并通过 `File -> MCP Server -> Connect` 连接插件，然后：
+- `validate`：执行 V2 deterministic validation，包括 source / contract / platform / consumption consistency。
+- `build:engineering`：生成 Web、Native Mobile、NativeWind、React Native、Mini Program 与 AI contract 等工程输出。
+- `build:penpot`：生成受治理的 Penpot manifest。
+- `smoke:four-platform`：执行四端代表性语义 smoke。
+- `governance:dry-run`：验证 release governance 可执行，但不会替 Mira 自动放行正式版本。
 
-```bash
-cp .env.example .env   # 填入 PENPOT_MCP_URL
-npm run sync:dry-run   # 预演
-npm run sync           # 实际同步
-```
+## Human Guide 与历史证据
 
-同步是幂等的：每个资产按 `com-design` pluginData 中的 source-id 匹配，存在即更新，不存在才建。
-
-### 4. 下一阶段统一构建
-
-目标不是让“人类文档生成工程配置”，而是让它们成为同一次构建的兄弟产物：
-
-```text
-design-source
-   |
-   +-> human docs
-   +-> Penpot manifest
-   +-> Tailwind adapter
-   +-> NativeWind adapter
-   +-> React Native tokens
-```
-
-最终仓库级接口计划收敛为 `build:docs`、`build:penpot`、`build:tailwind`、`build:nativewind`、`build:react-native` 与 `build:all`。具体约束见 `design-source/BUILD_PIPELINE.md`。
-
-## 人类文档与归档
-
-当前人类报告：
+当前 accepted human report：
 
 ```text
 report/design-system-v1/
 ```
 
-在统一构建管线实施前，旧报告已保存精确 Git 快照：
-
-```text
-archive/design-system-v1-pre-pipeline-2026-08-12
-```
-
-归档说明：
-
-```text
-report/archive/design-system-v1-pre-pipeline-2026-08-12/ARCHIVE.md
-```
-
-后续每次替换已发布的人类报告，都应先创建日期化快照，不覆盖旧归档。
+它是验收证据，不能被工程 build 删除或原地覆盖。历史报告和归档也不能成为未来构建的上游 source。
 
 ## 分支
 
-- `main`：稳定版本
-- `dev`：设计真相源、工具链与构建适配器的集成分支
-- `archive/*`：历史快照，不作为开发分支使用
+- `dev`：V2 施工、集成与验证
+- `main`：稳定发布
+- `archive/*`：历史快照，不参与正常施工
 
 ## 相关文档
 
-- `design-source/BUILD_PIPELINE.md`：统一构建、单位映射、工程适配与归档契约
+- `design-source/README.md`：设计语言与 V2 消费入口
+- `design-source/SKILL.md`：AI / Agent 消费指南
+- `design-source/library-consumption.json`：机器可读消费地图
+- `design-source/BUILD_PIPELINE.md`：构建与生成物边界
+- `design-source/v2-planning/v2-prd.md`：V2 产品定义
 - `design-source/PENPOT_MCP_PLAYBOOK.md`：Penpot MCP 操作手册
-- `penpot/README.md`：现有 Penpot 编译同步器说明
-- `report/README.md`：人类文档与归档说明
+- `report/README.md`：Human Guide 与归档说明
