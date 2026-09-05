@@ -115,3 +115,33 @@ test('T017 writes a stable machine-readable evidence artifact', () => {
     evidence,
   );
 });
+
+
+test('T017 preserves consolidated failure evidence when a traced JSON artifact is malformed', () => {
+  const { root } = passingFixture();
+  writeText(root, 'dist/tailwind/adapter.json', '{ malformed json');
+
+  const evidence = buildCiEvidence(root, { gateResults: allSuccess });
+
+  assert.equal(evidence.result, 'fail');
+  assert.ok(
+    evidence.checks.some(
+      (check) => check.id === 'source-parity:web' && check.status === 'fail',
+    ),
+  );
+  const relativePath = writeCiEvidence(root, evidence);
+  assert.equal(fs.existsSync(path.join(root, relativePath)), true);
+});
+
+test('T017 reports target failure when canonical and target source revisions are both missing', () => {
+  const { root } = passingFixture();
+  fs.rmSync(path.join(root, 'dist', 'design-model-v2.json'));
+  writeJson(root, 'dist/tailwind/adapter.json', { source: {} });
+
+  const evidence = buildCiEvidence(root, { gateResults: allSuccess });
+  const web = evidence.targets.find((target) => target.id === 'web');
+
+  assert.equal(evidence.result, 'fail');
+  assert.equal(web.status, 'fail');
+  assert.ok(evidence.summary.targetFailures > 0);
+});
