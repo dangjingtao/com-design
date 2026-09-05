@@ -186,6 +186,7 @@ export function validateConsumptionConsistency(repoRoot) {
     corePatterns: catalogDefinitions.corePatterns.count ?? 0,
   };
   const publicDocs = [
+    ['root README', rootReadme],
     ['design-source README', sourceReadme],
     ['SKILL', skill],
   ];
