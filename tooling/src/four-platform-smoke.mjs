@@ -346,13 +346,19 @@ function platformChecks({
       context.input === 'hybrid'
         && snapshot?.pointer?.hover === true
         && snapshot?.keyboardIme?.supported === true
-        && snapshot?.focus?.focusVisible === 'required',
+        && snapshot?.focus?.focusVisible === 'required'
+        && facts?.pointer?.activeWhen?.includes('hybrid')
+        && facts?.keyboard?.activeWhen?.includes('hybrid')
+        && facts?.focus?.focusVisibleRequiredFor?.includes('hybrid'),
       'Web smoke must cover pointer + keyboard/focus through a hybrid input context.',
       {
         input: context.input,
         pointer: snapshot?.pointer ?? null,
         keyboardIme: snapshot?.keyboardIme ?? null,
         focus: snapshot?.focus ?? null,
+        adapterPointer: facts?.pointer ?? null,
+        adapterKeyboard: facts?.keyboard ?? null,
+        adapterFocus: facts?.focus ?? null,
       },
     ));
   } else {
