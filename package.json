@@ -11,7 +11,8 @@
     "build:penpot": "node penpot/bin/build.mjs",
     "build:all": "node tooling/bin/build-all.mjs",
     "ci:evidence": "node tooling/bin/ci-evidence.mjs",
-    "build": "npm run build:all"
+    "build": "npm run build:all",
+    "smoke:four-platform": "node tooling/bin/smoke-four-platform.mjs"
   },
   "engines": {
     "node": ">=18"
