@@ -47,7 +47,7 @@
 | T013 | Icon Registry → Provider → Adapter | Foundation / Icon | PASS | V2 first-stage | - |
 | T014 | AI-readable / Executable / Verifiable Contract | AI / Contract | PASS | V2 first-stage | T003、T005、T010、T013 |
 | T015 | Penpot as Governed Downstream Consumer | Penpot / Tooling | PASS | V2 first-stage | T003、T005 |
-| T016 | Human Guide / Skill / Library-consumption Consistency | Docs / Consumption | DOING | V2 first-stage | T001、T007、T008、T009、T014、T015 |
+| T016 | Human Guide / Skill / Library-consumption Consistency | Docs / Consumption | REVIEW | V2 first-stage | T001、T007、T008、T009、T014、T015 |
 | T017 | Deterministic CI Hard Gate + Evidence Artifact | CI / Validation | PASS | V2 first-stage | T006、T007、T008、T009、T014、T015 |
 | T018 | Representative Four-platform Smoke Harness | QA / Cross-platform | PASS | V2 first-stage | T007、T008、T009、T010、T011、T012 |
 | T019 | Release Governance + Conditional AI Review Gate | CI / Review | PASS | V2 first-stage | T017 |
