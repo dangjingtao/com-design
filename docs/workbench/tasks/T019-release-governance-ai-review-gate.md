@@ -1,6 +1,6 @@
 # T019 · Release Governance + Conditional AI Review Gate
 
-- Status: TODO
+- Status: DOING
 - Target version: V2 first-stage
 - Impact: CI / Review / Governance
 - Owner: -
