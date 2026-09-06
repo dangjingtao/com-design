@@ -213,6 +213,46 @@
         "losing active context on deep navigation",
         "keeping expired workflow actions visually dominant"
       ]
+    },
+    {
+      "id": "incrementalLoading",
+      "name": "Incremental Loading / Infinite List",
+      "cn": "增量加载 / 无限列表",
+      "intent": "Let users continue browsing a long collection through automatic near-end loading, manual Load More, and explicit retry without losing already loaded content or collection position.",
+      "components": [
+        "List Item",
+        "Loading Indicator",
+        "Button",
+        "Alert / Inline Banner"
+      ],
+      "anatomy": [
+        "loaded collection",
+        "optional near-end trigger region",
+        "inline loading-more state",
+        "append-error recovery action",
+        "optional end-reached state"
+      ],
+      "rules": [
+        "Initial loading and loading-more MUST remain distinct; appending MUST NOT replace already loaded content with a full collection Skeleton.",
+        "Automatic near-end loading MUST use a semantic threshold resolved by the Platform Adapter and MUST have an in-flight request guard.",
+        "Automatic failure MUST preserve existing items and expose an explicit retry or Load More path.",
+        "Continuation/cursor state is opaque to UI and MUST NOT bind Core semantics to page-number or backend field names.",
+        "Duplicate item identities and stale/out-of-order responses MUST be guarded before append.",
+        "An exhausted collection MUST stop subsequent automatic or manual continuation requests.",
+        "Returning from detail SHOULD restore loaded items, continuation, active query/filter/sort and scroll position while the collection task remains active.",
+        "Pull-to-refresh and virtualization are separate capabilities; they MAY compose with this Pattern but MUST NOT redefine its loading states.",
+        "Newly appended content MUST NOT steal focus; loading, append-error and exhausted states MUST remain accessible."
+      ],
+      "avoid": [
+        "clearing the whole collection after load-more failure",
+        "using raw page numbers as a Core UI contract",
+        "firing duplicate requests from repeated threshold events",
+        "treating pull-to-refresh as the same state as load-more",
+        "requiring one shared virtualization implementation across platforms"
+      ],
+      "workflowContractRefs": [
+        "com-design:incremental-loading:v2"
+      ]
     }
   ]
 }
