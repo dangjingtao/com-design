@@ -15,8 +15,8 @@ test('T026 accepted semantic text/background pairs pass across default and Premi
   const result=auditContrast(model);
   assert.deepEqual(result.errors,[]);
   assert.equal(result.evidence.scopeCount,4);
-  assert.equal(result.evidence.pairCount,11);
-  assert.equal(result.evidence.checks,44);
+  assert.equal(result.evidence.pairCount,15);
+  assert.equal(result.evidence.checks,60);
   assert.ok(result.evidence.minimumRatio>=4.5);
 });
 
@@ -27,4 +27,20 @@ test('T026 contrast audit fails a semantic pair below the required threshold', (
   token.light='#FFFFFF';
   const result=auditContrast(candidate);
   assert.ok(result.errors.some((error)=>error.includes('default.light text-primary-on-surface')));
+});
+
+
+test('T026 contrast audit covers low-fill brand/destructive actions and focus ring', () => {
+  const model=buildTokenModel(path.resolve('design-source/colors_and_type.css'));
+  const result=auditContrast(model);
+  const ids=new Set(result.evidence.results.map((entry)=>entry.id));
+  assert.ok(ids.has('brand-text-on-secondary'));
+  assert.ok(ids.has('destructive-text-on-secondary'));
+  assert.ok(ids.has('on-primary-container-on-primary-container'));
+  assert.ok(ids.has('focus-ring-on-surface'));
+  const premiumBrand=result.evidence.results.find(
+    (entry)=>entry.scope==='premiumGold.light' && entry.id==='brand-text-on-secondary',
+  );
+  assert.ok(premiumBrand);
+  assert.ok(premiumBrand.ratio>=4.5);
 });
