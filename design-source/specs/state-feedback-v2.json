@@ -1,0 +1,90 @@
+{
+  "$schema": "../schemas/state-feedback-v2.schema.json",
+  "schemaVersion": 2,
+  "id": "com-design:state-feedback:v2",
+  "$metadata": {
+    "name": "Com Design State Feedback Semantics",
+    "owner": "T023",
+    "status": "v2-first-stage",
+    "canonical": true
+  },
+  "scope": {
+    "addsCoreComponent": true,
+    "addsCorePattern": false,
+    "coreComponentAdded": "result-state"
+  },
+  "references": {
+    "components": ["empty-state","result-state","alert","toast","snackbar","input","textarea","select"],
+    "pattern": "statusComposition"
+  },
+  "selection": {
+    "absence": "empty-state",
+    "taskOutcome": "result-state",
+    "localPersistent": "alert:inline",
+    "pagePersistent": "alert:banner",
+    "transientAcknowledgement": "toast",
+    "transientActionable": "snackbar",
+    "fieldError": "field-validation",
+    "externalBlock": "blocking-state"
+  },
+  "emptyState": {
+    "allowedVariants": ["first-use","no-data","no-results"],
+    "genericRecoverableErrorAllowed": false,
+    "semanticColorDefault": false
+  },
+  "resultState": {
+    "tones": ["success","error","warning","info","pending"],
+    "maxPrimaryActions": 1,
+    "fieldErrorsAllowed": false,
+    "pendingMustExplainExitOrReturn": true
+  },
+  "alertFamily": {
+    "toneOrthogonalToPresentation": true,
+    "inline": {
+      "scope": "local-context",
+      "placement": "normal-content-flow",
+      "geometry": "contained-local-surface",
+      "dismissDefault": "non-dismissible"
+    },
+    "banner": {
+      "scope": "page-or-region",
+      "placement": "structural-notification-slot",
+      "geometry": "flatter-edge-or-inset-aware",
+      "dismissRequiresSafeIgnore": true,
+      "stacking": "prioritize-merge-or-queue"
+    }
+  },
+  "blockingState": {
+    "promotedToCorePattern": false,
+    "causes": ["system-block","offline","permission-denied","unavailable","maintenance","not-found"],
+    "requiredContent": ["cause","scope","next-action"],
+    "nextActions": {
+      "system-block": ["explain-block","return-to-safe-context","retry-when-condition-changes"],
+      "offline": ["retry","check-connection","continue-with-available-content-when-safe"],
+      "permission-denied": ["request-access","open-platform-settings-when-applicable","return-to-safe-context"],
+      "unavailable": ["retry-later","view-status-when-available","return-to-safe-context"],
+      "maintenance": ["show-availability-window-when-known","retry-later","return-to-safe-context"],
+      "not-found": ["return-to-valid-context","search-or-browse-alternative-when-available"]
+    }
+  },
+  "transientFeedback": {
+    "toast": "short-non-durable-acknowledgement",
+    "snackbar": "short-feedback-with-at-most-one-action",
+    "criticalFailureToastOnlyAllowed": false
+  },
+  "fieldValidationBoundary": {
+    "owner": "field-or-form-validation",
+    "globalFeedbackMayReplaceFieldError": false
+  },
+  "examples": [
+    {"id":"empty-no-results","input":{"kind":"absence","reason":"query-no-match"},"expected":{"surface":"empty-state"}},
+    {"id":"task-submit-success","input":{"kind":"task-outcome","tone":"success"},"expected":{"surface":"result-state"}},
+    {"id":"local-sync-warning","input":{"kind":"persistent","scope":"local","tone":"warning"},"expected":{"surface":"alert:inline"}},
+    {"id":"page-session-expired","input":{"kind":"persistent","scope":"page","tone":"danger"},"expected":{"surface":"alert:banner"}},
+    {"id":"saved-acknowledgement","input":{"kind":"transient","actionable":false},"expected":{"surface":"toast"}},
+    {"id":"undo-delete","input":{"kind":"transient","actionable":true},"expected":{"surface":"snackbar"}},
+    {"id":"field-required","input":{"kind":"field-error"},"expected":{"surface":"field-validation"}},
+    {"id":"offline-block","input":{"kind":"external-block","cause":"offline"},"expected":{"surface":"blocking-state","nextActionRequired":true}},
+    {"id":"permission-block","input":{"kind":"external-block","cause":"permission-denied"},"expected":{"surface":"blocking-state","nextActionRequired":true}}
+  ]
+}
