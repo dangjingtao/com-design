@@ -55,7 +55,7 @@ V2 第一周目标不是“组件越多越好”，而是 Source → Contract �
 ## Implementation record
 
 - Commit / PR: PR #47 (`task/T026-first-week-integration-acceptance` → `dev`), predecessor baseline `dev@1e836b63b9c82403a237a92fe648d09144db3133`.
-- Final dev HEAD: predecessor integration baseline `1e836b63b9c82403a237a92fe648d09144db3133`; REVIEW-state implementation head before evidence-only status update: `3246b525e7a72d7b32d33fd8d7c22a953fecc236`.
+- Accepted RC implementation merge SHA: `1083f348bbe52dd90d2a7c470ef460138e34fd53` (PR #47 squash merge to `dev`). Subsequent evidence-only corrections do not change the accepted implementation payload.
 - Changed paths:
   - deterministic component CSS extractor + 34/34 parity gate
   - semantic contrast audit across Default / Premium Gold × Light / Dark
@@ -73,12 +73,12 @@ V2 第一周目标不是“组件越多越好”，而是 Source → Contract �
 
 ## Verification evidence
 
-- CI: Design System Build #340 — PASS on final REVIEW-state head `17789bea995b0fbb60a04f82b63eb86dfc350914`; the complete integration workflow including tests, 18-check validation, engineering, Penpot, `build:all`, four-platform smoke, accepted-report protection, RC evidence artifact, governance dry-run and T017 enforcement is green.
+- CI: Post-merge Design System Build #344 — PASS on accepted RC merge SHA `1083f348bbe52dd90d2a7c470ef460138e34fd53`; the complete integration workflow including tests, 18-check validation, engineering, Penpot, `build:all`, four-platform smoke, accepted-report protection, RC evidence artifact, governance dry-run and T017 enforcement is green.
 - Full test / validate / build: 242/242 repository tests PASS; deterministic validation 18/18 checks PASS with 0 warnings; `build:all` PASS; component CSS parity 34/34 PASS; 25 CI hard checks / 9 traced targets PASS.
 - Four-platform smoke: T018 `smoke:four-platform` PASS, 43/43 checks across Web / iOS / Android / WeChat Mini Program; platform adapter/source-parity evidence remains hard-gated.
 - AI / MCP evidence: Canonical Design Model V2 builds successfully; Agent contract generated; MCP manifest/tokens/package tests PASS and MCP is now a traced CI target tied to the canonical engineering source revision.
 - Penpot evidence: governed Penpot manifest build PASS with canonical authority/source revision; artifact `com-design-penpot-ed5444a3af28ef05c6f83fcc4cfa672e849eda56` (artifact 9981107508).
-- Release evidence package: `com-design-evidence-ed5444a3af28ef05c6f83fcc4cfa672e849eda56` (artifact 9981106820) contains CI/governance/validation/model/adapters/Agent/MCP/smoke/Human overlay/Penpot evidence; engineering artifact 9981107187. Release governance dry-run reports `hard=pass`, `ai=not-required`, `mira=pending`, which is expected before this card's final Mira judgment.
+- Release evidence package: post-merge `com-design-evidence-1083f348bbe52dd90d2a7c470ef460138e34fd53` (artifact 9981171805), engineering artifact 9981172224, Penpot artifact 9981172574. CI evidence PASS with 0 blocking failures; T017 passes 25 hard checks / 9 traced targets. Release governance dry-run remains `hard=pass`, `ai=not-required`, `mira=pending` by design because the dry-run is not the persisted T026 approval input.
 - Human evidence: accepted `report/design-system-v1/` unchanged guard PASS; Human Guide current-facts tests PASS and clearly label the V1 body as retained baseline rather than current V2 catalog.
 - Hard compliance: no blocking failure remains on the candidate head; every declared release requirement has executable evidence ownership.
 - Soft / first-stage residuals (non-blocking): versioned next-generation Human Doc generator/current-pointer flow, component recipe/type generation, stronger future cross-target snapshots, and stable package distribution beyond GitHub Actions artifacts remain explicitly pending in `BUILD_PIPELINE.md`. WeChat Mini Program full Core Component package remains outside first-stage adapter scope.
