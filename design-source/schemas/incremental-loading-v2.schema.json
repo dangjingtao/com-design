@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://com-design.local/schemas/incremental-loading-v2.schema.json",
+  "title": "Com Design Incremental Loading V2",
+  "type": "object",
+  "required": ["$schema","schemaVersion","id","$metadata","scope","references","stateModel","triggerPolicy","appendPolicy","restoration","boundaries","platformMappings","examples"],
+  "properties": {
+    "$schema": {"type":"string","minLength":1},
+    "schemaVersion": {"const":2},
+    "id": {"const":"com-design:incremental-loading:v2"},
+    "$metadata": {
+      "type":"object",
+      "required":["name","owner","status","canonical"],
+      "properties":{
+        "name":{"type":"string","minLength":1},
+        "owner":{"const":"T022"},
+        "status":{"type":"string","minLength":1},
+        "canonical":{"const":true}
+      },
+      "additionalProperties":false
+    },
+    "scope": {
+      "type":"object",
+      "required":["platforms","addsCoreComponent","addsCorePattern"],
+      "properties":{
+        "platforms":{"type":"array","uniqueItems":true,"items":{"enum":["ios","android","web","wechat-mini-program"]}},
+        "addsCoreComponent":{"const":false},
+        "addsCorePattern":{"const":true}
+      },
+      "additionalProperties":false
+    },
+    "references": {
+      "type":"object",
+      "required":["patternId","collectionWorkflow","layoutInputFoundation","platformEnvironment"],
+      "properties":{
+        "patternId":{"const":"incrementalLoading"},
+        "collectionWorkflow":{"const":"com-design:mobile-search-filter:v2"},
+        "layoutInputFoundation":{"const":"sources.layoutInputFoundation"},
+        "platformEnvironment":{"const":"sources.platformEnvironment"}
+      },
+      "additionalProperties":false
+    },
+    "stateModel": {
+      "type":"object",
+      "required":["states","authoritativeOwner","requestIdentity","continuation"],
+      "properties":{
+        "states":{"type":"array","uniqueItems":true,"items":{"enum":["idle","loading-initial","ready","loading-more","appended","append-error","exhausted"]}},
+        "authoritativeOwner":{"const":"collection-owner"},
+        "requestIdentity":{"const":"opaque-request-id"},
+        "continuation":{
+          "type":"object",
+          "required":["opaqueToUI","backendFieldNameBound","invalidatedBy"],
+          "properties":{
+            "opaqueToUI":{"const":true},
+            "backendFieldNameBound":{"const":false},
+            "invalidatedBy":{"type":"array","uniqueItems":true,"items":{"enum":["committedQuery","committedFilters","sort","collectionIdentity"]}}
+          },
+          "additionalProperties":false
+        }
+      },
+      "additionalProperties":false
+    },
+    "triggerPolicy": {
+      "type":"object",
+      "required":["modes","nearEnd","manualFallback","underfilledViewport"],
+      "properties":{
+        "modes":{"type":"array","uniqueItems":true,"items":{"enum":["automatic","manual","hybrid"]}},
+        "nearEnd":{
+          "type":"object",
+          "required":["semanticThreshold","adapterOwned","rawPixelMagicNumberForbidden","requestInFlightGuard"],
+          "properties":{
+            "semanticThreshold":{"const":"viewport-relative-or-semantic-distance"},
+            "adapterOwned":{"const":true},
+            "rawPixelMagicNumberForbidden":{"const":true},
+            "requestInFlightGuard":{"const":true}
+          },
+          "additionalProperties":false
+        },
+        "manualFallback":{
+          "type":"object",
+          "required":["availableAfterAutomaticFailure","retryFocusable","loadMoreFocusable"],
+          "properties":{
+            "availableAfterAutomaticFailure":{"const":true},
+            "retryFocusable":{"const":true},
+            "loadMoreFocusable":{"const":true}
+          },
+          "additionalProperties":false
+        },
+        "underfilledViewport":{
+          "type":"object",
+          "required":["mayContinueAutomatically","maxConsecutiveRequestsRequired","stopOn"],
+          "properties":{
+            "mayContinueAutomatically":{"const":true},
+            "maxConsecutiveRequestsRequired":{"const":true},
+            "stopOn":{"type":"array","uniqueItems":true,"items":{"enum":["viewport-filled","append-error","exhausted","guard-limit"]}}
+          },
+          "additionalProperties":false
+        }
+      },
+      "additionalProperties":false
+    },
+    "appendPolicy": {
+      "type":"object",
+      "required":["retainExistingDataOnError","dedupByStableItemKey","ignoreStaleRequest","preserveBatchOrder","appendDoesNotStealFocus","endReachedStopsRequests"],
+      "properties":{
+        "retainExistingDataOnError":{"const":true},
+        "dedupByStableItemKey":{"const":true},
+        "ignoreStaleRequest":{"const":true},
+        "preserveBatchOrder":{"const":true},
+        "appendDoesNotStealFocus":{"const":true},
+        "endReachedStopsRequests":{"const":true}
+      },
+      "additionalProperties":false
+    },
+    "restoration": {
+      "type":"object",
+      "required":["detailReturn","fields","requiresT021CollectionOwnership"],
+      "properties":{
+        "detailReturn":{"const":"restore-active-collection-task"},
+        "fields":{"type":"array","uniqueItems":true,"items":{"enum":["loadedItems","continuation","committedQuery","committedFilters","sort","scrollPosition"]}},
+        "requiresT021CollectionOwnership":{"const":true}
+      },
+      "additionalProperties":false
+    },
+    "boundaries": {
+      "type":"object",
+      "required":["pullToRefreshPartOfPattern","virtualizationPartOfPattern","virtualizationComposable","backendPaginationProtocolBound"],
+      "properties":{
+        "pullToRefreshPartOfPattern":{"const":false},
+        "virtualizationPartOfPattern":{"const":false},
+        "virtualizationComposable":{"const":true},
+        "backendPaginationProtocolBound":{"const":false}
+      },
+      "additionalProperties":false
+    },
+    "platformMappings": {
+      "type":"object",
+      "required":["ios","android","web","wechat-mini-program"],
+      "properties":{
+        "ios":{"type":"object"},
+        "android":{"type":"object"},
+        "web":{"type":"object"},
+        "wechat-mini-program":{"type":"object"}
+      },
+      "additionalProperties":false
+    },
+    "examples":{"type":"array","minItems":4,"items":{"type":"object"}}
+  },
+  "additionalProperties":false
+}
