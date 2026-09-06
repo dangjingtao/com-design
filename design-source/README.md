@@ -7,7 +7,7 @@ Com Design 是公司级 Android / iOS / Web / WeChat Mini Program 四端 Design 
 ```text
 33 Core Components
 4 Core Composite Components
-6 Core UX Patterns
+7 Core UX Patterns
 ```
 
 系统整体气质：**Modern / Clear / Light / Efficient**。
