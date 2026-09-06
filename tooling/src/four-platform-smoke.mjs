@@ -91,7 +91,10 @@ function semanticSnapshot(component) {
     semanticTypeCandidates: contract.semanticTypeCandidates ?? [],
     states: contract.variantDimensions?.state ?? [],
     hierarchy: contract.variantDimensions?.hierarchy ?? [],
+    semantic: contract.variantDimensions?.semantic ?? [],
+    shape: contract.variantDimensions?.shape ?? [],
     presentation: contract.variantDimensions?.presentation ?? [],
+    loadingContract: contract.loadingContract ?? null,
     selectionMode: contract.selectionModel?.mode ?? null,
     anatomy: contract.anatomy ?? [],
     interactionContract: contract.interactionContract ?? [],
@@ -118,12 +121,28 @@ function contractChecks(model) {
   checks.push(check(
     'contract:button-state-hierarchy',
     'contract',
-    includesAll(button.variantDimensions?.state ?? [], ['default', 'pressed', 'disabled'])
+    includesAll(
+      button.variantDimensions?.state ?? [],
+      ['default', 'pressed', 'loading', 'disabled'],
+    )
       && includesAll(
         button.variantDimensions?.hierarchy ?? [],
-        ['primary', 'secondary', 'tertiary', 'destructive'],
-      ),
-    'Button must preserve representative authoritative states and action hierarchy.',
+        ['primary', 'secondary', 'tertiary'],
+      )
+      && !(button.variantDimensions?.hierarchy ?? []).includes('destructive')
+      && includesAll(
+        button.variantDimensions?.semantic ?? [],
+        ['default', 'destructive'],
+      )
+      && includesAll(
+        button.variantDimensions?.shape ?? [],
+        ['standard', 'pill'],
+      )
+      && button.loadingContract?.suppressRepeatedActivation === true
+      && button.loadingContract?.preservesMeasuredDimensions === true
+      && button.loadingContract?.loadingIsDisabled === false
+      && button.loadingContract?.busySemanticsRequired === true,
+    'Button must preserve authoritative hierarchy, semantic intent, shape, loading and disabled-state boundaries across platforms.',
     { snapshot: semanticSnapshot(cases.button) },
   ));
 
