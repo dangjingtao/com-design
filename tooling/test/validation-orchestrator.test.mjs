@@ -28,12 +28,13 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
   assert.equal(evidence.result, 'pass');
   assert.equal(evidence.summary.failed, 0);
   assert.equal(evidence.summary.blockingErrors, 0);
-  assert.equal(evidence.summary.checksRun, 14);
+  assert.equal(evidence.summary.checksRun, 15);
   assert.deepEqual(
     evidence.checks.map((check) => check.id),
     [
       'source-integrity',
       'consumption-consistency',
+      'component-css-parity',
       'token-model',
       'platform-model',
       'platform-environment',
@@ -57,6 +58,8 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
     false,
   );
   assert.equal(evidence.checks.find((check) => check.id === 'consumption-consistency').evidence.catalogCounts.coreComponents, 34);
+  assert.equal(evidence.checks.find((check) => check.id === 'component-css-parity').evidence.componentCount, 34);
+  assert.equal(evidence.checks.find((check) => check.id === 'component-css-parity').evidence.matched, 34);
   assert.deepEqual(
     evidence.checks.find((check) => check.id === 'mobile-search-filter').evidence.platforms,
     ['ios', 'android', 'wechat-mini-program'],
