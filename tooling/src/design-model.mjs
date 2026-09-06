@@ -246,20 +246,6 @@ function validateRequiredInputs(repoRoot, sourceIntegrity, manifest) {
       readJson(path.join(repoRoot, 'design-source', entry.contract)),
     ]),
   );
-  const feedbackPreviews = {
-    alert: fs.readFileSync(
-      path.join(repoRoot, 'design-source', 'preview', 'component-alert.html'),
-      'utf8',
-    ),
-    emptyState: fs.readFileSync(
-      path.join(repoRoot, 'design-source', 'preview', 'component-empty-state.html'),
-      'utf8',
-    ),
-    resultState: fs.readFileSync(
-      path.join(repoRoot, 'design-source', 'preview', 'component-result-state.html'),
-      'utf8',
-    ),
-  };
   errors.push(
     ...validateStateFeedbackContract(
       stateFeedback,
@@ -268,7 +254,6 @@ function validateRequiredInputs(repoRoot, sourceIntegrity, manifest) {
         componentIndex,
         components: feedbackComponents,
         patterns: requireCanonicalSource(sourceIntegrity, 'corePatterns').value,
-        previews: feedbackPreviews,
       },
     ).map((error) => `state feedback workflow: ${error}`),
   );
