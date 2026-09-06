@@ -490,22 +490,45 @@
 /* @anatomy
    <div class="specimen"> <div class="story"> <span class="story-label">列表</span> <div class="surface"> <div class="sk sk-list" role="status" aria-busy="true" aria-label="内容加载中" data-evidence-sample="list"> <div class="sk-list__row"> <div class="sk__block sk-list__thumb"></div>
 */
-.sk { position: relative; overflow: hidden; }
-  .sk__block { background: var(--color-surface-subtle); border-radius: var(--radius-sm); position: relative; overflow: hidden; }
-  .sk__block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.55), rgba(255,255,255,0)); animation: sk-shimmer 1.4s ease-in-out infinite; }
-  .sk.is-static .sk__block::after { display: none; }
-  @keyframes sk-shimmer { 100% { transform: translateX(100%); } }
-  @media (prefers-reduced-motion: reduce) { .sk__block::after { animation: none; transform: none; } }
-  .sk__line { height: 12px; }
-  .sk-list { display: flex; flex-direction: column; gap: var(--space-12); }
-  .sk-list__row { display: flex; align-items: center; gap: var(--space-12); }
-  .sk-list__thumb { width: var(--com-size-40); height: var(--com-size-40); border-radius: var(--radius-sm); flex-shrink: 0; }
-  .sk-list__lines { display: flex; flex-direction: column; gap: var(--space-8); flex: 1; min-width: 0; }
-  .sk-card { display: flex; flex-direction: column; gap: var(--space-8); }
-  .sk-card__header { display: flex; flex-direction: column; gap: var(--space-8); margin-bottom: var(--space-4); }
-  .sk-profile { display: flex; flex-direction: column; align-items: center; gap: var(--space-12); }
-  .sk-profile__avatar { width: var(--com-size-56); height: var(--com-size-56); border-radius: var(--radius-pill); }
-  .sk-profile__lines { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); width: 100%; }
+.select { display: flex; flex-direction: column; gap: var(--space-6); }
+  .select-label { font: var(--type-label); color: var(--color-text-primary); }
+  .select-helper { font: var(--type-body-small); color: var(--color-text-tertiary); }
+  .select-trigger { display: flex; align-items: center; gap: var(--space-8); width: 100%; min-height: var(--size-control-height); padding: 0 var(--space-12); border: var(--com-border-control) solid var(--color-border); border-radius: var(--radius-control); background: var(--color-surface); color: var(--color-text-primary); font: var(--type-body); text-align: left; cursor: pointer; user-select: none; transition: background .15s, border-color .15s, border-width .15s; }
+  .select-trigger::-moz-focus-inner { border: 0; }
+  .select-trigger:focus { outline: none; }
+  .select-trigger:focus-visible { border-color: var(--color-border-focused); box-shadow: 0 0 0 2px var(--color-primary-container); }
+  .select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .select-placeholder { color: var(--color-text-placeholder); }
+  .select-chevron { flex: 0 0 auto; width: var(--size-icon-md); height: var(--size-icon-md); color: var(--color-text-tertiary); transition: transform .15s; }
+  .select.is-open .select-trigger { border-width: var(--com-border-focus); border-color: var(--color-border-focused); padding-left: 11px; padding-right: 11px; }
+  .select.is-open .select-chevron { transform: rotate(180deg); }
+  .select-trigger:active { background: var(--color-surface-pressed); }
+  .select.is-error .select-trigger { border-color: var(--color-border-error); }
+  .select.is-error .select-trigger:focus-visible, .select.is-error.is-open .select-trigger { border-color: var(--color-border-error); box-shadow: 0 0 0 2px var(--color-danger-bg); }
+  .select.is-disabled .select-trigger { background: var(--color-surface-subtle); border-color: var(--color-border-subtle); cursor: not-allowed; }
+  .select.is-disabled .select-value, .select.is-disabled .select-placeholder, .select.is-disabled .select-chevron { color: var(--color-text-disabled); }
+  .select-error { font: var(--type-body-small); color: var(--color-danger-text); }
+
+  .select-sheet-layer { position: fixed; inset: 0; z-index: 40; display: flex; align-items: flex-end; justify-content: center; background: var(--color-scrim); }
+  .select-sheet { width: min(100%, 390px); max-height: min(72vh, 560px); overflow: hidden; border-radius: var(--radius-overlay) var(--radius-overlay) 0 0; background: var(--color-surface); box-shadow: var(--shadow-2); }
+  .select-sheet-handle { width: 36px; height: 4px; margin: var(--space-8) auto var(--space-4); border-radius: 999px; background: var(--color-border); }
+  .select-sheet-header { display: flex; min-height: 52px; align-items: center; gap: var(--space-8); padding: 0 var(--space-8) 0 var(--space-16); border-bottom: 1px solid var(--color-border-subtle); }
+  .select-sheet-title { flex: 1; min-width: 0; margin: 0; font: var(--type-heading-small); color: var(--color-text-primary); }
+  .select-sheet-close { display: grid; width: 44px; height: 44px; place-items: center; border: 0; border-radius: var(--radius-control); background: transparent; color: var(--color-text-secondary); cursor: pointer; }
+  .select-sheet-close:active { background: var(--color-surface-pressed); }
+  .select-sheet-close:focus-visible { outline: 2px solid var(--color-border-focused); outline-offset: -2px; }
+  .select-options { max-height: min(56vh, 430px); overflow-y: auto; overscroll-behavior: contain; padding: var(--space-4) var(--space-8) calc(var(--space-12) + env(safe-area-inset-bottom)); }
+  .select-option { display: flex; min-height: 52px; align-items: center; gap: var(--space-12); padding: var(--space-8) var(--space-8); border-radius: var(--radius-control); color: var(--color-text-primary); cursor: pointer; outline: none; }
+  .select-option + .select-option { margin-top: 2px; }
+  .select-option:hover { background: var(--color-surface-subtle); }
+  .select-option:focus-visible { box-shadow: inset 0 0 0 2px var(--color-border-focused); }
+  .select-option[aria-selected="true"] { background: var(--color-primary-container); color: var(--color-text-brand); font-weight: 600; }
+  .select-option[aria-disabled="true"] { color: var(--color-text-disabled); cursor: not-allowed; }
+  .select-option[aria-disabled="true"]:hover { background: transparent; }
+  .select-option-label { flex: 1; min-width: 0; }
+  .select-option-meta { display: block; margin-top: 2px; font: var(--type-body-small); color: var(--color-text-tertiary); font-weight: 400; }
+  .select-check { width: var(--size-icon-md); height: var(--size-icon-md); flex: 0 0 auto; opacity: 0; }
+  .select-option[aria-selected="true"] .select-check { opacity: 1; }
 
 /* ── Snackbar ──────────────────────────────────────────────── */
 /* @anatomy
