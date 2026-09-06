@@ -142,6 +142,14 @@ const FORMAL_TARGETS = Object.freeze([
   },
 ]);
 
+export const CI_EVIDENCE_CHECK_IDS = Object.freeze([
+  ...CI_GATE_IDS,
+  ...FORMAL_TARGETS.flatMap((target) => [
+    'target-output:' + target.id,
+    'source-parity:' + target.id,
+  ]),
+]);
+
 export function buildCiEvidence(repoRoot, {
   repositorySha = null,
   headSha = null,
