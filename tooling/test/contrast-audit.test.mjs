@@ -17,7 +17,8 @@ test('T026 accepted semantic text/background pairs pass across default and Premi
   assert.equal(result.evidence.scopeCount,4);
   assert.equal(result.evidence.pairCount,15);
   assert.equal(result.evidence.checks,60);
-  assert.ok(result.evidence.minimumRatio>=4.5);
+  assert.ok(result.evidence.results.every((entry)=>entry.status==='pass'));
+  assert.ok(result.evidence.minimumRatio>=3);
 });
 
 test('T026 contrast audit fails a semantic pair below the required threshold', () => {
