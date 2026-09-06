@@ -49,9 +49,17 @@ V2 规划已确认两处真实实现 / Preview 缺陷：Switch disabled-on/off �
 
 ## Implementation record
 
-- Commit / PR:
+- Commit / PR: branch `task/T024-switch-timeline-defect-repair` from `dev`.
 - Changed paths:
+  - `design-source/components/switch.json`
+  - `design-source/preview/component-switch.html`
+  - `design-source/components/timeline.json`
+  - `design-source/preview/component-timeline.html`
+  - `tooling/test/switch-timeline-visual.test.mjs`
 - Notes:
+  - Switch keeps value and availability as independent dimensions; disabled-on uses right-side thumb + muted brand-container treatment, while disabled-off uses neutral disabled treatment. Disabled thumb is muted in both values; no whole-row opacity.
+  - Timeline connector ownership moves from the following item to the current non-final event. Inter-event spacing is current-event padding, while the rail stretches with actual content height and continues into the next node.
+  - Preview includes four-state Switch comparison, mixed-status variable-height Timeline, clean final termination and reduced-color readability evidence.
 
 ## Verification evidence
 
