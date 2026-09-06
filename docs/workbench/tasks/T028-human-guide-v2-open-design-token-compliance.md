@@ -97,9 +97,20 @@ Human Guide 目前仍保留大量 V1 手写展示层样式。虽然 Core Compone
 
 ## Implementation record
 
-- Commit / PR:
+- Commit / PR: branch `task/T028-human-guide-v2-open-design-token-compliance` → `dev`; PR pending.
 - Changed paths:
+  - `report/design-system-v2/index.html` — productized Human Guide shell with app bar, left navigation, overview/principles/foundations, component workspace + Inspector, composite/pattern lists, consumer map and authority flow.
+  - `report/design-system-v2/styles.css` — Human Guide shell rebuilt on Com Design semantic tokens; no raw color, token fallback, ad-hoc radius/type/elevation.
+  - `report/design-system-v2/app.js` — canonical contract Inspector, section navigation, responsive sidebar and opt-in Default / Premium Gold × Light / Dark controls.
+  - `report/design-system-v2/visual-evidence.html` + `visual-evidence.css` — deterministic four-theme review fixture reusing existing Core Alert/Button presentation evidence.
+  - `tooling/src/human-guide-token-compliance.mjs` + bin/test — deterministic token/style gate and machine-readable `dist/human-guide/token-compliance.json`.
+  - validation/build/CI integration — Human Guide compliance becomes a repository hard check and retained evidence artifact.
 - Notes:
+  - Open Design is used only as the visual-language reference: quiet technical-doc/product shell, left navigation, high information density, restrained surfaces, flat-first hierarchy. No Open Design token/value is introduced.
+  - Human Guide visual styling uses canonical semantic tokens. Two downstream CSS media-query breakpoints are explicitly allowlisted because CSS media queries cannot consume custom properties; the allowlist is context-scoped and regression-tested.
+  - Premium Gold is opt-in and shares the same DOM/component structure; it does not become a parallel Human Guide or a new source of truth.
+  - `report/design-system-v1/` remains untouched accepted evidence.
+  - T027 canonical 34 Components / 4 Composites / 7 Patterns consumption is preserved; Result State is selected by default in the new Inspector and Incremental Loading remains canonical Pattern 07.
 
 ## Verification evidence
 
