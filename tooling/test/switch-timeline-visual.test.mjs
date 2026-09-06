@@ -46,7 +46,7 @@ test('T024 Switch preview proves enabled/disabled × on/off without whole-row op
   );
   assert.match(
     switchPreview,
-    /\.switch-input:disabled \+ \.switch-track \.switch-thumb\{background:var\(--color-surface-subtle\)\}/,
+    /\.switch-input:disabled \+ \.switch-track \.switch-thumb\{background:var\(--color-text-disabled\)\}/,
   );
   assert.doesNotMatch(switchPreview, /\.switch-row\.is-disabled\s*\{[^}]*opacity\s*:/s);
 
