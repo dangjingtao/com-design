@@ -214,13 +214,14 @@ npm run build:all
 Current `build:all` order:
 
 ```text
-validate source
--> build Tailwind adapter
--> build NativeWind adapter
--> build React Native tokens
+check generated component CSS parity against indexed Preview evidence
+-> validate source / contracts / release requirement evidence
+-> build engineering adapters (Tailwind / NativeWind / React Native / platform adapters / AI / MCP)
 -> build Penpot manifest
 -> leave accepted human report untouched
 ```
+
+The component CSS parity step is a downstream-consumer integrity check. It does not make Preview or `components.css` an upstream source for Canonical Design Model, engineering adapters, or release semantics.
 
 A future `build:docs` must be introduced only together with versioned report retention. It must not silently turn `build:all` into an overwrite operation against the accepted report.
 
