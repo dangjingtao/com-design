@@ -58,7 +58,7 @@
 | T024 | Switch + Timeline Visual Defect Repair | QA / Component | PASS | V2 first-stage | T003 |
 | T025 | Button V2: Pill / Destructive / Loading | Component | PASS | V2 first-stage | T003 |
 | T026 | First-week Integration Acceptance / V2 RC Readiness | Integration / Review | PASS | V2 first-stage | T001-T025 |
-| T027 | Human Guide V2 Canonical Consumption + Versioned Current Entry | Docs / Human Consumption / Pages | TODO | V2 documentation follow-up | T026 |
+| T027 | Human Guide V2 Canonical Consumption + Versioned Current Entry | Docs / Human Consumption / Pages | DOING | V2 documentation follow-up | T026 |
 | T028 | Human Guide V2 Open Design Visual Refresh + Token Compliance | Human UI / Visual System / Token Compliance | TODO | V2 documentation follow-up | T027 |
 
 ## 推荐施工波次
