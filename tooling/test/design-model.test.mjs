@@ -60,6 +60,12 @@ test('builds Canonical Design Model V2 from accepted canonical sources', () => {
   assert.equal(model.motion.id, 'com-design:motion-foundation:v2');
   assert.equal(model.motion.schemaVersion, 2);
   assert.equal(model.motion.contract.reducedMotion.firstClass, true);
+  assert.equal(model.workflows.mobileSearchFilter.id, 'com-design:mobile-search-filter:v2');
+  assert.equal(model.workflows.mobileSearchFilter.schemaVersion, 2);
+  assert.equal(
+    model.workflows.mobileSearchFilter.provenance.sourcePath,
+    'design-source/specs/mobile-search-filter-v2.json',
+  );
   assert.equal(
     model.motion.provenance.sourcePath,
     'design-source/specs/motion-foundation-v2.json',
@@ -259,5 +265,18 @@ test('rejects invalid canonical motion contract before model emission', () => {
   assert.throws(
     () => buildCanonicalDesignModel(fixture),
     /motion foundation: motionFoundation\.reducedMotion: is required/,
+  );
+});
+
+
+test('rejects invalid canonical mobile search/filter workflow before model emission', () => {
+  const fixture = copyDesignSourceFixture();
+  const workflow = readFixtureJson(fixture, 'specs/mobile-search-filter-v2.json');
+  workflow.filter.quickFilter.peerViewNavigation = true;
+  writeFixtureJson(fixture, 'specs/mobile-search-filter-v2.json', workflow);
+
+  assert.throws(
+    () => buildCanonicalDesignModel(fixture),
+    /mobile search\/filter workflow:.*quick filter/s,
   );
 });
