@@ -41,7 +41,7 @@ Canonical Design Model V2
 当前 V2 canonical catalog 由验证器从真实 source 解析：
 
 ```text
-33 Core Components
+34 Core Components
 4 Core Composite Components
 7 Core UX Patterns
 ```
