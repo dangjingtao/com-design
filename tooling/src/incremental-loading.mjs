@@ -352,16 +352,47 @@ export function validateIncrementalLoadingContract(
     if (!environments.has(platform)) errors.push('T010 missing platform environment for T022: ' + platform);
   }
 
+  for (const platform of ['ios','android']) {
+    const mapping = contract?.platformMappings?.[platform];
+    if (
+      typeof mapping?.nearEndTrigger !== 'string'
+      || mapping.nearEndTrigger.length === 0
+      || mapping?.overscrollMayDuplicateTrigger !== false
+      || mapping?.preserveViewportOnAppend !== true
+      || typeof mapping?.tailInset !== 'string'
+      || !sameSet(
+        mapping?.accessibilityAnnouncements,
+        ['loading-more','append-error','exhausted'],
+      )
+    ) {
+      errors.push(platform + ' mapping must define guarded near-end, stable viewport, inset and accessible loading states.');
+    }
+  }
+
+  const web = contract?.platformMappings?.web;
+  if (
+    typeof web?.nearEndTrigger !== 'string'
+    || web.nearEndTrigger.length === 0
+    || web?.keyboardAndScreenReaderReachabilityRequired !== true
+    || web?.criticalFooterPolicy !== 'prefer-manual-or-hybrid-when-auto-loading-blocks-footer'
+    || web?.preserveViewportOnAppend !== true
+  ) {
+    errors.push('Web mapping must preserve keyboard/screen-reader reachability, footer access and viewport stability.');
+  }
+
   const mini = contract?.platformMappings?.['wechat-mini-program'];
   if (
     mini?.scrollOwnerRequired !== true
     || !sameSet(mini?.scrollOwnerKinds, ['page','contained'])
     || mini?.nestedScrollOwnersForbidden !== true
+    || typeof mini?.nearEndTrigger !== 'string'
+    || mini.nearEndTrigger.length === 0
     || mini?.requestInFlightGuard !== true
     || mini?.highFrequencyNodeMutationAllowed !== false
     || mini?.batchAppendRequired !== true
+    || mini?.virtualizationOrRecyclingComposable !== true
   ) {
-    errors.push('Mini Program must choose one scroll owner, guard requests and avoid high-frequency node mutation.');
+    errors.push('Mini Program must choose one scroll owner, guard requests, batch append and remain virtualization-composable.');
   }
 
   const examples = new Set((contract?.examples ?? []).map((entry) => entry.id));
