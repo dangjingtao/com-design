@@ -119,7 +119,7 @@ function setupNavigation(){
     const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];
     if(!visible) return;
     links.forEach(link=>link.classList.toggle('is-active',link===map.get(visible.target.id)));
-  },{rootMargin:'-20% 0px -70% 0px'});
+  },{rootMargin:'-20% 0% -70% 0%'});
   map.forEach((link,id)=>{
     const section=document.getElementById(id);
     if(section) observer.observe(section);
