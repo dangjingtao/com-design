@@ -1,6 +1,6 @@
 # T022 · Incremental Loading / Infinite List Pattern
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: UX Pattern / Collection / Cross-platform
 - Owner: -
@@ -78,13 +78,13 @@ V2 已规划 Incremental Loading：自动 near-end 加载 + 手动 Load More + r
 
 ## Verification evidence
 
-- CI: Design System Build #272, run `34001679534` — success on `55a462670819f9125345ab54fbd9ee7b6ea4c86b`; 194/194 tests PASS; V2 validation 13 checks / 0 warnings; engineering build, Penpot build, accepted-report guard, governance dry-run and T017 deterministic hard-gate enforcement all PASS.
+- CI: Design System Build #274 — success on REVIEW-state head `3b4815f7a453a284bcb189d27247ae375303d8a0`; 194/194 repository tests PASS; V2 validation 13 checks / 0 warnings; engineering build, Penpot build, accepted-report guard, governance dry-run and T017 deterministic hard-gate enforcement all PASS.
 - State-machine tests: automatic append success, stable-key dedup/order, append-error data retention, explicit retry continuation reuse, in-flight suppression, stale/out-of-order rejection, exhausted suppression, query/filter/sort invalidation, detail-return restoration, non-empty request identity, required next continuation, and append-error automatic-loop suppression all have focused regression coverage.
 - Mini Program scroll evidence: generated `dist/wechat-mini-program/adapter.json` carries T022 semantic source, page/contained scroll-owner vocabulary, `scrollOwnerRequired=true`, `nestedScrollOwnersForbidden=true`, request-in-flight guard, `highFrequencyNodeMutationAllowed=false`, `batchAppendRequired=true`, and virtualization/recycling composability. Web and Native adapter tests also prove their platform mappings are consumed.
 
 ## Review
 
 - Reviewer: Mira
-- Result: REVIEW
-- Conclusion: Construction and deterministic verification complete. Codex raised two valid findings on the earlier implementation: automatic near-end retries could loop after append error, and native/Web mapping schemas were too permissive. Both are fixed and their review threads are resolved. Independent review additionally hardened request identity and impossible `hasMore=true` continuation states.
-- Follow-up: Final review should confirm automatic failure always degrades to explicit recovery, continuation cannot be revived by stale responses, and platform mappings remain Adapter-owned while Pull-to-refresh / virtualization stay out of T022 Core semantics.
+- Result: PASS
+- Conclusion: Final acceptance passed. Codex P1/P2 findings were fixed and resolved: append-error now blocks automatic near-end retry loops until explicit manual/retry recovery, and Web/iOS/Android/Mini Program mapping shapes are encoded in both schema and custom validation. Independent review additionally required non-empty request identities, rejected `hasMore=true` without a next continuation, verified stale responses cannot revive invalidated continuation, and confirmed exhausted state suppresses all further continuation requests. Review-state Design System Build #274 passed after all fixes. CodeRabbit produced no actionable finding on the hardened patch.
+- Follow-up: T026 may consume T022 as the formal long-collection continuation contract. Pull-to-refresh and virtualization remain separate future capabilities and must not be inferred as accepted by T022.
