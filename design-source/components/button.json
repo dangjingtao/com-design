@@ -111,6 +111,15 @@
     },
     {
       "hierarchy": "primary",
+      "semantic": "destructive",
+      "shape": "standard",
+      "size": "compact",
+      "state": "loading",
+      "loadingPresentation": "spinner-label",
+      "label": "删除中"
+    },
+    {
+      "hierarchy": "primary",
       "semantic": "default",
       "shape": "standard",
       "size": "compact",
@@ -215,7 +224,28 @@
     "spinnerOnlyRequiresAccessibleName": true,
     "busySemanticsRequired": true,
     "loadingIsDisabled": false,
-    "focusableWhileBusy": true
+    "focusableWhileBusy": true,
+    "compositionPolicy": {
+      "resolveBaseAppearanceFrom": [
+        "hierarchy",
+        "semantic",
+        "shape",
+        "size"
+      ],
+      "loadingOverrides": [
+        "content",
+        "activation",
+        "busy-semantics"
+      ],
+      "loadingPreserves": [
+        "hierarchy",
+        "semantic",
+        "shape",
+        "size"
+      ],
+      "disabledOverridesVisualTreatment": true,
+      "pressedAllowedWhileLoading": false
+    }
   },
   "interactionContract": [
     "Primary remains a scarce hierarchy signal: normally one highest-priority Primary action per view or action group.",
@@ -223,7 +253,8 @@
     "Destructive is reserved for destructive or irreversible actions and must be reinforced by explicit action copy and surrounding confirmation/context when risk is material.",
     "Entering loading suppresses repeated activation until loading exits, but loading is not the disabled state.",
     "Loading preserves the measured button width and height captured on entry so spinner insertion or label changes do not cause layout jump.",
-    "Pressed feedback is subordinate to loading; a loading button does not continue press/toggle activation."
+    "Pressed feedback is subordinate to loading; a loading button does not continue press/toggle activation.",
+    "Loading resolves after hierarchy + semantic + shape + size: it replaces content/activation semantics but preserves the already-resolved hierarchy, destructive/default intent, shape, and size; disabled is the separate state that may replace visual treatment."
   ],
   "accessibilityContract": [
     "Loading exposes busy semantics (for example aria-busy on Web or the platform equivalent) while remaining distinguishable from disabled.",
