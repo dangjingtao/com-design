@@ -1,6 +1,6 @@
 # T024 · Switch + Timeline Visual Defect Repair
 
-- Status: DOING
+- Status: REVIEW
 - Target version: V2 first-stage
 - Impact: QA / Component / Preview
 - Owner: -
@@ -36,11 +36,11 @@ V2 规划已确认两处真实实现 / Preview 缺陷：Switch disabled-on/off �
 
 ## Acceptance
 
-- [ ] Switch enabled/disabled × on/off 四态一眼可区分，disabled 不等于状态消失。
-- [ ] Timeline 竖向 rail 连续，不出现“彩色点 + 几截断线”。
-- [ ] Timeline 长文本 / 不同 event 高度下 connector 仍正确。
-- [ ] contract 与 preview 保持一致。
-- [ ] `npm test`、validate、build 通过；提供 visual evidence。
+- [x] Switch enabled/disabled × on/off 四态一眼可区分，disabled 不等于状态消失。
+- [x] Timeline 竖向 rail 连续，不出现“彩色点 + 几截断线”。
+- [x] Timeline 长文本 / 不同 event 高度下 connector 仍正确。
+- [x] contract 与 preview 保持一致。
+- [x] `npm test`、validate、build 通过；提供 visual evidence。
 
 ## Risks / Dependencies
 
@@ -63,13 +63,13 @@ V2 规划已确认两处真实实现 / Preview 缺陷：Switch disabled-on/off �
 
 ## Verification evidence
 
-- CI:
-- Switch four-state evidence:
-- Timeline visual evidence:
+- CI: Design System Build #300 — success on substantive head `eca046219a29cfee80eb893398d02f64961d30a5`; 214/214 tests PASS, V2 validation 14 checks / 0 warnings, engineering build, Penpot build, accepted-report guard and T017 deterministic hard gate all PASS.
+- Switch four-state evidence: Preview explicitly separates enabled and disabled groups and includes `on`, `off`, `disabled-on`, `disabled-off` evidence samples. Disabled-on retains right-side thumb + muted brand-container track; disabled-off uses neutral disabled track; both use muted thumbs and disabled text without whole-row opacity.
+- Timeline visual evidence: Preview uses current-event-owned `::after` connector, stretchable rail, current content padding for inter-event spacing, variable-height long text, clean final termination, and a reduced-color readability sample. No Card wrapper is implied.
 
 ## Review
 
-- Reviewer:
-- Result: REVIEW / PASS / BLOCKED
-- Conclusion:
-- Follow-up:
+- Reviewer: Mira
+- Result: REVIEW
+- Conclusion: Construction and deterministic verification complete. Initial CI failure was a test false-positive where `--tl-event-gap` was mistaken for the CSS `gap` property; fixed by parsing the actual declaration. Independent geometry review found parent event padding was not a reliable contributor to flex rail stretch, so spacing moved into the current event's content padding. Codex independently raised the same two issues on the older reviewed head; both are fixed and threads resolved.
+- Follow-up: Final acceptance should confirm disabled Switch value remains legible without looking enabled, Timeline rail stays structurally continuous across variable content height, and no new component/state semantics were introduced beyond the two confirmed defect repairs.
