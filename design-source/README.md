@@ -5,7 +5,7 @@ Com Design 是公司级 Android / iOS / Web / WeChat Mini Program 四端 Design 
 当前 Core 由三类可消费契约组成：
 
 ```text
-33 Core Components
+34 Core Components
 4 Core Composite Components
 7 Core UX Patterns
 ```
@@ -164,7 +164,7 @@ Flat-first。普通 Card、Button、List Item、Grouped List 等静态 Surface �
 
 ## CORE COMPONENTS
 
-V1 仍为 **33 个 Core Components**，数量没有因为 Composite / Pattern 增加而膨胀。
+V2 当前为 **34 个 Core Components**。T023 将已稳定的 Result State 从候选能力正式纳入 Core；这不是为数量扩张，而是补齐任务结果的通用反馈契约。
 
 ### Actions & Forms — 8
 
@@ -174,9 +174,9 @@ Button · Icon Button · Input · Textarea · Select · Checkbox · Radio · Swi
 
 List Item · Tabs · Segmented Control · Top App Bar · Bottom Navigation · Section · Divider · Card · Tag · Badge · Avatar
 
-### Feedback / Overlay / Progress — 11
+### Feedback / Overlay / Progress — 12
 
-Toast · Snackbar · Alert · Dialog · Bottom Sheet · Loading Indicator · Skeleton · Empty State · Progress Indicator · Stepper · Timeline
+Toast · Snackbar · Alert · Dialog · Bottom Sheet · Loading Indicator · Skeleton · Empty State · Result State · Progress Indicator · Stepper · Timeline
 
 ### Search & Menu — 3
 
@@ -264,7 +264,7 @@ optional Section heading
 
 ---
 
-## CORE UX PATTERNS — 6
+## CORE UX PATTERNS — 7
 
 Pattern 解决任务规则，而不是固定视觉 anatomy。
 
@@ -274,6 +274,7 @@ Pattern 解决任务规则，而不是固定视觉 anatomy。
 4. **State to Action** — 从权威状态推导当前最强可执行动作
 5. **Intent Continuity / Handoff** — 登录 / 授权 / 外部系统打断后回到原任务
 6. **Contextual Next Step** — 长流程持续回答“我现在该做什么”
+7. **Incremental Loading / Infinite List** — 长集合自动/手动续载、失败恢复、continuation 与位置保持
 
 `Filter Bar` 是 `Collection Filter` 的推荐 Composite 实现之一，但 Pattern 不被某一个 Composite 锁死。
 
@@ -322,11 +323,11 @@ Preview：`preview/core-ux-patterns.html`
 - `colors_and_type.css` — runtime token variables
 - `css.json` — structured token view
 - `components.css` — Core Component aggregated CSS
-- `components/` — 33 个 Core Component contracts
+- `components/` — 34 个 Core Component contracts
 - `COMPOSITE_COMPONENTS.md` — 4 个 Core Composite Component 人类指南
 - `specs/core-composites.json` — Composite machine contracts
 - `preview/core-composite-components.html` — Composite interactive reference
-- `UX_PATTERNS.md` — 6 个 Core UX Pattern 人类指南
+- `UX_PATTERNS.md` — 7 个 Core UX Pattern 人类指南
 - `specs/core-patterns.json` — Pattern machine contracts
 - `preview/core-ux-patterns.html` — Pattern composition reference
 - `preview/component-*.html` — Core Component previews
@@ -341,7 +342,7 @@ Preview：`preview/core-ux-patterns.html`
 
 1. 字体使用系统字体，不引入 web font；跨平台字形差异属于预期。
 2. 预览图标以 Lucide 风格 inline SVG 为主；生产应映射到公司统一图标资产。
-3. Core Component = 33，Composite = 4，UX Pattern = 6；三者分层计数，不为了 KPI 互相吞并。
+3. Core Component = 34，Composite = 4，UX Pattern = 7；三者分层计数，不为了 KPI 互相吞并。
 4. Comfortable density 和平台触摸差异存在于 Token / Contract 层；默认 Preview 仍以 compact 为主。
 5. 动效必须有 Reduced Motion 路径；Carousel 等行为型 Composite 不允许只靠静态稿验收。
 6. `1.0.0-rc.2` 仍是候选版本；Stable 前需要继续做 Light / Dark、跨平台、可访问性和行为烟测。

@@ -14,7 +14,8 @@
         "Alert",
         "Icon",
         "Text",
-        "Button"
+        "Button",
+        "Result State"
       ],
       "anatomy": [
         "state label",
@@ -27,12 +28,17 @@
         "Use status color as reinforcement, not as the only carrier of meaning.",
         "Do not repeat the same status through a tinted card, tag, icon block and button simultaneously unless each element adds distinct meaning.",
         "A recoverable state SHOULD expose the next available action close to the explanation.",
-        "Terminal states SHOULD explain what is finished or unavailable instead of presenting a disabled primary action without context."
+        "Terminal states SHOULD explain what is finished or unavailable instead of presenting a disabled primary action without context.",
+        "Absence, task outcome, persistent notification, transient acknowledgement, field validation, and external blocking states MUST select different feedback responsibilities rather than sharing one generic error surface.",
+        "Offline / permission / system-block states MUST explain cause, affected scope and at least one meaningful next action."
       ],
       "avoid": [
         "status-only color blocks with no readable state text",
         "multiple same-color surfaces competing in one region",
         "using Warning or Danger merely to attract attention"
+      ],
+      "workflowContractRefs": [
+        "com-design:state-feedback:v2"
       ]
     },
     {

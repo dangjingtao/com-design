@@ -4,7 +4,7 @@
 > Scope: Company Mobile Core  
 > Canonical machine source: `specs/core-composites.json`  
 > Composite count: 4  
-> Core Component count remains: 33
+> Core Component count: 34
 
 Com Design 增加 **Composite Component（组合组件）** 层，用来收纳那些已经有稳定结构、稳定交互和明确消费方式，但本质上由多个 Core Component 组合而成的 UI。
 

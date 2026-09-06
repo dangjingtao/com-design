@@ -35,6 +35,7 @@
     { "slug": "loading-indicator", "name": "Loading Indicator", "category": "feedback-overlay-progress", "contract": "components/loading-indicator.json", "preview": "preview/component-loading-indicator.html" },
     { "slug": "skeleton", "name": "Skeleton", "category": "feedback-overlay-progress", "contract": "components/skeleton.json", "preview": "preview/component-skeleton.html" },
     { "slug": "empty-state", "name": "Empty State", "category": "feedback-overlay-progress", "contract": "components/empty-state.json", "preview": "preview/component-empty-state.html" },
+    { "slug": "result-state", "name": "Result State", "category": "feedback-overlay-progress", "contract": "components/result-state.json", "preview": "preview/component-result-state.html" },
     { "slug": "progress-indicator", "name": "Progress Indicator", "category": "feedback-overlay-progress", "contract": "components/progress-indicator.json", "preview": "preview/component-progress-indicator.html" },
     { "slug": "stepper", "name": "Stepper", "category": "feedback-overlay-progress", "contract": "components/stepper.json", "preview": "preview/component-stepper.html" },
     { "slug": "timeline", "name": "Timeline", "category": "feedback-overlay-progress", "contract": "components/timeline.json", "preview": "preview/component-timeline.html" },

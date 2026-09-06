@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 2,
+  "slug": "result-state",
+  "name": "Result State",
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "intent": "Express the outcome of a submitted task, page-level operation, or workflow step with one clear semantic result and a useful next action.",
+  "semanticTypeCandidates": [
+    "feedback-overlay",
+    "task-outcome",
+    "result-state"
+  ],
+  "variantDimensions": {
+    "tone": [
+      "success",
+      "error",
+      "warning",
+      "info",
+      "pending"
+    ],
+    "actionMode": [
+      "no-action",
+      "primary-only",
+      "primary-secondary"
+    ]
+  },
+  "states": [
+    "result-visible",
+    "action-available",
+    "action-pending"
+  ],
+  "representativeVariants": [
+    {
+      "tone": "success",
+      "title": "提交成功",
+      "supporting": "资料已提交审核。",
+      "primaryAction": "查看进度"
+    },
+    {
+      "tone": "error",
+      "title": "提交失败",
+      "supporting": "网络异常，内容尚未提交。",
+      "primaryAction": "重新提交",
+      "secondaryAction": "返回修改"
+    },
+    {
+      "tone": "warning",
+      "title": "已完成，但仍需处理",
+      "supporting": "当前结果已保存，请补充缺失信息。",
+      "primaryAction": "继续处理"
+    },
+    {
+      "tone": "info",
+      "title": "已收到申请",
+      "supporting": "后续状态会在这里更新。",
+      "primaryAction": "查看详情"
+    },
+    {
+      "tone": "pending",
+      "title": "正在处理",
+      "supporting": "可以离开此页面，处理完成后状态会更新。",
+      "primaryAction": "返回列表"
+    }
+  ],
+  "anatomy": [
+    "container",
+    "semanticVisual",
+    "title",
+    "supportingText",
+    "detailOrMeta?",
+    "actions?",
+    "primaryAction?",
+    "secondaryAction?"
+  ],
+  "traits": {
+    "maxContentWidth": "320px",
+    "visualSize": "64px",
+    "gap": "var(--space-8)",
+    "sectionGap": "var(--space-16)",
+    "titleFont": "var(--type-heading)",
+    "supportingFont": "var(--type-body)",
+    "detailFont": "var(--type-body-small)",
+    "actionGap": "var(--space-8)"
+  },
+  "interactionContract": [
+    "At most one visually Primary action is allowed for one result state.",
+    "Recoverable error Primary action SHOULD retry, resubmit, or return to an editable state; failure is never represented by a disabled dead-end CTA alone.",
+    "Success Primary action points to a real next step or durable result instead of a mechanical OK button.",
+    "Pending explains whether the user may leave, return later, or expect automatic state change.",
+    "Field-level validation errors MUST remain owned by field/form validation and MUST NOT promote a local field error to Result State."
+  ],
+  "accessibilityContract": [
+    "Tone is communicated by semantic icon/visual plus readable copy and structure; color is never the only carrier.",
+    "The semantic result, title, explanation, and next action remain available to assistive technology.",
+    "Decorative visual does not steal focus when the result state appears.",
+    "Action order follows reading order and one Primary action remains distinguishable without color alone."
+  ],
+  "platformPresentationRefs": [
+    {
+      "ref": "sources.platformEnvironment",
+      "context": "safe-area/content-scale/accessibility",
+      "note": "Page-level Result State consumes platform geometry and accessibility facts without changing result semantics."
+    }
+  ],
+  "structurePatterns": [
+    "semantic visual -> title -> supporting/result summary -> optional detail/meta -> actions",
+    "centered page-level or bounded task-region composition; not a thin notification strip",
+    "one Primary action maximum; optional Secondary action remains visually subordinate",
+    "Result State does not absorb environment/system-block states merely because they also have an icon and action"
+  ],
+  "usageHints": [
+    "use for success/error/warning/info/pending outcomes after a task or submission reaches a result state",
+    "use Inline Alert for local persistent feedback and Banner for page/region persistent notification",
+    "use Toast/Snackbar for transient acknowledgement",
+    "use Blocking State semantics for offline, permission denied, system unavailable, or other external task blocks"
+  ],
+  "doNotInvent": [
+    "no Success Page/Error Page forks with different component identities",
+    "no color-only result meaning",
+    "no oversized marketing hero illustration",
+    "no generic OK button when a meaningful next action exists",
+    "no field validation takeover"
+  ],
+  "unknowns": []
+}

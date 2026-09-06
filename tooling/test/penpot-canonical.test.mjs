@@ -77,6 +77,10 @@ test('T015 Penpot manifest carries canonical authority and exact source revision
   assert.ok(manifest.components.every((component) => Array.isArray(component.platformPresentationRefs)));
   assert.ok(manifest.components.every((component) => Array.isArray(component.platformExceptionRefs)));
 
+  const resultState = manifest.components.find((component) => component.slug === 'result-state');
+  assert.ok(resultState);
+  assert.ok(resultState.representativeVariants.some((variant) => variant.tone === 'success'));
+
   const button = manifest.components.find((component) => component.slug === 'button');
   assert.ok(button.states.includes('pressed'));
   assert.ok(button.states.includes('disabled'));

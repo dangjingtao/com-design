@@ -4,37 +4,73 @@
   "name": "Empty State",
   "sourceKind": "structured-spec",
   "confidence": "high",
-  "semanticTypeCandidates": ["feedback-overlay", "zero-content", "recovery-state"],
-  "variantDimensions": { "variant": ["first-use", "no-results", "no-data", "recoverable-error"] },
-  "representativeVariants": [
-    { "variant": "no-data", "title": "还没有任务", "supporting": "点击右下角按钮创建你的第一个任务。", "action": "新建任务" },
-    { "variant": "no-results", "title": "未找到相关结果", "supporting": "试试调整关键词或筛选条件。", "action": "清空筛选" },
-    { "variant": "recoverable-error", "title": "加载失败", "supporting": "网络连接异常,请检查后重试。", "action": "重新加载" }
+  "semanticTypeCandidates": [
+    "feedback-overlay",
+    "zero-content",
+    "absence-state"
   ],
-  "anatomy": ["container", "visual?", "title", "supportingText", "primaryAction?", "secondaryAction?"],
+  "variantDimensions": {
+    "variant": [
+      "first-use",
+      "no-results",
+      "no-data"
+    ]
+  },
+  "representativeVariants": [
+    {
+      "variant": "first-use",
+      "title": "还没有任务",
+      "supporting": "创建第一个任务后，它会出现在这里。",
+      "action": "新建任务"
+    },
+    {
+      "variant": "no-data",
+      "title": "暂无内容",
+      "supporting": "当前还没有可展示的内容。"
+    },
+    {
+      "variant": "no-results",
+      "title": "未找到相关结果",
+      "supporting": "没有符合当前关键词和筛选条件的结果。",
+      "action": "调整筛选"
+    }
+  ],
+  "anatomy": [
+    "container",
+    "visual?",
+    "title",
+    "supportingText",
+    "primaryAction?",
+    "secondaryAction?"
+  ],
   "traits": {
     "titleFont": "var(--type-heading)",
     "supportingFont": "var(--type-body-small)",
     "titleColor": "var(--color-text-primary)",
     "supportingColor": "var(--color-text-secondary)",
-    "errorColor": "var(--color-danger-text)",
     "gap": "var(--space-8)",
     "maxWidth": "280px",
     "visualSize": "64px",
     "visualColor": "var(--color-text-tertiary)"
   },
   "structurePatterns": [
-    "centered vertical column: optional visual, title, supporting text, actions",
-    "visual is an optional Lucide icon in a soft tinted circle (64px) or small illustration",
-    "at most one visually primary action; an optional secondary text action",
-    "recoverable-error uses danger accent for the visual and a retry action"
+    "centered vertical column: optional neutral visual, title, supporting text, actions",
+    "visual is optional and remains neutral/subtle; Empty State does not use Success/Danger decoration to imply an outcome",
+    "at most one visually primary action; optional secondary text action",
+    "no-results keeps current query/filter context visible or recoverable and offers a way to broaden or clear constraints"
   ],
   "usageHints": [
-    "copy explains the state and the next useful action",
-    "illustration is optional; do not let it dominate the task",
-    "no-results is contextual to the query, not a global product empty state",
+    "use only for absence: first-use, no-data, or no-results",
+    "copy explains why content is absent and the next useful action when one exists",
+    "no-results is contextual to the active query/filter state, not a global product empty state",
+    "recoverable failure belongs to Result/Blocking/Alert semantics, not Empty State",
     "one primary action maximum"
   ],
-  "doNotInvent": ["no oversized branded illustration", "no multiple competing primary actions"],
+  "doNotInvent": [
+    "no recoverable-error variant in new V2 designs",
+    "no Success/Danger color as default empty decoration",
+    "no oversized branded illustration",
+    "no multiple competing primary actions"
+  ],
   "unknowns": []
 }

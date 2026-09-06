@@ -4,19 +4,69 @@
   "name": "Alert / Inline Banner",
   "sourceKind": "structured-spec",
   "confidence": "high",
-  "semanticTypeCandidates": ["feedback-overlay", "persistent-feedback", "inline-alert", "banner"],
+  "semanticTypeCandidates": [
+    "feedback-overlay",
+    "persistent-feedback",
+    "inline-alert",
+    "banner"
+  ],
   "variantDimensions": {
-    "tone": ["info", "success", "warning", "danger"],
-    "variant": ["inline", "banner"],
-    "dismissible": ["non-dismissible", "dismissible"]
+    "tone": [
+      "info",
+      "success",
+      "warning",
+      "danger"
+    ],
+    "variant": [
+      "inline",
+      "banner"
+    ],
+    "dismissible": [
+      "non-dismissible",
+      "dismissible"
+    ]
   },
   "representativeVariants": [
-    { "tone": "info", "variant": "inline", "title": "同步提示", "message": "数据将于今晚 02:00 自动同步,期间请勿关闭页面。" },
-    { "tone": "success", "variant": "inline", "title": "保存成功", "message": "通知设置已更新并立即生效。" },
-    { "tone": "warning", "variant": "banner", "title": "存储空间即将用尽", "message": "剩余空间不足 2 GB,建议清理历史附件。", "action": "去清理" },
-    { "tone": "danger", "variant": "banner", "title": "登录已过期", "message": "为保障账号安全,请重新登录后继续操作。", "action": "重新登录", "dismissible": true }
+    {
+      "tone": "warning",
+      "variant": "inline",
+      "title": null,
+      "message": "部分附件尚未同步。",
+      "action": "重试同步",
+      "context": "inside-section"
+    },
+    {
+      "tone": "warning",
+      "variant": "banner",
+      "title": null,
+      "message": "当前网络不稳定，部分页面数据可能延迟更新。",
+      "action": "查看状态",
+      "context": "below-page-header"
+    },
+    {
+      "tone": "danger",
+      "variant": "banner",
+      "title": "登录已过期",
+      "message": "重新登录后可继续当前任务。",
+      "action": "重新登录",
+      "dismissible": false
+    },
+    {
+      "tone": "info",
+      "variant": "inline",
+      "title": "同步说明",
+      "message": "此设置只影响当前工作区。"
+    }
   ],
-  "anatomy": ["container", "statusIcon?", "content", "title?", "message", "action?", "dismiss?"],
+  "anatomy": [
+    "container",
+    "statusIcon?",
+    "content",
+    "title?",
+    "message",
+    "action?",
+    "dismiss?"
+  ],
   "traits": {
     "radius": "var(--radius-control)",
     "paddingHorizontal": "var(--space-12)",
@@ -26,27 +76,81 @@
     "titleFont": "var(--type-heading-small)",
     "messageFont": "var(--type-body-small)",
     "actionFont": "var(--type-label)",
-    "info": { "background": "var(--color-info-bg)", "text": "var(--color-info-text)", "icon": "var(--color-info-text)" },
-    "success": { "background": "var(--color-success-bg)", "text": "var(--color-success-text)", "icon": "var(--color-success-text)" },
-    "warning": { "background": "var(--color-warning-bg)", "text": "var(--color-warning-text)", "icon": "var(--color-warning-text)" },
-    "danger": { "background": "var(--color-danger-bg)", "text": "var(--color-danger-text)", "icon": "var(--color-danger-text)" }
+    "info": {
+      "background": "var(--color-info-bg)",
+      "text": "var(--color-info-text)",
+      "icon": "var(--color-info-text)"
+    },
+    "success": {
+      "background": "var(--color-success-bg)",
+      "text": "var(--color-success-text)",
+      "icon": "var(--color-success-text)"
+    },
+    "warning": {
+      "background": "var(--color-warning-bg)",
+      "text": "var(--color-warning-text)",
+      "icon": "var(--color-warning-text)"
+    },
+    "danger": {
+      "background": "var(--color-danger-bg)",
+      "text": "var(--color-danger-text)",
+      "icon": "var(--color-danger-text)"
+    }
   },
   "structurePatterns": [
-    "horizontal flex: status icon | content (title + message) | optional action + dismiss",
-    "tinted background with darker matching text/icon (the *Text role), not raw base chroma",
-    "inline variant sits within content flow; banner spans card/app width",
-    "at most one high-frequency action; dismiss only for ignorable information"
+    "inline: local content-flow feedback with contained radius, local width, status icon + message block + optional contextual action",
+    "banner: page/region notification slot with flatter edge/inset-aware geometry and action/dismiss aligned to banner edge",
+    "warning + inline and warning + banner MUST remain structurally distinguishable even when neither has a title",
+    "tone (info/success/warning/danger) is orthogonal to presentation (inline/banner)",
+    "status uses icon shape + readable text; never color alone"
   ],
   "usageHints": [
-    "persistent contextual feedback — unlike Toast it stays until addressed or dismissed",
-    "status must be conveyed by icon shape plus text, never color alone",
-    "warning/danger do not automatically imply modal blocking",
-    "use body-small message with an optional heading-small title"
+    "Inline Alert is persistent local contextual feedback attached to a section/form group/card/task region",
+    "Banner is persistent page/region-scope notification placed in a structural notification slot",
+    "severity alone never chooses Banner; scope chooses presentation",
+    "short success acknowledgement normally belongs to Toast/Snackbar",
+    "field errors remain field-level validation",
+    "host/system notifications are not content Banners"
   ],
   "doNotInvent": [
-    "no solid primary-filled alert banners (tinted surface is V1)",
+    "no same rounded card for inline/banner with width as the only difference",
+    "no solid primary-filled alert banners",
     "no accent-cyan as a fifth status tone",
-    "no multiple competing actions"
+    "no multiple competing actions",
+    "no Banner for transient saved-success feedback"
   ],
-  "unknowns": ["banner top placement safe-area handled by platform layer"]
+  "unknowns": [],
+  "intent": "Provide persistent contextual feedback at either local-content scope (Inline Alert) or page/region scope (Banner) without turning transient acknowledgements or task outcomes into persistent chrome.",
+  "presentationContract": {
+    "inline": {
+      "scope": "local-context",
+      "placement": "inside-normal-content-flow",
+      "geometry": "contained-radius-and-local-width",
+      "layout": "icon + message-block + optional local action",
+      "actionPlacement": [
+        "after-message",
+        "trailing-when-space-allows"
+      ],
+      "dismissPolicy": "uncommon-and-only-when-safely-ignorable"
+    },
+    "banner": {
+      "scope": "page-or-region",
+      "placement": "defined-notification-slot-below-header-or-at-affected-region-edge",
+      "geometry": "flatter-edge-or-inset-aware-region-surface",
+      "layout": "icon + concise message-block + optional action + optional edge-dismiss",
+      "actionPlacement": [
+        "trailing-on-wide",
+        "below-message-on-narrow"
+      ],
+      "dismissPolicy": "only-when-message-can-safely-be-ignored",
+      "stacking": "prioritize-merge-or-queue; do-not-stack-indefinitely"
+    }
+  },
+  "platformPresentationRefs": [
+    {
+      "ref": "sources.platformEnvironment",
+      "context": "safe-area/host-chrome",
+      "note": "Banner placement consumes page/host geometry and must stay outside host-owned chrome."
+    }
+  ]
 }

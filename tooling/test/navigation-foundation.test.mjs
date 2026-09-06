@@ -286,7 +286,7 @@ test('T020 binds existing Top App Bar and Bottom Navigation contracts without ad
     );
   }
 
-  assert.equal(index.components.length, 33);
+  assert.equal(index.components.length, 34);
   assert.equal(
     index.components.some((entry) => entry.slug === 'side-navigation'),
     false,

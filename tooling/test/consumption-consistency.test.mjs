@@ -32,7 +32,7 @@ test('T016 repository consumption entrypoints match V2 canonical catalogs and fo
   const result = validateConsumptionConsistency(repoRoot);
   assert.deepEqual(result.errors, []);
   assert.deepEqual(result.evidence.catalogCounts, {
-    coreComponents: 33,
+    coreComponents: 34,
     coreCompositeComponents: 4,
     corePatterns: 7,
   });
@@ -93,7 +93,7 @@ test('T016 rejects Mobile-only public entrypoint wording', () => {
 test('T016 rejects stale public catalog counts', () => {
   const root = fixture();
   const skillPath = path.join(root, 'design-source', 'SKILL.md');
-  const skill = fs.readFileSync(skillPath, 'utf8').replace('33 Core Components', '6 Core Components');
+  const skill = fs.readFileSync(skillPath, 'utf8').replace('34 Core Components', '6 Core Components');
   fs.writeFileSync(skillPath, skill);
 
   const result = validateConsumptionConsistency(root);

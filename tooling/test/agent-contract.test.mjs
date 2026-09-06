@@ -42,6 +42,15 @@ test('T014 exposes canonical implementation catalogs for a validated target cont
     contract.catalogs.workflows.incrementalLoading.contract.appendPolicy.retainExistingDataOnError,
     true,
   );
+  assert.equal(
+    contract.catalogs.workflows.stateFeedback.id,
+    'com-design:state-feedback:v2',
+  );
+  assert.equal(
+    contract.catalogs.workflows.stateFeedback.contract.selection.taskOutcome,
+    'result-state',
+  );
+  assert.ok(contract.catalogs.components.some((entry) => entry.slug === 'result-state'));
   assert.ok(contract.catalogs.motion?.intents?.length >= 7);
   assert.ok(contract.catalogs.platformAdapters.length >= 4);
   assert.ok(contract.catalogs.registeredEngineeringOutputs.some((entry) => entry.id === 'web.tailwind'));
