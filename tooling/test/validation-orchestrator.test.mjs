@@ -28,7 +28,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
   assert.equal(evidence.result, 'pass');
   assert.equal(evidence.summary.failed, 0);
   assert.equal(evidence.summary.blockingErrors, 0);
-  assert.equal(evidence.summary.checksRun, 18);
+  assert.equal(evidence.summary.checksRun, 19);
   assert.deepEqual(
     evidence.checks.map((check) => check.id),
     [
@@ -36,6 +36,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
       'consumption-consistency',
       'component-css-parity',
       'human-guide-current-facts',
+      'human-guide-token-compliance',
       'token-model',
       'contrast-audit',
       'platform-model',
@@ -65,6 +66,14 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
   assert.equal(evidence.checks.find((check) => check.id === 'component-css-parity').evidence.matched, 34);
   assert.equal(evidence.checks.find((check) => check.id === 'human-guide-current-facts').evidence.coreComponents, 34);
   assert.equal(evidence.checks.find((check) => check.id === 'human-guide-current-facts').evidence.corePatterns, 7);
+  assert.deepEqual(
+    evidence.checks.find((check) => check.id === 'human-guide-token-compliance').evidence.themeScopes,
+    ['default-light', 'default-dark', 'premium-light', 'premium-dark'],
+  );
+  assert.equal(
+    evidence.checks.find((check) => check.id === 'human-guide-token-compliance').evidence.violations.length,
+    0,
+  );
   assert.equal(evidence.checks.find((check) => check.id === 'contrast-audit').evidence.scopeCount, 4);
   assert.ok(evidence.checks.find((check) => check.id === 'contrast-audit').evidence.minimumRatio >= 4.5);
   assert.deepEqual(
