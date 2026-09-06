@@ -25,8 +25,8 @@ test('T024 Switch preserves value and availability as independent four-state dim
   assert.notEqual(disabledOff.track, off.track);
   assert.notEqual(disabledOn.track, on.track);
   assert.notEqual(disabledOff.track, disabledOn.track);
-  assert.equal(disabledOff.thumb, 'var(--color-surface-subtle)');
-  assert.equal(disabledOn.thumb, 'var(--color-surface-subtle)');
+  assert.equal(disabledOff.thumb, 'var(--color-text-disabled)');
+  assert.equal(disabledOn.thumb, 'var(--color-text-disabled)');
   assert.equal(disabledOff.label, 'var(--color-text-disabled)');
   assert.equal(disabledOn.label, 'var(--color-text-disabled)');
 });
