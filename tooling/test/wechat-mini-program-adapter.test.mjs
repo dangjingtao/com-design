@@ -93,6 +93,11 @@ test('WeChat Mini Program adapter consumes canonical reduced-motion and platform
       'no-high-frequency-frame-by-frame-setData',
     ),
   );
+  assert.equal(evidence.incrementalLoading.semanticSource, 'com-design:incremental-loading:v2');
+  assert.equal(evidence.incrementalLoading.platform.scrollOwnerRequired, true);
+  assert.deepEqual(evidence.incrementalLoading.platform.scrollOwnerKinds, ['page', 'contained']);
+  assert.equal(evidence.incrementalLoading.platform.highFrequencyNodeMutationAllowed, false);
+  assert.equal(evidence.incrementalLoading.platform.batchAppendRequired, true);
   assert.equal(evidence.contract.tailwindOrDomRequired, false);
   assert.equal(evidence.contract.reactNativeRequired, false);
   assert.equal(evidence.contract.rpxRequiredByCore, false);
@@ -138,5 +143,12 @@ test('WeChat Mini Program adapter rejects missing canonical or platform evidence
       canonicalModel: { ...context.canonicalModel, motion: null },
     }),
     /requires canonical T011 motion foundation/,
+  );
+  assert.throws(
+    () => wechatMiniProgramAdapter.build(null, {
+      ...context,
+      canonicalModel: { ...context.canonicalModel, workflows: {} },
+    }),
+    /requires canonical T022 incremental loading mapping/,
   );
 });
