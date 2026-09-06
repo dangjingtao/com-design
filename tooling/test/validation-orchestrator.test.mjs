@@ -28,7 +28,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
   assert.equal(evidence.result, 'pass');
   assert.equal(evidence.summary.failed, 0);
   assert.equal(evidence.summary.blockingErrors, 0);
-  assert.equal(evidence.summary.checksRun, 13);
+  assert.equal(evidence.summary.checksRun, 14);
   assert.deepEqual(
     evidence.checks.map((check) => check.id),
     [
@@ -42,6 +42,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
       'motion-foundation',
       'mobile-search-filter',
       'incremental-loading',
+      'state-feedback',
       'component-contracts',
       'iconography',
       'canonical-design-model',
@@ -55,7 +56,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
     evidence.checks.find((check) => check.id === 'navigation-foundation').evidence.hostChromeIsCore,
     false,
   );
-  assert.equal(evidence.checks.find((check) => check.id === 'consumption-consistency').evidence.catalogCounts.coreComponents, 33);
+  assert.equal(evidence.checks.find((check) => check.id === 'consumption-consistency').evidence.catalogCounts.coreComponents, 34);
   assert.deepEqual(
     evidence.checks.find((check) => check.id === 'mobile-search-filter').evidence.platforms,
     ['ios', 'android', 'wechat-mini-program'],
@@ -72,7 +73,15 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
     evidence.checks.find((check) => check.id === 'incremental-loading').evidence.miniProgramScrollOwnerRequired,
     true,
   );
-  assert.equal(evidence.checks.find((check) => check.id === 'component-contracts').evidence.componentCount, 33);
+  assert.equal(
+    evidence.checks.find((check) => check.id === 'state-feedback').evidence.coreComponentAdded,
+    'result-state',
+  );
+  assert.equal(
+    evidence.checks.find((check) => check.id === 'state-feedback').evidence.blockingPatternPromoted,
+    false,
+  );
+  assert.equal(evidence.checks.find((check) => check.id === 'component-contracts').evidence.componentCount, 34);
   assert.equal(evidence.checks.find((check) => check.id === 'canonical-design-model').evidence.platformCount, 4);
   assert.equal(JSON.stringify(evidence).includes(repoRoot), false);
 });
