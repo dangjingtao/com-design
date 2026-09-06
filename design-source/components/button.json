@@ -139,37 +139,30 @@
     "compactHeight": "40px",
     "largeHeight": "48px",
     "paddingHorizontal": "12px",
-    "standardRadius": "var(--radius-control)",
+    "radius": "var(--radius-control)",
     "pillRadius": "var(--radius-pill)",
     "font": "var(--type-label)",
-    "hierarchy": {
-      "primary": {
-        "background": "var(--color-primary)",
-        "color": "var(--color-on-primary)",
-        "pressedBackground": "var(--color-primary-hover)"
-      },
-      "secondary": {
-        "background": "var(--color-secondary)",
-        "color": "var(--color-text-brand)",
-        "pressedBackground": "var(--color-secondary-hover)"
-      },
-      "tertiary": {
-        "background": "transparent",
-        "color": "var(--color-text-brand)",
-        "pressedBackground": "var(--color-surface-pressed)"
-      }
+    "primary": {
+      "background": "var(--color-primary)",
+      "color": "var(--color-on-primary)",
+      "pressedBackground": "var(--color-primary-hover)"
     },
-    "semantic": {
-      "default": {
-        "foregroundPolicy": "inherit-hierarchy"
-      },
-      "destructive": {
-        "primaryBackground": "var(--color-destructive)",
-        "primaryPressedBackground": "var(--color-destructive-hover)",
-        "primaryForeground": "var(--color-on-primary)",
-        "secondaryForeground": "var(--color-danger-text)",
-        "tertiaryForeground": "var(--color-danger-text)"
-      }
+    "secondary": {
+      "background": "var(--color-secondary)",
+      "color": "var(--color-text-brand)",
+      "pressedBackground": "var(--color-secondary-hover)"
+    },
+    "tertiary": {
+      "background": "transparent",
+      "color": "var(--color-text-brand)",
+      "pressedBackground": "var(--color-surface-pressed)"
+    },
+    "destructive": {
+      "background": "var(--color-destructive)",
+      "color": "var(--color-on-primary)",
+      "pressedBackground": "var(--color-destructive-hover)",
+      "secondaryForeground": "var(--color-danger-text)",
+      "tertiaryForeground": "var(--color-danger-text)"
     },
     "disabled": {
       "background": "var(--color-disabled)",
