@@ -142,7 +142,9 @@
     "coreComposites": "./core-composites.json",
     "corePatterns": "./core-patterns.json",
     "releaseGovernanceSchema": "../schemas/release-governance-v1.schema.json",
-    "releaseGovernance": "./release-governance-v1.json"
+    "releaseGovernance": "./release-governance-v1.json",
+    "mobileSearchFilterSchema": "../schemas/mobile-search-filter-v2.schema.json",
+    "mobileSearchFilterWorkflow": "./mobile-search-filter-v2.json"
   },
   "plannedSources": {
     "legacyTokenJsonBundle": {
@@ -223,7 +225,8 @@
     "colorScheme": "light/dark context selects the existing themeResolution path",
     "contentScale": "T002 defines standard/enlarged/platform-driven context selection; T010 exposes the platform/host hook while T012 resolves reflow behavior through sources.layoutInputFoundation",
     "environment": "T010 resolves runtime safe area, reserved regions, system/host chrome, back, focus, keyboard/IME, pointer, gesture, overlay dismissal/system UI, and accessibility hooks through sources.platformEnvironment",
-    "navigation": "T020 resolves shared recursive destination state and viewport-driven Side Navigation / Rail / compact mappings through sources.navigationFoundation; platform identity alone does not choose presentation."
+    "navigation": "T020 resolves shared recursive destination state and viewport-driven Side Navigation / Rail / compact mappings through sources.navigationFoundation; platform identity alone does not choose presentation.",
+    "searchFilter": "T021 resolves CollectionQueryModel, IME commit boundaries, quick-filter semantics, filter draft/apply/reset, detail-return restoration and mobile platform mapping through sources.mobileSearchFilterWorkflow; platform/host events remain Adapter details."
   },
   "governance": {
     "componentToPrimitiveReference": "forbidden",
@@ -245,6 +248,7 @@
       "platformTouchTargetsMapped",
       "layoutInputFoundationMapped",
       "navigationFoundationMapped",
+      "mobileSearchFilterWorkflowMapped",
       "motionStandardReducedMapped",
       "iconographyContractMapped",
       "sharedIconScaleMapped",
