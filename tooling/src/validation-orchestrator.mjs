@@ -6,6 +6,7 @@ import { validateComponentCatalog } from './component-contract.mjs';
 import { validateConsumptionConsistency } from './consumption-consistency.mjs';
 import { validateComponentCssParity } from './component-css.mjs';
 import { auditContrast } from './contrast-audit.mjs';
+import { validateReleaseGateTrace } from './release-gate-trace.mjs';
 import { validateIconographyContract } from './iconography.mjs';
 import { validateLayoutInputFoundationContract } from './layout-input-foundation.mjs';
 import { validateNavigationFoundationContract } from './navigation-foundation.mjs';
@@ -529,6 +530,13 @@ export function runRepositoryValidation(repoRoot) {
         platformCount: canonicalModel.platform?.platforms?.length ?? 0,
       },
     };
+  }));
+
+  checks.push(runCheck('release-gate-trace', () => {
+    if (!manifest) return { errors: ['canonical manifest is unavailable.'] };
+    return validateReleaseGateTrace(manifest, {
+      validationIds: checks.map((check) => check.id),
+    });
   }));
 
   let manifestSha256 = null;
