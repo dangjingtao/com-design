@@ -6,92 +6,80 @@
 <title>Alert · com-design</title>
 <link rel="stylesheet" href="../colors_and_type.css">
 <style>
-body { margin:0; padding:12px; background:var(--color-background); font-family:var(--font-family-base); color:var(--color-text-primary); }
-.specimen { display:flex; flex-direction:column; gap:12px; }
-.stage { display:flex; flex-direction:column; gap:12px; }
-.story { display:flex; flex-direction:column; gap:6px; }
-.story-label { font:var(--type-caption); color:var(--color-text-tertiary); }
-.rail { display:flex; flex-direction:column; gap:12px; background:var(--color-surface); border-radius:var(--radius-container); padding:12px; }
+body { margin:0; padding:var(--space-12); background:var(--color-background); font-family:var(--font-family-base); color:var(--color-text-primary); }
+.specimen { display:flex; flex-direction:column; gap:var(--space-20); max-width:760px; margin:0 auto; }
+.story { display:flex; flex-direction:column; gap:var(--space-8); }
+.story-label { font:var(--type-label-small); color:var(--color-text-tertiary); }
+.section-card { width:min(420px,100%); background:var(--color-surface); border-radius:var(--radius-container); padding:var(--space-16); display:flex; flex-direction:column; gap:var(--space-12); border:var(--com-border-control) solid var(--color-border-subtle); }
+.section-copy { font:var(--type-body); color:var(--color-text-secondary); margin:0; }
+.page-shell { width:min(520px,100%); background:var(--color-surface); border:var(--com-border-control) solid var(--color-border-subtle); border-radius:var(--radius-container); overflow:hidden; }
+.page-header { min-height:56px; display:flex; align-items:center; padding:0 var(--space-16); font:var(--type-heading-small); border-bottom:var(--com-border-control) solid var(--color-border-subtle); }
+.page-content { padding:var(--space-16); font:var(--type-body); color:var(--color-text-secondary); }
 
 /* @component-css-start */
-.alert { display:flex; align-items:flex-start; gap:var(--space-8); padding:var(--space-8) var(--space-12); border-radius:var(--radius-control); width:100%; box-sizing:border-box; }
-.alert-icon { width:var(--size-icon-md); height:var(--size-icon-md); flex-shrink:0; display:block; margin-top:1px; }
+.alert { display:flex; align-items:flex-start; gap:var(--space-8); box-sizing:border-box; }
+.alert-icon { width:var(--size-icon-md); height:var(--size-icon-md); flex-shrink:0; margin-top:1px; }
 .alert-body { flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:2px; }
 .alert-title { font:var(--type-heading-small); margin:0; }
-.alert-message { font:var(--type-body-small); margin:0; word-break:break-word; }
-.alert-action { font:var(--type-label); background:none; border:none; padding:0; margin-top:2px; cursor:pointer; color:currentColor; align-self:flex-start; white-space:nowrap; }
-.alert-action:hover { text-decoration:underline; }
-.alert-dismiss { width:16px; height:16px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; border:none; background:transparent; padding:0; cursor:pointer; color:currentColor; opacity:0.7; border-radius:var(--radius-pill); margin-top:3px; }
-.alert-dismiss:hover { opacity:1; }
-.alert-dismiss svg { width:16px; height:16px; display:block; }
+.alert-message { font:var(--type-body-small); margin:0; }
+.alert-action { min-height:40px; display:inline-flex; align-items:center; appearance:none; border:0; background:transparent; padding:0 var(--space-4); font:var(--type-label); color:currentColor; cursor:pointer; white-space:nowrap; }
+.alert-dismiss { width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center; border:0; background:transparent; color:currentColor; cursor:pointer; flex-shrink:0; }
+.alert-inline { width:100%; padding:var(--space-8) var(--space-12); border-radius:var(--radius-control); }
+.alert-banner { width:100%; padding:var(--space-12) var(--space-16); border-radius:0; align-items:center; }
+.alert-banner .alert-body { gap:var(--space-4); }
+.alert-banner .alert-action { margin-left:auto; align-self:center; }
 .alert-info { background:var(--color-info-bg); color:var(--color-info-text); }
 .alert-success { background:var(--color-success-bg); color:var(--color-success-text); }
 .alert-warning { background:var(--color-warning-bg); color:var(--color-warning-text); }
 .alert-danger { background:var(--color-danger-bg); color:var(--color-danger-text); }
+@media (max-width:460px) {
+  .alert-banner { align-items:flex-start; flex-wrap:wrap; }
+  .alert-banner .alert-body { flex-basis:calc(100% - 32px); }
+  .alert-banner .alert-action { margin-left:calc(var(--size-icon-md) + var(--space-8)); }
+}
 /* @component-css-end */
 </style>
 </head>
 <body>
 <div class="specimen">
-  <div class="stage">
-    <div class="story">
-      <span class="story-label">行内提示</span>
-      <div class="rail">
-        <div class="alert alert-info" role="status" data-evidence-sample="info">
-          <svg class="alert-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
-            <path d="M12 11v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="12" cy="7.6" r="1" fill="currentColor"/>
-          </svg>
-          <div class="alert-body">
-            <p class="alert-title">同步提示</p>
-            <p class="alert-message">数据将于今晚 02:00 自动同步,期间请勿关闭页面。</p>
-          </div>
-        </div>
-        <div class="alert alert-success" role="status" data-evidence-sample="success">
-          <svg class="alert-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
-            <path d="M8 12.2l2.6 2.6L16.2 9.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <div class="alert-body">
-            <p class="alert-title">保存成功</p>
-            <p class="alert-message">通知设置已更新并立即生效。</p>
-          </div>
-        </div>
+  <section class="story">
+    <span class="story-label">warning + inline · 局部上下文</span>
+    <div class="section-card">
+      <p class="section-copy">附件同步</p>
+      <div class="alert alert-inline alert-warning" role="status" data-evidence-sample="warning-inline-titleless">
+        <svg class="alert-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4.2l8.6 14.8H3.4L12 4.2z" stroke="currentColor" stroke-width="2"/><path d="M12 10v4" stroke="currentColor" stroke-width="2"/></svg>
+        <div class="alert-body"><p class="alert-message">部分附件尚未同步。</p></div>
+        <button class="alert-action" type="button">重试同步</button>
       </div>
+      <p class="section-copy">仅影响当前附件区域，其它内容仍可继续编辑。</p>
     </div>
-    <div class="story">
-      <span class="story-label">横幅</span>
-      <div class="rail">
-        <div class="alert alert-warning" role="alert" data-evidence-sample="warning">
-          <svg class="alert-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 4.2l8.6 14.8H3.4L12 4.2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M12 10v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="12" cy="16.6" r="1" fill="currentColor"/>
-          </svg>
-          <div class="alert-body">
-            <p class="alert-title">存储空间即将用尽</p>
-            <p class="alert-message">剩余空间不足 2 GB,建议清理历史附件。</p>
-            <button class="alert-action" type="button">去清理</button>
-          </div>
-        </div>
-        <div class="alert alert-danger" role="alert" data-evidence-sample="danger">
-          <svg class="alert-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
-            <path d="M9 9l6 6M15 9l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          <div class="alert-body">
-            <p class="alert-title">登录已过期</p>
-            <p class="alert-message">为保障账号安全,请重新登录后继续操作。</p>
-            <button class="alert-action" type="button">重新登录</button>
-          </div>
-          <button class="alert-dismiss" type="button" aria-label="关闭">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          </button>
-        </div>
+  </section>
+
+  <section class="story">
+    <span class="story-label">warning + banner · 页面级通知槽</span>
+    <div class="page-shell">
+      <div class="page-header">工作台</div>
+      <div class="alert alert-banner alert-warning" role="status" data-evidence-sample="warning-banner-titleless">
+        <svg class="alert-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4.2l8.6 14.8H3.4L12 4.2z" stroke="currentColor" stroke-width="2"/><path d="M12 10v4" stroke="currentColor" stroke-width="2"/></svg>
+        <div class="alert-body"><p class="alert-message">当前网络不稳定，部分页面数据可能延迟更新。</p></div>
+        <button class="alert-action" type="button">查看状态</button>
       </div>
+      <div class="page-content">Banner 属于页面结构槽位，而不是把 Inline Alert 拉宽。</div>
     </div>
-  </div>
+  </section>
+
+  <section class="story">
+    <span class="story-label">danger + banner · 不可安全忽略</span>
+    <div class="page-shell">
+      <div class="page-header">项目详情</div>
+      <div class="alert alert-banner alert-danger" role="alert" data-evidence-sample="danger-banner">
+        <svg class="alert-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M9 9l6 6M15 9l-6 6" stroke="currentColor" stroke-width="2"/></svg>
+        <div class="alert-body"><p class="alert-title">登录已过期</p><p class="alert-message">重新登录后可继续当前任务。</p></div>
+        <button class="alert-action" type="button">重新登录</button>
+      </div>
+      <div class="page-content">不可安全忽略，因此没有关闭按钮。</div>
+    </div>
+  </section>
 </div>
 </body>
 </html>
