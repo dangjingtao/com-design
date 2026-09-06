@@ -37,7 +37,7 @@ test('T025 Button separates hierarchy semantic shape size and state axes', () =>
 });
 
 test('T025 Pill is a machine-readable shape variant and does not change base heights', () => {
-  assert.equal(button.traits.standardRadius, 'var(--radius-control)');
+  assert.equal(button.traits.radius, 'var(--radius-control)');
   assert.equal(button.traits.pillRadius, 'var(--radius-pill)');
   assert.equal(button.traits.compactHeight, '40px');
   assert.equal(button.traits.largeHeight, '48px');
@@ -48,8 +48,8 @@ test('T025 Pill is a machine-readable shape variant and does not change base hei
 });
 
 test('T025 Destructive is semantic intent composed with action hierarchy', () => {
-  const destructive = button.traits.semantic.destructive;
-  assert.equal(destructive.primaryBackground, 'var(--color-destructive)');
+  const destructive = button.traits.destructive;
+  assert.equal(destructive.background, 'var(--color-destructive)');
   assert.equal(destructive.secondaryForeground, 'var(--color-danger-text)');
   assert.equal(destructive.tertiaryForeground, 'var(--color-danger-text)');
 
