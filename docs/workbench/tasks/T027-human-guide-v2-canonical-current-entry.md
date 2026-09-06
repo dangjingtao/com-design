@@ -1,6 +1,6 @@
 # T027 · Human Guide V2 Canonical Consumption + Versioned Current Entry
 
-- Status: TODO
+- Status: DOING
 - Target version: V2 documentation follow-up
 - Impact: Docs / Human Consumption / Pages
 - Owner: -
