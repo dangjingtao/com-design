@@ -7,7 +7,7 @@ a{color:var(--color-text-brand);text-decoration:none}
 a:hover{text-decoration:underline}
 a:focus-visible,button:focus-visible,input:focus-visible{outline:var(--com-border-focus) solid var(--color-border-focused);outline-offset:var(--space-2)}
 code{font:var(--type-caption);color:var(--color-text-secondary)}
-.appbar{position:sticky;inset-block-start:0;z-index:20;display:flex;align-items:center;gap:var(--space-16);min-block-size:calc(var(--space-32) + var(--space-24));padding-inline:var(--space-20);border-block-end:var(--com-border-control) solid var(--color-border-subtle);background:var(--color-surface)}
+.appbar{position:sticky;inset-block-start:0;display:flex;align-items:center;gap:var(--space-16);min-block-size:calc(var(--space-32) + var(--space-24));padding-inline:var(--space-20);border-block-end:var(--com-border-control) solid var(--color-border-subtle);background:var(--color-surface)}
 .nav-toggle{display:none;min-block-size:var(--size-touch-min);padding-inline:var(--space-12);border:0;border-radius:var(--radius-control);background:transparent;color:var(--color-text-secondary);font:var(--type-label);cursor:pointer}
 .nav-toggle:hover{background:var(--color-surface-subtle)}
 .brand-lockup{display:inline-flex;align-items:center;gap:var(--space-8);min-inline-size:0;color:var(--color-text-primary)}
@@ -138,8 +138,8 @@ code{font:var(--type-caption);color:var(--color-text-secondary)}
   .nav-toggle{display:inline-flex;align-items:center}
   .brand-copy small,.version-chip{display:none}
   .docs-shell{grid-template-columns:1fr}
-  .sidebar{position:fixed;inset-block-start:calc(var(--space-32) + var(--space-24));inset-inline-start:0;z-index:15;inline-size:min(calc(var(--space-32) * 8),85%);transform:translateX(-100%);transition:transform var(--motion-duration-fast) var(--motion-easing-standard)}
-  .sidebar.is-open{transform:translateX(0)}
+  .sidebar{position:fixed;inset-block-start:calc(var(--space-32) + var(--space-24));inset-inline-start:0;inline-size:min(calc(var(--space-32) * 8),85%);transform:translateX(-100%);visibility:hidden;pointer-events:none;transition:transform var(--motion-duration-fast) var(--motion-easing-standard)}
+  .sidebar.is-open{transform:translateX(0);visibility:visible;pointer-events:auto}
   .docs-main{padding-inline:var(--space-16)}
   .section-block{padding-block:calc(var(--space-32) + var(--space-24))}
   .hero{grid-template-columns:1fr;gap:var(--space-32);padding-block-start:calc(var(--space-32) * 2)}
