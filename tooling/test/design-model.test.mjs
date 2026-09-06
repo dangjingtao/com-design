@@ -319,3 +319,21 @@ test('rejects invalid canonical state feedback workflow before model emission', 
     /state feedback workflow:.*genericRecoverableErrorAllowed/s,
   );
 });
+
+
+test('T023 feedback Preview markup remains downstream of the canonical model', () => {
+  const fixture = copyDesignSourceFixture();
+  const before = buildCanonicalDesignModel(fixture);
+  fs.writeFileSync(
+    path.join(fixture, 'design-source', 'preview', 'component-alert.html'),
+    '<div class="review-fixture">visual reference changed only</div>\n',
+  );
+  fs.writeFileSync(
+    path.join(fixture, 'design-source', 'preview', 'component-result-state.html'),
+    '<div class="review-fixture">result visual reference changed only</div>\n',
+  );
+  const after = buildCanonicalDesignModel(fixture);
+
+  assert.equal(after.sourceHash, before.sourceHash);
+  assert.deepEqual(after.workflows.stateFeedback, before.workflows.stateFeedback);
+});
