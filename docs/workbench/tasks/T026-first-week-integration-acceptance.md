@@ -54,10 +54,19 @@ V2 第一周目标不是“组件越多越好”，而是 Source → Contract �
 
 ## Implementation record
 
-- Commit / PR:
-- Final dev HEAD:
+- Commit / PR: branch `task/T026-first-week-integration-acceptance` from final predecessor `dev@1e836b63b9c82403a237a92fe648d09144db3133`.
+- Final dev HEAD: predecessor integration baseline `1e836b63b9c82403a237a92fe648d09144db3133`; T026 candidate HEAD will be recorded after final acceptance.
 - Changed paths:
+  - component CSS extractor / parity validation / regenerated aggregate
+  - semantic contrast audit
+  - release requirement → evidence trace
+  - deterministic CI full-build gate
+  - T026 evidence and governance docs/tests
 - Notes:
+  - Predecessor baseline already had T001-T025 PASS, Design System Build #321 success and Human Docs #177 success on the same SHA.
+  - RC audit found a real downstream drift blocker: `design-source/components.css` lagged T023-T025 previews (Alert/Button/Empty/Result/Switch/Timeline). The aggregate is reconciled and parity is now hard-gated across all 34 components.
+  - RC audit also found that CI had equivalent engineering + Penpot steps but did not directly execute the acceptance-required `npm run build:all`; full build is now a first-class T017 hard-gate outcome.
+  - Manifest release requirements now carry explicit evidence ownership; contrast audit is no longer a declaration without executable proof.
 
 ## Verification evidence
 
