@@ -69,6 +69,7 @@ export function validateSourceIntegrity(repoRoot, options = {}) {
     catalogCounts: {},
     platformTargets: [],
     adapterMaturity: {},
+    releaseGateTrace: { requirements: 0, traced: 0 },
   };
 
   let manifest;
@@ -193,6 +194,50 @@ export function validateSourceIntegrity(repoRoot, options = {}) {
   const releaseGates = manifest.releaseGates;
   if (!releaseGates || releaseGates.evaluation !== 'validator-evidence' || !Array.isArray(releaseGates.requirements)) {
     errors.push('manifest.releaseGates must declare requirements and use validator-evidence evaluation instead of hand-written pass booleans.');
+  } else {
+    const requirements = releaseGates.requirements;
+    const trace = releaseGates.evidenceTrace;
+    evidence.releaseGateTrace.requirements = requirements.length;
+    if (!trace || typeof trace !== 'object' || Array.isArray(trace)) {
+      errors.push('manifest.releaseGates.evidenceTrace must map every requirement to executable evidence.');
+    } else {
+      const allowedKinds = new Set(['validation', 'ci', 'governance', 'review']);
+      const requirementSet = new Set(requirements);
+      for (const requirement of requirements) {
+        const entries = trace[requirement];
+        if (!Array.isArray(entries) || entries.length === 0) {
+          errors.push('releaseGates.evidenceTrace is missing requirement: ' + requirement + '.');
+          continue;
+        }
+        let valid = true;
+        for (const entry of entries) {
+          if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
+            errors.push('releaseGates.evidenceTrace.' + requirement + ' entries must be objects.');
+            valid = false;
+            continue;
+          }
+          if (!allowedKinds.has(entry.kind)) {
+            errors.push('releaseGates.evidenceTrace.' + requirement + ' has unsupported evidence kind: ' + entry.kind + '.');
+            valid = false;
+          }
+          if (
+            !Array.isArray(entry.ids)
+            || entry.ids.length === 0
+            || entry.ids.some((id) => typeof id !== 'string' || id.length === 0)
+            || new Set(entry.ids).size !== entry.ids.length
+          ) {
+            errors.push('releaseGates.evidenceTrace.' + requirement + ' must declare unique non-empty evidence ids.');
+            valid = false;
+          }
+        }
+        if (valid) evidence.releaseGateTrace.traced += 1;
+      }
+      for (const requirement of Object.keys(trace)) {
+        if (!requirementSet.has(requirement)) {
+          errors.push('releaseGates.evidenceTrace contains undeclared requirement: ' + requirement + '.');
+        }
+      }
+    }
   }
 
   return { errors, evidence };
