@@ -322,6 +322,21 @@ export function runRepositoryValidation(repoRoot) {
     if (!contract) errors.push('canonical mobileSearchFilterWorkflow source is unavailable.');
     if (!schema) errors.push('canonical mobileSearchFilterSchema source is unavailable.');
     if (!canonicalSources.componentIndex?.value) errors.push('canonical componentIndex source is unavailable.');
+    const searchFieldEntry = canonicalSources.componentIndex?.value?.components?.find(
+      (entry) => entry.slug === 'search-field',
+    );
+    let searchFieldContract = null;
+    if (!searchFieldEntry?.contract) {
+      errors.push('canonical Search Field contract entry is unavailable.');
+    } else {
+      try {
+        searchFieldContract = readJson(
+          path.join(repoRoot, 'design-source', searchFieldEntry.contract),
+        );
+      } catch (error) {
+        errors.push('canonical Search Field contract cannot be read: ' + error.message);
+      }
+    }
     if (!canonicalSources.coreComposites?.value) errors.push('canonical coreComposites source is unavailable.');
     if (!canonicalSources.corePatterns?.value) errors.push('canonical corePatterns source is unavailable.');
     if (!canonicalSources.platformEnvironment?.value) errors.push('canonical platformEnvironment source is unavailable.');
@@ -334,6 +349,7 @@ export function runRepositoryValidation(repoRoot) {
         schema,
         {
           componentIndex: canonicalSources.componentIndex.value,
+          searchFieldContract,
           composites: canonicalSources.coreComposites.value,
           patterns: canonicalSources.corePatterns.value,
           platformEnvironment: canonicalSources.platformEnvironment.value,
