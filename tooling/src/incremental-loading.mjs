@@ -107,6 +107,14 @@ export function reduceIncrementalLoadingState(state, event, contract) {
       effects.push('request-suppressed-exhausted');
       return { state: next, effects };
     }
+    if (
+      next.phase === 'append-error'
+      && type === 'request-more'
+      && event.trigger !== 'manual'
+    ) {
+      effects.push('request-suppressed-append-error-auto');
+      return { state: next, effects };
+    }
     if (next.inFlight) {
       effects.push('request-suppressed-in-flight');
       return { state: next, effects };
