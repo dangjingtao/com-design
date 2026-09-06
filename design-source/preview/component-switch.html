@@ -7,11 +7,11 @@
 <link rel="stylesheet" href="../colors_and_type.css">
 <style>
   body{margin:0;padding:12px;background:var(--color-background);font-family:var(--font-family-base);color:var(--color-text-primary)}
-  .specimen{display:flex;flex-direction:column;gap:12px;max-width:390px;margin:0 auto}
+  .specimen{display:flex;flex-direction:column;gap:16px;max-width:390px;margin:0 auto}
   .story{display:flex;flex-direction:column;gap:8px}
   .story-label{font:var(--type-label-small);color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.04em;padding:0 4px}
-  .rail{display:flex;flex-direction:column}
   .list{background:var(--color-surface);border-radius:var(--radius-container);overflow:hidden}
+  .evidence-note{margin:0 4px;font:var(--type-caption);color:var(--color-text-tertiary)}
 
   /* @component-css-start */
   .switch-row{display:flex;align-items:center;gap:var(--space-12);min-height:48px;padding:8px 12px;background:var(--color-surface);position:relative;cursor:pointer}
@@ -24,49 +24,55 @@
   .switch-control{flex:0 0 auto;width:44px;height:24px;position:relative;flex-shrink:0}
   .switch-input{position:absolute;opacity:0;width:44px;height:24px;margin:0}
   .switch-track{display:block;width:44px;height:24px;border-radius:var(--radius-pill);background:var(--color-surface-subtle);border:1px solid var(--color-border);box-sizing:border-box;position:relative;transition:background .15s,border-color .15s}
-  .switch-thumb{position:absolute;top:1px;left:1px;width:20px;height:20px;border-radius:var(--radius-pill);background:var(--color-surface);transition:transform .15s}
+  .switch-thumb{position:absolute;top:1px;left:1px;width:20px;height:20px;border-radius:var(--radius-pill);background:var(--color-surface);transition:transform .15s,background .15s}
   .switch-input:checked + .switch-track{background:var(--color-primary);border-color:var(--color-primary)}
   .switch-input:checked + .switch-track .switch-thumb{transform:translateX(18px)}
-  .switch-input:disabled:not(:checked) + .switch-track{background:var(--color-surface-subtle);border-color:var(--color-border-subtle)}
-  .switch-input:disabled:checked + .switch-track{background:var(--color-disabled);border-color:var(--color-disabled)}
+  .switch-input:disabled:not(:checked) + .switch-track{background:var(--color-disabled);border-color:var(--color-disabled)}
+  .switch-input:disabled:checked + .switch-track{background:var(--color-primary-container);border-color:var(--color-border-subtle)}
+  .switch-input:disabled + .switch-track .switch-thumb{background:var(--color-text-disabled)}
   /* @component-css-end */
 </style>
 </head>
 <body>
 <div class="specimen">
   <div class="story">
-    <span class="story-label">开关设置</span>
-    <div class="rail">
-      <div class="list">
-        <label class="switch-row" data-evidence-sample="on">
-          <span class="switch-text"><span class="switch-title">推送通知</span><span class="switch-helper">审核结果与任务提醒</span></span>
-          <span class="switch-control">
-            <input type="checkbox" class="switch-input" checked>
-            <span class="switch-track"><span class="switch-thumb"></span></span>
-          </span>
-        </label>
-        <label class="switch-row" data-evidence-sample="off">
-          <span class="switch-text"><span class="switch-title">邮件摘要</span><span class="switch-helper">每周一上午发送汇总</span></span>
-          <span class="switch-control">
-            <input type="checkbox" class="switch-input">
-            <span class="switch-track"><span class="switch-thumb"></span></span>
-          </span>
-        </label>
-        <label class="switch-row is-disabled" data-evidence-sample="disabled-on">
-          <span class="switch-text"><span class="switch-title">企业安全策略</span><span class="switch-helper">由管理员强制开启</span></span>
-          <span class="switch-control">
-            <input type="checkbox" class="switch-input" checked disabled>
-            <span class="switch-track"><span class="switch-thumb"></span></span>
-          </span>
-        </label>
-        <label class="switch-row is-disabled" data-evidence-sample="disabled-off">
-          <span class="switch-text"><span class="switch-title">Beta 实验功能</span><span class="switch-helper">当前账号暂不可用</span></span>
-          <span class="switch-control">
-            <input type="checkbox" class="switch-input" disabled>
-            <span class="switch-track"><span class="switch-thumb"></span></span>
-          </span>
-        </label>
-      </div>
+    <span class="story-label">Enabled · value on / off</span>
+    <div class="list" data-evidence-group="enabled">
+      <label class="switch-row" data-evidence-sample="on">
+        <span class="switch-text"><span class="switch-title">推送通知</span><span class="switch-helper">审核结果与任务提醒</span></span>
+        <span class="switch-control">
+          <input type="checkbox" class="switch-input" checked aria-label="推送通知">
+          <span class="switch-track"><span class="switch-thumb"></span></span>
+        </span>
+      </label>
+      <label class="switch-row" data-evidence-sample="off">
+        <span class="switch-text"><span class="switch-title">邮件摘要</span><span class="switch-helper">每周一上午发送汇总</span></span>
+        <span class="switch-control">
+          <input type="checkbox" class="switch-input" aria-label="邮件摘要">
+          <span class="switch-track"><span class="switch-thumb"></span></span>
+        </span>
+      </label>
+    </div>
+  </div>
+
+  <div class="story">
+    <span class="story-label">Disabled · value still visible</span>
+    <p class="evidence-note">禁用降低可操作感，但不抹掉当前值。</p>
+    <div class="list" data-evidence-group="disabled">
+      <label class="switch-row is-disabled" data-evidence-sample="disabled-on">
+        <span class="switch-text"><span class="switch-title">企业安全策略</span><span class="switch-helper">由管理员强制开启</span></span>
+        <span class="switch-control">
+          <input type="checkbox" class="switch-input" checked disabled aria-label="企业安全策略">
+          <span class="switch-track"><span class="switch-thumb"></span></span>
+        </span>
+      </label>
+      <label class="switch-row is-disabled" data-evidence-sample="disabled-off">
+        <span class="switch-text"><span class="switch-title">Beta 实验功能</span><span class="switch-helper">当前账号暂不可用</span></span>
+        <span class="switch-control">
+          <input type="checkbox" class="switch-input" disabled aria-label="Beta 实验功能">
+          <span class="switch-track"><span class="switch-thumb"></span></span>
+        </span>
+      </label>
     </div>
   </div>
 </div>
