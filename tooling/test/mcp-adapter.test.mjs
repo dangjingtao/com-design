@@ -19,7 +19,7 @@ const model = buildTokenModel(path.join(repoRoot, 'design-source', 'colors_and_t
 
 test('MCP manifest is tied to the complete design source and component catalog', () => {
   const manifest = createMcpManifest(repoRoot, model);
-  assert.equal(manifest.designSystem, 'Com Design Mobile');
+  assert.equal(manifest.designSystem, 'Com Design');
   assert.equal(manifest.componentCount, 34);
   assert.equal(manifest.tokenSourceHash, model.sourceHash);
   assert.match(manifest.sourceHash, /^[a-f0-9]{64}$/);
