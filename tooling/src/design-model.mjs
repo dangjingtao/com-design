@@ -14,6 +14,7 @@ import { validateNavigationFoundationContract } from './navigation-foundation.mj
 import { validateMotionFoundationContract } from './motion-foundation.mjs';
 import { validateMobileSearchFilterWorkflowContract } from './mobile-search-filter.mjs';
 import { validateIncrementalLoadingContract } from './incremental-loading.mjs';
+import { validateStateFeedbackContract } from './state-feedback.mjs';
 
 const MODEL_SCHEMA_VERSION = 2;
 const MODEL_ID = 'com-design:canonical-model:v2';
@@ -235,6 +236,41 @@ function validateRequiredInputs(repoRoot, sourceIntegrity, manifest) {
         layoutInputFoundation,
       },
     ).map((error) => `incremental loading workflow: ${error}`),
+  );
+
+  const stateFeedback = requireCanonicalSource(sourceIntegrity, 'stateFeedbackWorkflow').value;
+  const stateFeedbackSchema = requireCanonicalSource(sourceIntegrity, 'stateFeedbackSchema').value;
+  const feedbackComponents = Object.fromEntries(
+    (componentIndex.components ?? []).map((entry) => [
+      entry.slug,
+      readJson(path.join(repoRoot, 'design-source', entry.contract)),
+    ]),
+  );
+  const feedbackPreviews = {
+    alert: fs.readFileSync(
+      path.join(repoRoot, 'design-source', 'preview', 'component-alert.html'),
+      'utf8',
+    ),
+    emptyState: fs.readFileSync(
+      path.join(repoRoot, 'design-source', 'preview', 'component-empty-state.html'),
+      'utf8',
+    ),
+    resultState: fs.readFileSync(
+      path.join(repoRoot, 'design-source', 'preview', 'component-result-state.html'),
+      'utf8',
+    ),
+  };
+  errors.push(
+    ...validateStateFeedbackContract(
+      stateFeedback,
+      stateFeedbackSchema,
+      {
+        componentIndex,
+        components: feedbackComponents,
+        patterns: requireCanonicalSource(sourceIntegrity, 'corePatterns').value,
+        previews: feedbackPreviews,
+      },
+    ).map((error) => `state feedback workflow: ${error}`),
   );
 
   const foundationPath = requireCanonicalSource(sourceIntegrity, 'foundation').resolvedPath;
@@ -587,6 +623,18 @@ export function validateCanonicalDesignModel(model) {
   ) {
     errors.push('canonical incremental loading workflow must carry source provenance.');
   }
+  if (
+    model?.workflows?.stateFeedback?.id !== 'com-design:state-feedback:v2'
+    || model?.workflows?.stateFeedback?.schemaVersion !== 2
+  ) {
+    errors.push('canonical design model must expose the accepted T023 state feedback workflow.');
+  }
+  if (
+    !model?.workflows?.stateFeedback?.provenance
+    || typeof model.workflows.stateFeedback.provenance !== 'object'
+  ) {
+    errors.push('canonical state feedback workflow must carry source provenance.');
+  }
 
   for (const platform of model?.platform?.platforms ?? []) {
     if (!MATURITY_STATUSES.has(platform.maturity?.status)) {
@@ -629,6 +677,10 @@ export function buildCanonicalDesignModel(repoRoot) {
     sourceIntegrity,
     'incrementalLoadingWorkflow',
   );
+  const stateFeedbackEvidence = requireCanonicalSource(
+    sourceIntegrity,
+    'stateFeedbackWorkflow',
+  );
 
   const manifestSource = sourceDescriptor(repoRoot, 'source:manifest', manifest.__path, 'manifest');
   const foundationSource = sourceDescriptor(repoRoot, 'source:foundation', foundationEvidence.resolvedPath);
@@ -661,6 +713,11 @@ export function buildCanonicalDesignModel(repoRoot) {
     repoRoot,
     'source:incrementalLoadingWorkflow',
     incrementalLoadingEvidence.resolvedPath,
+  );
+  const stateFeedbackSource = sourceDescriptor(
+    repoRoot,
+    'source:stateFeedbackWorkflow',
+    stateFeedbackEvidence.resolvedPath,
   );
 
   const tokenModel = buildTokenModel(foundationEvidence.resolvedPath);
@@ -701,6 +758,10 @@ export function buildCanonicalDesignModel(repoRoot) {
       incrementalLoading: normalizeWorkflow(
         incrementalLoadingEvidence.value,
         incrementalLoadingSource,
+      ),
+      stateFeedback: normalizeWorkflow(
+        stateFeedbackEvidence.value,
+        stateFeedbackSource,
       ),
     },
     platform: normalizePlatforms(
