@@ -120,3 +120,16 @@ test('T023 unknown blocking cause is rejected instead of guessed', () => {
     /unknown blocking-state cause/,
   );
 });
+
+
+test('T023 prohibition copy may name forbidden error semantics without activating them', () => {
+  const candidate=JSON.parse(JSON.stringify(components));
+  candidate['empty-state'].doNotInvent.push(
+    'never restore recoverable-error or Danger decoration to Empty State',
+  );
+  candidate['empty-state'].structurePatterns.push(
+    'Empty State does not use error coloring as a semantic carrier',
+  );
+
+  assert.deepEqual(validate(contract,{components:candidate}), []);
+});
