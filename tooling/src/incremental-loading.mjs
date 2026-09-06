@@ -38,6 +38,24 @@ function appendDeduped(existing, incoming) {
   return [...existing, ...appended];
 }
 
+function requireRequestId(value) {
+  if (typeof value !== 'string' || value.length === 0) {
+    throw new Error('incremental-loading requestId must be a non-empty string.');
+  }
+  return value;
+}
+
+function continuationFromSuccess(event) {
+  if (typeof event.hasMore !== 'boolean') {
+    throw new Error('incremental-loading success response must declare hasMore boolean.');
+  }
+  if (event.hasMore === false) return null;
+  if (event.nextContinuation === null || event.nextContinuation === undefined) {
+    throw new Error('incremental-loading hasMore=true requires nextContinuation.');
+  }
+  return structuredClone(event.nextContinuation);
+}
+
 export function createIncrementalLoadingState(seed = {}) {
   const items = cloneItems(seed.items);
   items.forEach(itemKey);
@@ -74,7 +92,7 @@ export function reduceIncrementalLoadingState(state, event, contract) {
     }
     next.requestGeneration += 1;
     next.inFlight = {
-      requestId: event.requestId,
+      requestId: requireRequestId(event.requestId),
       continuation: null,
       generation: next.requestGeneration,
       trigger: 'initial',
@@ -102,7 +120,7 @@ export function reduceIncrementalLoadingState(state, event, contract) {
     }
     next.requestGeneration += 1;
     next.inFlight = {
-      requestId: event.requestId,
+      requestId: requireRequestId(event.requestId),
       continuation: structuredClone(continuation),
       generation: next.requestGeneration,
       trigger: event.trigger ?? (type === 'retry-more' ? 'retry' : 'manual'),
@@ -128,7 +146,7 @@ export function reduceIncrementalLoadingState(state, event, contract) {
     next.items = type === 'initial-success'
       ? appendDeduped([], incoming)
       : appendDeduped(next.items, incoming);
-    next.continuation = event.hasMore === false ? null : structuredClone(event.nextContinuation ?? null);
+    next.continuation = continuationFromSuccess(event);
     next.failedContinuation = null;
     next.inFlight = null;
 
