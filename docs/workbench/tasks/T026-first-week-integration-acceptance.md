@@ -1,6 +1,6 @@
 # T026 · First-week Integration Acceptance / V2 RC Readiness
 
-- Status: TODO
+- Status: DOING
 - Target version: V2 first-stage
 - Impact: Integration / Review / Release Readiness
 - Owner: -
