@@ -54,6 +54,31 @@ export function createCollectionQueryState(seed = {}) {
   };
 }
 
+function resolveOpenFilterDraftForQueryCommit(next, event, contract, effects) {
+  if (!next.filterSurfaceOpen) return;
+
+  const allowed = contract.collectionQueryModel?.filterDraft?.externalQueryChangePolicy ?? [];
+  const strategy = event.filterDraftStrategy;
+  if (!allowed.includes(strategy)) {
+    throw new Error(
+      'query commit while filter draft is open requires filterDraftStrategy: '
+        + allowed.join(' | '),
+    );
+  }
+
+  if (strategy === 'cancel-draft') {
+    next.filterSurfaceOpen = false;
+    next.filterDraft = null;
+    effects.push('filter-draft-cancelled-for-query-change', 'filter-surface-closed');
+    return;
+  }
+
+  if (strategy === 'rebase-draft') {
+    next.filterDraft = cloneFilters(next.committedFilters);
+    effects.push('filter-draft-rebased-for-query-change');
+  }
+}
+
 export function reduceCollectionQueryState(state, event, contract) {
   const next = structuredClone(state);
   const effects = [];
@@ -81,6 +106,9 @@ export function reduceCollectionQueryState(state, event, contract) {
       effects.push('commit-suppressed-during-composition');
       return { state: next, effects };
     }
+    if (next.pendingQuery !== next.committedQuery) {
+      resolveOpenFilterDraftForQueryCommit(next, event, contract, effects);
+    }
     next.committedQuery = next.pendingQuery;
     next.continuation = null;
     effects.push('query-committed', 'refresh-collection');
@@ -88,6 +116,15 @@ export function reduceCollectionQueryState(state, event, contract) {
   }
 
   if (type === 'clear-query') {
+    if (next.filterSurfaceOpen && next.committedQuery !== '') {
+      resolveOpenFilterDraftForQueryCommit(
+        next,
+        { ...event, filterDraftStrategy: event.filterDraftStrategy ?? 'cancel-draft' },
+        contract,
+        effects,
+      );
+    }
+    next.composing = false;
     next.pendingQuery = '';
     next.committedQuery = '';
     next.continuation = null;
@@ -96,6 +133,12 @@ export function reduceCollectionQueryState(state, event, contract) {
   }
 
   if (type === 'cancel-back') {
+    if (next.filterSurfaceOpen) {
+      next.filterSurfaceOpen = false;
+      next.filterDraft = null;
+      effects.push('filter-draft-discarded', 'filter-surface-closed');
+      return { state: next, effects };
+    }
     effects.push('exit-or-return-search-context');
     return { state: next, effects };
   }
