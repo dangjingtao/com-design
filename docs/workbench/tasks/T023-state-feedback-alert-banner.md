@@ -1,6 +1,6 @@
 # T023 · State Feedback + Alert/Banner Semantics
 
-- Status: TODO
+- Status: DOING
 - Target version: V2 first-stage
 - Impact: Component / UX Pattern / Feedback
 - Owner: -
