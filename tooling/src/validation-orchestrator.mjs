@@ -10,6 +10,7 @@ import { validateNavigationFoundationContract } from './navigation-foundation.mj
 import { validateMotionFoundationContract } from './motion-foundation.mjs';
 import { validateMobileSearchFilterWorkflowContract } from './mobile-search-filter.mjs';
 import { validateIncrementalLoadingContract } from './incremental-loading.mjs';
+import { validateStateFeedbackContract } from './state-feedback.mjs';
 import { validatePlatformEnvironmentContract } from './platform-environment.mjs';
 import { validatePlatformModel } from './platform-context.mjs';
 import { validateSourceIntegrity } from './source-integrity.mjs';
@@ -397,6 +398,62 @@ export function runRepositoryValidation(repoRoot) {
         patternId: contract.references?.patternId ?? null,
         miniProgramScrollOwnerRequired:
           contract.platformMappings?.['wechat-mini-program']?.scrollOwnerRequired ?? null,
+      },
+    };
+  }));
+
+  checks.push(runCheck('state-feedback', () => {
+    const contract = canonicalSources.stateFeedbackWorkflow?.value;
+    const schema = canonicalSources.stateFeedbackSchema?.value;
+    const componentIndex = canonicalSources.componentIndex?.value;
+    const patterns = canonicalSources.corePatterns?.value;
+    const errors = [];
+    if (!contract) errors.push('canonical stateFeedbackWorkflow source is unavailable.');
+    if (!schema) errors.push('canonical stateFeedbackSchema source is unavailable.');
+    if (!componentIndex) errors.push('canonical componentIndex source is unavailable.');
+    if (!patterns) errors.push('canonical corePatterns source is unavailable.');
+
+    const components = {};
+    if (componentIndex) {
+      for (const entry of componentIndex.components ?? []) {
+        try {
+          components[entry.slug] = readJson(
+            path.join(repoRoot, 'design-source', entry.contract),
+          );
+        } catch (error) {
+          errors.push('feedback component contract cannot be read: ' + entry.slug + ' (' + error.message + ')');
+        }
+      }
+    }
+
+    const previews = {};
+    for (const [key, relativePath] of [
+      ['alert', 'design-source/preview/component-alert.html'],
+      ['emptyState', 'design-source/preview/component-empty-state.html'],
+      ['resultState', 'design-source/preview/component-result-state.html'],
+    ]) {
+      try {
+        previews[key] = fs.readFileSync(path.join(repoRoot, relativePath), 'utf8');
+      } catch (error) {
+        errors.push('feedback preview cannot be read: ' + relativePath + ' (' + error.message + ')');
+      }
+    }
+    if (errors.length) return { errors };
+
+    return {
+      errors: validateStateFeedbackContract(
+        contract,
+        schema,
+        { componentIndex, components, patterns, previews },
+      ),
+      evidence: {
+        schemaVersion: contract.schemaVersion ?? null,
+        coreComponentAdded: contract.scope?.coreComponentAdded ?? null,
+        emptyVariants: contract.emptyState?.allowedVariants ?? [],
+        resultTones: contract.resultState?.tones ?? [],
+        inlineScope: contract.alertFamily?.inline?.scope ?? null,
+        bannerScope: contract.alertFamily?.banner?.scope ?? null,
+        blockingPatternPromoted: contract.blockingState?.promotedToCorePattern ?? null,
       },
     };
   }));
