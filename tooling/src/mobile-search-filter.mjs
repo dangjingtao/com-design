@@ -185,6 +185,7 @@ export function validateMobileSearchFilterWorkflowContract(
   schema,
   {
     componentIndex,
+    searchFieldContract,
     composites,
     patterns,
     platformEnvironment,
@@ -296,7 +297,28 @@ export function validateMobileSearchFilterWorkflowContract(
   }
 
   const searchField = (componentIndex?.components ?? []).find((entry) => entry.slug === 'search-field');
-  if (!searchField) errors.push('Search Field must remain an indexed Core Component.');
+  if (!searchField) {
+    errors.push('Search Field must remain an indexed Core Component.');
+  }
+  if (!searchFieldContract || searchFieldContract.slug !== 'search-field') {
+    errors.push('T021 requires the canonical Search Field contract.');
+  } else {
+    const states = searchFieldContract.variantDimensions?.state ?? [];
+    if (!states.includes('composing')) {
+      errors.push('Search Field must expose composing state for IME workflow evidence.');
+    }
+    const interaction = searchFieldContract.interactionContract ?? [];
+    if (!interaction.some((rule) => /IME composition/.test(rule))) {
+      errors.push('Search Field interaction contract must declare IME composition semantics.');
+    }
+    if (!interaction.some((rule) => /Clear/.test(rule) && /search context/.test(rule))) {
+      errors.push('Search Field interaction contract must keep Clear distinct from leaving search context.');
+    }
+    const keyboard = searchFieldContract.keyboardContract ?? [];
+    if (!keyboard.some((rule) => /Platform Adapter/.test(rule))) {
+      errors.push('Search Field keyboard/IME events must remain Platform Adapter mapped.');
+    }
+  }
 
   if (layoutInputFoundation?.id !== 'com-design:layout-input-foundation:v2') {
     errors.push('T021 must consume the accepted T012 layout/input foundation.');
@@ -311,6 +333,29 @@ export function validateMobileSearchFilterWorkflowContract(
     if (!mapping) {
       errors.push('missing platform mapping: ' + platform);
       continue;
+    }
+    const requiredEnvironmentInputs = ['keyboard-ime', 'back', 'safe-area', 'accessibility'];
+    if (platform === 'wechat-mini-program') requiredEnvironmentInputs.push('host-chrome');
+    for (const input of requiredEnvironmentInputs) {
+      if (!mapping.environmentInputs?.includes(input)) {
+        errors.push(platform + ' mapping must consume T010 environment input: ' + input);
+      }
+    }
+    for (const field of ['searchSubmit', 'back', 'filterSurface']) {
+      if (typeof mapping[field] !== 'string' || mapping[field].length === 0) {
+        errors.push(platform + ' mapping must declare ' + field + ' behavior.');
+      }
+    }
+    if (platform === 'ios' || platform === 'android') {
+      if (typeof mapping.stickyActionInset !== 'string' || mapping.stickyActionInset.length === 0) {
+        errors.push(platform + ' mapping must declare stickyActionInset behavior.');
+      }
+    }
+    if (
+      platform === 'wechat-mini-program'
+      && (typeof mapping.restoration !== 'string' || mapping.restoration.length === 0)
+    ) {
+      errors.push('wechat-mini-program mapping must declare restoration behavior.');
     }
     if (!snapshot) {
       errors.push('T010 has no environment example for T021 platform: ' + platform);
