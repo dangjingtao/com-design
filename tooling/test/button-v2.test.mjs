@@ -76,6 +76,16 @@ test('T025 Loading suppresses repeat activation without becoming disabled', () =
   assert.equal(button.loadingContract.busySemanticsRequired, true);
   assert.equal(button.loadingContract.focusableWhileBusy, true);
   assert.equal(button.loadingContract.defaultPresentation, 'spinner-label');
+  assert.deepEqual(
+    button.loadingContract.compositionPolicy.loadingPreserves,
+    ['hierarchy','semantic','shape','size'],
+  );
+  assert.deepEqual(
+    button.loadingContract.compositionPolicy.loadingOverrides,
+    ['content','activation','busy-semantics'],
+  );
+  assert.equal(button.loadingContract.compositionPolicy.disabledOverridesVisualTreatment, true);
+  assert.equal(button.loadingContract.compositionPolicy.pressedAllowedWhileLoading, false);
 
   const loading = openingButtonFor('loading-spinner-label');
   assert.match(loading, /aria-busy="true"/);
@@ -120,4 +130,23 @@ test('T025 Canonical Model, Agent and Penpot all consume the new Button axes', (
   assert.deepEqual(penpotButton.variantDimensions.semantic, ['default','destructive']);
   assert.deepEqual(penpotButton.variantDimensions.shape, ['standard','pill']);
   assert.ok(penpotButton.states.includes('loading'));
+});
+
+
+test('T025 loading preserves destructive semantic treatment and suppresses preview activation', () => {
+  const destructiveLoading = openingButtonFor('loading-destructive');
+  assert.match(destructiveLoading, /class="btn primary is-destructive is-loading"/);
+  assert.match(destructiveLoading, /aria-busy="true"/);
+  assert.match(destructiveLoading, /data-repeat-activation="suppressed"/);
+
+  assert.match(
+    preview,
+    /document\.querySelectorAll\('\.btn\.is-loading'\)[\s\S]*?event\.preventDefault\(\)[\s\S]*?event\.stopPropagation\(\)/,
+  );
+
+  const variant = button.representativeVariants.find(
+    (entry) => entry.semantic === 'destructive' && entry.state === 'loading',
+  );
+  assert.ok(variant);
+  assert.equal(variant.hierarchy, 'primary');
 });
