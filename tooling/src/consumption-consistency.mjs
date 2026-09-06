@@ -221,12 +221,14 @@ export function validateConsumptionConsistency(repoRoot) {
   }
   if (
     library.downstreamConsumers?.humanGuide?.acceptedReport !== 'report/design-system-v1/'
+    || library.downstreamConsumers?.humanGuide?.currentReport !== 'report/design-system-v2/'
     || library.downstreamConsumers?.humanGuide?.upstreamAuthority !== false
   ) {
-    errors.push('Human Guide must remain downstream acceptance evidence at report/design-system-v1/.');
+    errors.push('Human Guide must remain a downstream consumer with accepted V1 evidence and current V2 report.');
   }
 
   requireFile(repoRoot, 'report/design-system-v1', errors, 'accepted human report');
+  requireFile(repoRoot, 'report/design-system-v2', errors, 'current V2 human report');
   requireFile(repoRoot, 'design-source/preview', errors, 'preview root');
 
   const rootReadme = readTextIfPresent(path.join(repoRoot, 'README.md'));

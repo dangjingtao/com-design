@@ -5,10 +5,16 @@
 ## Current live report
 
 ```text
-report/design-system-v1/
+report/design-system-v2/
 ```
 
-This report is an important design-system acceptance artifact. It must remain readable and traceable even after newer reports are generated.
+The deployed root is a generated `current` pointer to a versioned path:
+
+```text
+/ → /versions/<canonical-version>/
+```
+
+The V2 Human Guide is a downstream consumer of `design-source/`; catalog facts are read from canonical Component / Composite / Pattern sources rather than copied into the report.
 
 ## Retention policy
 
@@ -22,15 +28,18 @@ Rules:
 4. Existing reports may be moved into a version/archive location only if the complete readable report and its Git traceability are preserved.
 5. Automated cleanup must exclude retained human reports.
 
-A future layout may use:
+Current repository/deployment layout:
 
 ```text
 report/
-  design-system-v1/       current accepted report
-  versions/
-    <version-or-date>/     retained acceptance reports
-  archive/
-    ...                    immutable historical markers
+  design-system-v2/       current V2 Human Guide source shell
+  design-system-v1/       immutable accepted V1 evidence
+  archive/                historical markers
+
+Pages:
+/                         generated current pointer
+/versions/<version>/      versioned V2 Human Guide
+/accepted/v1/             retained V1 baseline
 ```
 
 `current` or `latest` should only be an entry point/pointer. It must never be the only surviving copy of an accepted report.

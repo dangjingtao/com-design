@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN" data-source-base="../../design-source" data-site-base="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Com Design · Human Guide V2</title>
+  <meta name="description" content="Com Design V2 当前人类可读入口，由 canonical design source 驱动。">
+  <link rel="stylesheet" href="../../design-source/colors_and_type.css">
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#overview">Com Design <span>Human Guide V2</span></a>
+    <nav aria-label="Human Guide">
+      <a href="#components">组件</a>
+      <a href="#composites">组合组件</a>
+      <a href="#patterns">UX Pattern</a>
+      <a href="#authority">系统边界</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="overview">
+      <p class="eyebrow">CURRENT · CANONICAL-DRIVEN</p>
+      <h1>Com Design V2</h1>
+      <p class="lead">当前设计系统的人类可读入口。目录、组合与 UX Pattern 均从 <code>design-source/</code> 读取；本页面解释规则与提供导航，不维护第二套设计事实。</p>
+      <div class="facts" aria-live="polite">
+        <article><strong id="component-count">—</strong><span>Core Components</span></article>
+        <article><strong id="composite-count">—</strong><span>Core Composites</span></article>
+        <article><strong id="pattern-count">—</strong><span>Core UX Patterns</span></article>
+        <article><strong id="system-version">—</strong><span>Current Version</span></article>
+      </div>
+      <div class="current-record" id="current-record">正在读取 current build record…</div>
+    </section>
+
+    <section class="section" id="components">
+      <div class="section-head">
+        <div><p class="eyebrow">COMPONENT CATALOG</p><h2>Core Components</h2></div>
+        <label class="search">筛选组件 <input id="component-filter" type="search" placeholder="Button / Result State…" autocomplete="off"></label>
+      </div>
+      <p class="section-copy">列表直接来自 <code>design-source/components/index.json</code>。每个条目链接到同一 revision 的 Contract 与 Preview。</p>
+      <div id="component-groups" class="catalog-loading">正在读取 canonical component catalog…</div>
+    </section>
+
+    <section class="section" id="composites">
+      <div class="section-head"><div><p class="eyebrow">STABLE ASSEMBLY</p><h2>Core Composite Components</h2></div></div>
+      <p class="section-copy">稳定、可直接实例化的跨组件结构。数据来自 <code>design-source/specs/core-composites.json</code>。</p>
+      <div id="composite-list" class="card-grid catalog-loading">正在读取 composite catalog…</div>
+      <p class="source-link"><a id="composite-preview" href="../../design-source/preview/core-composite-components.html">打开 Composite Interactive Preview ↗</a></p>
+    </section>
+
+    <section class="section" id="patterns">
+      <div class="section-head"><div><p class="eyebrow">TASK RULES</p><h2>Core UX Patterns</h2></div></div>
+      <p class="section-copy">Pattern 负责跨组件、跨状态、跨页面的任务规则；不计入 Core Component 数量。数据来自 <code>design-source/specs/core-patterns.json</code>。</p>
+      <div id="pattern-list" class="card-grid catalog-loading">正在读取 pattern catalog…</div>
+      <p class="source-link"><a id="pattern-preview" href="../../design-source/preview/core-ux-patterns.html">打开 Core UX Pattern Preview ↗</a></p>
+    </section>
+
+    <section class="section authority" id="authority">
+      <div class="section-head"><div><p class="eyebrow">SOURCE AUTHORITY</p><h2>谁说了算</h2></div></div>
+      <div class="authority-grid">
+        <article><strong>Canonical editable source</strong><code>design-source/</code><p>Token、Component、Composite、Pattern、Platform contract 的正式来源。</p></article>
+        <article><strong>Human Guide</strong><code>downstream consumer</code><p>负责解释、发现与导航；不能反向成为规范值来源。</p></article>
+        <article><strong>Preview / UI Kits / Penpot</strong><code>downstream evidence / consumer</code><p>用于可视化、同步与消费验证，不得覆盖 canonical contract。</p></article>
+      </div>
+      <div class="history-note">
+        <strong>Accepted V1 Human Guide</strong>
+        <p>V1 验收页面作为历史 evidence 独立保留，不再承担“当前 V2”入口职责。</p>
+        <a href="../../accepted/v1/">查看 Accepted V1 baseline ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Com Design Human Guide V2</span>
+    <span id="source-revision">source revision: local / unknown</span>
+  </footer>
+
+  <template id="load-error-template">
+    <div class="load-error">无法读取 canonical data。请确认页面通过仓库/Pages 服务器访问，并检查 <code>design-source/</code> 是否完整。</div>
+  </template>
+</body>
+</html>

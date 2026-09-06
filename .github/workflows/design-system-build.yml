@@ -10,6 +10,8 @@ on:
       - 'tooling/**'
       - 'penpot/**'
       - 'report/design-system-v1/**'
+      - 'report/design-system-v2/**'
+      - '.github/workflows/pages.yml'
       - 'package.json'
       - '.github/workflows/design-system-build.yml'
   pull_request:
@@ -20,6 +22,8 @@ on:
       - 'tooling/**'
       - 'penpot/**'
       - 'report/design-system-v1/**'
+      - 'report/design-system-v2/**'
+      - '.github/workflows/pages.yml'
       - 'package.json'
       - '.github/workflows/design-system-build.yml'
 
@@ -119,7 +123,8 @@ jobs:
             dist/mcp/data/mcp-manifest.json
             dist/mcp/data/tokens.json
             dist/smoke/four-platform.json
-            dist/human-guide/com-design-v2-current.js
+            dist/human-guide/current.json
+            dist/human-guide/index.html
             penpot/build/manifest.json
           if-no-files-found: error
           retention-days: 30

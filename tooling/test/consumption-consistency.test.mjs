@@ -18,6 +18,11 @@ function fixture() {
     path.join(root, 'report', 'design-system-v1'),
     { recursive: true },
   );
+  fs.cpSync(
+    path.join(repoRoot, 'report', 'design-system-v2'),
+    path.join(root, 'report', 'design-system-v2'),
+    { recursive: true },
+  );
   return root;
 }
 

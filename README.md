@@ -105,13 +105,21 @@ npm run governance:dry-run
 
 ## Human Guide 与历史证据
 
-当前 accepted human report：
+当前 Human Guide source shell：
+
+```text
+report/design-system-v2/
+```
+
+Pages 根入口由 canonical version 生成并指向 `/versions/<version>/`。组件、Composite 与 UX Pattern 目录从 `design-source/` 读取，不在 Human Guide 维护第二份 catalog。
+
+Accepted V1 human report：
 
 ```text
 report/design-system-v1/
 ```
 
-它是验收证据，不能被工程 build 删除或原地覆盖。历史报告和归档也不能成为未来构建的上游 source。
+V1 是验收证据，不能被工程 build 删除或原地覆盖；线上保留在 `/accepted/v1/`。Human Guide V2、历史报告和归档都不能成为未来构建的上游 source。
 
 ## 分支
 

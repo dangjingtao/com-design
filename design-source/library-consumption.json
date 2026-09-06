@@ -98,7 +98,9 @@
     "humanGuide": {
       "acceptedReport": "report/design-system-v1/",
       "acceptanceEvidence": true,
-      "upstreamAuthority": false
+      "upstreamAuthority": false,
+      "currentReport": "report/design-system-v2/",
+      "currentEntrypoint": "generated Pages / → /versions/<canonical-version>/"
     }
   },
   "previewPolicy": {
