@@ -17,12 +17,14 @@ export const HUMAN_GUIDE_LITERAL_ALLOWLIST=Object.freeze([
     file:'report/design-system-v2/styles.css',
     value:'840px',
     category:'responsive-boundary',
+    lineContains:'@media(max-width:840px){',
     reason:'Downstream Human Guide CSS media queries cannot consume custom properties; T012 still owns semantic viewport behavior.',
   },
   {
     file:'report/design-system-v2/styles.css',
     value:'520px',
     category:'responsive-boundary',
+    lineContains:'@media(max-width:520px){',
     reason:'Narrow Human Guide recomposition boundary only; it does not define a Core platform or viewport contract.',
   },
 ]);
@@ -43,11 +45,15 @@ function scanRawUnits(relativePath,text){
   const results=[];
   for(const match of text.matchAll(/(?<![\w-])(\d+(?:\.\d+)?(?:px|rem|em))\b/g)){
     const value=match[1];
-    const allowed=HUMAN_GUIDE_LITERAL_ALLOWLIST.find(entry=>entry.file===relativePath&&entry.value===value);
+    const line=lineNumber(text,match.index??0);
+    const lineText=text.split('\n')[line-1]??'';
+    const allowed=HUMAN_GUIDE_LITERAL_ALLOWLIST.find(
+      entry=>entry.file===relativePath&&entry.value===value&&lineText.includes(entry.lineContains),
+    );
     if(!allowed){
       results.push({
         file:relativePath,
-        line:lineNumber(text,match.index??0),
+        line,
         value,
         rule:'raw-length-literal',
       });
