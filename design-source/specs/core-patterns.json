@@ -9,8 +9,19 @@
       "name": "Status Composition",
       "cn": "状态组合",
       "intent": "Present a meaningful state with enough explanation and recovery context that users do not have to infer meaning from color or a badge alone.",
-      "components": ["Tag", "Alert", "Icon", "Text", "Button"],
-      "anatomy": ["state label", "optional explanation", "optional evidence/meta", "optional next or recovery action"],
+      "components": [
+        "Tag",
+        "Alert",
+        "Icon",
+        "Text",
+        "Button"
+      ],
+      "anatomy": [
+        "state label",
+        "optional explanation",
+        "optional evidence/meta",
+        "optional next or recovery action"
+      ],
       "rules": [
         "State text MUST be independently understandable without color.",
         "Use status color as reinforcement, not as the only carrier of meaning.",
@@ -29,19 +40,33 @@
       "name": "Search Pattern",
       "cn": "搜索",
       "intent": "Support focused retrieval while preserving a quiet content hierarchy before, during and after query entry.",
-      "components": ["Search Field", "Loading Indicator", "Empty State", "List Item"],
-      "anatomy": ["query input", "optional scope/context", "results or state feedback"],
+      "components": [
+        "Search Field",
+        "Loading Indicator",
+        "Empty State",
+        "List Item"
+      ],
+      "anatomy": [
+        "query input",
+        "optional scope/context",
+        "results or state feedback"
+      ],
       "rules": [
         "Search SHOULD begin with a single clear input before adding filters or advanced controls.",
         "Pending input and committed query MAY be distinct when the product benefits from explicit submission.",
         "Loading, zero-result and error states MUST be distinguishable.",
         "Returning from a result detail SHOULD preserve the user's query when the search task is still active.",
-        "Search affordances SHOULD use neutral surfaces; Brand color is reserved for focus, selection and meaningful action."
+        "Search affordances SHOULD use neutral surfaces; Brand color is reserved for focus, selection and meaningful action.",
+        "IME composition MUST remain pending input; committed query submission and debounce begin only after composition end.",
+        "Clear query MUST keep the search context active; Cancel/Back owns leaving or returning from the search context."
       ],
       "avoid": [
         "resetting query after every detail view",
         "using one generic empty state for loading, network error and zero result",
         "decorative brand-filled search containers"
+      ],
+      "workflowContractRefs": [
+        "com-design:mobile-search-filter:v2"
       ]
     },
     {
@@ -49,8 +74,23 @@
       "name": "Collection Filter",
       "cn": "集合筛选",
       "intent": "Filter a mobile collection without turning every condition into permanent chrome or losing the user's active constraints during navigation.",
-      "components": ["Search Field", "Button", "Bottom Sheet", "Tag", "Radio", "Checkbox", "List Item", "Filter Bar"],
-      "anatomy": ["optional keyword input", "filter trigger", "draft filter surface", "active condition summary", "result feedback"],
+      "components": [
+        "Search Field",
+        "Button",
+        "Bottom Sheet",
+        "Tag",
+        "Radio",
+        "Checkbox",
+        "List Item",
+        "Filter Bar"
+      ],
+      "anatomy": [
+        "optional keyword input",
+        "filter trigger",
+        "draft filter surface",
+        "active condition summary",
+        "result feedback"
+      ],
       "rules": [
         "The collection owner MUST remain the authoritative source of committed filter state.",
         "A sheet or dialog MAY keep local draft state until Apply is invoked.",
@@ -59,13 +99,19 @@
         "Inside the draft surface, Apply MAY be the single Primary action for that action group; Reset SHOULD use Tertiary or text treatment and MUST affect draft state before commitment.",
         "Dismissing the draft surface without Apply MUST NOT mutate committed filter state.",
         "Detail-return navigation SHOULD preserve committed filters while the collection task remains active.",
-        "Result count or meaningful result feedback SHOULD be exposed accessibly after filter changes."
+        "Result count or meaningful result feedback SHOULD be exposed accessibly after filter changes.",
+        "Quick filters represent collection conditions, not peer-view navigation, and MUST NOT be implemented as Tabs solely for visual convenience.",
+        "Reset defaults to draft-only and MUST NOT clear the committed search query; Apply is the commit boundary for draft-mode filtering.",
+        "Detail return SHOULD restore committed query, filters, sort, loaded data and scroll while the collection task remains active."
       ],
       "avoid": [
         "committing every tap immediately when users need to compare multiple conditions",
         "duplicating filter truth in both sheet-local and page state after confirmation",
         "painting the filter trigger, active conditions and footer actions with Brand fill simultaneously",
         "using a disabled Apply control as the only indication that nothing changed"
+      ],
+      "workflowContractRefs": [
+        "com-design:mobile-search-filter:v2"
       ]
     },
     {
@@ -73,8 +119,19 @@
       "name": "State to Action",
       "cn": "状态到动作",
       "intent": "Translate account, lifecycle, permission, eligibility or process state into one understandable current action instead of exposing raw state machinery to users.",
-      "components": ["Tag", "Alert", "Button", "List Item", "Empty State"],
-      "anatomy": ["current state", "reason or evidence when needed", "highest-priority available action", "optional recovery or secondary action"],
+      "components": [
+        "Tag",
+        "Alert",
+        "Button",
+        "List Item",
+        "Empty State"
+      ],
+      "anatomy": [
+        "current state",
+        "reason or evidence when needed",
+        "highest-priority available action",
+        "optional recovery or secondary action"
+      ],
       "rules": [
         "Determine available actions from authoritative product state before choosing visual hierarchy.",
         "A view SHOULD normally expose one highest-priority action for the user's current state.",
@@ -95,8 +152,19 @@
       "name": "Intent Continuity / Handoff",
       "cn": "意图连续与回流",
       "intent": "Preserve the user's original task when login, authorization, another app, a responsive web flow or another temporary interruption is required.",
-      "components": ["Button", "Alert", "Loading Indicator", "Dialog"],
-      "anatomy": ["origin intent", "interruption or handoff", "minimum context transfer", "result mapping", "return to task"],
+      "components": [
+        "Button",
+        "Alert",
+        "Loading Indicator",
+        "Dialog"
+      ],
+      "anatomy": [
+        "origin intent",
+        "interruption or handoff",
+        "minimum context transfer",
+        "result mapping",
+        "return to task"
+      ],
       "rules": [
         "The origin task and safe return destination SHOULD be preserved before interruption.",
         "External handoff MUST carry only the minimum context required to map the result back to the existing product entity.",
@@ -117,8 +185,20 @@
       "name": "Contextual Next Step",
       "cn": "上下文下一步",
       "intent": "Help users answer 'what should I do now?' inside a long-running workflow without turning the whole workflow into a dashboard of equally weighted actions.",
-      "components": ["Section", "List Item", "Progress Indicator", "Stepper", "Button", "Tag"],
-      "anatomy": ["active context identity", "current progress/state", "one next meaningful step", "optional secondary destinations"],
+      "components": [
+        "Section",
+        "List Item",
+        "Progress Indicator",
+        "Stepper",
+        "Button",
+        "Tag"
+      ],
+      "anatomy": [
+        "active context identity",
+        "current progress/state",
+        "one next meaningful step",
+        "optional secondary destinations"
+      ],
       "rules": [
         "The active entity or workflow context SHOULD remain visible or recoverable on deep screens.",
         "Progress and next action MUST come from authoritative workflow state rather than a duplicated dashboard status.",
