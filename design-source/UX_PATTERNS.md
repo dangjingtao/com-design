@@ -3,8 +3,8 @@
 > Status: Release Candidate / Core  
 > Scope: Company Mobile Core  
 > Canonical machine source: `specs/core-patterns.json`  
-> Pattern count: 6  
-> Core Component count remains: 33  
+> Pattern count: 7  
+> Core Component count: 34  
 > Core Composite Component count: 4
 
 Com Design 的 Pattern 层用于描述**多个 Core Component / Composite Component 如何共同解决一个重复出现的用户任务**。Pattern 不是一个固定视觉组件，也不允许把某个业务项目的状态枚举、页面名或领域词带回 Core。
@@ -158,3 +158,34 @@ Pattern 层继续服从 Com Design 的颜色剂量原则：
 - 不通过堆叠彩色容器来制造“丰富感”。
 
 详细机器契约以 `specs/core-patterns.json` 为准；稳定组合请同时读取 `COMPOSITE_COMPONENTS.md` 与 `specs/core-composites.json`。
+
+
+---
+
+## 7. Incremental Loading / Infinite List｜增量加载 / 无限列表
+
+用于长集合继续获取下一段数据。它统一的是状态、触发、错误恢复、continuation 与位置保持，不要求四端使用同一种滚动或虚拟化实现。
+
+核心状态：
+
+```text
+idle
+→ loading-initial
+→ ready
+→ loading-more
+→ appended / append-error
+→ exhausted
+```
+
+关键规则：
+
+- 自动 near-end 与手动 Load More / Retry 共用同一 continuation 语义；
+- append error 保留已有数据，并停止自动重试循环，等待显式 Retry / Load More；
+- continuation 对 UI 不透明，不绑定后端 page number / cursor 字段名；
+- duplicate / stale / out-of-order response 必须在 append 前 guard；
+- exhausted 后停止后续 continuation 请求；
+- detail return 恢复已加载数据、query/filter/sort、continuation 与 scroll position；
+- Pull-to-refresh 与 virtualization 是可组合但独立的能力；
+- WeChat Mini Program 必须明确 page 或 contained scroll owner，避免嵌套滚动与高频节点更新。
+
+Canonical contract：`specs/incremental-loading-v2.json`。
