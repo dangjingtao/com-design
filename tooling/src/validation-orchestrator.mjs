@@ -545,6 +545,7 @@ export function runRepositoryValidation(repoRoot) {
     if (!manifest) return { errors: ['canonical manifest is unavailable.'] };
     return validateReleaseGateTrace(manifest, {
       validationIds: checks.map((check) => check.id),
+      releaseGovernance: canonicalSources.releaseGovernance?.value ?? null,
     });
   }));
 
