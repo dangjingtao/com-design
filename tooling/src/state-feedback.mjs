@@ -95,14 +95,19 @@ export function validateStateFeedbackContract(
     if (!sameSet(variants, ['first-use','no-data','no-results'])) {
       errors.push('Empty State variants must be exactly first-use / no-data / no-results.');
     }
-    if (JSON.stringify(empty).includes('recoverable-error')) {
-      errors.push('Empty State must not retain recoverable-error semantics in the V2 contract.');
+    const representativeVariants = empty.representativeVariants ?? [];
+    if (
+      variants.includes('recoverable-error')
+      || representativeVariants.some((entry) => entry?.variant === 'recoverable-error')
+    ) {
+      errors.push('Empty State must not retain recoverable-error as an active V2 variant.');
     }
+    const activeTraitKeys = Object.keys(empty.traits ?? {});
     if (
       empty.semanticTypeCandidates?.includes('recovery-state')
-      || JSON.stringify(empty.structurePatterns ?? []).match(/danger|error/i)
+      || activeTraitKeys.some((key) => /^(?:error|danger)/i.test(key))
     ) {
-      errors.push('Empty State must remain absence-oriented and neutral, not an error/recovery surface.');
+      errors.push('Empty State active semantics must remain absence-oriented and neutral, not an error/recovery surface.');
     }
   }
 
