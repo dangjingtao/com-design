@@ -36,6 +36,14 @@ test('T028 responsive literal allowlist is narrow and documented',()=>{
   assert.ok(HUMAN_GUIDE_LITERAL_ALLOWLIST.every(item=>item.category==='responsive-boundary'&&item.reason.length>20));
 });
 
+test('T028 does not allow a responsive breakpoint literal outside its documented media-query line',()=>{
+  const root=fixture();
+  const cssPath=path.join(root,'report/design-system-v2/styles.css');
+  fs.appendFileSync(cssPath,'\n.bad-width { inline-size: 840px; }\n');
+  const result=validateHumanGuideTokenCompliance(root);
+  assert.ok(result.errors.some(error=>error.includes('raw-length-literal')&&error.includes('840px')));
+});
+
 test('T028 rejects raw shell colors',()=>{
   const root=fixture();
   const cssPath=path.join(root,'report/design-system-v2/styles.css');
