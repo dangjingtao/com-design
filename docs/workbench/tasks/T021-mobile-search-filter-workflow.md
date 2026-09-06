@@ -1,6 +1,6 @@
 # T021 · Mobile Search + Filter Workflow Contract
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: UX Pattern / Mobile / Collection
 - Owner: -
@@ -78,13 +78,13 @@ V2 已确认移动搜索与筛选是一条完整集合任务流：Search Field �
 
 ## Verification evidence
 
-- CI: Design System Build #261, run `34000865296` — success on `0a62b831de12759f026844587b71150c4bfa0eff`; 180/180 tests PASS; V2 validation 12 checks / 0 warnings; engineering build, Penpot build, accepted-report guard, governance dry-run and T017 deterministic hard-gate enforcement all PASS.
+- CI: Design System Build #263 — success on `1dde7d945c87102f519b49b5cf0f6289be267f4f`; full repository tests PASS, V2 validation 12 checks / 0 warnings, engineering build, Penpot build, accepted-report guard, governance dry-run and T017 deterministic hard-gate enforcement all PASS.
 - IME / draft tests: focused tests prove intermediate IME input cannot commit, composition-end enables commit, dismiss and Back cannot commit draft, Apply is the commit boundary, Reset stays draft-only, Clear preserves filters, open-draft query changes require explicit cancel/rebase strategy, and empty platform mapping hooks fail validation.
 - Restore-state evidence: reference reducer captures/restores committed query, committed filters, sort, loaded data and scroll position after detail return; query/filter/sort commits invalidate continuation. Canonical Model rejects an invalid T021 workflow before emission, and Agent Contract exposes the accepted workflow with source provenance.
 
 ## Review
 
 - Reviewer: Mira
-- Result: REVIEW
-- Conclusion: Construction and deterministic verification complete. Independent review already hardened Back-vs-filter dismissal and query-change-vs-open-draft behavior. CodeRabbit is still processing an earlier head and has not produced actionable findings on the hardened implementation yet.
-- Follow-up: Final review must confirm no path commits IME intermediate text or filter draft implicitly, quick-filter semantics cannot drift into Tabs, and restore/platform hooks stay downstream of T010/T012 rather than becoming platform-specific Core logic.
+- Result: PASS
+- Conclusion: Independent acceptance passed. Final substantive head before evidence-only PASS commits is `1dde7d945c87102f519b49b5cf0f6289be267f4f`; Design System Build #263 passed after the final state-machine hardening. Review specifically checked IME composition boundaries, draft/committed separation, Back behavior with an open Filter Surface, explicit cancel/rebase handling when query changes under an open draft, Clear-vs-Cancel semantics, quick-filter non-navigation semantics, detail-return restoration, and T010/T012 platform-boundary ownership. No remaining path was found that can implicitly commit IME intermediate text or filter draft, turn Quick Filter into Tabs, or promote platform event details into Core semantics. CodeRabbit remained on an earlier head and produced no actionable finding; final acceptance therefore proceeds by independent review under the project rule.
+- Follow-up: T022 may consume `CollectionQueryModel.continuation` and invalidation semantics for incremental loading, but must not reopen or redefine T021 query/filter ownership, IME, draft/apply, or restoration contracts.
