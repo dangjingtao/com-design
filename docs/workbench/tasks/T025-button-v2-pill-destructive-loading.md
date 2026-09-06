@@ -1,6 +1,6 @@
 # T025 · Button V2: Pill / Destructive / Loading
 
-- Status: DOING
+- Status: REVIEW
 - Target version: V2 first-stage
 - Impact: Component / Action
 - Owner: -
@@ -36,11 +36,11 @@ V2 已确认 Button 需要补三类能力：Pill/Capsule shape variant、正式 
 
 ## Acceptance
 
-- [ ] Pill 与 ordinary radius 可机器区分且视觉可辨。
-- [ ] Destructive 仅用于 destructive / irreversible action，不取代普通 Primary。
-- [ ] Loading 不导致控件宽高跳变或重复提交。
-- [ ] spinner-only 有可访问名称 / busy state。
-- [ ] preview / contract / tests 通过，Primary 稀缺规则未回归。
+- [x] Pill 与 ordinary radius 可机器区分且视觉可辨。
+- [x] Destructive 仅用于 destructive / irreversible action，不取代普通 Primary。
+- [x] Loading 不导致控件宽高跳变或重复提交。
+- [x] spinner-only 有可访问名称 / busy state。
+- [x] preview / contract / tests 通过，Primary 稀缺规则未回归。
 
 ## Risks / Dependencies
 
@@ -63,13 +63,14 @@ V2 已确认 Button 需要补三类能力：Pill/Capsule shape variant、正式 
 
 ## Verification evidence
 
-- CI:
-- Button state matrix:
-- Preview / visual evidence:
+- CI: Design System Build #316 — success on final substantive head `b58cf4d64b198f3a0eb4a1bb41fcb8c223c1d341`; 222/222 tests PASS, V2 validation 14 checks / 0 warnings, engineering build, Penpot build, accepted-report guard and T017 deterministic hard gate all PASS.
+- Button state matrix: hierarchy = Primary / Secondary / Tertiary; semantic = default / destructive; shape = standard / pill; size = compact / large; state = default / pressed / loading / disabled. Focused regressions reject destructive in hierarchy and reject Success / Warning semantic expansion.
+- Preview / visual evidence: standard vs pill uses the same 40px compact height; destructive semantic is demonstrated across Primary / Secondary / Tertiary; idle and spinner-label loading share an explicit locked width; spinner-only exposes `aria-busy` + accessible name; loading buttons suppress activation without the disabled attribute; destructive-loading preserves the resolved destructive treatment.
+- Cross-platform / downstream evidence: T018 representative four-platform smoke was updated to trace Button semantic/shape/loading invariants and passes; Canonical Model, Agent contract and Penpot all consume the new axes.
 
 ## Review
 
-- Reviewer:
-- Result: REVIEW / PASS / BLOCKED
-- Conclusion:
-- Follow-up:
+- Reviewer: Mira
+- Result: REVIEW
+- Conclusion: Construction and deterministic verification complete. Initial Build #310 exposed a valid stale T018 assumption that treated `destructive` as a fourth Button hierarchy; the smoke contract now follows the accepted V2 orthogonal model and re-verifies all four platforms. Independent review additionally formalized loading composition precedence, added actual Preview activation suppression, chose the existing high-contrast danger-text semantic for low-fill destructive actions, and preserved existing Button trait paths to avoid unnecessary consumer breakage. CodeRabbit produced no actionable review thread on the final substantive head; Codex review could not run because its repository review quota is exhausted.
+- Follow-up: Final acceptance should confirm Primary remains scarce, destructive stays semantic rather than hierarchical, loading remains busy/focusable rather than disabled, and Pill changes shape without weakening 40/48px size or platform hit-target contracts.
