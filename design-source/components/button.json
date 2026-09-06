@@ -4,27 +4,143 @@
   "name": "Button",
   "sourceKind": "structured-spec",
   "confidence": "high",
-  "semanticTypeCandidates": ["actions-forms", "action-trigger", "form-submit"],
+  "semanticTypeCandidates": [
+    "actions-forms",
+    "action-trigger",
+    "form-submit"
+  ],
   "variantDimensions": {
-    "hierarchy": ["primary", "secondary", "tertiary", "destructive"],
-    "size": ["compact", "large"],
-    "state": ["default", "pressed", "disabled"]
+    "hierarchy": [
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "semantic": [
+      "default",
+      "destructive"
+    ],
+    "shape": [
+      "standard",
+      "pill"
+    ],
+    "size": [
+      "compact",
+      "large"
+    ],
+    "state": [
+      "default",
+      "pressed",
+      "loading",
+      "disabled"
+    ]
   },
   "representativeVariants": [
-    { "hierarchy": "primary", "size": "compact", "state": "default", "label": "确认提交" },
-    { "hierarchy": "primary", "size": "compact", "state": "pressed", "label": "确认提交" },
-    { "hierarchy": "secondary", "size": "compact", "state": "default", "label": "次要操作" },
-    { "hierarchy": "tertiary", "size": "compact", "state": "default", "label": "文字按钮" },
-    { "hierarchy": "destructive", "size": "compact", "state": "default", "label": "删除" },
-    { "hierarchy": "primary", "size": "large", "state": "default", "label": "大号主按钮" },
-    { "hierarchy": "primary", "size": "compact", "state": "disabled", "label": "不可用" }
+    {
+      "hierarchy": "primary",
+      "semantic": "default",
+      "shape": "standard",
+      "size": "compact",
+      "state": "default",
+      "label": "确认提交"
+    },
+    {
+      "hierarchy": "primary",
+      "semantic": "default",
+      "shape": "pill",
+      "size": "compact",
+      "state": "default",
+      "label": "立即参与"
+    },
+    {
+      "hierarchy": "secondary",
+      "semantic": "default",
+      "shape": "standard",
+      "size": "compact",
+      "state": "default",
+      "label": "次要操作"
+    },
+    {
+      "hierarchy": "tertiary",
+      "semantic": "default",
+      "shape": "standard",
+      "size": "compact",
+      "state": "default",
+      "label": "文字按钮"
+    },
+    {
+      "hierarchy": "primary",
+      "semantic": "destructive",
+      "shape": "standard",
+      "size": "compact",
+      "state": "default",
+      "label": "永久删除"
+    },
+    {
+      "hierarchy": "tertiary",
+      "semantic": "destructive",
+      "shape": "standard",
+      "size": "compact",
+      "state": "default",
+      "label": "移除"
+    },
+    {
+      "hierarchy": "primary",
+      "semantic": "default",
+      "shape": "standard",
+      "size": "large",
+      "state": "default",
+      "label": "大号主按钮"
+    },
+    {
+      "hierarchy": "primary",
+      "semantic": "default",
+      "shape": "standard",
+      "size": "compact",
+      "state": "loading",
+      "loadingPresentation": "spinner-label",
+      "label": "提交中"
+    },
+    {
+      "hierarchy": "primary",
+      "semantic": "default",
+      "shape": "pill",
+      "size": "compact",
+      "state": "loading",
+      "loadingPresentation": "spinner-only",
+      "accessibleName": "正在提交"
+    },
+    {
+      "hierarchy": "primary",
+      "semantic": "destructive",
+      "shape": "standard",
+      "size": "compact",
+      "state": "loading",
+      "loadingPresentation": "spinner-label",
+      "label": "删除中"
+    },
+    {
+      "hierarchy": "primary",
+      "semantic": "default",
+      "shape": "standard",
+      "size": "compact",
+      "state": "disabled",
+      "label": "不可用"
+    }
   ],
-  "anatomy": ["container", "label", "leadingIcon?", "trailingIcon?"],
+  "anatomy": [
+    "container",
+    "content",
+    "spinner?",
+    "label?",
+    "leadingIcon?",
+    "trailingIcon?"
+  ],
   "traits": {
     "compactHeight": "40px",
     "largeHeight": "48px",
     "paddingHorizontal": "12px",
     "radius": "var(--radius-control)",
+    "pillRadius": "var(--radius-pill)",
     "font": "var(--type-label)",
     "primary": {
       "background": "var(--color-primary)",
@@ -44,31 +160,99 @@
     "destructive": {
       "background": "var(--color-destructive)",
       "color": "var(--color-on-primary)",
-      "pressedBackground": "var(--color-destructive-hover)"
+      "pressedBackground": "var(--color-destructive-hover)",
+      "secondaryForeground": "var(--color-danger-text)",
+      "tertiaryForeground": "var(--color-danger-text)"
     },
     "disabled": {
       "background": "var(--color-disabled)",
       "color": "var(--color-text-disabled)"
+    },
+    "spinner": {
+      "size": "16px",
+      "stroke": "2px",
+      "gap": "var(--space-8)"
     }
   },
   "structurePatterns": [
     "horizontal flex with 8px gap; label single-line; centered content",
+    "shape is independent: standard uses radius-control; pill uses radius-pill without changing 40/48px visual height",
+    "hierarchy (Primary/Secondary/Tertiary), semantic intent (default/destructive), shape (standard/pill), size, and state are separate axes",
+    "loading defaults to spinner + label; spinner-only is allowed only with an accessible name",
+    "loading state locks the entering control dimensions and suppresses repeat activation",
     "full-width in mobile forms (.block modifier stretches to 100%)",
-    "icon-only buttons keep square hit area ≥ size-control-height"
+    "icon-only or spinner-only buttons keep square visual geometry and the platform minimum hit target"
   ],
   "usageHints": [
     "Primary is a scarce hierarchy signal: normally one highest-priority primary action per view or action group",
     "Do not promote every available action to Primary; use Secondary for visible supporting actions and Tertiary for low-emphasis actions",
     "When Primary and supporting actions appear together, avoid multiple brand-filled buttons competing in the same visual region",
-    "Secondary uses a neutral surface by default so action importance is not confused with brand-color area",
-    "Destructive is reserved for irreversible actions and does not compete with Primary unless destruction is the current confirmed task",
+    "Destructive is a semantic intent, not a replacement for Primary/Secondary/Tertiary hierarchy",
+    "Use destructive only for destructive or irreversible actions; do not add Success/Warning button semantics without real usage evidence",
+    "Pill is a deliberate shape variant for compact action affordances, not a license to make every button capsule-shaped",
+    "Loading blocks duplicate activation, keeps dimensions stable, exposes busy semantics, and remains distinct from disabled",
     "Visual height differs from platform hit target (iOS 44 / Android 48)"
   ],
   "doNotInvent": [
     "no gradient or glow on primary (flat-first)",
     "no default shadow on button",
     "no accent-cyan primary color",
-    "no repeated primary-filled treatment merely because several actions are clickable"
+    "no repeated primary-filled treatment merely because several actions are clickable",
+    "no red-pill / green-pill mixed enums; compose semantic and shape axes instead",
+    "no Success or Warning Button semantics by default",
+    "no disabled attribute as a shortcut for loading semantics"
   ],
-  "unknowns": ["exact loading-spinner-in-button spacing not specified in RC2"]
+  "unknowns": [],
+  "intent": "Trigger one immediate action while keeping action hierarchy, semantic intent, shape, size, and interaction state independently selectable.",
+  "loadingContract": {
+    "suppressRepeatedActivation": true,
+    "preservesMeasuredDimensions": true,
+    "dimensionPolicy": "lock-entering-button-width-and-height-until-loading-exits",
+    "defaultPresentation": "spinner-label",
+    "allowedPresentations": [
+      "spinner-label",
+      "spinner-only"
+    ],
+    "spinnerLabelKeepsReadableProgressCopy": true,
+    "spinnerOnlyRequiresAccessibleName": true,
+    "busySemanticsRequired": true,
+    "loadingIsDisabled": false,
+    "focusableWhileBusy": true,
+    "compositionPolicy": {
+      "resolveBaseAppearanceFrom": [
+        "hierarchy",
+        "semantic",
+        "shape",
+        "size"
+      ],
+      "loadingOverrides": [
+        "content",
+        "activation",
+        "busy-semantics"
+      ],
+      "loadingPreserves": [
+        "hierarchy",
+        "semantic",
+        "shape",
+        "size"
+      ],
+      "disabledOverridesVisualTreatment": true,
+      "pressedAllowedWhileLoading": false
+    }
+  },
+  "interactionContract": [
+    "Primary remains a scarce hierarchy signal: normally one highest-priority Primary action per view or action group.",
+    "Semantic intent is orthogonal to hierarchy. Destructive does not become a fourth hierarchy level; destructive Primary/Secondary/Tertiary all remain possible when composition requires them.",
+    "Destructive is reserved for destructive or irreversible actions and must be reinforced by explicit action copy and surrounding confirmation/context when risk is material.",
+    "Entering loading suppresses repeated activation until loading exits, but loading is not the disabled state.",
+    "Loading preserves the measured button width and height captured on entry so spinner insertion or label changes do not cause layout jump.",
+    "Pressed feedback is subordinate to loading; a loading button does not continue press/toggle activation.",
+    "Loading resolves after hierarchy + semantic + shape + size: it replaces content/activation semantics but preserves the already-resolved hierarchy, destructive/default intent, shape, and size; disabled is the separate state that may replace visual treatment."
+  ],
+  "accessibilityContract": [
+    "Loading exposes busy semantics (for example aria-busy on Web or the platform equivalent) while remaining distinguishable from disabled.",
+    "Spinner + label keeps readable progress copy; spinner-only requires a persistent accessible name.",
+    "Destructive meaning is communicated by explicit action wording and context, never by danger color alone.",
+    "Pill shape does not reduce the platform touch target below the existing iOS 44 / Android 48 guidance."
+  ]
 }

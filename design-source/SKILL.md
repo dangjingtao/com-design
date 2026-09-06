@@ -43,8 +43,8 @@ For AI / Agent implementation, the order is: canonical contract → target platf
 
 - Brand primary `#5B5EF7` Electric Indigo drives the highest-priority actions, active navigation, focus, links and selected state; accent `#16BFD3` is reserved for local emphasis, progress, and data highlights rather than a fifth status color.
 - **Brand color is a scarce hierarchy signal, not a generic clickable-state fill.** Secondary actions use neutral subtle surfaces by default; informational containers also prefer neutral surfaces with brand-colored foreground, so repeated actions/status blocks do not turn the screen into one large brand tint.
-- Primary Button normally appears once per view or action group for the highest-priority next step. Visible supporting actions use Secondary; low-emphasis actions use Tertiary/text treatment. Do not create several brand-filled buttons merely because several actions are available.
-- Radius is `4 / 8 / 12 / 16` plus pill: controls use `8px`, containers use `12px`, overlays use `16px`; pill appears only on compact tags/chips.
+- Primary Button normally appears once per view or action group for the highest-priority next step. Visible supporting actions use Secondary; low-emphasis actions use Tertiary/text treatment. Destructive is a semantic intent layered onto hierarchy rather than a fourth hierarchy level. Loading blocks repeated activation, preserves dimensions, exposes busy semantics, and is not the same state as disabled.
+- Radius is `4 / 8 / 12 / 16` plus pill: controls use `8px`, containers use `12px`, overlays use `16px`; pill is reserved for explicit capsule variants such as Tag/Chip and Button Pill, not applied globally.
 - Compact-first density: default control height `40px`, large controls `48px`, bottom navigation `56px`, and spacing tokens are `0 / 2 / 4 / 6 / 8 / 12 / 16 / 20 / 24 / 32`.
 - Typography uses `system-ui, -apple-system, Segoe UI, Roboto, sans-serif`; scale runs from caption `12px/18px` to display `28px/36px`, with semibold (`600`) reserved for headings, title, and display.
 - Flat-first surfaces: components have no default shadow; only two elevations exist (`--com-elevation-floating`, `--com-elevation-modal`) for transient floating layers and modals.
@@ -87,7 +87,7 @@ Composite 视觉参考：`preview/core-composite-components.html`。
 
 | Slug | Name | Insight |
 |---|---|---|
-| button | Button | 主操作使用 Electric Indigo；Secondary 默认中性浅底；40px 紧凑，无阴影，Primary 作为稀缺层级信号 |
+| button | Button | hierarchy / semantic / shape / state 分轴；Primary 稀缺，Destructive 为动作语义，Pill 为显式形状，Loading 保持尺寸与 busy 可访问语义 |
 | input | Input | 描边输入框，字段级校验优先，readonly 与 disabled 语义分离 |
 | list-item | List Item | 信息行，48px 最小高，section-before-card；多行相关入口优先组合成 Grouped List，而不是每行套 Card |
 | card | Card | 默认无边框无阴影容器，边框仅在需要强化收纳时使用 |
