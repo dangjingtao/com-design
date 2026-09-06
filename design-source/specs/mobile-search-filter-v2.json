@@ -9,16 +9,33 @@
     "canonical": true
   },
   "scope": {
-    "platforms": ["ios", "android", "wechat-mini-program"],
+    "platforms": [
+      "ios",
+      "android",
+      "wechat-mini-program"
+    ],
     "addsCoreComponent": false,
     "addsCorePattern": false
   },
   "references": {
-    "components": ["search-field", "button", "tag", "bottom-sheet", "radio", "checkbox", "list-item"],
-    "composites": ["filterBar"],
-    "patterns": ["searchPattern", "collectionFilter"],
-    "platformEnvironment": "com-design:platform-environment:v1",
-    "layoutInputFoundation": "com-design:layout-input-foundation:v2"
+    "components": [
+      "search-field",
+      "button",
+      "tag",
+      "bottom-sheet",
+      "radio",
+      "checkbox",
+      "list-item"
+    ],
+    "composites": [
+      "filterBar"
+    ],
+    "patterns": [
+      "searchPattern",
+      "collectionFilter"
+    ],
+    "platformEnvironment": "sources.platformEnvironment",
+    "layoutInputFoundation": "sources.layoutInputFoundation"
   },
   "collectionQueryModel": {
     "authoritativeOwner": "collection-owner",
@@ -35,7 +52,11 @@
       "resetFiltersPreservesQuery": true,
       "sortIndependent": true
     },
-    "continuationInvalidation": ["committedQuery", "committedFilters", "sort"],
+    "continuationInvalidation": [
+      "committedQuery",
+      "committedFilters",
+      "sort"
+    ],
     "filterDraft": {
       "separateFromCommitted": true,
       "initializeFromCommittedOnOpen": true,
@@ -43,7 +64,10 @@
       "apply": "commit-draft-refresh-close",
       "reset": "reset-draft-only",
       "reopenSource": "current-committed-filters",
-      "externalQueryChangePolicy": ["cancel-draft", "rebase-draft"]
+      "externalQueryChangePolicy": [
+        "cancel-draft",
+        "rebase-draft"
+      ]
     }
   },
   "search": {
@@ -72,7 +96,11 @@
       },
       "explicit-submit": {
         "commitWhileComposing": false,
-        "commitTriggers": ["keyboard-search", "enter-confirm", "explicit-action"]
+        "commitTriggers": [
+          "keyboard-search",
+          "enter-confirm",
+          "explicit-action"
+        ]
       }
     },
     "semantics": {
@@ -90,7 +118,11 @@
     "quickFilter": {
       "semanticRole": "collection-condition",
       "peerViewNavigation": false,
-      "recommendedVisibleCount": [1, 2, 3],
+      "recommendedVisibleCount": [
+        1,
+        2,
+        3
+      ],
       "activeCueNonColorOnly": true
     },
     "advancedSurface": {
@@ -108,26 +140,52 @@
   },
   "restoration": {
     "detailReturn": "restore-active-collection-task",
-    "fields": ["committedQuery", "committedFilters", "sort", "loadedData", "scrollPosition"],
-    "invalidatedWhen": ["collection-identity-changed", "product-explicit-refresh", "restoration-expired"]
+    "fields": [
+      "committedQuery",
+      "committedFilters",
+      "sort",
+      "loadedData",
+      "scrollPosition"
+    ],
+    "invalidatedWhen": [
+      "collection-identity-changed",
+      "product-explicit-refresh",
+      "restoration-expired"
+    ]
   },
   "platformMappings": {
     "ios": {
-      "environmentInputs": ["keyboard-ime", "back", "safe-area", "accessibility"],
+      "environmentInputs": [
+        "keyboard-ime",
+        "back",
+        "safe-area",
+        "accessibility"
+      ],
       "searchSubmit": "map-platform-search-or-return-after-composition-end",
       "back": "preserve-task-continuity-and-map-system-gesture",
       "filterSurface": "bottom-sheet-or-full-screen-by-complexity",
       "stickyActionInset": "consume-safe-area"
     },
     "android": {
-      "environmentInputs": ["keyboard-ime", "back", "safe-area", "accessibility"],
+      "environmentInputs": [
+        "keyboard-ime",
+        "back",
+        "safe-area",
+        "accessibility"
+      ],
       "searchSubmit": "map-ime-search-or-enter-after-composition-end",
       "back": "dismiss-keyboard-before-exiting-search-context-when-platform-requires",
       "filterSurface": "bottom-sheet-or-full-screen-by-complexity",
       "stickyActionInset": "consume-gesture-safe-area"
     },
     "wechat-mini-program": {
-      "environmentInputs": ["keyboard-ime", "back", "safe-area", "host-chrome", "accessibility"],
+      "environmentInputs": [
+        "keyboard-ime",
+        "back",
+        "safe-area",
+        "host-chrome",
+        "accessibility"
+      ],
       "searchSubmit": "map-host-confirm-after-composition-end",
       "back": "distinguish-close-filter-surface-from-exit-page",
       "filterSurface": "bottom-sheet-or-page-by-complexity",
@@ -139,32 +197,57 @@
       "id": "ime-instant-search",
       "scenario": {
         "mode": "instant-debounced",
-        "events": ["composition-start", "input:ni", "input:你好", "composition-end:你好", "debounce"]
+        "events": [
+          "composition-start",
+          "input:ni",
+          "input:你好",
+          "composition-end:你好",
+          "debounce"
+        ]
       },
       "expected": {
-        "committedRequests": ["你好"],
+        "committedRequests": [
+          "你好"
+        ],
         "intermediateCompositionCommitted": false
       }
     },
     {
       "id": "filter-dismiss-does-not-commit",
       "scenario": {
-        "committedFilters": ["status:active"],
-        "actions": ["open-filter", "draft:add:region:gd", "dismiss"]
+        "committedFilters": [
+          "status:active"
+        ],
+        "actions": [
+          "open-filter",
+          "draft:add:region:gd",
+          "dismiss"
+        ]
       },
       "expected": {
-        "committedFilters": ["status:active"],
+        "committedFilters": [
+          "status:active"
+        ],
         "draftDiscarded": true
       }
     },
     {
       "id": "filter-apply-commits",
       "scenario": {
-        "committedFilters": ["status:active"],
-        "actions": ["open-filter", "draft:add:region:gd", "apply"]
+        "committedFilters": [
+          "status:active"
+        ],
+        "actions": [
+          "open-filter",
+          "draft:add:region:gd",
+          "apply"
+        ]
       },
       "expected": {
-        "committedFilters": ["status:active", "region:gd"],
+        "committedFilters": [
+          "status:active",
+          "region:gd"
+        ],
         "continuationReset": true,
         "surfaceClosed": true
       }
@@ -174,12 +257,21 @@
       "scenario": {
         "snapshot": {
           "committedQuery": "设计规范",
-          "committedFilters": ["type:doc"],
+          "committedFilters": [
+            "type:doc"
+          ],
           "sort": "relevance",
-          "loadedData": ["r1", "r2", "r3"],
+          "loadedData": [
+            "r1",
+            "r2",
+            "r3"
+          ],
           "scrollPosition": 640
         },
-        "actions": ["open-detail:r2", "back"]
+        "actions": [
+          "open-detail:r2",
+          "back"
+        ]
       },
       "expected": {
         "restoreSnapshot": true,
