@@ -12,6 +12,7 @@ export const CI_GATE_IDS = Object.freeze([
   'engineering-build',
   'penpot-build',
   'build-all',
+  'four-platform-smoke',
   'accepted-report-unchanged',
 ]);
 
@@ -67,15 +68,19 @@ function targetEvidence(repoRoot, definition, canonicalSourceHash) {
     ? readJsonIfPresent(repoRoot, definition.jsonPath)
     : null;
   const sourceRevision = payload ? definition.readSourceRevision(payload) : null;
+  const expectedRevision = definition.readExpectedRevision
+    ? definition.readExpectedRevision(repoRoot, canonicalSourceHash)
+    : canonicalSourceHash;
   const outputsPresent = outputs.every((entry) => entry.exists);
   const sourceMatches = Boolean(sourceRevision)
-    && Boolean(canonicalSourceHash)
-    && sourceRevision === canonicalSourceHash;
+    && Boolean(expectedRevision)
+    && sourceRevision === expectedRevision;
   return {
     id: definition.id,
     kind: definition.kind,
     status: outputsPresent && sourceMatches ? 'pass' : 'fail',
     sourceRevision,
+    expectedRevision,
     outputs,
   };
 }
@@ -127,6 +132,20 @@ const FORMAL_TARGETS = Object.freeze([
     readSourceRevision: (payload) => payload?.sourceHash ?? null,
   },
   {
+    id: 'mcp',
+    kind: 'ai-tool-consumer',
+    jsonPath: 'dist/mcp/data/mcp-manifest.json',
+    outputPaths: [
+      'dist/mcp/package.json',
+      'dist/mcp/server.mjs',
+      'dist/mcp/data/mcp-manifest.json',
+      'dist/mcp/data/tokens.json',
+    ],
+    readSourceRevision: (payload) => payload?.tokenSourceHash ?? null,
+    readExpectedRevision: (repoRoot) =>
+      readJsonIfPresent(repoRoot, 'dist/build-manifest.json')?.sourceHash ?? null,
+  },
+  {
     id: 'penpot',
     kind: 'design-consumer',
     jsonPath: 'penpot/build/manifest.json',
@@ -164,6 +183,7 @@ export function buildCiEvidence(repoRoot, {
     gateCheck('engineering-build', gateResults.engineeringBuild),
     gateCheck('penpot-build', gateResults.penpotBuild),
     gateCheck('build-all', gateResults.buildAll),
+    gateCheck('four-platform-smoke', gateResults.fourPlatformSmoke),
     gateCheck('accepted-report-unchanged', gateResults.acceptedReport),
   ];
 
@@ -186,7 +206,7 @@ export function buildCiEvidence(repoRoot, {
     checks.push(parityCheck(
       'source-parity:' + target.id,
       target.sourceRevision,
-      canonicalSourceHash,
+      target.expectedRevision,
     ));
   }
 
