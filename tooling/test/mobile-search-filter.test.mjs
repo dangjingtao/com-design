@@ -220,3 +220,84 @@ test('T021 rejects empty mobile platform presentation hooks', () => {
   assert.ok(errors.some((error) => error.includes('ios mapping must consume T010 environment input')));
   assert.ok(errors.some((error) => error.includes('ios mapping must declare searchSubmit behavior')));
 });
+
+
+test('T021 Back dismisses an open filter draft before leaving search context', () => {
+  let state = createCollectionQueryState({
+    committedQuery: '设计',
+    committedFilters: ['type:doc'],
+  });
+  ({ state } = reduceCollectionQueryState(state, { type: 'filter-open' }, contract));
+  ({ state } = reduceCollectionQueryState(
+    state,
+    { type: 'filter-set-draft', filters: ['type:doc', 'region:gd'] },
+    contract,
+  ));
+
+  const firstBack = reduceCollectionQueryState(state, { type: 'cancel-back' }, contract);
+  assert.equal(firstBack.state.filterSurfaceOpen, false);
+  assert.deepEqual(firstBack.state.committedFilters, ['type:doc']);
+  assert.ok(firstBack.effects.includes('filter-draft-discarded'));
+  assert.equal(firstBack.effects.includes('exit-or-return-search-context'), false);
+
+  const secondBack = reduceCollectionQueryState(firstBack.state, { type: 'cancel-back' }, contract);
+  assert.ok(secondBack.effects.includes('exit-or-return-search-context'));
+});
+
+test('T021 query commit while filter draft is open requires explicit cancel or rebase strategy', () => {
+  let state = createCollectionQueryState({
+    committedQuery: '旧词',
+    committedFilters: ['type:doc'],
+  });
+  ({ state } = reduceCollectionQueryState(state, { type: 'filter-open' }, contract));
+  ({ state } = reduceCollectionQueryState(
+    state,
+    { type: 'filter-set-draft', filters: ['type:doc', 'region:gd'] },
+    contract,
+  ));
+  ({ state } = reduceCollectionQueryState(state, { type: 'search-input', value: '新词' }, contract));
+
+  assert.throws(
+    () => reduceCollectionQueryState(state, { type: 'explicit-submit' }, contract),
+    /requires filterDraftStrategy/,
+  );
+
+  const cancelled = reduceCollectionQueryState(
+    state,
+    { type: 'explicit-submit', filterDraftStrategy: 'cancel-draft' },
+    contract,
+  );
+  assert.equal(cancelled.state.committedQuery, '新词');
+  assert.equal(cancelled.state.filterSurfaceOpen, false);
+  assert.deepEqual(cancelled.state.committedFilters, ['type:doc']);
+  assert.ok(cancelled.effects.includes('filter-draft-cancelled-for-query-change'));
+
+  const reopened = reduceCollectionQueryState(
+    reduceCollectionQueryState(cancelled.state, { type: 'filter-open' }, contract).state,
+    { type: 'search-input', value: '第三词' },
+    contract,
+  ).state;
+  const rebased = reduceCollectionQueryState(
+    reopened,
+    { type: 'explicit-submit', filterDraftStrategy: 'rebase-draft' },
+    contract,
+  );
+  assert.equal(rebased.state.committedQuery, '第三词');
+  assert.deepEqual(rebased.state.filterDraft, ['type:doc']);
+  assert.equal(rebased.state.filterSurfaceOpen, true);
+  assert.ok(rebased.effects.includes('filter-draft-rebased-for-query-change'));
+});
+
+test('T021 Clear cancels composition and preserves filter state', () => {
+  let state = createCollectionQueryState({
+    committedQuery: 'token',
+    committedFilters: ['type:doc'],
+  });
+  ({ state } = reduceCollectionQueryState(state, { type: 'composition-start' }, contract));
+  ({ state } = reduceCollectionQueryState(state, { type: 'search-input', value: 'to' }, contract));
+
+  const cleared = reduceCollectionQueryState(state, { type: 'clear-query' }, contract);
+  assert.equal(cleared.state.composing, false);
+  assert.equal(cleared.state.committedQuery, '');
+  assert.deepEqual(cleared.state.committedFilters, ['type:doc']);
+});
