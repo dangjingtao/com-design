@@ -15,6 +15,7 @@ const readJson = (relativePath) => JSON.parse(fs.readFileSync(path.join(repoRoot
 const contract = readJson('design-source/specs/mobile-search-filter-v2.json');
 const schema = readJson('design-source/schemas/mobile-search-filter-v2.schema.json');
 const componentIndex = readJson('design-source/components/index.json');
+const searchFieldContract = readJson('design-source/components/search-field.json');
 const composites = readJson('design-source/specs/core-composites.json');
 const patterns = readJson('design-source/specs/core-patterns.json');
 const platformEnvironment = readJson('design-source/specs/platform-environment-v1.json');
@@ -25,6 +26,7 @@ const validate = (candidate = contract, overrides = {}) => validateMobileSearchF
   schema,
   {
     componentIndex,
+    searchFieldContract,
     composites,
     patterns,
     platformEnvironment,
@@ -198,4 +200,23 @@ test('T021 patterns and Filter Bar must explicitly consume the shared workflow c
 
   const errors = validate(contract, { patterns: candidatePatterns });
   assert.ok(errors.some((error) => error.includes('collectionFilter must reference')));
+});
+
+
+test('T021 rejects Search Field that loses IME composing state', () => {
+  const candidateSearchField = structuredClone(searchFieldContract);
+  candidateSearchField.variantDimensions.state =
+    candidateSearchField.variantDimensions.state.filter((state) => state !== 'composing');
+
+  const errors = validate(contract, { searchFieldContract: candidateSearchField });
+  assert.ok(errors.some((error) => error.includes('Search Field must expose composing state')));
+});
+
+test('T021 rejects empty mobile platform presentation hooks', () => {
+  const candidate = structuredClone(contract);
+  candidate.platformMappings.ios = {};
+
+  const errors = validate(candidate);
+  assert.ok(errors.some((error) => error.includes('ios mapping must consume T010 environment input')));
+  assert.ok(errors.some((error) => error.includes('ios mapping must declare searchSubmit behavior')));
 });
