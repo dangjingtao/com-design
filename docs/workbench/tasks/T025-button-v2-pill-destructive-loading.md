@@ -1,6 +1,6 @@
 # T025 · Button V2: Pill / Destructive / Loading
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: Component / Action
 - Owner: -
@@ -63,7 +63,7 @@ V2 已确认 Button 需要补三类能力：Pill/Capsule shape variant、正式 
 
 ## Verification evidence
 
-- CI: Design System Build #316 — success on final substantive head `b58cf4d64b198f3a0eb4a1bb41fcb8c223c1d341`; 222/222 tests PASS, V2 validation 14 checks / 0 warnings, engineering build, Penpot build, accepted-report guard and T017 deterministic hard gate all PASS.
+- CI: Design System Build #318 — success on REVIEW-state head `7f16285bb55f1518a899090e06e3b800db2f5446`; 222/222 tests PASS, V2 validation 14 checks / 0 warnings, engineering build, Penpot build, accepted-report guard and T017 deterministic hard gate all PASS.
 - Button state matrix: hierarchy = Primary / Secondary / Tertiary; semantic = default / destructive; shape = standard / pill; size = compact / large; state = default / pressed / loading / disabled. Focused regressions reject destructive in hierarchy and reject Success / Warning semantic expansion.
 - Preview / visual evidence: standard vs pill uses the same 40px compact height; destructive semantic is demonstrated across Primary / Secondary / Tertiary; idle and spinner-label loading share an explicit locked width; spinner-only exposes `aria-busy` + accessible name; loading buttons suppress activation without the disabled attribute; destructive-loading preserves the resolved destructive treatment.
 - Cross-platform / downstream evidence: T018 representative four-platform smoke was updated to trace Button semantic/shape/loading invariants and passes; Canonical Model, Agent contract and Penpot all consume the new axes.
@@ -71,6 +71,6 @@ V2 已确认 Button 需要补三类能力：Pill/Capsule shape variant、正式 
 ## Review
 
 - Reviewer: Mira
-- Result: REVIEW
-- Conclusion: Construction and deterministic verification complete. Initial Build #310 exposed a valid stale T018 assumption that treated `destructive` as a fourth Button hierarchy; the smoke contract now follows the accepted V2 orthogonal model and re-verifies all four platforms. Independent review additionally formalized loading composition precedence, added actual Preview activation suppression, chose the existing high-contrast danger-text semantic for low-fill destructive actions, and preserved existing Button trait paths to avoid unnecessary consumer breakage. CodeRabbit produced no actionable review thread on the final substantive head; Codex review could not run because its repository review quota is exhausted.
-- Follow-up: Final acceptance should confirm Primary remains scarce, destructive stays semantic rather than hierarchical, loading remains busy/focusable rather than disabled, and Pill changes shape without weakening 40/48px size or platform hit-target contracts.
+- Result: PASS
+- Conclusion: Final acceptance passed. Button V2 now has orthogonal hierarchy / semantic / shape / size / state axes: Primary remains a scarce hierarchy signal; destructive is explicit semantic intent and composes with Primary / Secondary / Tertiary instead of replacing them; Success / Warning were not expanded without evidence. Loading is a busy, focusable state that suppresses repeated activation, locks entering dimensions, preserves resolved hierarchy/semantic/shape/size, supports spinner + label by default and spinner-only only with an accessible name, and remains distinct from disabled. Pill is an explicit shape variant using radius-pill while preserving the existing 40 / 48px visual size and platform hit-target guidance. Existing Button trait paths were preserved where possible to avoid unnecessary machine-consumer breakage. T018 four-platform smoke now traces these authoritative Button axes and passes. CodeRabbit produced no actionable review thread on the accepted head; Codex repository review was unavailable because its review quota is exhausted, so Mira completed independent final review.
+- Follow-up: T026 may consume T025 as the final Button V2 contract. The existing generated-`components.css` extractor gap remains an integration concern and must not be hidden by hand-editing generated output.
