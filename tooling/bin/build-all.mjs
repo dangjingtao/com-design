@@ -18,6 +18,7 @@ run('Check aggregated component CSS parity', 'tooling/bin/extract-components-css
 run('Validate source', 'tooling/bin/validate.mjs');
 run('Build engineering adapters', 'tooling/bin/build.mjs');
 run('Build Penpot manifest', 'penpot/bin/build.mjs');
+run('Build Human Guide current facts overlay', 'tooling/bin/human-guide-overlay.mjs');
 
 console.log('\nHuman acceptance reports were not regenerated or overwritten.');
 console.log('A versioned human-doc builder will be added separately under the retention contract.');
