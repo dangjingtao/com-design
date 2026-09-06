@@ -1,9 +1,9 @@
 {
   "$metadata": {
-    "name": "Com Design Mobile",
+    "name": "Com Design",
     "version": "1.0.0-rc.2",
     "status": "release-candidate",
-    "scope": "company-mobile-core",
+    "scope": "company-cross-platform-core",
     "canonicalEntrypoint": true
   },
   "manifestContract": {
@@ -400,7 +400,8 @@
           "kind": "validation",
           "ids": [
             "consumption-consistency",
-            "component-css-parity"
+            "component-css-parity",
+            "human-guide-current-facts"
           ]
         },
         {
