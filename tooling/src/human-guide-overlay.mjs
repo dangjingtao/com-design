@@ -25,7 +25,9 @@ export function buildHumanGuideCurrentFacts(repoRoot){
 
 export function buildHumanGuideOverlay(repoRoot){
   const facts=buildHumanGuideCurrentFacts(repoRoot);
+  const currentFactsLabel='V2 current facts · '+facts.version+' · '+facts.coreComponents+' Core Components · '+facts.coreCompositeComponents+' Core Composite Components · '+facts.corePatterns+' Core UX Patterns · canonical: '+facts.canonicalManifest;
   return `(()=>{
+const currentFactsLabel=${JSON.stringify('${PLACEHOLDER}')};
 const facts=${JSON.stringify(facts)};
 function applyCurrentFacts(){
   document.title='Com Design · V2 Current Facts + Accepted V1 Human Guide';
@@ -75,7 +77,7 @@ function applyCurrentFacts(){
     if(main) main.insertBefore(banner,main.firstChild);
     else document.body.insertBefore(banner,document.body.firstChild);
   }
-  banner.textContent='V2 current facts · '+facts.version+' · '+facts.coreComponents+' Core Components · '+facts.coreCompositeComponents+' Core Composite Components · '+facts.corePatterns+' Core UX Patterns · canonical: '+facts.canonicalManifest+'。下方主体为保留的 V1 accepted Human Guide 基线，不代表当前 catalog 数量。';
+  banner.textContent=currentFactsLabel+'。下方主体为保留的 V1 accepted Human Guide 基线，不代表当前 catalog 数量。';
 }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',applyCurrentFacts,{once:true});
 else applyCurrentFacts();
