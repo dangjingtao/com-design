@@ -34,6 +34,14 @@ test('T014 exposes canonical implementation catalogs for a validated target cont
     contract.catalogs.workflows.mobileSearchFilter.contract.search.ime.commitWhileComposing,
     false,
   );
+  assert.equal(
+    contract.catalogs.workflows.incrementalLoading.id,
+    'com-design:incremental-loading:v2',
+  );
+  assert.equal(
+    contract.catalogs.workflows.incrementalLoading.contract.appendPolicy.retainExistingDataOnError,
+    true,
+  );
   assert.ok(contract.catalogs.motion?.intents?.length >= 7);
   assert.ok(contract.catalogs.platformAdapters.length >= 4);
   assert.ok(contract.catalogs.registeredEngineeringOutputs.some((entry) => entry.id === 'web.tailwind'));
