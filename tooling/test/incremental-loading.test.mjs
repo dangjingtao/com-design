@@ -265,3 +265,42 @@ test('T022 rejects empty Web or native platform trigger mappings', () => {
   const iosErrors=validate(iosCandidate);
   assert.ok(iosErrors.some((error)=>error.includes('ios mapping must define guarded near-end')));
 });
+
+
+test('T022 append-error blocks automatic near-end loops until explicit manual retry', () => {
+  let state=createIncrementalLoadingState({
+    items:[{key:'a'}],
+    continuation:'opaque:c1',
+  });
+  const requested=requestMore(state,'r1','near-end');
+  const failed=reduceIncrementalLoadingState(
+    requested.state,
+    {type:'append-error',requestId:'r1',generation:requested.request.generation},
+    contract,
+  );
+
+  const automatic=reduceIncrementalLoadingState(
+    failed.state,
+    {type:'request-more',requestId:'r2',trigger:'near-end'},
+    contract,
+  );
+  assert.equal(automatic.request,undefined);
+  assert.equal(automatic.state.phase,'append-error');
+  assert.ok(automatic.effects.includes('request-suppressed-append-error-auto'));
+
+  const manual=reduceIncrementalLoadingState(
+    failed.state,
+    {type:'request-more',requestId:'r3',trigger:'manual'},
+    contract,
+  );
+  assert.equal(manual.state.phase,'loading-more');
+  assert.deepEqual(manual.request.continuation,'opaque:c1');
+
+  const retry=reduceIncrementalLoadingState(
+    failed.state,
+    {type:'retry-more',requestId:'r4'},
+    contract,
+  );
+  assert.equal(retry.state.phase,'loading-more');
+  assert.deepEqual(retry.request.continuation,'opaque:c1');
+});
