@@ -59,7 +59,7 @@ export function createMcpManifest(repoRoot, model) {
   return {
     schemaVersion: 1,
     name: 'com-design-mcp',
-    designSystem: 'Com Design Mobile',
+    designSystem: 'Com Design',
     version: packageJson.version,
     transport: 'stdio',
     source: 'design-source/',
@@ -117,7 +117,7 @@ export function createMcpPackageJson(version) {
     version,
     private: true,
     type: 'module',
-    description: 'Generated local MCP server for Com Design Mobile',
+    description: 'Generated local MCP server for Com Design',
     engines: { node: '>=18' },
     scripts: { start: 'node server.mjs' },
     dependencies: {
