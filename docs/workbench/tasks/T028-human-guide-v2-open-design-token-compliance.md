@@ -1,6 +1,6 @@
 # T028 · Human Guide V2 Open Design Visual Refresh + Token Compliance
 
-- Status: TODO
+- Status: DOING
 - Target version: V2 documentation follow-up
 - Impact: Human UI / Visual System / Token Compliance
 - Owner: -
