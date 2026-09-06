@@ -4,15 +4,52 @@
   "name": "Timeline",
   "sourceKind": "structured-spec",
   "confidence": "high",
-  "semanticTypeCandidates": ["feedback-overlay", "chronological-history", "event-log"],
-  "variantDimensions": { "state": ["default", "success", "warning", "danger", "info"] },
-  "representativeVariants": [
-    { "title": "审批通过", "timestamp": "今天 14:32", "status": "success" },
-    { "title": "提交审批", "timestamp": "今天 10:05", "status": "default" },
-    { "title": "材料待补充", "timestamp": "昨天 16:48", "status": "warning" },
-    { "title": "驳回", "timestamp": "昨天 09:20", "status": "danger" }
+  "semanticTypeCandidates": [
+    "feedback-overlay",
+    "chronological-history",
+    "event-log"
   ],
-  "anatomy": ["container", "event", "node", "connector", "timestamp?", "title", "supportingContent?", "status?"],
+  "variantDimensions": {
+    "state": [
+      "default",
+      "success",
+      "warning",
+      "danger",
+      "info"
+    ]
+  },
+  "representativeVariants": [
+    {
+      "title": "审批通过",
+      "timestamp": "今天 14:32",
+      "status": "success"
+    },
+    {
+      "title": "提交审批",
+      "timestamp": "今天 10:05",
+      "status": "default"
+    },
+    {
+      "title": "材料待补充",
+      "timestamp": "昨天 16:48",
+      "status": "warning"
+    },
+    {
+      "title": "驳回",
+      "timestamp": "昨天 09:20",
+      "status": "danger"
+    }
+  ],
+  "anatomy": [
+    "container",
+    "event",
+    "node",
+    "connector",
+    "timestamp?",
+    "title",
+    "supportingContent?",
+    "status?"
+  ],
   "traits": {
     "nodeSize": "10px",
     "connectorThickness": "2px",
@@ -28,20 +65,32 @@
     "warningNode": "var(--color-warning)",
     "dangerNode": "var(--color-danger)",
     "infoNode": "var(--color-info)",
-    "gap": "var(--space-12)"
+    "gap": "var(--space-12)",
+    "nodeTopOffset": "6px",
+    "connectorOwnership": "current-event-to-next-event",
+    "eventSpacing": "var(--space-12)"
   },
   "structurePatterns": [
-    "vertical list of events; each event has a 10px node on the left connected by a 2px subtle vertical line",
+    "vertical list of events; every non-final current event owns the connector from its node toward the next event node",
+    "event spacing is part of the current event block so the connector remains continuous through variable content height and inter-event spacing",
     "content to the right: optional timestamp caption, title (body), optional supporting text (body-small)",
-    "node color carries status only when the event actually has status meaning",
-    "the last event's connector fades or is omitted"
+    "node stays aligned near the timestamp / first content line even when supporting text wraps",
+    "node color carries status only when the event actually has status meaning; text and chronology remain readable without color",
+    "the final event owns no outgoing connector and terminates the rail cleanly",
+    "Timeline does not require a Card container"
   ],
   "usageHints": [
     "chronological order must be explicit (newest first or oldest first, labeled if needed)",
     "group long histories by meaningful date or phase boundaries",
     "timeline records event history; it does not replace a task Stepper",
-    "status is never conveyed by color alone (icon shape + text)"
+    "status is never conveyed by color alone (readable event text remains authoritative)",
+    "connector layout must follow real event height; do not derive rail length from a fixed number of text lines"
   ],
-  "doNotInvent": ["no horizontal timeline in V1", "no oversized icons replacing the 10px node"],
+  "doNotInvent": [
+    "no horizontal timeline in V1",
+    "no oversized icons replacing the 10px node",
+    "no connector owned by the following event",
+    "no required Card wrapper"
+  ],
   "unknowns": []
 }
