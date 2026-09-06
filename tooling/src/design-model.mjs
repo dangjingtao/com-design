@@ -200,12 +200,19 @@ function validateRequiredInputs(repoRoot, sourceIntegrity, manifest) {
 
   const mobileSearchFilter = requireCanonicalSource(sourceIntegrity, 'mobileSearchFilterWorkflow').value;
   const mobileSearchFilterSchema = requireCanonicalSource(sourceIntegrity, 'mobileSearchFilterSchema').value;
+  const componentIndex = requireCanonicalSource(sourceIntegrity, 'componentIndex').value;
+  const searchFieldEntry = componentIndex.components?.find((entry) => entry.slug === 'search-field');
+  let searchFieldContract = null;
+  if (searchFieldEntry?.contract) {
+    searchFieldContract = readJson(path.join(repoRoot, 'design-source', searchFieldEntry.contract));
+  }
   errors.push(
     ...validateMobileSearchFilterWorkflowContract(
       mobileSearchFilter,
       mobileSearchFilterSchema,
       {
-        componentIndex: requireCanonicalSource(sourceIntegrity, 'componentIndex').value,
+        componentIndex,
+        searchFieldContract,
         composites: requireCanonicalSource(sourceIntegrity, 'coreComposites').value,
         patterns: requireCanonicalSource(sourceIntegrity, 'corePatterns').value,
         platformEnvironment,
