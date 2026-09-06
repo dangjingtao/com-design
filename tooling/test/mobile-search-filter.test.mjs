@@ -1,0 +1,303 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import test from 'node:test';
+import {
+  createCollectionQueryState,
+  reduceCollectionQueryState,
+  validateMobileSearchFilterWorkflowContract,
+} from '../src/mobile-search-filter.mjs';
+
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+const readJson = (relativePath) => JSON.parse(fs.readFileSync(path.join(repoRoot, relativePath), 'utf8'));
+
+const contract = readJson('design-source/specs/mobile-search-filter-v2.json');
+const schema = readJson('design-source/schemas/mobile-search-filter-v2.schema.json');
+const componentIndex = readJson('design-source/components/index.json');
+const searchFieldContract = readJson('design-source/components/search-field.json');
+const composites = readJson('design-source/specs/core-composites.json');
+const patterns = readJson('design-source/specs/core-patterns.json');
+const platformEnvironment = readJson('design-source/specs/platform-environment-v1.json');
+const layoutInputFoundation = readJson('design-source/specs/layout-input-foundation-v2.json');
+
+const validate = (candidate = contract, overrides = {}) => validateMobileSearchFilterWorkflowContract(
+  candidate,
+  schema,
+  {
+    componentIndex,
+    searchFieldContract,
+    composites,
+    patterns,
+    platformEnvironment,
+    layoutInputFoundation,
+    ...overrides,
+  },
+);
+
+test('T021 canonical workflow validates against accepted Components, Patterns and platform foundations', () => {
+  assert.deepEqual(validate(), []);
+  assert.deepEqual(contract.scope.platforms, ['ios', 'android', 'wechat-mini-program']);
+  assert.equal(contract.scope.addsCoreComponent, false);
+  assert.equal(contract.scope.addsCorePattern, false);
+});
+
+test('T021 IME composition never commits intermediate query text', () => {
+  let state = createCollectionQueryState({
+    committedQuery: '',
+    committedFilters: ['type:doc'],
+    continuation: 'page-2',
+  });
+
+  ({ state } = reduceCollectionQueryState(state, { type: 'composition-start' }, contract));
+  ({ state } = reduceCollectionQueryState(state, { type: 'search-input', value: 'ni' }, contract));
+  let result = reduceCollectionQueryState(state, { type: 'debounce-commit' }, contract);
+  state = result.state;
+
+  assert.equal(state.pendingQuery, 'ni');
+  assert.equal(state.committedQuery, '');
+  assert.equal(state.continuation, 'page-2');
+  assert.ok(result.effects.includes('commit-suppressed-during-composition'));
+
+  ({ state } = reduceCollectionQueryState(state, { type: 'composition-end', value: '你好' }, contract));
+  result = reduceCollectionQueryState(state, { type: 'debounce-commit' }, contract);
+  assert.equal(result.state.committedQuery, '你好');
+  assert.equal(result.state.continuation, null);
+  assert.ok(result.effects.includes('refresh-collection'));
+});
+
+test('T021 filter dismiss discards draft while Apply is the only commit boundary', () => {
+  let state = createCollectionQueryState({
+    committedQuery: '设计',
+    committedFilters: ['status:active'],
+    continuation: 'cursor-2',
+  });
+
+  ({ state } = reduceCollectionQueryState(state, { type: 'filter-open' }, contract));
+  ({ state } = reduceCollectionQueryState(
+    state,
+    { type: 'filter-set-draft', filters: ['status:active', 'region:gd'] },
+    contract,
+  ));
+  ({ state } = reduceCollectionQueryState(state, { type: 'filter-dismiss' }, contract));
+
+  assert.deepEqual(state.committedFilters, ['status:active']);
+  assert.equal(state.committedQuery, '设计');
+  assert.equal(state.continuation, 'cursor-2');
+
+  ({ state } = reduceCollectionQueryState(state, { type: 'filter-open' }, contract));
+  ({ state } = reduceCollectionQueryState(
+    state,
+    { type: 'filter-set-draft', filters: ['status:active', 'region:gd'] },
+    contract,
+  ));
+  const applied = reduceCollectionQueryState(state, { type: 'filter-apply' }, contract);
+
+  assert.deepEqual(applied.state.committedFilters, ['status:active', 'region:gd']);
+  assert.equal(applied.state.committedQuery, '设计');
+  assert.equal(applied.state.continuation, null);
+  assert.ok(applied.effects.includes('filters-committed'));
+});
+
+test('T021 Reset changes draft only and Clear query preserves filters', () => {
+  let state = createCollectionQueryState({
+    committedQuery: 'token',
+    committedFilters: ['type:doc'],
+  });
+
+  ({ state } = reduceCollectionQueryState(state, { type: 'filter-open' }, contract));
+  ({ state } = reduceCollectionQueryState(
+    state,
+    { type: 'filter-reset-draft', defaultFilters: [] },
+    contract,
+  ));
+
+  assert.deepEqual(state.committedFilters, ['type:doc']);
+  assert.equal(state.committedQuery, 'token');
+
+  ({ state } = reduceCollectionQueryState(state, { type: 'filter-dismiss' }, contract));
+  const cleared = reduceCollectionQueryState(state, { type: 'clear-query' }, contract);
+
+  assert.equal(cleared.state.committedQuery, '');
+  assert.deepEqual(cleared.state.committedFilters, ['type:doc']);
+  assert.ok(cleared.effects.includes('search-context-preserved'));
+});
+
+test('T021 Clear query and Cancel/Back remain distinct semantics', () => {
+  const initial = createCollectionQueryState({
+    committedQuery: 'Mira',
+    committedFilters: ['kind:repo'],
+  });
+  const cleared = reduceCollectionQueryState(initial, { type: 'clear-query' }, contract);
+  const backed = reduceCollectionQueryState(initial, { type: 'cancel-back' }, contract);
+
+  assert.notDeepEqual(cleared.state, backed.state);
+  assert.ok(cleared.effects.includes('query-cleared'));
+  assert.ok(backed.effects.includes('exit-or-return-search-context'));
+});
+
+test('T021 detail return restores query filters sort loaded data and scroll', () => {
+  let state = createCollectionQueryState({
+    committedQuery: '设计规范',
+    committedFilters: ['type:doc'],
+    sort: 'relevance',
+  });
+
+  ({ state } = reduceCollectionQueryState(
+    state,
+    { type: 'capture-restoration', loadedData: ['r1', 'r2', 'r3'], scrollPosition: 640 },
+    contract,
+  ));
+
+  state.committedQuery = 'mutated';
+  state.committedFilters = [];
+  state.sort = 'newest';
+
+  const restored = reduceCollectionQueryState(state, { type: 'restore-detail-return' }, contract);
+  assert.equal(restored.state.committedQuery, '设计规范');
+  assert.deepEqual(restored.state.committedFilters, ['type:doc']);
+  assert.equal(restored.state.sort, 'relevance');
+  assert.deepEqual(restored.restoration.loadedData, ['r1', 'r2', 'r3']);
+  assert.equal(restored.restoration.scrollPosition, 640);
+});
+
+test('T021 quick filter cannot become Tabs/peer-view navigation', () => {
+  const candidate = structuredClone(contract);
+  candidate.filter.quickFilter.peerViewNavigation = true;
+  candidate.filter.quickFilter.semanticRole = 'peer-view-navigation';
+
+  const errors = validate(candidate);
+  assert.ok(errors.some((error) => error.includes('quick filter')));
+});
+
+test('T021 rejects filter dismissal that commits draft', () => {
+  const candidate = structuredClone(contract);
+  candidate.filter.advancedSurface.dismissCommits = true;
+
+  const errors = validate(candidate);
+  assert.ok(errors.some((error) => error.includes('dismiss must not commit')));
+});
+
+test('T021 rejects Reset semantics that clear the search query', () => {
+  const candidate = structuredClone(contract);
+  candidate.filter.advancedSurface.resetClearsQuery = true;
+
+  const errors = validate(candidate);
+  assert.ok(errors.some((error) => error.includes('must not clear the search query')));
+});
+
+test('T021 requires all three mobile platform mappings to be backed by T010 environment evidence', () => {
+  const candidate = structuredClone(contract);
+  delete candidate.platformMappings.android;
+
+  const errors = validate(candidate);
+  assert.ok(errors.some((error) => error.includes('platformMappings.android') || error.includes('missing platform mapping: android')));
+});
+
+test('T021 patterns and Filter Bar must explicitly consume the shared workflow contract', () => {
+  const candidatePatterns = structuredClone(patterns);
+  candidatePatterns.patterns.find((entry) => entry.id === 'collectionFilter').workflowContractRefs = [];
+
+  const errors = validate(contract, { patterns: candidatePatterns });
+  assert.ok(errors.some((error) => error.includes('collectionFilter must reference')));
+});
+
+
+test('T021 rejects Search Field that loses IME composing state', () => {
+  const candidateSearchField = structuredClone(searchFieldContract);
+  candidateSearchField.variantDimensions.state =
+    candidateSearchField.variantDimensions.state.filter((state) => state !== 'composing');
+
+  const errors = validate(contract, { searchFieldContract: candidateSearchField });
+  assert.ok(errors.some((error) => error.includes('Search Field must expose composing state')));
+});
+
+test('T021 rejects empty mobile platform presentation hooks', () => {
+  const candidate = structuredClone(contract);
+  candidate.platformMappings.ios = {};
+
+  const errors = validate(candidate);
+  assert.ok(errors.some((error) => error.includes('ios mapping must consume T010 environment input')));
+  assert.ok(errors.some((error) => error.includes('ios mapping must declare searchSubmit behavior')));
+});
+
+
+test('T021 Back dismisses an open filter draft before leaving search context', () => {
+  let state = createCollectionQueryState({
+    committedQuery: '设计',
+    committedFilters: ['type:doc'],
+  });
+  ({ state } = reduceCollectionQueryState(state, { type: 'filter-open' }, contract));
+  ({ state } = reduceCollectionQueryState(
+    state,
+    { type: 'filter-set-draft', filters: ['type:doc', 'region:gd'] },
+    contract,
+  ));
+
+  const firstBack = reduceCollectionQueryState(state, { type: 'cancel-back' }, contract);
+  assert.equal(firstBack.state.filterSurfaceOpen, false);
+  assert.deepEqual(firstBack.state.committedFilters, ['type:doc']);
+  assert.ok(firstBack.effects.includes('filter-draft-discarded'));
+  assert.equal(firstBack.effects.includes('exit-or-return-search-context'), false);
+
+  const secondBack = reduceCollectionQueryState(firstBack.state, { type: 'cancel-back' }, contract);
+  assert.ok(secondBack.effects.includes('exit-or-return-search-context'));
+});
+
+test('T021 query commit while filter draft is open requires explicit cancel or rebase strategy', () => {
+  let state = createCollectionQueryState({
+    committedQuery: '旧词',
+    committedFilters: ['type:doc'],
+  });
+  ({ state } = reduceCollectionQueryState(state, { type: 'filter-open' }, contract));
+  ({ state } = reduceCollectionQueryState(
+    state,
+    { type: 'filter-set-draft', filters: ['type:doc', 'region:gd'] },
+    contract,
+  ));
+  ({ state } = reduceCollectionQueryState(state, { type: 'search-input', value: '新词' }, contract));
+
+  assert.throws(
+    () => reduceCollectionQueryState(state, { type: 'explicit-submit' }, contract),
+    /requires filterDraftStrategy/,
+  );
+
+  const cancelled = reduceCollectionQueryState(
+    state,
+    { type: 'explicit-submit', filterDraftStrategy: 'cancel-draft' },
+    contract,
+  );
+  assert.equal(cancelled.state.committedQuery, '新词');
+  assert.equal(cancelled.state.filterSurfaceOpen, false);
+  assert.deepEqual(cancelled.state.committedFilters, ['type:doc']);
+  assert.ok(cancelled.effects.includes('filter-draft-cancelled-for-query-change'));
+
+  const reopened = reduceCollectionQueryState(
+    reduceCollectionQueryState(cancelled.state, { type: 'filter-open' }, contract).state,
+    { type: 'search-input', value: '第三词' },
+    contract,
+  ).state;
+  const rebased = reduceCollectionQueryState(
+    reopened,
+    { type: 'explicit-submit', filterDraftStrategy: 'rebase-draft' },
+    contract,
+  );
+  assert.equal(rebased.state.committedQuery, '第三词');
+  assert.deepEqual(rebased.state.filterDraft, ['type:doc']);
+  assert.equal(rebased.state.filterSurfaceOpen, true);
+  assert.ok(rebased.effects.includes('filter-draft-rebased-for-query-change'));
+});
+
+test('T021 Clear cancels composition and preserves filter state', () => {
+  let state = createCollectionQueryState({
+    committedQuery: 'token',
+    committedFilters: ['type:doc'],
+  });
+  ({ state } = reduceCollectionQueryState(state, { type: 'composition-start' }, contract));
+  ({ state } = reduceCollectionQueryState(state, { type: 'search-input', value: 'to' }, contract));
+
+  const cleared = reduceCollectionQueryState(state, { type: 'clear-query' }, contract);
+  assert.equal(cleared.state.composing, false);
+  assert.equal(cleared.state.committedQuery, '');
+  assert.deepEqual(cleared.state.committedFilters, ['type:doc']);
+});

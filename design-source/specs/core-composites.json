@@ -10,9 +10,26 @@
       "name": "Carousel",
       "cn": "轮播",
       "intent": "Present a small ordered set of peer content panels that users can move through without losing orientation or accessibility.",
-      "components": ["Card", "Icon Button", "Badge", "Text"],
-      "anatomy": ["viewport", "track", "slide", "optional previous/next controls", "position indicator", "accessible status"],
-      "variants": ["compact", "standard", "manual", "autoplay-opt-in"],
+      "components": [
+        "Card",
+        "Icon Button",
+        "Badge",
+        "Text"
+      ],
+      "anatomy": [
+        "viewport",
+        "track",
+        "slide",
+        "optional previous/next controls",
+        "position indicator",
+        "accessible status"
+      ],
+      "variants": [
+        "compact",
+        "standard",
+        "manual",
+        "autoplay-opt-in"
+      ],
       "rules": [
         "Manual swipe or scroll-snap MUST work without autoplay or pointer-only controls.",
         "Autoplay MUST be off by default. When enabled it SHOULD use an interval of at least 5 seconds, pause after user interaction or focus, and stop or collapse under reduced-motion preferences.",
@@ -29,16 +46,39 @@
         "overlay arrows covering titles or actions",
         "different slide heights causing the page to jump"
       ],
-      "relatedPatterns": ["searchPattern", "contextualNextStep"]
+      "relatedPatterns": [
+        "searchPattern",
+        "contextualNextStep"
+      ]
     },
     {
       "id": "filterBar",
       "name": "Filter Bar",
       "cn": "筛选栏",
       "intent": "Provide a reusable mobile collection control that combines optional query input, filter entry, active-condition summary and result feedback while keeping committed state authoritative outside the composite.",
-      "components": ["Search Field", "Button", "Icon Button", "Tag", "Bottom Sheet", "Radio", "Checkbox"],
-      "anatomy": ["optional query input", "filter trigger", "active count", "optional removable conditions", "draft filter surface", "result feedback"],
-      "variants": ["search-plus-filter", "filter-only", "inline-summary", "sheet-summary"],
+      "components": [
+        "Search Field",
+        "Button",
+        "Icon Button",
+        "Tag",
+        "Bottom Sheet",
+        "Radio",
+        "Checkbox"
+      ],
+      "anatomy": [
+        "optional query input",
+        "filter trigger",
+        "active count",
+        "optional removable conditions",
+        "draft filter surface",
+        "result feedback"
+      ],
+      "variants": [
+        "search-plus-filter",
+        "filter-only",
+        "inline-summary",
+        "sheet-summary"
+      ],
       "rules": [
         "Pending query input and committed query MAY be separate states; submission behavior MUST be explicit and predictable.",
         "The parent collection MUST remain the authoritative owner of committed query and filter values.",
@@ -47,7 +87,9 @@
         "Inside the draft surface, Apply MAY be the single Primary action for that action group; Reset SHOULD be Tertiary or text treatment and MUST reset the draft before commitment.",
         "Applied conditions SHOULD be individually removable when space and scanability benefit from it.",
         "After commitment, result count or a meaningful result update SHOULD be exposed through an accessible status region.",
-        "Returning from a detail view SHOULD preserve committed filter state while the collection task is still active."
+        "Returning from a detail view SHOULD preserve committed filter state while the collection task is still active.",
+        "Quick filters are collection conditions and MUST NOT be presented as Tabs unless they truly switch peer views.",
+        "Reset filter state MUST preserve committed search query unless the product exposes a separate explicit reset-all action."
       ],
       "avoid": [
         "committing every option tap when users are comparing several conditions",
@@ -55,16 +97,37 @@
         "brand-filling the trigger, chips and sheet footer at the same time",
         "using disabled Apply as the only indication that nothing changed"
       ],
-      "relatedPatterns": ["collectionFilter", "searchPattern"]
+      "relatedPatterns": [
+        "collectionFilter",
+        "searchPattern"
+      ],
+      "workflowContractRefs": [
+        "com-design:mobile-search-filter:v2"
+      ]
     },
     {
       "id": "tabbedActionBar",
       "name": "Tabbed Action Bar",
       "cn": "标签导航操作栏",
       "intent": "Combine peer-view navigation with a small, stable set of local utility actions without compressing tabs or turning a navigation row into an icon toolbar.",
-      "components": ["Tabs", "Icon Button", "Badge", "Menu"],
-      "anatomy": ["tab list", "active indicator", "optional trailing utility group", "optional overflow"],
-      "variants": ["fixed-tabs", "scrollable-tabs", "sticky", "with-utilities"],
+      "components": [
+        "Tabs",
+        "Icon Button",
+        "Badge",
+        "Menu"
+      ],
+      "anatomy": [
+        "tab list",
+        "active indicator",
+        "optional trailing utility group",
+        "optional overflow"
+      ],
+      "variants": [
+        "fixed-tabs",
+        "scrollable-tabs",
+        "sticky",
+        "with-utilities"
+      ],
       "rules": [
         "Tabs remain the primary structure; utility actions MUST NOT reduce tab hit targets below platform guidance.",
         "On narrow mobile widths, keep at most two local utility actions inline; move additional actions to overflow or a more appropriate Top App Bar before shrinking labels or hit areas.",
@@ -80,16 +143,38 @@
         "brand-filled pill tabs mixed with brand-filled utility buttons",
         "reordering tabs when an action badge appears"
       ],
-      "relatedPatterns": ["searchPattern", "collectionFilter"]
+      "relatedPatterns": [
+        "searchPattern",
+        "collectionFilter"
+      ]
     },
     {
       "id": "groupedList",
       "name": "Grouped List",
       "cn": "分组堆叠列表",
       "intent": "Present several related destinations, settings or attributes as one calm stacked group so users scan relationships without a card-per-row layout.",
-      "components": ["Section", "List Item", "Divider", "Icon Button", "Switch", "Badge"],
-      "anatomy": ["optional section heading", "group surface", "stacked rows", "inset dividers", "optional leading visual", "trailing accessory"],
-      "variants": ["navigation", "settings", "mixed-accessory", "compact"],
+      "components": [
+        "Section",
+        "List Item",
+        "Divider",
+        "Icon Button",
+        "Switch",
+        "Badge"
+      ],
+      "anatomy": [
+        "optional section heading",
+        "group surface",
+        "stacked rows",
+        "inset dividers",
+        "optional leading visual",
+        "trailing accessory"
+      ],
+      "variants": [
+        "navigation",
+        "settings",
+        "mixed-accessory",
+        "compact"
+      ],
       "rules": [
         "Use one shared group surface for related rows instead of wrapping every row in its own Card.",
         "Rows SHOULD use a minimum visual height around 52-56 logical units while preserving platform touch-target minimums.",
@@ -107,7 +192,10 @@
         "divider lines darker than the content hierarchy",
         "tiny chevron-only tap targets"
       ],
-      "relatedPatterns": ["stateToAction", "contextualNextStep"]
+      "relatedPatterns": [
+        "stateToAction",
+        "contextualNextStep"
+      ]
     }
   ]
 }

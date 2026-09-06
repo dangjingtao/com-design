@@ -26,6 +26,14 @@ test('T014 exposes canonical implementation catalogs for a validated target cont
   assert.ok(contract.catalogs.components.length > 0);
   assert.ok(contract.catalogs.composites.length > 0);
   assert.ok(contract.catalogs.patterns.length > 0);
+  assert.equal(
+    contract.catalogs.workflows.mobileSearchFilter.id,
+    'com-design:mobile-search-filter:v2',
+  );
+  assert.equal(
+    contract.catalogs.workflows.mobileSearchFilter.contract.search.ime.commitWhileComposing,
+    false,
+  );
   assert.ok(contract.catalogs.motion?.intents?.length >= 7);
   assert.ok(contract.catalogs.platformAdapters.length >= 4);
   assert.ok(contract.catalogs.registeredEngineeringOutputs.some((entry) => entry.id === 'web.tailwind'));

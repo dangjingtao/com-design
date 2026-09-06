@@ -4,16 +4,49 @@
   "name": "Search Field",
   "sourceKind": "structured-spec",
   "confidence": "high",
-  "semanticTypeCandidates": ["search-menu", "query-input", "search"],
-  "variantDimensions": { "state": ["idle", "focused", "query", "loading", "disabled"] },
-  "representativeVariants": [
-    { "state": "idle", "placeholder": "搜索设置、成员、文档" },
-    { "state": "focused", "value": "登录" },
-    { "state": "query", "value": "设计规范" },
-    { "state": "loading", "value": "token" },
-    { "state": "disabled", "placeholder": "搜索不可用" }
+  "semanticTypeCandidates": [
+    "search-menu",
+    "query-input",
+    "search"
   ],
-  "anatomy": ["container", "leadingSlot", "queryOrPlaceholder", "trailingSlot?"],
+  "variantDimensions": {
+    "state": [
+      "idle",
+      "focused",
+      "query",
+      "composing",
+      "loading",
+      "disabled"
+    ]
+  },
+  "representativeVariants": [
+    {
+      "state": "idle",
+      "placeholder": "搜索设置、成员、文档"
+    },
+    {
+      "state": "focused",
+      "value": "登录"
+    },
+    {
+      "state": "query",
+      "value": "设计规范"
+    },
+    {
+      "state": "loading",
+      "value": "token"
+    },
+    {
+      "state": "disabled",
+      "placeholder": "搜索不可用"
+    }
+  ],
+  "anatomy": [
+    "container",
+    "leadingSlot",
+    "queryOrPlaceholder",
+    "trailingSlot?"
+  ],
   "traits": {
     "height": "var(--size-control-height)",
     "paddingHorizontal": "var(--space-12)",
@@ -43,6 +76,25 @@
     "placeholder on subtle surface must meet contrast",
     "clear action keeps focus and requires accessible name"
   ],
-  "doNotInvent": ["no toolbar in the trailing slot", "no outlined Input look", "no disabling search to represent no results"],
-  "unknowns": []
+  "doNotInvent": [
+    "no toolbar in the trailing slot",
+    "no outlined Input look",
+    "no disabling search to represent no results"
+  ],
+  "unknowns": [],
+  "interactionContract": [
+    "IME composition updates pending input only and MUST NOT commit intermediate text as the collection query.",
+    "Instant/debounced search starts debounce only after composition end and MUST guard stale async responses.",
+    "Explicit-submit search may commit from keyboard Search/Enter/Confirm or one explicit action only after composition ends.",
+    "Clear removes the query while preserving focus and the active search context unless the product explicitly ends the task.",
+    "Loading preserves the visible query; zero results MUST NOT be represented by disabling the Search Field."
+  ],
+  "keyboardContract": [
+    "Platform/host IME composition and confirm events are mapped by the Platform Adapter; Web event names are not Core semantics.",
+    "Cancel/Back is distinct from Clear: Clear edits query state, while Back/Cancel exits or returns from search context according to task continuity."
+  ],
+  "accessibilityContract": [
+    "Clear action requires an accessible name and platform-safe hit target.",
+    "Search state, active filters and result feedback remain available to assistive technology without relying on color alone."
+  ]
 }

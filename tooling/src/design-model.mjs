@@ -12,6 +12,7 @@ import { validatePlatformModel } from './platform-context.mjs';
 import { validateLayoutInputFoundationContract } from './layout-input-foundation.mjs';
 import { validateNavigationFoundationContract } from './navigation-foundation.mjs';
 import { validateMotionFoundationContract } from './motion-foundation.mjs';
+import { validateMobileSearchFilterWorkflowContract } from './mobile-search-filter.mjs';
 
 const MODEL_SCHEMA_VERSION = 2;
 const MODEL_ID = 'com-design:canonical-model:v2';
@@ -195,6 +196,29 @@ function validateRequiredInputs(repoRoot, sourceIntegrity, manifest) {
   errors.push(
     ...validateMotionFoundationContract(motionContract, motionSchema)
       .map((error) => `motion foundation: ${error}`),
+  );
+
+  const mobileSearchFilter = requireCanonicalSource(sourceIntegrity, 'mobileSearchFilterWorkflow').value;
+  const mobileSearchFilterSchema = requireCanonicalSource(sourceIntegrity, 'mobileSearchFilterSchema').value;
+  const componentIndex = requireCanonicalSource(sourceIntegrity, 'componentIndex').value;
+  const searchFieldEntry = componentIndex.components?.find((entry) => entry.slug === 'search-field');
+  let searchFieldContract = null;
+  if (searchFieldEntry?.contract) {
+    searchFieldContract = readJson(path.join(repoRoot, 'design-source', searchFieldEntry.contract));
+  }
+  errors.push(
+    ...validateMobileSearchFilterWorkflowContract(
+      mobileSearchFilter,
+      mobileSearchFilterSchema,
+      {
+        componentIndex,
+        searchFieldContract,
+        composites: requireCanonicalSource(sourceIntegrity, 'coreComposites').value,
+        patterns: requireCanonicalSource(sourceIntegrity, 'corePatterns').value,
+        platformEnvironment,
+        layoutInputFoundation,
+      },
+    ).map((error) => `mobile search/filter workflow: ${error}`),
   );
 
   const foundationPath = requireCanonicalSource(sourceIntegrity, 'foundation').resolvedPath;
@@ -398,6 +422,16 @@ function normalizeMotion(contract, source) {
   };
 }
 
+function normalizeWorkflow(contract, source) {
+  const { $schema: _schema, ...value } = contract;
+  return {
+    id: value.id,
+    schemaVersion: value.schemaVersion,
+    contract: value,
+    provenance: provenance(source),
+  };
+}
+
 function normalizePlatforms(platformModel, manifest, platformSource, schemaSource, manifestSource) {
   const platforms = platformModel.platforms.map((entry) => ({
     id: `platform:${entry.id}`,
@@ -513,6 +547,18 @@ export function validateCanonicalDesignModel(model) {
   if (!model?.motion?.provenance || typeof model.motion.provenance !== 'object') {
     errors.push('canonical motion foundation must carry source provenance.');
   }
+  if (
+    model?.workflows?.mobileSearchFilter?.id !== 'com-design:mobile-search-filter:v2'
+    || model?.workflows?.mobileSearchFilter?.schemaVersion !== 2
+  ) {
+    errors.push('canonical design model must expose the accepted T021 mobile search/filter workflow.');
+  }
+  if (
+    !model?.workflows?.mobileSearchFilter?.provenance
+    || typeof model.workflows.mobileSearchFilter.provenance !== 'object'
+  ) {
+    errors.push('canonical mobile search/filter workflow must carry source provenance.');
+  }
 
   for (const platform of model?.platform?.platforms ?? []) {
     if (!MATURITY_STATUSES.has(platform.maturity?.status)) {
@@ -547,6 +593,10 @@ export function buildCanonicalDesignModel(repoRoot) {
   const layoutInputEvidence = requireCanonicalSource(sourceIntegrity, 'layoutInputFoundation');
   const navigationEvidence = requireCanonicalSource(sourceIntegrity, 'navigationFoundation');
   const motionEvidence = requireCanonicalSource(sourceIntegrity, 'motionContract');
+  const mobileSearchFilterEvidence = requireCanonicalSource(
+    sourceIntegrity,
+    'mobileSearchFilterWorkflow',
+  );
 
   const manifestSource = sourceDescriptor(repoRoot, 'source:manifest', manifest.__path, 'manifest');
   const foundationSource = sourceDescriptor(repoRoot, 'source:foundation', foundationEvidence.resolvedPath);
@@ -569,6 +619,11 @@ export function buildCanonicalDesignModel(repoRoot) {
     repoRoot,
     'source:motionContract',
     motionEvidence.resolvedPath,
+  );
+  const mobileSearchFilterSource = sourceDescriptor(
+    repoRoot,
+    'source:mobileSearchFilterWorkflow',
+    mobileSearchFilterEvidence.resolvedPath,
   );
 
   const tokenModel = buildTokenModel(foundationEvidence.resolvedPath);
@@ -601,6 +656,12 @@ export function buildCanonicalDesignModel(repoRoot) {
     layoutInput: normalizeLayoutInput(layoutInputEvidence.value, layoutInputSource),
     navigation: normalizeNavigation(navigationEvidence.value, navigationSource),
     motion: normalizeMotion(motionEvidence.value, motionSource),
+    workflows: {
+      mobileSearchFilter: normalizeWorkflow(
+        mobileSearchFilterEvidence.value,
+        mobileSearchFilterSource,
+      ),
+    },
     platform: normalizePlatforms(
       platformEvidence.value,
       manifest,

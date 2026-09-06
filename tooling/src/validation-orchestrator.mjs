@@ -8,6 +8,7 @@ import { validateIconographyContract } from './iconography.mjs';
 import { validateLayoutInputFoundationContract } from './layout-input-foundation.mjs';
 import { validateNavigationFoundationContract } from './navigation-foundation.mjs';
 import { validateMotionFoundationContract } from './motion-foundation.mjs';
+import { validateMobileSearchFilterWorkflowContract } from './mobile-search-filter.mjs';
 import { validatePlatformEnvironmentContract } from './platform-environment.mjs';
 import { validatePlatformModel } from './platform-context.mjs';
 import { validateSourceIntegrity } from './source-integrity.mjs';
@@ -310,6 +311,57 @@ export function runRepositoryValidation(repoRoot) {
         schemaVersion: contract.schemaVersion ?? null,
         intentCount: contract.intents?.length ?? 0,
         reducedMotionFirstClass: contract.reducedMotion?.firstClass === true,
+      },
+    };
+  }));
+
+  checks.push(runCheck('mobile-search-filter', () => {
+    const contract = canonicalSources.mobileSearchFilterWorkflow?.value;
+    const schema = canonicalSources.mobileSearchFilterSchema?.value;
+    const errors = [];
+    if (!contract) errors.push('canonical mobileSearchFilterWorkflow source is unavailable.');
+    if (!schema) errors.push('canonical mobileSearchFilterSchema source is unavailable.');
+    if (!canonicalSources.componentIndex?.value) errors.push('canonical componentIndex source is unavailable.');
+    const searchFieldEntry = canonicalSources.componentIndex?.value?.components?.find(
+      (entry) => entry.slug === 'search-field',
+    );
+    let searchFieldContract = null;
+    if (!searchFieldEntry?.contract) {
+      errors.push('canonical Search Field contract entry is unavailable.');
+    } else {
+      try {
+        searchFieldContract = readJson(
+          path.join(repoRoot, 'design-source', searchFieldEntry.contract),
+        );
+      } catch (error) {
+        errors.push('canonical Search Field contract cannot be read: ' + error.message);
+      }
+    }
+    if (!canonicalSources.coreComposites?.value) errors.push('canonical coreComposites source is unavailable.');
+    if (!canonicalSources.corePatterns?.value) errors.push('canonical corePatterns source is unavailable.');
+    if (!canonicalSources.platformEnvironment?.value) errors.push('canonical platformEnvironment source is unavailable.');
+    if (!canonicalSources.layoutInputFoundation?.value) errors.push('canonical layoutInputFoundation source is unavailable.');
+    if (errors.length) return { errors };
+
+    return {
+      errors: validateMobileSearchFilterWorkflowContract(
+        contract,
+        schema,
+        {
+          componentIndex: canonicalSources.componentIndex.value,
+          searchFieldContract,
+          composites: canonicalSources.coreComposites.value,
+          patterns: canonicalSources.corePatterns.value,
+          platformEnvironment: canonicalSources.platformEnvironment.value,
+          layoutInputFoundation: canonicalSources.layoutInputFoundation.value,
+        },
+      ),
+      evidence: {
+        schemaVersion: contract.schemaVersion ?? null,
+        platforms: contract.scope?.platforms ?? [],
+        exampleCount: contract.examples?.length ?? 0,
+        restoreFields: contract.restoration?.fields ?? [],
+        quickFilterPeerViewNavigation: contract.filter?.quickFilter?.peerViewNavigation ?? null,
       },
     };
   }));

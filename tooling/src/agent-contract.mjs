@@ -119,6 +119,7 @@ export function createAgentContract(repoRoot, options = {}) {
       components: model.components,
       composites: model.composites,
       patterns: model.patterns,
+      workflows: model.workflows,
       navigation: model.navigation,
       motion,
       platformAdapters: platforms,
@@ -132,7 +133,7 @@ export function createAgentContract(repoRoot, options = {}) {
     },
     layers: {
       core: {
-        catalogs: ['tokens', 'components', 'composites', 'patterns', 'navigation', 'motion'],
+        catalogs: ['tokens', 'components', 'composites', 'patterns', 'workflows', 'navigation', 'motion'],
         rule: 'Core semantics remain platform-neutral and cannot be forked by a consumer.',
       },
       productExtension: {

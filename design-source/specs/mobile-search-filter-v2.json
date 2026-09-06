@@ -1,0 +1,282 @@
+{
+  "$schema": "../schemas/mobile-search-filter-v2.schema.json",
+  "schemaVersion": 2,
+  "id": "com-design:mobile-search-filter:v2",
+  "$metadata": {
+    "name": "Com Design Mobile Search + Filter Workflow",
+    "owner": "T021",
+    "status": "v2-first-stage",
+    "canonical": true
+  },
+  "scope": {
+    "platforms": [
+      "ios",
+      "android",
+      "wechat-mini-program"
+    ],
+    "addsCoreComponent": false,
+    "addsCorePattern": false
+  },
+  "references": {
+    "components": [
+      "search-field",
+      "button",
+      "tag",
+      "bottom-sheet",
+      "radio",
+      "checkbox",
+      "list-item"
+    ],
+    "composites": [
+      "filterBar"
+    ],
+    "patterns": [
+      "searchPattern",
+      "collectionFilter"
+    ],
+    "platformEnvironment": "sources.platformEnvironment",
+    "layoutInputFoundation": "sources.layoutInputFoundation"
+  },
+  "collectionQueryModel": {
+    "authoritativeOwner": "collection-owner",
+    "fields": [
+      "pendingQuery",
+      "committedQuery",
+      "committedFilters",
+      "sort",
+      "continuation",
+      "restorationState"
+    ],
+    "independence": {
+      "clearQueryPreservesFilters": true,
+      "resetFiltersPreservesQuery": true,
+      "sortIndependent": true
+    },
+    "continuationInvalidation": [
+      "committedQuery",
+      "committedFilters",
+      "sort"
+    ],
+    "filterDraft": {
+      "separateFromCommitted": true,
+      "initializeFromCommittedOnOpen": true,
+      "dismissWithoutApply": "discard-draft",
+      "apply": "commit-draft-refresh-close",
+      "reset": "reset-draft-only",
+      "reopenSource": "current-committed-filters",
+      "externalQueryChangePolicy": [
+        "cancel-draft",
+        "rebase-draft"
+      ]
+    }
+  },
+  "search": {
+    "lifecycleStates": [
+      "idle",
+      "focused-empty",
+      "typing",
+      "composing",
+      "suggesting",
+      "searching",
+      "results",
+      "zero-results",
+      "recoverable-error"
+    ],
+    "ime": {
+      "compositionIsPendingInput": true,
+      "commitWhileComposing": false,
+      "debounceStartsAfterCompositionEnd": true,
+      "platformEventNamesCanonical": false
+    },
+    "submissionModes": {
+      "instant-debounced": {
+        "debounceAfterCompositionEnd": true,
+        "requestCancellation": true,
+        "staleResponseGuard": true
+      },
+      "explicit-submit": {
+        "commitWhileComposing": false,
+        "commitTriggers": [
+          "keyboard-search",
+          "enter-confirm",
+          "explicit-action"
+        ]
+      }
+    },
+    "semantics": {
+      "clearQuery": "clear-query-keep-search-context",
+      "cancelBack": "exit-or-return-search-context",
+      "zeroResultsDistinctFromError": true
+    },
+    "asyncPolicy": {
+      "suggestionStaleResponseGuard": true,
+      "resultStaleResponseGuard": true,
+      "preserveUsableOldResultsOnRecoverableError": true
+    }
+  },
+  "filter": {
+    "quickFilter": {
+      "semanticRole": "collection-condition",
+      "peerViewNavigation": false,
+      "recommendedVisibleCount": [
+        1,
+        2,
+        3
+      ],
+      "activeCueNonColorOnly": true
+    },
+    "advancedSurface": {
+      "defaultPresentation": "bottom-sheet",
+      "complexPresentation": "full-screen-or-full-height",
+      "applyIsCommitBoundary": true,
+      "dismissCommits": false,
+      "resetClearsQuery": false
+    },
+    "feedback": {
+      "resultCountAccessible": true,
+      "zeroResultRecoveryRequired": true,
+      "disabledApplyOnlyNoChangeSignal": false
+    }
+  },
+  "restoration": {
+    "detailReturn": "restore-active-collection-task",
+    "fields": [
+      "committedQuery",
+      "committedFilters",
+      "sort",
+      "loadedData",
+      "scrollPosition"
+    ],
+    "invalidatedWhen": [
+      "collection-identity-changed",
+      "product-explicit-refresh",
+      "restoration-expired"
+    ]
+  },
+  "platformMappings": {
+    "ios": {
+      "environmentInputs": [
+        "keyboard-ime",
+        "back",
+        "safe-area",
+        "accessibility"
+      ],
+      "searchSubmit": "map-platform-search-or-return-after-composition-end",
+      "back": "preserve-task-continuity-and-map-system-gesture",
+      "filterSurface": "bottom-sheet-or-full-screen-by-complexity",
+      "stickyActionInset": "consume-safe-area"
+    },
+    "android": {
+      "environmentInputs": [
+        "keyboard-ime",
+        "back",
+        "safe-area",
+        "accessibility"
+      ],
+      "searchSubmit": "map-ime-search-or-enter-after-composition-end",
+      "back": "dismiss-keyboard-before-exiting-search-context-when-platform-requires",
+      "filterSurface": "bottom-sheet-or-full-screen-by-complexity",
+      "stickyActionInset": "consume-gesture-safe-area"
+    },
+    "wechat-mini-program": {
+      "environmentInputs": [
+        "keyboard-ime",
+        "back",
+        "safe-area",
+        "host-chrome",
+        "accessibility"
+      ],
+      "searchSubmit": "map-host-confirm-after-composition-end",
+      "back": "distinguish-close-filter-surface-from-exit-page",
+      "filterSurface": "bottom-sheet-or-page-by-complexity",
+      "restoration": "must-not-depend-on-browser-history"
+    }
+  },
+  "examples": [
+    {
+      "id": "ime-instant-search",
+      "scenario": {
+        "mode": "instant-debounced",
+        "events": [
+          "composition-start",
+          "input:ni",
+          "input:你好",
+          "composition-end:你好",
+          "debounce"
+        ]
+      },
+      "expected": {
+        "committedRequests": [
+          "你好"
+        ],
+        "intermediateCompositionCommitted": false
+      }
+    },
+    {
+      "id": "filter-dismiss-does-not-commit",
+      "scenario": {
+        "committedFilters": [
+          "status:active"
+        ],
+        "actions": [
+          "open-filter",
+          "draft:add:region:gd",
+          "dismiss"
+        ]
+      },
+      "expected": {
+        "committedFilters": [
+          "status:active"
+        ],
+        "draftDiscarded": true
+      }
+    },
+    {
+      "id": "filter-apply-commits",
+      "scenario": {
+        "committedFilters": [
+          "status:active"
+        ],
+        "actions": [
+          "open-filter",
+          "draft:add:region:gd",
+          "apply"
+        ]
+      },
+      "expected": {
+        "committedFilters": [
+          "status:active",
+          "region:gd"
+        ],
+        "continuationReset": true,
+        "surfaceClosed": true
+      }
+    },
+    {
+      "id": "detail-return-restores-collection",
+      "scenario": {
+        "snapshot": {
+          "committedQuery": "设计规范",
+          "committedFilters": [
+            "type:doc"
+          ],
+          "sort": "relevance",
+          "loadedData": [
+            "r1",
+            "r2",
+            "r3"
+          ],
+          "scrollPosition": 640
+        },
+        "actions": [
+          "open-detail:r2",
+          "back"
+        ]
+      },
+      "expected": {
+        "restoreSnapshot": true,
+        "scrollPosition": 640
+      }
+    }
+  ]
+}
