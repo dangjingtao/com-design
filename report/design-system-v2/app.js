@@ -109,10 +109,22 @@ function setupNavigation(){
     const open=sidebar.classList.toggle('is-open');
     navToggle.setAttribute('aria-expanded',String(open));
   });
-  document.querySelectorAll('.side-link').forEach(link=>link.addEventListener('click',()=>{
+  function closeSidebar(){
     sidebar.classList.remove('is-open');
     navToggle.setAttribute('aria-expanded','false');
-  }));
+  }
+  document.querySelectorAll('.side-link').forEach(link=>link.addEventListener('click',closeSidebar));
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape'&&sidebar.classList.contains('is-open')){
+      closeSidebar();
+      navToggle.focus();
+    }
+  });
+  document.addEventListener('click',event=>{
+    if(!sidebar.classList.contains('is-open')) return;
+    if(sidebar.contains(event.target)||navToggle.contains(event.target)) return;
+    closeSidebar();
+  });
   const links=[...document.querySelectorAll('.side-link[href^="#"]')];
   const map=new Map(links.map(link=>[link.getAttribute('href').slice(1),link]));
   const observer=new IntersectionObserver(entries=>{
