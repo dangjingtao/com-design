@@ -82,11 +82,13 @@ export function validateHumanGuideV2(repoRoot){
   requireFile(repoRoot,'report/design-system-v2/styles.css',errors);
   requireFile(repoRoot,'report/design-system-v1/index.html',errors);
   const pagesPath=requireFile(repoRoot,'.github/workflows/pages.yml',errors);
+  const builderPath=requireFile(repoRoot,'tooling/bin/human-guide-v2.mjs',errors);
   if(errors.length) return {errors,evidence:facts};
 
   const html=fs.readFileSync(htmlPath,'utf8');
   const app=fs.readFileSync(appPath,'utf8');
   const pages=fs.readFileSync(pagesPath,'utf8');
+  const builder=fs.readFileSync(builderPath,'utf8');
 
   for(const required of [
     "components/index.json",
@@ -119,11 +121,13 @@ export function validateHumanGuideV2(repoRoot){
     'report/design-system-v2',
     '_site/accepted/v1',
     '_site/versions',
-    'human-guide-v2.mjs',
-    '_site/current.json',
+    'human-guide-v2.mjs _site',
   ];
   for(const fragment of requiredPagesFragments){
     if(!pages.includes(fragment)) errors.push('Pages current-entry assembly is missing '+fragment+'.');
+  }
+  if(!builder.includes("path.join(outputDir,'current.json')") || !builder.includes("path.join(outputDir,'index.html')")){
+    errors.push('Human Guide V2 builder must emit current.json and the root current pointer.');
   }
   if(pages.includes('human-guide-overlay.mjs _site/com-design-v2-current.js')){
     errors.push('Pages must not use the V1 current-facts overlay as the normal V2 current entry.');
