@@ -1,6 +1,6 @@
 # T024 · Switch + Timeline Visual Defect Repair
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 first-stage
 - Impact: QA / Component / Preview
 - Owner: -
@@ -63,13 +63,13 @@ V2 规划已确认两处真实实现 / Preview 缺陷：Switch disabled-on/off �
 
 ## Verification evidence
 
-- CI: Design System Build #300 — success on substantive head `eca046219a29cfee80eb893398d02f64961d30a5`; 214/214 tests PASS, V2 validation 14 checks / 0 warnings, engineering build, Penpot build, accepted-report guard and T017 deterministic hard gate all PASS.
+- CI: Design System Build #306 — success on final substantive head `5b028bf6376cb36f38c1e3e46cb6dc65ab723f78`; 214/214 tests PASS, V2 validation 14 checks / 0 warnings, engineering build, Penpot build, accepted-report guard and T017 deterministic hard gate all PASS.
 - Switch four-state evidence: Preview explicitly separates enabled and disabled groups and includes `on`, `off`, `disabled-on`, `disabled-off` evidence samples. Disabled-on retains right-side thumb + muted brand-container track; disabled-off uses neutral disabled track; both use muted thumbs and disabled text without whole-row opacity.
 - Timeline visual evidence: Preview uses current-event-owned `::after` connector, stretchable rail, current content padding for inter-event spacing, variable-height long text, clean final termination, and a reduced-color readability sample. No Card wrapper is implied.
 
 ## Review
 
 - Reviewer: Mira
-- Result: REVIEW
-- Conclusion: Construction and deterministic verification complete. Initial CI failure was a test false-positive where `--tl-event-gap` was mistaken for the CSS `gap` property; fixed by parsing the actual declaration. Independent geometry review found parent event padding was not a reliable contributor to flex rail stretch, so spacing moved into the current event's content padding. Codex independently raised the same two issues on the older reviewed head; both are fixed and threads resolved.
-- Follow-up: Final acceptance should confirm disabled Switch value remains legible without looking enabled, Timeline rail stays structurally continuous across variable content height, and no new component/state semantics were introduced beyond the two confirmed defect repairs.
+- Result: PASS
+- Conclusion: Final acceptance passed. Switch preserves `off / on` independently from `enabled / disabled`: disabled-off uses a neutral disabled track, disabled-on uses a muted brand-container track, both use disabled text/thumb treatment, and neither relies on whole-row opacity or hover/cursor cues. Timeline now assigns the outgoing connector to each current non-final event; the rail stretches against content height including inter-event spacing, long wrapped content cannot cut the rail, and the final event terminates cleanly. No Switch state-model redesign, Timeline business-semantic change, or Card requirement was introduced. Codex's two valid findings were fixed and resolved. CodeRabbit produced no current actionable finding before final acceptance; Mira independently reviewed the final head.
+- Follow-up: The repository still lacks the declared generator for `design-source/components.css`; T024 does not hand-edit that generated downstream artifact. T026 should keep this existing pipeline gap visible during integration acceptance.
