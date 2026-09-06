@@ -1,6 +1,6 @@
 # T025 · Button V2: Pill / Destructive / Loading
 
-- Status: TODO
+- Status: DOING
 - Target version: V2 first-stage
 - Impact: Component / Action
 - Owner: -
@@ -48,9 +48,18 @@ V2 已确认 Button 需要补三类能力：Pill/Capsule shape variant、正式 
 
 ## Implementation record
 
-- Commit / PR:
+- Commit / PR: branch `task/T025-button-v2-pill-destructive-loading` from `dev`.
 - Changed paths:
+  - `design-source/components/button.json`
+  - `design-source/preview/component-button.html`
+  - `design-source/SKILL.md`
+  - `design-source/README.md`
+  - `tooling/test/button-v2.test.mjs`
 - Notes:
+  - Button axes are now independent: hierarchy = Primary / Secondary / Tertiary; semantic = default / destructive; shape = standard / pill; size = compact / large; state = default / pressed / loading / disabled.
+  - Destructive is no longer a fourth hierarchy level. Primary destructive uses action-destructive fill; lower-fill destructive actions use danger-text semantic foreground.
+  - Loading suppresses duplicate activation, preserves entering dimensions, defaults to spinner + label, supports spinner-only only with an accessible name, requires busy semantics, and is explicitly distinct from disabled.
+  - Pill uses `radius-pill` without changing the 40 / 48px visual height contract or platform hit-target guidance.
 
 ## Verification evidence
 
