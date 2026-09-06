@@ -6,6 +6,7 @@ import { validateComponentCatalog } from './component-contract.mjs';
 import { validateConsumptionConsistency } from './consumption-consistency.mjs';
 import { validateComponentCssParity } from './component-css.mjs';
 import { validateHumanGuideV2 } from './human-guide-v2.mjs';
+import { validateHumanGuideTokenCompliance } from './human-guide-token-compliance.mjs';
 import { auditContrast } from './contrast-audit.mjs';
 import { validateReleaseGateTrace } from './release-gate-trace.mjs';
 import { validateIconographyContract } from './iconography.mjs';
@@ -189,6 +190,14 @@ export function runRepositoryValidation(repoRoot) {
 
   checks.push(runCheck('human-guide-current-facts', () => {
     const result = validateHumanGuideV2(repoRoot);
+    return {
+      errors: result.errors,
+      evidence: result.evidence,
+    };
+  }));
+
+  checks.push(runCheck('human-guide-token-compliance', () => {
+    const result = validateHumanGuideTokenCompliance(repoRoot);
     return {
       errors: result.errors,
       evidence: result.evidence,

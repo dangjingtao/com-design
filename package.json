@@ -17,7 +17,8 @@
     "governance:evaluate": "node tooling/bin/release-governance.mjs",
     "build:component-css": "node tooling/bin/extract-components-css.mjs",
     "check:component-css": "node tooling/bin/extract-components-css.mjs --check",
-    "build:human": "node tooling/bin/human-guide-v2.mjs"
+    "build:human": "node tooling/bin/human-guide-v2.mjs",
+    "check:human-guide": "node tooling/bin/human-guide-token-compliance.mjs"
   },
   "engines": {
     "node": ">=18"

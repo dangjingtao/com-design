@@ -19,6 +19,7 @@ run('Validate source', 'tooling/bin/validate.mjs');
 run('Build engineering adapters', 'tooling/bin/build.mjs');
 run('Build Penpot manifest', 'penpot/bin/build.mjs');
 run('Build versioned Human Guide V2 current entry', 'tooling/bin/human-guide-v2.mjs');
+run('Build Human Guide token-compliance evidence', 'tooling/bin/human-guide-token-compliance.mjs');
 
 console.log('\nHuman acceptance reports were not regenerated or overwritten.');
 console.log('Human Guide V2 current metadata and root pointer were built under the retention contract.');

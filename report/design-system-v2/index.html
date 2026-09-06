@@ -6,76 +6,191 @@
   <title>Com Design · Human Guide V2</title>
   <meta name="description" content="Com Design V2 当前人类可读入口，由 canonical design source 驱动。">
   <link rel="stylesheet" href="../../design-source/colors_and_type.css">
+  <link rel="stylesheet" href="../../design-source/themes/premium-gold.css">
   <link rel="stylesheet" href="./styles.css">
   <script defer src="./app.js"></script>
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="#overview">Com Design <span>Human Guide V2</span></a>
-    <nav aria-label="Human Guide">
-      <a href="#components">组件</a>
-      <a href="#composites">组合组件</a>
-      <a href="#patterns">UX Pattern</a>
-      <a href="#authority">系统边界</a>
-    </nav>
+  <header class="appbar">
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-controls="sidebar" aria-expanded="false">目录</button>
+    <a class="brand-lockup" href="#overview" aria-label="Com Design Human Guide V2">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-copy"><strong>Com Design</strong><small>Human Guide V2</small></span>
+    </a>
+    <div class="appbar-tools">
+      <span class="version-chip" id="version-chip">RC</span>
+      <div class="theme-controls" aria-label="Human Guide theme controls">
+        <button type="button" class="tool-button" id="theme-family" aria-pressed="false">Default</button>
+        <button type="button" class="tool-button" id="theme-scheme" aria-pressed="false">Light</button>
+      </div>
+    </div>
   </header>
 
-  <main>
-    <section class="hero" id="overview">
-      <p class="eyebrow">CURRENT · CANONICAL-DRIVEN</p>
-      <h1>Com Design V2</h1>
-      <p class="lead">当前设计系统的人类可读入口。目录、组合与 UX Pattern 均从 <code>design-source/</code> 读取；本页面解释规则与提供导航，不维护第二套设计事实。</p>
-      <div class="facts" aria-live="polite">
-        <article><strong id="component-count">—</strong><span>Core Components</span></article>
-        <article><strong id="composite-count">—</strong><span>Core Composites</span></article>
-        <article><strong id="pattern-count">—</strong><span>Core UX Patterns</span></article>
-        <article><strong id="system-version">—</strong><span>Current Version</span></article>
+  <div class="docs-shell">
+    <aside class="sidebar" id="sidebar">
+      <nav class="side-nav" aria-label="Human Guide sections">
+        <p class="nav-kicker">GUIDE</p>
+        <a class="side-link is-active" href="#overview">Overview</a>
+        <a class="side-link" href="#principles">设计原则</a>
+        <a class="side-link" href="#foundations">Foundations</a>
+        <p class="nav-kicker">LIBRARY</p>
+        <a class="side-link" href="#components">Core Components</a>
+        <a class="side-link" href="#composites">Composite Components</a>
+        <a class="side-link" href="#patterns">UX Patterns</a>
+        <p class="nav-kicker">CONSUME</p>
+        <a class="side-link" href="#consumers">消费入口</a>
+        <a class="side-link" href="#authority">系统边界</a>
+      </nav>
+      <div class="sidebar-foot">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Canonical source connected</span>
+        <a href="../../accepted/v1/">Accepted V1 ↗</a>
       </div>
-      <div class="current-record" id="current-record">正在读取 current build record…</div>
-    </section>
+    </aside>
 
-    <section class="section" id="components">
-      <div class="section-head">
-        <div><p class="eyebrow">COMPONENT CATALOG</p><h2>Core Components</h2></div>
-        <label class="search">筛选组件 <input id="component-filter" type="search" placeholder="Button / Result State…" autocomplete="off"></label>
-      </div>
-      <p class="section-copy">列表直接来自 <code>design-source/components/index.json</code>。每个条目链接到同一 revision 的 Contract 与 Preview。</p>
-      <div id="component-groups" class="catalog-loading">正在读取 canonical component catalog…</div>
-    </section>
+    <main class="docs-main">
+      <section class="hero section-block" id="overview">
+        <div class="hero-copy">
+          <p class="eyebrow">CURRENT · CANONICAL-DRIVEN</p>
+          <h1>把设计意图，稳定地带到四端。</h1>
+          <p class="lead">Com Design V2 是 Android、iOS、Web 与微信小程序共享的设计系统。Human Guide 负责解释、发现与导航；真正的设计事实仍来自 <code>design-source/</code>。</p>
+        </div>
+        <div class="hero-meta">
+          <dl class="facts" aria-live="polite">
+            <div><dt>Core Components</dt><dd id="component-count">—</dd></div>
+            <div><dt>Core Composites</dt><dd id="composite-count">—</dd></div>
+            <div><dt>Core UX Patterns</dt><dd id="pattern-count">—</dd></div>
+            <div><dt>Current Version</dt><dd id="system-version">—</dd></div>
+          </dl>
+          <div class="current-record" id="current-record">正在读取 current build record…</div>
+        </div>
+      </section>
 
-    <section class="section" id="composites">
-      <div class="section-head"><div><p class="eyebrow">STABLE ASSEMBLY</p><h2>Core Composite Components</h2></div></div>
-      <p class="section-copy">稳定、可直接实例化的跨组件结构。数据来自 <code>design-source/specs/core-composites.json</code>。</p>
-      <div id="composite-list" class="card-grid catalog-loading">正在读取 composite catalog…</div>
-      <p class="source-link"><a id="composite-preview" href="../../design-source/preview/core-composite-components.html">打开 Composite Interactive Preview ↗</a></p>
-    </section>
+      <section class="section-block" id="principles">
+        <header class="section-heading">
+          <div><p class="eyebrow">DESIGN PRINCIPLES</p><h2>先有层级，再有装饰。</h2></div>
+          <p>Open Design 提供的是文档产品化的视觉启发；Com Design 自己的语义、层级和约束不让位。</p>
+        </header>
+        <div class="principle-list">
+          <article><span>01</span><div><h3>Semantic first</h3><p>颜色、状态、动作与组件都先表达语义，再映射到平台表现。</p></div></article>
+          <article><span>02</span><div><h3>Flat first</h3><p>优先使用排版、留白、分隔与中性 surface 建立结构，不用卡片和阴影堆层级。</p></div></article>
+          <article><span>03</span><div><h3>Primary is scarce</h3><p>一个视图或动作组通常只有一个最高优先级动作，Brand 不承担“哪里都要亮”的职责。</p></div></article>
+          <article><span>04</span><div><h3>One source, many consumers</h3><p>Human Guide、Penpot、AI Contract 与平台 Adapter 都是 downstream consumer，不制造第二真相源。</p></div></article>
+        </div>
+      </section>
 
-    <section class="section" id="patterns">
-      <div class="section-head"><div><p class="eyebrow">TASK RULES</p><h2>Core UX Patterns</h2></div></div>
-      <p class="section-copy">Pattern 负责跨组件、跨状态、跨页面的任务规则；不计入 Core Component 数量。数据来自 <code>design-source/specs/core-patterns.json</code>。</p>
-      <div id="pattern-list" class="card-grid catalog-loading">正在读取 pattern catalog…</div>
-      <p class="source-link"><a id="pattern-preview" href="../../design-source/preview/core-ux-patterns.html">打开 Core UX Pattern Preview ↗</a></p>
-    </section>
+      <section class="section-block" id="foundations">
+        <header class="section-heading">
+          <div><p class="eyebrow">FOUNDATIONS</p><h2>同一套语义，允许不同上下文。</h2></div>
+          <p>当前页面本身也消费这些 semantic tokens；右上角可以切换 Default / Premium Gold 与 Light / Dark。</p>
+        </header>
+        <div class="foundation-grid">
+          <article class="foundation-item">
+            <h3>Color semantics</h3>
+            <div class="swatch-line" aria-label="semantic color samples">
+              <span class="swatch swatch-brand"></span><span class="swatch swatch-surface"></span><span class="swatch swatch-success"></span><span class="swatch swatch-warning"></span><span class="swatch swatch-danger"></span>
+            </div>
+            <p>Brand 用于身份、选择、focus 与关键动作；状态色只承载状态语义。</p>
+          </article>
+          <article class="foundation-item">
+            <h3>Typography</h3>
+            <p class="type-sample">中文优先，信息密度高，但不拥挤。</p>
+            <p>Display → Title → Heading → Body → Caption 保持稳定层级。</p>
+          </article>
+          <article class="foundation-item">
+            <h3>Spacing & radius</h3>
+            <div class="measure-line"><span></span><span></span><span></span><span></span></div>
+            <p>页面节奏来自 canonical spacing；圆角用于控件与容器，不把所有区块都卡片化。</p>
+          </article>
+          <article class="foundation-item">
+            <h3>Platform context</h3>
+            <p>Android / iOS / Web / WeChat Mini Program 共享设计意图；viewport、input、motion、color scheme 独立解析。</p>
+          </article>
+        </div>
+      </section>
 
-    <section class="section authority" id="authority">
-      <div class="section-head"><div><p class="eyebrow">SOURCE AUTHORITY</p><h2>谁说了算</h2></div></div>
-      <div class="authority-grid">
-        <article><strong>Canonical editable source</strong><code>design-source/</code><p>Token、Component、Composite、Pattern、Platform contract 的正式来源。</p></article>
-        <article><strong>Human Guide</strong><code>downstream consumer</code><p>负责解释、发现与导航；不能反向成为规范值来源。</p></article>
-        <article><strong>Preview / UI Kits / Penpot</strong><code>downstream evidence / consumer</code><p>用于可视化、同步与消费验证，不得覆盖 canonical contract。</p></article>
-      </div>
-      <div class="history-note">
-        <strong>Accepted V1 Human Guide</strong>
-        <p>V1 验收页面作为历史 evidence 独立保留，不再承担“当前 V2”入口职责。</p>
-        <a href="../../accepted/v1/">查看 Accepted V1 baseline ↗</a>
-      </div>
-    </section>
-  </main>
+      <section class="section-block" id="components">
+        <header class="section-heading">
+          <div><p class="eyebrow">COMPONENT CATALOG</p><h2>Core Components</h2></div>
+          <p>目录直接来自 <code>design-source/components/index.json</code>。选择组件后，Inspector 会读取同一 revision 的 contract。</p>
+        </header>
+        <div class="component-toolbar">
+          <label class="search-field">
+            <span>筛选组件</span>
+            <input id="component-filter" type="search" placeholder="Button / Result State…" autocomplete="off">
+          </label>
+          <span class="catalog-note" id="catalog-note">Canonical catalog</span>
+        </div>
+        <div class="component-workspace">
+          <div id="component-groups" class="catalog-loading">正在读取 canonical component catalog…</div>
+          <aside class="inspector" id="component-inspector" aria-live="polite">
+            <div class="inspector-empty">
+              <p class="eyebrow">COMPONENT INSPECTOR</p>
+              <h3>选择一个组件</h3>
+              <p>查看 intent、variant、state、使用约束，以及同 revision Preview。</p>
+            </div>
+          </aside>
+        </div>
+      </section>
 
-  <footer>
-    <span>Com Design Human Guide V2</span>
-    <span id="source-revision">source revision: local / unknown</span>
-  </footer>
+      <section class="section-block" id="composites">
+        <header class="section-heading">
+          <div><p class="eyebrow">STABLE ASSEMBLY</p><h2>Core Composite Components</h2></div>
+          <p>稳定、可复用的跨组件结构。它们不是业务页面模板，也不计入 Core Component 数量。</p>
+        </header>
+        <div id="composite-list" class="catalog-list catalog-loading">正在读取 composite catalog…</div>
+        <p class="source-link"><a href="../../design-source/preview/core-composite-components.html">打开 Composite Interactive Preview ↗</a></p>
+      </section>
+
+      <section class="section-block" id="patterns">
+        <header class="section-heading">
+          <div><p class="eyebrow">TASK RULES</p><h2>Core UX Patterns</h2></div>
+          <p>Pattern 解决跨组件、跨状态、跨页面的任务问题。第 7 个 Incremental Loading 与其他 Pattern 使用同一结构呈现。</p>
+        </header>
+        <div id="pattern-list" class="catalog-list catalog-loading">正在读取 pattern catalog…</div>
+        <p class="source-link"><a href="../../design-source/preview/core-ux-patterns.html">打开 Core UX Pattern Preview ↗</a></p>
+      </section>
+
+      <section class="section-block" id="consumers">
+        <header class="section-heading">
+          <div><p class="eyebrow">CONSUMPTION</p><h2>从同一个源头出发。</h2></div>
+          <p>不同消费者拥有不同入口，但都不能反向改写 canonical semantics。</p>
+        </header>
+        <div class="consumer-table" aria-label="Com Design consumers">
+          <div class="consumer-row consumer-head"><span>Consumer</span><span>Entrypoint</span><span>Role</span></div>
+          <div class="consumer-row"><strong>AI / Agent</strong><code>dist/agent/contract.json</code><span>Executable contract</span></div>
+          <div class="consumer-row"><strong>Web</strong><code>dist/tailwind/adapter.json</code><span>Platform adapter</span></div>
+          <div class="consumer-row"><strong>iOS / Android</strong><code>dist/native-mobile/adapter.json</code><span>Platform adapter</span></div>
+          <div class="consumer-row"><strong>WeChat Mini Program</strong><code>dist/wechat-mini-program/adapter.json</code><span>Platform adapter</span></div>
+          <div class="consumer-row"><strong>Penpot</strong><code>penpot/build/manifest.json</code><span>Governed workspace</span></div>
+          <div class="consumer-row"><strong>Human Guide</strong><code>report/design-system-v2/</code><span>Explanation & discovery</span></div>
+        </div>
+      </section>
+
+      <section class="section-block" id="authority">
+        <header class="section-heading">
+          <div><p class="eyebrow">SOURCE AUTHORITY</p><h2>谁说了算。</h2></div>
+          <p>页面看起来像产品，但它仍然只是设计系统的一个消费者。</p>
+        </header>
+        <div class="authority-flow" aria-label="Com Design source authority flow">
+          <article class="authority-primary"><span>01</span><div><strong>Canonical editable source</strong><code>design-source/</code><p>Token、Component、Composite、Pattern 与 Platform contract 的正式来源。</p></div></article>
+          <div class="flow-rule" aria-hidden="true"></div>
+          <article><span>02</span><div><strong>Normalized contracts</strong><p>Machine contract 与 Adapter 把设计意图变成可执行、可验证的消费接口。</p></div></article>
+          <article><span>03</span><div><strong>Downstream consumers</strong><p>Human Guide、Preview、Penpot、UI Kits 与工程输出只负责消费和证据。</p></div></article>
+        </div>
+        <div class="history-note">
+          <div><strong>Accepted V1 Human Guide</strong><p>历史验收页面继续独立保留，不承担当前 V2 的事实来源职责。</p></div>
+          <a href="../../accepted/v1/">查看 Accepted V1 baseline ↗</a>
+        </div>
+      </section>
+
+      <footer class="docs-footer">
+        <span>Com Design Human Guide V2</span>
+        <a href="./visual-evidence.html">Theme visual evidence ↗</a>
+        <span id="source-revision">source revision: local / unknown</span>
+      </footer>
+    </main>
+  </div>
 
   <template id="load-error-template">
     <div class="load-error">无法读取 canonical data。请确认页面通过仓库/Pages 服务器访问，并检查 <code>design-source/</code> 是否完整。</div>
