@@ -1,6 +1,6 @@
 # T024 · Switch + Timeline Visual Defect Repair
 
-- Status: TODO
+- Status: DOING
 - Target version: V2 first-stage
 - Impact: QA / Component / Preview
 - Owner: -
