@@ -4,6 +4,7 @@ import path from 'node:path';
 import { buildCanonicalDesignModel } from './design-model.mjs';
 import { validateComponentCatalog } from './component-contract.mjs';
 import { validateConsumptionConsistency } from './consumption-consistency.mjs';
+import { validateComponentCssParity } from './component-css.mjs';
 import { validateIconographyContract } from './iconography.mjs';
 import { validateLayoutInputFoundationContract } from './layout-input-foundation.mjs';
 import { validateNavigationFoundationContract } from './navigation-foundation.mjs';
@@ -169,6 +170,14 @@ export function runRepositoryValidation(repoRoot) {
 
   checks.push(runCheck('consumption-consistency', () => {
     const result = validateConsumptionConsistency(repoRoot);
+    return {
+      errors: result.errors,
+      evidence: result.evidence,
+    };
+  }));
+
+  checks.push(runCheck('component-css-parity', () => {
+    const result = validateComponentCssParity(repoRoot);
     return {
       errors: result.errors,
       evidence: result.evidence,
