@@ -146,7 +146,9 @@
     "mobileSearchFilterSchema": "../schemas/mobile-search-filter-v2.schema.json",
     "mobileSearchFilterWorkflow": "./mobile-search-filter-v2.json",
     "incrementalLoadingSchema": "../schemas/incremental-loading-v2.schema.json",
-    "incrementalLoadingWorkflow": "./incremental-loading-v2.json"
+    "incrementalLoadingWorkflow": "./incremental-loading-v2.json",
+    "stateFeedbackSchema": "../schemas/state-feedback-v2.schema.json",
+    "stateFeedbackWorkflow": "./state-feedback-v2.json"
   },
   "plannedSources": {
     "legacyTokenJsonBundle": {
@@ -229,7 +231,8 @@
     "environment": "T010 resolves runtime safe area, reserved regions, system/host chrome, back, focus, keyboard/IME, pointer, gesture, overlay dismissal/system UI, and accessibility hooks through sources.platformEnvironment",
     "navigation": "T020 resolves shared recursive destination state and viewport-driven Side Navigation / Rail / compact mappings through sources.navigationFoundation; platform identity alone does not choose presentation.",
     "searchFilter": "T021 resolves CollectionQueryModel, IME commit boundaries, quick-filter semantics, filter draft/apply/reset, detail-return restoration and mobile platform mapping through sources.mobileSearchFilterWorkflow; platform/host events remain Adapter details.",
-    "incrementalLoading": "T022 resolves shared loading/append-error/exhausted state, opaque continuation, dedup/order/stale-response guards, restoration and platform trigger ownership through sources.incrementalLoadingWorkflow. Pull-to-refresh and virtualization remain separate capabilities."
+    "incrementalLoading": "T022 resolves shared loading/append-error/exhausted state, opaque continuation, dedup/order/stale-response guards, restoration and platform trigger ownership through sources.incrementalLoadingWorkflow. Pull-to-refresh and virtualization remain separate capabilities.",
+    "stateFeedback": "T023 resolves absence, task outcome, persistent local/page notification, transient acknowledgement/actionable feedback, field validation ownership and external blocking-state semantics through sources.stateFeedbackWorkflow. Result State is Core; Blocking State remains a non-promoted semantic capability."
   },
   "governance": {
     "componentToPrimitiveReference": "forbidden",
@@ -253,6 +256,7 @@
       "navigationFoundationMapped",
       "mobileSearchFilterWorkflowMapped",
       "incrementalLoadingMapped",
+      "stateFeedbackMapped",
       "motionStandardReducedMapped",
       "iconographyContractMapped",
       "sharedIconScaleMapped",
