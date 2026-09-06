@@ -302,3 +302,17 @@ The full pipeline is complete only when:
 - component contracts can generate validated recipe/type metadata where appropriate;
 - stronger cross-target snapshot checks detect stale or inconsistent generated artifacts;
 - product projects have a stable distribution/consumption path without copying token values by hand.
+
+
+## Aggregated component CSS
+
+`design-source/components.css` is a downstream Human Guide / visual-reference artifact. Its component rules are extracted from each indexed `preview/component-*.html` block delimited by `@component-css-start/end`.
+
+Commands:
+
+```bash
+npm run build:component-css
+npm run check:component-css
+```
+
+`npm run validate` hard-gates parity across all indexed Core Components. Preview remains downstream visual evidence rather than Canonical Design Model authority; this extractor exists only to prevent the committed Human Guide aggregate from drifting behind its preview evidence.
