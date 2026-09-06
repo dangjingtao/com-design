@@ -57,7 +57,7 @@
 | T023 | State Feedback + Alert/Banner Semantics | Component / Pattern | PASS | V2 first-stage | T003 |
 | T024 | Switch + Timeline Visual Defect Repair | QA / Component | PASS | V2 first-stage | T003 |
 | T025 | Button V2: Pill / Destructive / Loading | Component | PASS | V2 first-stage | T003 |
-| T026 | First-week Integration Acceptance / V2 RC Readiness | Integration / Review | TODO | V2 first-stage | T001-T025 |
+| T026 | First-week Integration Acceptance / V2 RC Readiness | Integration / Review | DOING | V2 first-stage | T001-T025 |
 
 ## 推荐施工波次
 
