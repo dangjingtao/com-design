@@ -28,7 +28,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
   assert.equal(evidence.result, 'pass');
   assert.equal(evidence.summary.failed, 0);
   assert.equal(evidence.summary.blockingErrors, 0);
-  assert.equal(evidence.summary.checksRun, 12);
+  assert.equal(evidence.summary.checksRun, 13);
   assert.deepEqual(
     evidence.checks.map((check) => check.id),
     [
@@ -41,6 +41,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
       'navigation-foundation',
       'motion-foundation',
       'mobile-search-filter',
+      'incremental-loading',
       'component-contracts',
       'iconography',
       'canonical-design-model',
@@ -62,6 +63,14 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
   assert.equal(
     evidence.checks.find((check) => check.id === 'mobile-search-filter').evidence.quickFilterPeerViewNavigation,
     false,
+  );
+  assert.equal(
+    evidence.checks.find((check) => check.id === 'incremental-loading').evidence.patternId,
+    'incrementalLoading',
+  );
+  assert.equal(
+    evidence.checks.find((check) => check.id === 'incremental-loading').evidence.miniProgramScrollOwnerRequired,
+    true,
   );
   assert.equal(evidence.checks.find((check) => check.id === 'component-contracts').evidence.componentCount, 33);
   assert.equal(evidence.checks.find((check) => check.id === 'canonical-design-model').evidence.platformCount, 4);
