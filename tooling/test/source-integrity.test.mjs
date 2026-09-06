@@ -14,7 +14,7 @@ test('repository manifest resolves canonical sources and derives real catalog co
   assert.deepEqual(result.evidence.catalogCounts, {
     coreComponents: 33,
     coreCompositeComponents: 4,
-    corePatterns: 6,
+    corePatterns: 7,
     coreIcons: 11,
   });
 });
