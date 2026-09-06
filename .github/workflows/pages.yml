@@ -40,6 +40,7 @@ jobs:
       - name: Build engineering delivery assets
         run: |
           npm test
+          npm run validate
           npm run build:engineering
           npm run build:penpot
 
@@ -155,6 +156,9 @@ jobs:
           printf '\nBuild revision: `%s`\n' "$GITHUB_SHA" >> "$TRAE_SOURCE_PACK/README.md"
           (cd "$TRAE_SOURCE_PACK" && zip -qr "$GITHUB_WORKSPACE/_site/downloads/com-design-trae-source.zip" .)
 
+          # Generate current V2 facts from canonical source without modifying the accepted V1 report.
+          node tooling/bin/human-guide-overlay.mjs _site/com-design-v2-current.js
+
           # Append Human Guide-only iframe compatibility rules after the main workspace script.
           # This keeps Core Preview pages untouched while fixing multi-scene evidence layouts in the simulator.
           printf '\n' >> _site/guide-components.js
@@ -205,7 +209,8 @@ jobs:
           html = html.replace(
               '</body>',
               f'  <script src="./foundation.js?v={build}"></script>\n'
-              f'  <script src="./mobile-nav.js?v={build}"></script>\n</body>'
+              f'  <script src="./mobile-nav.js?v={build}"></script>\n'
+              f'  <script src="./com-design-v2-current.js?v={build}"></script>\n</body>'
           )
           page.write_text(html, encoding='utf-8')
           PY

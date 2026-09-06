@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "library": "com-design",
   "version": "1.0.0-rc.2",
-  "productType": "company-mobile-core",
+  "productType": "company-cross-platform-core",
   "language": "zh",
   "kitType": "mobile",
   "components": [

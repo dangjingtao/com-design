@@ -1,9 +1,9 @@
 {
   "$metadata": {
-    "name": "Com Design Mobile",
+    "name": "Com Design",
     "version": "1.0.0-rc.2",
     "status": "release-candidate",
-    "scope": "company-mobile-core",
+    "scope": "company-cross-platform-core",
     "canonicalEntrypoint": true
   },
   "manifestContract": {
@@ -267,6 +267,180 @@
       "penpotSyncPolicyRequired",
       "contrastAuditRequired",
       "independentReviewRequiredBeforeStableRelease"
-    ]
+    ],
+    "evidenceTrace": {
+      "sourceIntegrity": [
+        {
+          "kind": "validation",
+          "ids": [
+            "source-integrity"
+          ]
+        }
+      ],
+      "themeLightDarkMapped": [
+        {
+          "kind": "validation",
+          "ids": [
+            "token-model",
+            "contrast-audit"
+          ]
+        }
+      ],
+      "densityCompactComfortableMapped": [
+        {
+          "kind": "validation",
+          "ids": [
+            "token-model",
+            "layout-input-foundation"
+          ]
+        }
+      ],
+      "platformTouchTargetsMapped": [
+        {
+          "kind": "validation",
+          "ids": [
+            "platform-model",
+            "layout-input-foundation"
+          ]
+        }
+      ],
+      "layoutInputFoundationMapped": [
+        {
+          "kind": "validation",
+          "ids": [
+            "layout-input-foundation"
+          ]
+        }
+      ],
+      "navigationFoundationMapped": [
+        {
+          "kind": "validation",
+          "ids": [
+            "navigation-foundation"
+          ]
+        }
+      ],
+      "mobileSearchFilterWorkflowMapped": [
+        {
+          "kind": "validation",
+          "ids": [
+            "mobile-search-filter"
+          ]
+        }
+      ],
+      "incrementalLoadingMapped": [
+        {
+          "kind": "validation",
+          "ids": [
+            "incremental-loading"
+          ]
+        }
+      ],
+      "stateFeedbackMapped": [
+        {
+          "kind": "validation",
+          "ids": [
+            "state-feedback"
+          ]
+        }
+      ],
+      "motionStandardReducedMapped": [
+        {
+          "kind": "validation",
+          "ids": [
+            "motion-foundation"
+          ]
+        }
+      ],
+      "iconographyContractMapped": [
+        {
+          "kind": "validation",
+          "ids": [
+            "iconography"
+          ]
+        }
+      ],
+      "sharedIconScaleMapped": [
+        {
+          "kind": "validation",
+          "ids": [
+            "iconography"
+          ]
+        }
+      ],
+      "componentCatalogDeclared": [
+        {
+          "kind": "validation",
+          "ids": [
+            "source-integrity",
+            "component-contracts"
+          ]
+        }
+      ],
+      "compositeCatalogDeclared": [
+        {
+          "kind": "validation",
+          "ids": [
+            "source-integrity",
+            "canonical-design-model"
+          ]
+        }
+      ],
+      "patternsSeparatedCanonically": [
+        {
+          "kind": "validation",
+          "ids": [
+            "source-integrity",
+            "canonical-design-model"
+          ]
+        }
+      ],
+      "humanReadableAssemblyRequired": [
+        {
+          "kind": "validation",
+          "ids": [
+            "consumption-consistency",
+            "component-css-parity",
+            "human-guide-current-facts"
+          ]
+        },
+        {
+          "kind": "ci",
+          "ids": [
+            "accepted-report-unchanged"
+          ]
+        }
+      ],
+      "penpotSyncPolicyRequired": [
+        {
+          "kind": "validation",
+          "ids": [
+            "consumption-consistency"
+          ]
+        },
+        {
+          "kind": "ci",
+          "ids": [
+            "penpot-build"
+          ]
+        }
+      ],
+      "contrastAuditRequired": [
+        {
+          "kind": "validation",
+          "ids": [
+            "contrast-audit"
+          ]
+        }
+      ],
+      "independentReviewRequiredBeforeStableRelease": [
+        {
+          "kind": "governance",
+          "ids": [
+            "mira-judgment"
+          ]
+        }
+      ]
+    }
   }
 }

@@ -6,6 +6,16 @@ const EVIDENCE_SCHEMA_VERSION = 1;
 const EVIDENCE_ID = 'com-design:ci-evidence:v1';
 const DEFAULT_OUTPUT_PATH = path.join('dist', 'ci', 'evidence.json');
 
+export const CI_GATE_IDS = Object.freeze([
+  'unit-tests',
+  'v2-validation',
+  'engineering-build',
+  'penpot-build',
+  'build-all',
+  'four-platform-smoke',
+  'accepted-report-unchanged',
+]);
+
 function readJsonIfPresent(repoRoot, relativePath) {
   const filePath = path.join(repoRoot, relativePath);
   if (!fs.existsSync(filePath)) return null;
@@ -58,15 +68,19 @@ function targetEvidence(repoRoot, definition, canonicalSourceHash) {
     ? readJsonIfPresent(repoRoot, definition.jsonPath)
     : null;
   const sourceRevision = payload ? definition.readSourceRevision(payload) : null;
+  const expectedRevision = definition.readExpectedRevision
+    ? definition.readExpectedRevision(repoRoot, canonicalSourceHash)
+    : canonicalSourceHash;
   const outputsPresent = outputs.every((entry) => entry.exists);
   const sourceMatches = Boolean(sourceRevision)
-    && Boolean(canonicalSourceHash)
-    && sourceRevision === canonicalSourceHash;
+    && Boolean(expectedRevision)
+    && sourceRevision === expectedRevision;
   return {
     id: definition.id,
     kind: definition.kind,
     status: outputsPresent && sourceMatches ? 'pass' : 'fail',
     sourceRevision,
+    expectedRevision,
     outputs,
   };
 }
@@ -118,6 +132,20 @@ const FORMAL_TARGETS = Object.freeze([
     readSourceRevision: (payload) => payload?.sourceHash ?? null,
   },
   {
+    id: 'mcp',
+    kind: 'ai-tool-consumer',
+    jsonPath: 'dist/mcp/data/mcp-manifest.json',
+    outputPaths: [
+      'dist/mcp/package.json',
+      'dist/mcp/server.mjs',
+      'dist/mcp/data/mcp-manifest.json',
+      'dist/mcp/data/tokens.json',
+    ],
+    readSourceRevision: (payload) => payload?.tokenSourceHash ?? null,
+    readExpectedRevision: (repoRoot) =>
+      readJsonIfPresent(repoRoot, 'dist/build-manifest.json')?.sourceHash ?? null,
+  },
+  {
     id: 'penpot',
     kind: 'design-consumer',
     jsonPath: 'penpot/build/manifest.json',
@@ -133,6 +161,14 @@ const FORMAL_TARGETS = Object.freeze([
   },
 ]);
 
+export const CI_EVIDENCE_CHECK_IDS = Object.freeze([
+  ...CI_GATE_IDS,
+  ...FORMAL_TARGETS.flatMap((target) => [
+    'target-output:' + target.id,
+    'source-parity:' + target.id,
+  ]),
+]);
+
 export function buildCiEvidence(repoRoot, {
   repositorySha = null,
   headSha = null,
@@ -146,6 +182,8 @@ export function buildCiEvidence(repoRoot, {
     gateCheck('v2-validation', gateResults.validation),
     gateCheck('engineering-build', gateResults.engineeringBuild),
     gateCheck('penpot-build', gateResults.penpotBuild),
+    gateCheck('build-all', gateResults.buildAll),
+    gateCheck('four-platform-smoke', gateResults.fourPlatformSmoke),
     gateCheck('accepted-report-unchanged', gateResults.acceptedReport),
   ];
 
@@ -168,7 +206,7 @@ export function buildCiEvidence(repoRoot, {
     checks.push(parityCheck(
       'source-parity:' + target.id,
       target.sourceRevision,
-      canonicalSourceHash,
+      target.expectedRevision,
     ));
   }
 

@@ -17,6 +17,7 @@ test('repository manifest resolves canonical sources and derives real catalog co
     corePatterns: 7,
     coreIcons: 11,
   });
+  assert.deepEqual(result.evidence.releaseGateTrace, { requirements: 19, traced: 19 });
 });
 
 function makeFixture() {
@@ -63,6 +64,9 @@ function makeFixture() {
     releaseGates: {
       evaluation: 'validator-evidence',
       requirements: ['sourceIntegrity'],
+      evidenceTrace: {
+        sourceIntegrity: [{ kind: 'validation', ids: ['source-integrity'] }],
+      },
     },
   };
 
@@ -166,4 +170,33 @@ test('canonical foundation evidence follows the manifest declaration', () => {
   const result = validateSourceIntegrity(fixture.root);
   assert.deepEqual(result.errors, []);
   assert.equal(result.evidence.canonicalSources.foundation.resolvedPath, fs.realpathSync(alternatePath));
+});
+
+
+test('T026 source integrity rejects release requirements without evidence ownership', () => {
+  const fixture = makeFixture();
+  fixture.manifest.releaseGates.requirements.push('contrastAuditRequired');
+  writeManifest(fixture.manifestPath, fixture.manifest);
+
+  const result = validateSourceIntegrity(fixture.root);
+  assert.ok(
+    result.errors.some((error) =>
+      error.includes('releaseGates.evidenceTrace is missing requirement: contrastAuditRequired'),
+    ),
+  );
+});
+
+test('T026 source integrity rejects undeclared release evidence trace entries', () => {
+  const fixture = makeFixture();
+  fixture.manifest.releaseGates.evidenceTrace.ghostRequirement = [
+    { kind: 'validation', ids: ['source-integrity'] },
+  ];
+  writeManifest(fixture.manifestPath, fixture.manifest);
+
+  const result = validateSourceIntegrity(fixture.root);
+  assert.ok(
+    result.errors.some((error) =>
+      error.includes('releaseGates.evidenceTrace contains undeclared requirement: ghostRequirement'),
+    ),
+  );
 });

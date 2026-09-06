@@ -32,7 +32,19 @@ function passingFixture() {
   writeText(root, 'dist/wechat-mini-program/tokens.js');
   writeJson(root, 'dist/agent/contract.json', { sourceHash });
   writeJson(root, 'penpot/build/manifest.json', { canonical: { sourceHash } });
-  writeJson(root, 'dist/build-manifest.json', { canonicalSourceHash: sourceHash });
+  writeJson(root, 'dist/build-manifest.json', {
+    canonicalSourceHash: sourceHash,
+    sourceHash: 't'.repeat(64),
+  });
+  writeText(root, 'dist/mcp/package.json', '{"name":"@com-design/mcp"}\n');
+  writeText(root, 'dist/mcp/server.mjs', 'export {};\n');
+  writeJson(root, 'dist/mcp/data/mcp-manifest.json', {
+    designSystem: 'Com Design',
+    tokenSourceHash: 't'.repeat(64),
+    componentCount: 34,
+    tools: ['com_list','com_info'],
+  });
+  writeJson(root, 'dist/mcp/data/tokens.json', { sourceHash: 't'.repeat(64) });
 
   return { root, sourceHash };
 }
@@ -42,6 +54,8 @@ const allSuccess = {
   validation: 'success',
   engineeringBuild: 'success',
   penpotBuild: 'success',
+  buildAll: 'success',
+  fourPlatformSmoke: 'success',
   acceptedReport: 'success',
 };
 
@@ -58,10 +72,52 @@ test('T017 emits pass evidence only when deterministic gates and traced outputs 
   assert.equal(evidence.source.headSha, 'head-sha');
   assert.equal(evidence.source.canonicalSourceHash, sourceHash);
   assert.equal(evidence.summary.failed, 0);
-  assert.equal(evidence.summary.targets, 8);
+  assert.equal(evidence.summary.targets, 9);
+  assert.equal(evidence.summary.hardGates, 25);
+  assert.ok(evidence.checks.some((check) => check.id === 'build-all' && check.status === 'pass'));
+  assert.ok(evidence.checks.some((check) => check.id === 'four-platform-smoke' && check.status === 'pass'));
+  assert.ok(evidence.targets.some((target) => target.id === 'mcp' && target.status === 'pass'));
   assert.ok(evidence.targets.some((target) => target.id === 'ios' && target.status === 'pass'));
   assert.ok(evidence.targets.some((target) => target.id === 'android' && target.status === 'pass'));
   assert.ok(evidence.checks.every((check) => check.hardGate === true));
+});
+
+test('T026 build:all is a first-class T017 hard gate', () => {
+  const { root } = passingFixture();
+  const evidence = buildCiEvidence(root, {
+    gateResults: { ...allSuccess, buildAll: 'failure' },
+  });
+
+  assert.equal(evidence.result, 'fail');
+  assert.ok(
+    evidence.checks.some((check) => check.id === 'build-all' && check.status === 'fail'),
+  );
+});
+
+test('T026 four-platform smoke is a first-class T017 hard gate', () => {
+  const { root } = passingFixture();
+  const evidence = buildCiEvidence(root, {
+    gateResults: { ...allSuccess, fourPlatformSmoke: 'failure' },
+  });
+  assert.equal(evidence.result, 'fail');
+  assert.ok(
+    evidence.checks.some((check) => check.id === 'four-platform-smoke' && check.status === 'fail'),
+  );
+});
+
+test('T026 MCP target requires token-source parity with the engineering build', () => {
+  const { root } = passingFixture();
+  writeJson(root, 'dist/mcp/data/mcp-manifest.json', {
+    designSystem: 'Com Design',
+    tokenSourceHash: 'x'.repeat(64),
+    componentCount: 34,
+    tools: ['com_list'],
+  });
+  const evidence = buildCiEvidence(root, { gateResults: allSuccess });
+  assert.equal(evidence.result, 'fail');
+  assert.ok(
+    evidence.checks.some((check) => check.id === 'source-parity:mcp' && check.status === 'fail'),
+  );
 });
 
 test('T017 fails evidence when any workflow hard gate fails', () => {

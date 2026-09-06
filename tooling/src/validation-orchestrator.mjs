@@ -4,6 +4,10 @@ import path from 'node:path';
 import { buildCanonicalDesignModel } from './design-model.mjs';
 import { validateComponentCatalog } from './component-contract.mjs';
 import { validateConsumptionConsistency } from './consumption-consistency.mjs';
+import { validateComponentCssParity } from './component-css.mjs';
+import { validateHumanGuideCurrentFacts } from './human-guide-overlay.mjs';
+import { auditContrast } from './contrast-audit.mjs';
+import { validateReleaseGateTrace } from './release-gate-trace.mjs';
 import { validateIconographyContract } from './iconography.mjs';
 import { validateLayoutInputFoundationContract } from './layout-input-foundation.mjs';
 import { validateNavigationFoundationContract } from './navigation-foundation.mjs';
@@ -175,6 +179,22 @@ export function runRepositoryValidation(repoRoot) {
     };
   }));
 
+  checks.push(runCheck('component-css-parity', () => {
+    const result = validateComponentCssParity(repoRoot);
+    return {
+      errors: result.errors,
+      evidence: result.evidence,
+    };
+  }));
+
+  checks.push(runCheck('human-guide-current-facts', () => {
+    const result = validateHumanGuideCurrentFacts(repoRoot);
+    return {
+      errors: result.errors,
+      evidence: result.evidence,
+    };
+  }));
+
   checks.push(runCheck('token-model', () => {
     const foundationPath = canonicalSources.foundation?.resolvedPath;
     if (!foundationPath) {
@@ -188,6 +208,15 @@ export function runRepositoryValidation(repoRoot) {
         tokenSourceSha256: tokenModel.sourceHash,
       },
     };
+  }));
+
+  checks.push(runCheck('contrast-audit', () => {
+    if (!tokenModel) {
+      const foundationPath = canonicalSources.foundation?.resolvedPath;
+      if (!foundationPath) return { errors: ['canonical foundation source is unavailable.'] };
+      tokenModel = buildTokenModel(foundationPath);
+    }
+    return auditContrast(tokenModel);
   }));
 
   checks.push(runCheck('platform-model', () => {
@@ -510,6 +539,14 @@ export function runRepositoryValidation(repoRoot) {
         platformCount: canonicalModel.platform?.platforms?.length ?? 0,
       },
     };
+  }));
+
+  checks.push(runCheck('release-gate-trace', () => {
+    if (!manifest) return { errors: ['canonical manifest is unavailable.'] };
+    return validateReleaseGateTrace(manifest, {
+      validationIds: checks.map((check) => check.id),
+      releaseGovernance: canonicalSources.releaseGovernance?.value ?? null,
+    });
   }));
 
   let manifestSha256 = null;

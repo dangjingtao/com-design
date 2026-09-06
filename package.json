@@ -14,7 +14,9 @@
     "build": "npm run build:all",
     "smoke:four-platform": "node tooling/bin/smoke-four-platform.mjs",
     "governance:dry-run": "node tooling/bin/release-governance.mjs",
-    "governance:evaluate": "node tooling/bin/release-governance.mjs"
+    "governance:evaluate": "node tooling/bin/release-governance.mjs",
+    "build:component-css": "node tooling/bin/extract-components-css.mjs",
+    "check:component-css": "node tooling/bin/extract-components-css.mjs --check"
   },
   "engines": {
     "node": ">=18"

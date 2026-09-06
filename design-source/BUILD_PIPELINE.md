@@ -214,13 +214,14 @@ npm run build:all
 Current `build:all` order:
 
 ```text
-validate source
--> build Tailwind adapter
--> build NativeWind adapter
--> build React Native tokens
+check generated component CSS parity against indexed Preview evidence
+-> validate source / contracts / release requirement evidence
+-> build engineering adapters (Tailwind / NativeWind / React Native / platform adapters / AI / MCP)
 -> build Penpot manifest
 -> leave accepted human report untouched
 ```
+
+The component CSS parity step is a downstream-consumer integrity check. It does not make Preview or `components.css` an upstream source for Canonical Design Model, engineering adapters, or release semantics.
 
 A future `build:docs` must be introduced only together with versioned report retention. It must not silently turn `build:all` into an overwrite operation against the accepted report.
 
@@ -302,3 +303,17 @@ The full pipeline is complete only when:
 - component contracts can generate validated recipe/type metadata where appropriate;
 - stronger cross-target snapshot checks detect stale or inconsistent generated artifacts;
 - product projects have a stable distribution/consumption path without copying token values by hand.
+
+
+## Aggregated component CSS
+
+`design-source/components.css` is a downstream Human Guide / visual-reference artifact. Its component rules are extracted from each indexed `preview/component-*.html` block delimited by `@component-css-start/end`.
+
+Commands:
+
+```bash
+npm run build:component-css
+npm run check:component-css
+```
+
+`npm run validate` hard-gates parity across all indexed Core Components. Preview remains downstream visual evidence rather than Canonical Design Model authority; this extractor exists only to prevent the committed Human Guide aggregate from drifting behind its preview evidence.
