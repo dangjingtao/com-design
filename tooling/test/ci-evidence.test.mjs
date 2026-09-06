@@ -42,6 +42,7 @@ const allSuccess = {
   validation: 'success',
   engineeringBuild: 'success',
   penpotBuild: 'success',
+  buildAll: 'success',
   acceptedReport: 'success',
 };
 
@@ -59,9 +60,23 @@ test('T017 emits pass evidence only when deterministic gates and traced outputs 
   assert.equal(evidence.source.canonicalSourceHash, sourceHash);
   assert.equal(evidence.summary.failed, 0);
   assert.equal(evidence.summary.targets, 8);
+  assert.equal(evidence.summary.hardGates, 22);
+  assert.ok(evidence.checks.some((check) => check.id === 'build-all' && check.status === 'pass'));
   assert.ok(evidence.targets.some((target) => target.id === 'ios' && target.status === 'pass'));
   assert.ok(evidence.targets.some((target) => target.id === 'android' && target.status === 'pass'));
   assert.ok(evidence.checks.every((check) => check.hardGate === true));
+});
+
+test('T026 build:all is a first-class T017 hard gate', () => {
+  const { root } = passingFixture();
+  const evidence = buildCiEvidence(root, {
+    gateResults: { ...allSuccess, buildAll: 'failure' },
+  });
+
+  assert.equal(evidence.result, 'fail');
+  assert.ok(
+    evidence.checks.some((check) => check.id === 'build-all' && check.status === 'fail'),
+  );
 });
 
 test('T017 fails evidence when any workflow hard gate fails', () => {
