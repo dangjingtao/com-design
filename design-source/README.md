@@ -322,7 +322,7 @@ Preview：`preview/core-ux-patterns.html`
 - `README.md` — 本文档，设计语境与快速入口
 - `colors_and_type.css` — runtime token variables
 - `css.json` — structured token view
-- `components.css` — Core Component aggregated CSS
+- `components.css` — 由 Preview 中受标记的 component CSS 区块确定性聚合的下游参考产物；通过 `npm run build:component-css` 重建，不是 Core contract / production implementation 真相源
 - `components/` — 34 个 Core Component contracts
 - `COMPOSITE_COMPONENTS.md` — 4 个 Core Composite Component 人类指南
 - `specs/core-composites.json` — Composite machine contracts
