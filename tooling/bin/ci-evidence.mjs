@@ -43,6 +43,7 @@ const evidence = buildCiEvidence(repoRoot, {
     validation: process.env.GATE_VALIDATION,
     engineeringBuild: process.env.GATE_ENGINEERING_BUILD,
     penpotBuild: process.env.GATE_PENPOT_BUILD,
+    buildAll: process.env.GATE_BUILD_ALL,
     acceptedReport: process.env.GATE_ACCEPTED_REPORT,
   },
 });
