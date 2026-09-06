@@ -93,7 +93,9 @@ test('T024 Timeline preview keeps the rail continuous through variable event hei
     /\.tl-event:not\(:last-child\) \.tl-rail::after\{/,
   );
   assert.doesNotMatch(timelinePreview, /\.tl-event \+ \.tl-event \.tl-rail::before/);
-  assert.doesNotMatch(timelinePreview, /\.timeline\{[^}]*gap:/s);
+  const timelineRule = timelinePreview.match(/\.timeline\{([^}]*)\}/);
+  assert.ok(timelineRule);
+  assert.doesNotMatch(timelineRule[1], /(?:^|;)gap\s*:/);
 
   assert.match(timelinePreview, /data-evidence-sample="variable-height"/);
   assert.match(timelinePreview, /data-evidence-event="default-long"/);
