@@ -1,18 +1,56 @@
 import { CI_GATE_IDS } from './ci-evidence.mjs';
 
-const GOVERNANCE_EVIDENCE_IDS=Object.freeze([
-  'deterministic-hard-gates',
-  'conditional-ai-review',
-  'mira-judgment',
-  'release-eligibility',
-  'consumer-explicit-upgrade',
-]);
+function buildGovernanceEvidenceIds(releaseGovernance){
+  const ids=new Set();
+  const pipeline=new Set(releaseGovernance?.pipeline ?? []);
 
-const REVIEW_EVIDENCE_IDS=Object.freeze([
-  'independent-review',
-]);
+  if(
+    pipeline.has('deterministic-hard-gates')
+    && releaseGovernance?.deterministicHardGate?.requiredEvidenceId==='com-design:ci-evidence:v1'
+    && releaseGovernance?.deterministicHardGate?.requiredResult==='pass'
+    && releaseGovernance?.deterministicHardGate?.canBeOverridden===false
+  ){
+    ids.add('deterministic-hard-gates');
+  }
 
-export function validateReleaseGateTrace(manifest,{validationIds=[]}={}){
+  if(
+    pipeline.has('conditional-ai-review')
+    && releaseGovernance?.aiReviewGate?.vendorNeutral===true
+  ){
+    ids.add('conditional-ai-review');
+  }
+
+  if(
+    pipeline.has('mira-judgment')
+    && releaseGovernance?.miraJudgment?.role==='Mira'
+    && releaseGovernance?.miraJudgment?.requiredForRelease===true
+    && releaseGovernance?.miraJudgment?.finalVeto===true
+    && ['approve','revise','reject'].every((decision)=>
+      releaseGovernance?.miraJudgment?.decisions?.includes(decision)
+    )
+  ){
+    ids.add('mira-judgment');
+  }
+
+  if(pipeline.has('release-eligibility')){
+    ids.add('release-eligibility');
+  }
+
+  if(
+    pipeline.has('consumer-explicit-upgrade')
+    && releaseGovernance?.consumerVersionPolicy?.autoUpgrade===false
+    && releaseGovernance?.consumerVersionPolicy?.explicitUpgradeRequired===true
+  ){
+    ids.add('consumer-explicit-upgrade');
+  }
+
+  return ids;
+}
+
+export function validateReleaseGateTrace(
+  manifest,
+  {validationIds=[],releaseGovernance=null}={},
+){
   const errors=[];
   const releaseGates=manifest?.releaseGates;
   const requirements=releaseGates?.requirements;
@@ -27,9 +65,9 @@ export function validateReleaseGateTrace(manifest,{validationIds=[]}={}){
   const registries={
     validation:new Set(validationIds),
     ci:new Set(CI_GATE_IDS),
-    governance:new Set(GOVERNANCE_EVIDENCE_IDS),
-    review:new Set(REVIEW_EVIDENCE_IDS),
+    governance:buildGovernanceEvidenceIds(releaseGovernance),
   };
+
   let links=0;
   let traced=0;
 
@@ -39,15 +77,29 @@ export function validateReleaseGateTrace(manifest,{validationIds=[]}={}){
       errors.push('release requirement has no evidence trace: '+requirement+'.');
       continue;
     }
+
     let requirementValid=true;
     for(const entry of entries){
       const registry=registries[entry?.kind];
-      for(const id of entry?.ids??[]){
+      if(!registry){
+        errors.push(
+          'release requirement '+requirement+' uses unsupported evidence kind: '
+          +(entry?.kind??'<missing>')+'.'
+        );
+        requirementValid=false;
+        continue;
+      }
+      if(!Array.isArray(entry?.ids) || entry.ids.length===0){
+        errors.push('release requirement '+requirement+' has an empty evidence id list.');
+        requirementValid=false;
+        continue;
+      }
+      for(const id of entry.ids){
         links+=1;
-        if(!registry || !registry.has(id)){
+        if(!registry.has(id)){
           errors.push(
-            'release requirement '+requirement+' references unknown '
-            +(entry?.kind??'<missing>')+' evidence id: '+id+'.'
+            'release requirement '+requirement+' references unknown or unbacked '
+            +entry.kind+' evidence id: '+id+'.'
           );
           requirementValid=false;
         }
@@ -65,6 +117,7 @@ export function validateReleaseGateTrace(manifest,{validationIds=[]}={}){
       validationEvidenceIds:[...registries.validation].sort(),
       ciEvidenceIds:[...registries.ci].sort(),
       governanceEvidenceIds:[...registries.governance].sort(),
+      miraJudgmentBacked:registries.governance.has('mira-judgment'),
     }
   };
 }
