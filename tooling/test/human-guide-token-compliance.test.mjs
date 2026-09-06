@@ -68,6 +68,14 @@ test('T028 rejects unknown Human Guide token references',()=>{
   assert.ok(result.errors.some(error=>error.includes('unknown-token-reference')));
 });
 
+test('T028 rejects ad-hoc z-index layering',()=>{
+  const root=fixture();
+  const cssPath=path.join(root,'report/design-system-v2/styles.css');
+  fs.appendFileSync(cssPath,'\n.bad-layer { z-index: 99; }\n');
+  const result=validateHumanGuideTokenCompliance(root);
+  assert.ok(result.errors.some(error=>error.includes('literal-layering')));
+});
+
 test('T028 rejects runtime inline styling',()=>{
   const root=fixture();
   const jsPath=path.join(root,'report/design-system-v2/app.js');
