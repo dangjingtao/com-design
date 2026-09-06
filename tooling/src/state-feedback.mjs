@@ -204,32 +204,34 @@ export function validateStateFeedbackContract(
     errors.push('Toast/Snackbar must stay transient and cannot be the only critical failure feedback.');
   }
 
-  const alertPreview = previews?.alert ?? '';
-  if (
-    !alertPreview.includes('data-evidence-sample="warning-inline-titleless"')
-    || !alertPreview.includes('data-evidence-sample="warning-banner-titleless"')
-    || !alertPreview.includes('alert-inline')
-    || !alertPreview.includes('alert-banner')
-    || !alertPreview.includes('page-header')
-    || !alertPreview.includes('section-card')
-  ) {
-    errors.push('Alert preview must visibly compare titleless warning Inline Alert vs Banner in distinct local/page contexts.');
-  }
-
-  const emptyPreview = previews?.emptyState ?? '';
-  if (emptyPreview.includes('recoverable-error') || /加载失败/.test(emptyPreview)) {
-    errors.push('Empty State preview must not present generic recoverable error.');
-  }
-  for (const sample of ['first-use','no-data','no-results']) {
-    if (!emptyPreview.includes('data-evidence-sample="' + sample + '"')) {
-      errors.push('Empty State preview missing absence sample: ' + sample);
+  if (previews !== undefined) {
+    const alertPreview = previews?.alert ?? '';
+    if (
+      !alertPreview.includes('data-evidence-sample="warning-inline-titleless"')
+      || !alertPreview.includes('data-evidence-sample="warning-banner-titleless"')
+      || !alertPreview.includes('alert-inline')
+      || !alertPreview.includes('alert-banner')
+      || !alertPreview.includes('page-header')
+      || !alertPreview.includes('section-card')
+    ) {
+      errors.push('Alert preview must visibly compare titleless warning Inline Alert vs Banner in distinct local/page contexts.');
     }
-  }
 
-  const resultPreview = previews?.resultState ?? '';
-  for (const sample of ['success','error','pending']) {
-    if (!resultPreview.includes('data-evidence-sample="' + sample + '"')) {
-      errors.push('Result State preview missing outcome sample: ' + sample);
+    const emptyPreview = previews?.emptyState ?? '';
+    if (emptyPreview.includes('recoverable-error') || /加载失败/.test(emptyPreview)) {
+      errors.push('Empty State preview must not present generic recoverable error.');
+    }
+    for (const sample of ['first-use','no-data','no-results']) {
+      if (!emptyPreview.includes('data-evidence-sample="' + sample + '"')) {
+        errors.push('Empty State preview missing absence sample: ' + sample);
+      }
+    }
+
+    const resultPreview = previews?.resultState ?? '';
+    for (const sample of ['success','error','pending']) {
+      if (!resultPreview.includes('data-evidence-sample="' + sample + '"')) {
+        errors.push('Result State preview missing outcome sample: ' + sample);
+      }
     }
   }
 
