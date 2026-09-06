@@ -16,7 +16,7 @@
   /* @component-css-start */
   .timeline{--tl-node-size:10px;--tl-node-offset:6px;--tl-event-gap:var(--space-12);display:flex;flex-direction:column}
   .tl-event{display:flex;align-items:flex-start;gap:var(--space-12);position:relative}
-  .tl-event:not(:last-child){padding-bottom:var(--tl-event-gap)}
+  .tl-event:not(:last-child) .tl-content{padding-bottom:var(--tl-event-gap)}
   .tl-rail{align-self:stretch;flex:0 0 auto;position:relative;width:var(--tl-node-size);display:flex;justify-content:center;padding-top:var(--tl-node-offset)}
   .tl-node{width:var(--tl-node-size);height:var(--tl-node-size);border-radius:var(--radius-full);background:var(--color-border-strong);flex-shrink:0;position:relative;z-index:1}
   .tl-event:not(:last-child) .tl-rail::after{content:"";position:absolute;top:calc(var(--tl-node-offset) + var(--tl-node-size));bottom:calc(-1 * var(--tl-node-offset));left:50%;width:2px;transform:translateX(-50%);background:var(--color-border-subtle);z-index:0}
