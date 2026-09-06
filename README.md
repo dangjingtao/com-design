@@ -43,7 +43,7 @@ Canonical Design Model V2
 ```text
 33 Core Components
 4 Core Composite Components
-6 Core UX Patterns
+7 Core UX Patterns
 ```
 
 正式目标平台：
