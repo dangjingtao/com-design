@@ -81,6 +81,7 @@ Composite 视觉参考：`preview/core-composite-components.html`。
 | `stateToAction` | State to Action | 权限、资格、生命周期、审核等状态决定当前可执行动作 |
 | `intentContinuity` | Intent Continuity / Handoff | 登录、授权、跨系统流程会暂时打断原任务 |
 | `contextualNextStep` | Contextual Next Step | 长流程需要明确当前上下文、进度和唯一下一步 |
+| `incrementalLoading` | Incremental Loading / Infinite List | 长集合续载需要统一 continuation、错误恢复、去重与位置保持 |
 
 ## Components
 
