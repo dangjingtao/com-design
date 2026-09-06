@@ -27,7 +27,7 @@ export function buildHumanGuideOverlay(repoRoot){
   const facts=buildHumanGuideCurrentFacts(repoRoot);
   const currentFactsLabel='V2 current facts · '+facts.version+' · '+facts.coreComponents+' Core Components · '+facts.coreCompositeComponents+' Core Composite Components · '+facts.corePatterns+' Core UX Patterns · canonical: '+facts.canonicalManifest;
   return `(()=>{
-const currentFactsLabel=${JSON.stringify('${PLACEHOLDER}')};
+const currentFactsLabel=${JSON.stringify(currentFactsLabel)};
 const facts=${JSON.stringify(facts)};
 function applyCurrentFacts(){
   document.title='Com Design · V2 Current Facts + Accepted V1 Human Guide';
