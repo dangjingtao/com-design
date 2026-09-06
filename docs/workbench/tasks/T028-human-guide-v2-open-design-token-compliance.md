@@ -1,6 +1,6 @@
 # T028 · Human Guide V2 Open Design Visual Refresh + Token Compliance
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 documentation follow-up
 - Impact: Human UI / Visual System / Token Compliance
 - Owner: -
@@ -76,17 +76,17 @@ Human Guide 目前仍保留大量 V1 手写展示层样式。虽然 Core Compone
 
 ## Acceptance
 
-- [ ] V2 Human Guide 视觉已完成 Open Design 方向的正式重构，同时保持明显的 Com Design 品牌与组件语言，而非直接复制外部设计系统。
-- [ ] Human Guide shell 的颜色、surface、border、text、status、radius、spacing、type、elevation 可追溯到 Com Design token 或明确 allowlisted evidence-only exception。
-- [ ] 不再存在用于正常 Human UI styling 的散落 raw brand/status hex 或隐式 `var(--token, #fallback)` 第二套视觉值。
-- [ ] Token compliance 有 deterministic gate；违规可在 CI/validate 中被阻断，而不是靠人工肉眼记忆。
-- [ ] Component / Composite / Pattern 页面视觉统一，新增 Result State、Button V2、Incremental Loading 等内容在新 shell 中无旧风格断层。
-- [ ] Primary 稀缺、flat-first、Section-before-Card、feedback semantics 等既有 Com Design 规则未因“好看”被破坏。
-- [ ] Desktop / mobile responsive visual evidence 通过；导航、目录、组件 Inspector 在窄屏仍可用。
-- [ ] Default / Premium Gold × Light / Dark 的相关 Human Guide semantic contrast 检查无 hard failure。
-- [ ] accepted V1 report 未修改，T027 current-entry / canonical-consumption gates 继续 PASS。
-- [ ] `npm test`、`npm run validate`、Human Guide build / Pages build 通过。
-- [ ] Mira 完成 visual + token final review 后方可 PASS。
+- [x] V2 Human Guide 视觉已完成 Open Design 方向的正式重构，同时保持明显的 Com Design 品牌与组件语言，而非直接复制外部设计系统。
+- [x] Human Guide shell 的颜色、surface、border、text、status、radius、spacing、type、elevation 可追溯到 Com Design token 或明确 allowlisted evidence-only exception。
+- [x] 不再存在用于正常 Human UI styling 的散落 raw brand/status hex 或隐式 `var(--token, #fallback)` 第二套视觉值。
+- [x] Token compliance 有 deterministic gate；违规可在 CI/validate 中被阻断，而不是靠人工肉眼记忆。
+- [x] Component / Composite / Pattern 页面视觉统一，新增 Result State、Button V2、Incremental Loading 等内容在新 shell 中无旧风格断层。
+- [x] Primary 稀缺、flat-first、Section-before-Card、feedback semantics 等既有 Com Design 规则未因“好看”被破坏。
+- [x] Desktop / mobile responsive visual evidence 通过；导航、目录、组件 Inspector 在窄屏仍可用。
+- [x] Default / Premium Gold × Light / Dark 的相关 Human Guide semantic contrast 检查无 hard failure。
+- [x] accepted V1 report 未修改，T027 current-entry / canonical-consumption gates 继续 PASS。
+- [x] `npm test`、`npm run validate`、Human Guide build / Pages build 通过。
+- [x] Mira 完成 visual + token final review 后方可 PASS。
 
 ## Risks / Dependencies
 
@@ -114,17 +114,17 @@ Human Guide 目前仍保留大量 V1 手写展示层样式。虽然 Core Compone
 
 ## Verification evidence
 
-- CI: Design System Build #361, run `34036982345` — PASS on implementation head `ca0632627300bfdbebcc679a6e62bd0a7287c21c`.
+- CI: Design System Build #361, run `34036982345` — PASS on reviewed implementation head `ca0632627300bfdbebcc679a6e62bd0a7287c21c`; post-merge Design System Build #363, run `34037082420` — PASS on accepted implementation merge SHA `5a8d4e2fdf929fb13aac1af0322c285bb33ac988`.
 - Repository tests: 254/254 PASS; deterministic validation 19/19 checks PASS with 0 warnings.
 - Token compliance: `human-guide-token-compliance` PASS; 2 Human Guide style files scanned, 0 violations, 2 narrowly scoped responsive breakpoint exceptions, unknown-token/fallback/raw-color/raw-length/radius/type/elevation/layering/inline-style regressions covered by tests. Machine evidence: `dist/human-guide/token-compliance.json`.
-- Visual evidence: `report/design-system-v2/visual-evidence.html` deterministically renders Default Light / Default Dark / Premium Gold Light / Premium Gold Dark against the same Human shell and existing Core Alert/Button presentation evidence.
+- Visual evidence: `report/design-system-v2/visual-evidence.html` deterministically renders Default Light / Default Dark / Premium Gold Light / Premium Gold Dark against the same Human shell and existing Core Alert/Button presentation evidence. Post-merge Pages #180, run `34037082372` — PASS; deployed `github-pages` artifact `9990503050` was inspected from the actual published bundle. The four static theme fixtures render coherently: Default stays neutral/indigo and restrained; Premium Gold remains an opt-in warm semantic remap; Light/Dark keep the same hierarchy and component structure. The main Human Guide render shows the intended left-nav technical-documentation/product shell rather than a dashboard/card wall. Browser navigation in the review environment was administrator-blocked, so visual inspection used the deployed artifact through a local static renderer; this is recorded as a review-environment limitation rather than product evidence.
 - Responsive evidence: wide layout uses persistent left documentation navigation + Component Inspector; downstream compact breakpoints recompose to one flow, hide the closed drawer from focus/pointer interaction, and support link-close / Escape / outside-click dismissal.
 - Theme / contrast evidence: the Human Guide consumes existing Default/Premium Gold semantic mappings; repository contrast audit remains part of 19-check validation and passes all 4 semantic scopes with no hard failure.
 - Accepted V1 guard: CI `Verify accepted report was not changed` PASS; PR diff contains no `report/design-system-v1/` path.
-- Other evidence: T027 builder still reports `1.0.0-rc.2 · 34 components · 4 composites · 7 patterns`; T018 four-platform smoke 43/43 PASS; T017 deterministic CI hard gate 25 checks / 9 traced targets PASS. Initial CI #356 failed only because the orchestrator regression test still expected 18 checks; the test contract was updated to 19 and explicitly asserts the new Human Guide gate.
+- Other evidence: deployed `current.json` records source revision `5a8d4e2fdf929fb13aac1af0322c285bb33ac988`, current path `versions/1.0.0-rc.2/`, accepted V1 path `accepted/v1/`, 34 Components / 4 Composites / 7 Patterns, `result-state`, and `incrementalLoading`. T018 four-platform smoke 43/43 PASS; T017 deterministic CI hard gate 25 checks / 9 traced targets PASS. Initial CI #356 failed only because the orchestrator regression test still expected 18 checks; the test contract was updated to 19 and explicitly asserts the new Human Guide gate.
 
 ## Review
 
 - Reviewer: Mira
-- Result: REVIEW
-- Conclusion: Implementation review passes for merge-to-dev publication verification. The page now follows the intended quiet, productized technical-documentation direction while retaining Com Design's own hierarchy, flat-first behavior and Brand scarcity. No external Open Design token/value was imported. Human shell styling is canonical-token driven, Premium Gold is opt-in, T027 34/4/7 source consumption is intact, and accepted V1 remains immutable. During self-review two accessibility/quality issues were proactively fixed: off-screen compact navigation focusability and incomplete ARIA table roles; ad-hoc z-index layering was also moved under the hard gate. Codex review is unavailable due quota; CodeRabbit has not produced an actionable review thread, so Mira completed independent review. Final PASS is held until post-merge Pages publication and real rendered visual inspection.
+- Result: PASS
+- Conclusion: Final visual/design-system acceptance passed after post-merge publication and deployed-artifact inspection. Human Guide V2 now has the intended restrained, productized technical-documentation direction while retaining Com Design's own hierarchy, flat-first behavior and Brand scarcity; Open Design is reference language only and contributes no token or source authority. Human shell styling is canonical-token driven with 0 violations and only two narrowly scoped responsive media-query exceptions. Default / Premium Gold × Light / Dark share one structure and pass the existing four-scope contrast audit; Premium Gold remains opt-in. T027 canonical 34/4/7 consumption, Result State and Incremental Loading remain intact, and accepted V1 is untouched. Self-review fixed compact-navigation focusability, incomplete ARIA table roles and ad-hoc layering before acceptance. Codex review was unavailable due quota; CodeRabbit produced no actionable review thread, so Mira completed independent final review using deterministic CI, token evidence, Pages publication and rendered deployed-artifact evidence.
