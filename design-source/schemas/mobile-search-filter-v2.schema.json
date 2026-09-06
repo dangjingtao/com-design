@@ -18,44 +18,114 @@
     "examples"
   ],
   "properties": {
-    "$schema": { "type": "string", "minLength": 1 },
-    "schemaVersion": { "const": 2 },
-    "id": { "const": "com-design:mobile-search-filter:v2" },
+    "$schema": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schemaVersion": {
+      "const": 2
+    },
+    "id": {
+      "const": "com-design:mobile-search-filter:v2"
+    },
     "$metadata": {
       "type": "object",
-      "required": ["name", "owner", "status", "canonical"],
+      "required": [
+        "name",
+        "owner",
+        "status",
+        "canonical"
+      ],
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "owner": { "const": "T021" },
-        "status": { "type": "string", "minLength": 1 },
-        "canonical": { "const": true }
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner": {
+          "const": "T021"
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "canonical": {
+          "const": true
+        }
       },
       "additionalProperties": false
     },
     "scope": {
       "type": "object",
-      "required": ["platforms", "addsCoreComponent", "addsCorePattern"],
+      "required": [
+        "platforms",
+        "addsCoreComponent",
+        "addsCorePattern"
+      ],
       "properties": {
         "platforms": {
           "type": "array",
           "minItems": 3,
           "uniqueItems": true,
-          "items": { "enum": ["ios", "android", "wechat-mini-program"] }
+          "items": {
+            "enum": [
+              "ios",
+              "android",
+              "wechat-mini-program"
+            ]
+          }
         },
-        "addsCoreComponent": { "const": false },
-        "addsCorePattern": { "const": false }
+        "addsCoreComponent": {
+          "const": false
+        },
+        "addsCorePattern": {
+          "const": false
+        }
       },
       "additionalProperties": false
     },
     "references": {
       "type": "object",
-      "required": ["components", "composites", "patterns", "platformEnvironment", "layoutInputFoundation"],
+      "required": [
+        "components",
+        "composites",
+        "patterns",
+        "platformEnvironment",
+        "layoutInputFoundation"
+      ],
       "properties": {
-        "components": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
-        "composites": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
-        "patterns": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
-        "platformEnvironment": { "const": "com-design:platform-environment:v1" },
-        "layoutInputFoundation": { "const": "com-design:layout-input-foundation:v2" }
+        "components": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "composites": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "patterns": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "platformEnvironment": {
+          "const": "sources.platformEnvironment"
+        },
+        "layoutInputFoundation": {
+          "const": "sources.layoutInputFoundation"
+        }
       },
       "additionalProperties": false
     },
@@ -69,7 +139,9 @@
         "filterDraft"
       ],
       "properties": {
-        "authoritativeOwner": { "const": "collection-owner" },
+        "authoritativeOwner": {
+          "const": "collection-owner"
+        },
         "fields": {
           "type": "array",
           "uniqueItems": true,
@@ -86,18 +158,34 @@
         },
         "independence": {
           "type": "object",
-          "required": ["clearQueryPreservesFilters", "resetFiltersPreservesQuery", "sortIndependent"],
+          "required": [
+            "clearQueryPreservesFilters",
+            "resetFiltersPreservesQuery",
+            "sortIndependent"
+          ],
           "properties": {
-            "clearQueryPreservesFilters": { "const": true },
-            "resetFiltersPreservesQuery": { "const": true },
-            "sortIndependent": { "const": true }
+            "clearQueryPreservesFilters": {
+              "const": true
+            },
+            "resetFiltersPreservesQuery": {
+              "const": true
+            },
+            "sortIndependent": {
+              "const": true
+            }
           },
           "additionalProperties": false
         },
         "continuationInvalidation": {
           "type": "array",
           "uniqueItems": true,
-          "items": { "enum": ["committedQuery", "committedFilters", "sort"] }
+          "items": {
+            "enum": [
+              "committedQuery",
+              "committedFilters",
+              "sort"
+            ]
+          }
         },
         "filterDraft": {
           "type": "object",
@@ -111,16 +199,33 @@
             "externalQueryChangePolicy"
           ],
           "properties": {
-            "separateFromCommitted": { "const": true },
-            "initializeFromCommittedOnOpen": { "const": true },
-            "dismissWithoutApply": { "const": "discard-draft" },
-            "apply": { "const": "commit-draft-refresh-close" },
-            "reset": { "const": "reset-draft-only" },
-            "reopenSource": { "const": "current-committed-filters" },
+            "separateFromCommitted": {
+              "const": true
+            },
+            "initializeFromCommittedOnOpen": {
+              "const": true
+            },
+            "dismissWithoutApply": {
+              "const": "discard-draft"
+            },
+            "apply": {
+              "const": "commit-draft-refresh-close"
+            },
+            "reset": {
+              "const": "reset-draft-only"
+            },
+            "reopenSource": {
+              "const": "current-committed-filters"
+            },
             "externalQueryChangePolicy": {
               "type": "array",
               "uniqueItems": true,
-              "items": { "enum": ["cancel-draft", "rebase-draft"] }
+              "items": {
+                "enum": [
+                  "cancel-draft",
+                  "rebase-draft"
+                ]
+              }
             }
           },
           "additionalProperties": false
@@ -130,7 +235,13 @@
     },
     "search": {
       "type": "object",
-      "required": ["lifecycleStates", "ime", "submissionModes", "semantics", "asyncPolicy"],
+      "required": [
+        "lifecycleStates",
+        "ime",
+        "submissionModes",
+        "semantics",
+        "asyncPolicy"
+      ],
       "properties": {
         "lifecycleStates": {
           "type": "array",
@@ -158,36 +269,68 @@
             "platformEventNamesCanonical"
           ],
           "properties": {
-            "compositionIsPendingInput": { "const": true },
-            "commitWhileComposing": { "const": false },
-            "debounceStartsAfterCompositionEnd": { "const": true },
-            "platformEventNamesCanonical": { "const": false }
+            "compositionIsPendingInput": {
+              "const": true
+            },
+            "commitWhileComposing": {
+              "const": false
+            },
+            "debounceStartsAfterCompositionEnd": {
+              "const": true
+            },
+            "platformEventNamesCanonical": {
+              "const": false
+            }
           },
           "additionalProperties": false
         },
         "submissionModes": {
           "type": "object",
-          "required": ["instant-debounced", "explicit-submit"],
+          "required": [
+            "instant-debounced",
+            "explicit-submit"
+          ],
           "properties": {
             "instant-debounced": {
               "type": "object",
-              "required": ["debounceAfterCompositionEnd", "requestCancellation", "staleResponseGuard"],
+              "required": [
+                "debounceAfterCompositionEnd",
+                "requestCancellation",
+                "staleResponseGuard"
+              ],
               "properties": {
-                "debounceAfterCompositionEnd": { "const": true },
-                "requestCancellation": { "const": true },
-                "staleResponseGuard": { "const": true }
+                "debounceAfterCompositionEnd": {
+                  "const": true
+                },
+                "requestCancellation": {
+                  "const": true
+                },
+                "staleResponseGuard": {
+                  "const": true
+                }
               },
               "additionalProperties": false
             },
             "explicit-submit": {
               "type": "object",
-              "required": ["commitWhileComposing", "commitTriggers"],
+              "required": [
+                "commitWhileComposing",
+                "commitTriggers"
+              ],
               "properties": {
-                "commitWhileComposing": { "const": false },
+                "commitWhileComposing": {
+                  "const": false
+                },
                 "commitTriggers": {
                   "type": "array",
                   "uniqueItems": true,
-                  "items": { "enum": ["keyboard-search", "enter-confirm", "explicit-action"] }
+                  "items": {
+                    "enum": [
+                      "keyboard-search",
+                      "enter-confirm",
+                      "explicit-action"
+                    ]
+                  }
                 }
               },
               "additionalProperties": false
@@ -197,21 +340,41 @@
         },
         "semantics": {
           "type": "object",
-          "required": ["clearQuery", "cancelBack", "zeroResultsDistinctFromError"],
+          "required": [
+            "clearQuery",
+            "cancelBack",
+            "zeroResultsDistinctFromError"
+          ],
           "properties": {
-            "clearQuery": { "const": "clear-query-keep-search-context" },
-            "cancelBack": { "const": "exit-or-return-search-context" },
-            "zeroResultsDistinctFromError": { "const": true }
+            "clearQuery": {
+              "const": "clear-query-keep-search-context"
+            },
+            "cancelBack": {
+              "const": "exit-or-return-search-context"
+            },
+            "zeroResultsDistinctFromError": {
+              "const": true
+            }
           },
           "additionalProperties": false
         },
         "asyncPolicy": {
           "type": "object",
-          "required": ["suggestionStaleResponseGuard", "resultStaleResponseGuard", "preserveUsableOldResultsOnRecoverableError"],
+          "required": [
+            "suggestionStaleResponseGuard",
+            "resultStaleResponseGuard",
+            "preserveUsableOldResultsOnRecoverableError"
+          ],
           "properties": {
-            "suggestionStaleResponseGuard": { "const": true },
-            "resultStaleResponseGuard": { "const": true },
-            "preserveUsableOldResultsOnRecoverableError": { "const": true }
+            "suggestionStaleResponseGuard": {
+              "const": true
+            },
+            "resultStaleResponseGuard": {
+              "const": true
+            },
+            "preserveUsableOldResultsOnRecoverableError": {
+              "const": true
+            }
           },
           "additionalProperties": false
         }
@@ -220,42 +383,85 @@
     },
     "filter": {
       "type": "object",
-      "required": ["quickFilter", "advancedSurface", "feedback"],
+      "required": [
+        "quickFilter",
+        "advancedSurface",
+        "feedback"
+      ],
       "properties": {
         "quickFilter": {
           "type": "object",
-          "required": ["semanticRole", "peerViewNavigation", "recommendedVisibleCount", "activeCueNonColorOnly"],
+          "required": [
+            "semanticRole",
+            "peerViewNavigation",
+            "recommendedVisibleCount",
+            "activeCueNonColorOnly"
+          ],
           "properties": {
-            "semanticRole": { "const": "collection-condition" },
-            "peerViewNavigation": { "const": false },
+            "semanticRole": {
+              "const": "collection-condition"
+            },
+            "peerViewNavigation": {
+              "const": false
+            },
             "recommendedVisibleCount": {
               "type": "array",
-              "items": { "type": "integer" },
+              "items": {
+                "type": "integer"
+              },
               "uniqueItems": true
             },
-            "activeCueNonColorOnly": { "const": true }
+            "activeCueNonColorOnly": {
+              "const": true
+            }
           },
           "additionalProperties": false
         },
         "advancedSurface": {
           "type": "object",
-          "required": ["defaultPresentation", "complexPresentation", "applyIsCommitBoundary", "dismissCommits", "resetClearsQuery"],
+          "required": [
+            "defaultPresentation",
+            "complexPresentation",
+            "applyIsCommitBoundary",
+            "dismissCommits",
+            "resetClearsQuery"
+          ],
           "properties": {
-            "defaultPresentation": { "const": "bottom-sheet" },
-            "complexPresentation": { "const": "full-screen-or-full-height" },
-            "applyIsCommitBoundary": { "const": true },
-            "dismissCommits": { "const": false },
-            "resetClearsQuery": { "const": false }
+            "defaultPresentation": {
+              "const": "bottom-sheet"
+            },
+            "complexPresentation": {
+              "const": "full-screen-or-full-height"
+            },
+            "applyIsCommitBoundary": {
+              "const": true
+            },
+            "dismissCommits": {
+              "const": false
+            },
+            "resetClearsQuery": {
+              "const": false
+            }
           },
           "additionalProperties": false
         },
         "feedback": {
           "type": "object",
-          "required": ["resultCountAccessible", "zeroResultRecoveryRequired", "disabledApplyOnlyNoChangeSignal"],
+          "required": [
+            "resultCountAccessible",
+            "zeroResultRecoveryRequired",
+            "disabledApplyOnlyNoChangeSignal"
+          ],
           "properties": {
-            "resultCountAccessible": { "const": true },
-            "zeroResultRecoveryRequired": { "const": true },
-            "disabledApplyOnlyNoChangeSignal": { "const": false }
+            "resultCountAccessible": {
+              "const": true
+            },
+            "zeroResultRecoveryRequired": {
+              "const": true
+            },
+            "disabledApplyOnlyNoChangeSignal": {
+              "const": false
+            }
           },
           "additionalProperties": false
         }
@@ -264,31 +470,59 @@
     },
     "restoration": {
       "type": "object",
-      "required": ["detailReturn", "fields", "invalidatedWhen"],
+      "required": [
+        "detailReturn",
+        "fields",
+        "invalidatedWhen"
+      ],
       "properties": {
-        "detailReturn": { "const": "restore-active-collection-task" },
+        "detailReturn": {
+          "const": "restore-active-collection-task"
+        },
         "fields": {
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "enum": ["committedQuery", "committedFilters", "sort", "loadedData", "scrollPosition"]
+            "enum": [
+              "committedQuery",
+              "committedFilters",
+              "sort",
+              "loadedData",
+              "scrollPosition"
+            ]
           }
         },
         "invalidatedWhen": {
           "type": "array",
           "uniqueItems": true,
-          "items": { "enum": ["collection-identity-changed", "product-explicit-refresh", "restoration-expired"] }
+          "items": {
+            "enum": [
+              "collection-identity-changed",
+              "product-explicit-refresh",
+              "restoration-expired"
+            ]
+          }
         }
       },
       "additionalProperties": false
     },
     "platformMappings": {
       "type": "object",
-      "required": ["ios", "android", "wechat-mini-program"],
+      "required": [
+        "ios",
+        "android",
+        "wechat-mini-program"
+      ],
       "properties": {
-        "ios": { "type": "object" },
-        "android": { "type": "object" },
-        "wechat-mini-program": { "type": "object" }
+        "ios": {
+          "type": "object"
+        },
+        "android": {
+          "type": "object"
+        },
+        "wechat-mini-program": {
+          "type": "object"
+        }
       },
       "additionalProperties": false
     },
@@ -297,11 +531,22 @@
       "minItems": 3,
       "items": {
         "type": "object",
-        "required": ["id", "scenario", "expected"],
+        "required": [
+          "id",
+          "scenario",
+          "expected"
+        ],
         "properties": {
-          "id": { "type": "string", "minLength": 1 },
-          "scenario": { "type": "object" },
-          "expected": { "type": "object" }
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scenario": {
+            "type": "object"
+          },
+          "expected": {
+            "type": "object"
+          }
         },
         "additionalProperties": false
       }
