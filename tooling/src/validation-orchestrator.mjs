@@ -5,7 +5,7 @@ import { buildCanonicalDesignModel } from './design-model.mjs';
 import { validateComponentCatalog } from './component-contract.mjs';
 import { validateConsumptionConsistency } from './consumption-consistency.mjs';
 import { validateComponentCssParity } from './component-css.mjs';
-import { validateHumanGuideCurrentFacts } from './human-guide-overlay.mjs';
+import { validateHumanGuideV2 } from './human-guide-v2.mjs';
 import { auditContrast } from './contrast-audit.mjs';
 import { validateReleaseGateTrace } from './release-gate-trace.mjs';
 import { validateIconographyContract } from './iconography.mjs';
@@ -188,7 +188,7 @@ export function runRepositoryValidation(repoRoot) {
   }));
 
   checks.push(runCheck('human-guide-current-facts', () => {
-    const result = validateHumanGuideCurrentFacts(repoRoot);
+    const result = validateHumanGuideV2(repoRoot);
     return {
       errors: result.errors,
       evidence: result.evidence,
