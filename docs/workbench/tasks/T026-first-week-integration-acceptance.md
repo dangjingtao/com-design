@@ -75,7 +75,7 @@ V2 第一周目标不是“组件越多越好”，而是 Source → Contract �
 
 ## Verification evidence
 
-- CI: Design System Build #337 — success on exact REVIEW-state head `6e3fb5a384de2373b1d649e38f15ae6c167b80ba`; predecessor substantive Build #335 was also fully green.
+- CI: Design System Build #340 — PASS on final REVIEW-state head `17789bea995b0fbb60a04f82b63eb86dfc350914`; the complete integration workflow including tests, 18-check validation, engineering, Penpot, `build:all`, four-platform smoke, accepted-report protection, RC evidence artifact, governance dry-run and T017 enforcement is green.
 - Full test / validate / build: 242/242 repository tests PASS; deterministic validation 18/18 checks PASS with 0 warnings; `build:all` PASS; component CSS parity 34/34 PASS; 25 CI hard checks / 9 traced targets PASS.
 - Four-platform smoke: T018 `smoke:four-platform` PASS, 43/43 checks across Web / iOS / Android / WeChat Mini Program; platform adapter/source-parity evidence remains hard-gated.
 - AI / MCP evidence: Canonical Design Model V2 builds successfully; Agent contract generated; MCP manifest/tokens/package tests PASS and MCP is now a traced CI target tied to the canonical engineering source revision.
