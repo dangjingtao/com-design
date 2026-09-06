@@ -158,8 +158,8 @@
         "primaryBackground": "var(--color-destructive)",
         "primaryPressedBackground": "var(--color-destructive-hover)",
         "primaryForeground": "var(--color-on-primary)",
-        "secondaryForeground": "var(--color-destructive)",
-        "tertiaryForeground": "var(--color-destructive)"
+        "secondaryForeground": "var(--color-danger-text)",
+        "tertiaryForeground": "var(--color-danger-text)"
       }
     },
     "disabled": {
