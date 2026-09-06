@@ -58,6 +58,8 @@
 | T024 | Switch + Timeline Visual Defect Repair | QA / Component | PASS | V2 first-stage | T003 |
 | T025 | Button V2: Pill / Destructive / Loading | Component | PASS | V2 first-stage | T003 |
 | T026 | First-week Integration Acceptance / V2 RC Readiness | Integration / Review | PASS | V2 first-stage | T001-T025 |
+| T027 | Human Guide V2 Canonical Consumption + Versioned Current Entry | Docs / Human Consumption / Pages | TODO | V2 documentation follow-up | T026 |
+| T028 | Human Guide V2 Open Design Visual Refresh + Token Compliance | Human UI / Visual System / Token Compliance | TODO | V2 documentation follow-up | T027 |
 
 ## 推荐施工波次
 
@@ -80,6 +82,10 @@ T001-T004 的对应前置合入后推进 T005、T010、T011、T012，并在 T003
 ### Wave D · 门禁与总验收
 
 T016-T019 完成消费一致性、CI、四端 smoke 与 Review Gate；最后 T026 做第一周总验收。
+
+### Wave E · Human Guide V2 收口
+
+T026 PASS 后串行推进 T027 → T028。T027 先建立 canonical-driven 的版本化 V2 Human Guide 与 current Pages 入口，保留 accepted V1 evidence；T028 再完成 Open Design 视觉方向与 Human UI token compliance，禁止用视觉整改反向制造第二真相源。
 
 ## 派卡规则
 
