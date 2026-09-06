@@ -224,7 +224,7 @@ export function validateConsumptionConsistency(repoRoot) {
     || library.downstreamConsumers?.humanGuide?.currentReport !== 'report/design-system-v2/'
     || library.downstreamConsumers?.humanGuide?.upstreamAuthority !== false
   ) {
-    errors.push('Human Guide must keep accepted V1 evidence and current V2 report as downstream consumers.');
+    errors.push('Human Guide must remain a downstream consumer with accepted V1 evidence and current V2 report.');
   }
 
   requireFile(repoRoot, 'report/design-system-v1', errors, 'accepted human report');
