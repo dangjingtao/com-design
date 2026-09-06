@@ -6,6 +6,8 @@ on:
       - dev
     paths:
       - "report/design-system-v1/**"
+      - "report/design-system-v2/**"
+      - "report/README.md"
       - "design.md"
       - "design-source/**"
       - "tooling/**"
@@ -51,15 +53,21 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          VERSION="$(node -e "const fs=require('fs');const m=JSON.parse(fs.readFileSync('design-source/specs/design-system-v1.json','utf8'));process.stdout.write(m.\$metadata.version)")"
           rm -rf _site
+          mkdir -p "_site/versions/$VERSION"
+          mkdir -p _site/accepted/v1
           mkdir -p _site/design-source/themes
+          mkdir -p _site/design-source/specs
           mkdir -p _site/downloads
-          cp -R report/design-system-v1/. _site/
+          cp -R report/design-system-v2/. "_site/versions/$VERSION/"
+          cp -R report/design-system-v1/. _site/accepted/v1/
           cp design-source/colors_and_type.css _site/design-source/colors_and_type.css
           cp design-source/components.css _site/design-source/components.css
           cp -R design-source/themes/. _site/design-source/themes/
           cp -R design-source/components _site/design-source/components
           cp -R design-source/preview _site/design-source/preview
+          cp -R design-source/specs/. _site/design-source/specs/
 
           # Publish engineering outputs built from the same design-source revision.
           cp -R dist/tailwind _site/downloads/tailwind
@@ -156,47 +164,34 @@ jobs:
           printf '\nBuild revision: `%s`\n' "$GITHUB_SHA" >> "$TRAE_SOURCE_PACK/README.md"
           (cd "$TRAE_SOURCE_PACK" && zip -qr "$GITHUB_WORKSPACE/_site/downloads/com-design-trae-source.zip" .)
 
-          # Generate current V2 facts from canonical source without modifying the accepted V1 report.
-          node tooling/bin/human-guide-overlay.mjs _site/com-design-v2-current.js
+          # Generate the root current pointer + traceable current.json from canonical source.
+          # The actual current Human Guide lives under /versions/<canonical-version>/.
+          node tooling/bin/human-guide-v2.mjs _site
 
-          # Append Human Guide-only iframe compatibility rules after the main workspace script.
-          # This keeps Core Preview pages untouched while fixing multi-scene evidence layouts in the simulator.
-          printf '\n' >> _site/guide-components.js
-          cat report/design-system-v1/guide-preview-adapter.js >> _site/guide-components.js
+          # Keep accepted V1 fully readable without modifying repository acceptance evidence.
+          cp -R _site/design-source _site/accepted/v1/design-source
+          cp -R _site/downloads _site/accepted/v1/downloads
 
-          # Foundation is flat-first: enforce a presentation guard after the main Foundation styles.
-          printf '\n' >> _site/foundation.css
-          cat report/design-system-v1/foundation-flat-guard.css >> _site/foundation.css
+          # Legacy V1-only presentation adapters stay scoped to /accepted/v1/.
+          printf '\n' >> _site/accepted/v1/guide-components.js
+          cat report/design-system-v1/guide-preview-adapter.js >> _site/accepted/v1/guide-components.js
+          printf '\n' >> _site/accepted/v1/foundation.css
+          cat report/design-system-v1/foundation-flat-guard.css >> _site/accepted/v1/foundation.css
+          node tooling/bin/human-guide-overlay.mjs _site/accepted/v1/com-design-v2-current.js
 
-          # Every deployment references revisioned Human Guide assets.
           BUILD_ID="${GITHUB_SHA::12}"
           python3 - "$BUILD_ID" <<'PY'
           from pathlib import Path
           import sys
 
           build = sys.argv[1]
-          page = Path('_site/index.html')
+          page = Path('_site/accepted/v1/index.html')
           html = page.read_text(encoding='utf-8')
-          html = html.replace(
-              'href="./guide-components.css"',
-              f'href="./guide-components.css?v={build}"'
-          )
-          html = html.replace(
-              'href="./delivery.css"',
-              f'href="./delivery.css?v={build}"'
-          )
-          html = html.replace(
-              'href="./premium-gold.css"',
-              f'href="./premium-gold.css?v={build}"'
-          )
-          html = html.replace(
-              'src="./guide-components.js"',
-              f'src="./guide-components.js?v={build}"'
-          )
-          html = html.replace(
-              '<div class="canvas-label">Standard Mobile Canvas · 390 × 844</div>',
-              ''
-          )
+          html = html.replace('href="./guide-components.css"', f'href="./guide-components.css?v={build}"')
+          html = html.replace('href="./delivery.css"', f'href="./delivery.css?v={build}"')
+          html = html.replace('href="./premium-gold.css"', f'href="./premium-gold.css?v={build}"')
+          html = html.replace('src="./guide-components.js"', f'src="./guide-components.js?v={build}"')
+          html = html.replace('<div class="canvas-label">Standard Mobile Canvas · 390 × 844</div>', '')
           html = html.replace(
               '</head>',
               f'  <link rel="stylesheet" href="./foundation.css?v={build}">\n'
