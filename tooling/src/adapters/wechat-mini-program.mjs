@@ -168,6 +168,14 @@ function createAdapterEvidence(model, platformEnvironment) {
   if (!miniMotion) {
     throw new Error('mini-program.wechat requires canonical WeChat motion mapping.');
   }
+  const incrementalLoading = model.workflows?.incrementalLoading;
+  const incrementalMapping = incrementalLoading?.contract?.platformMappings?.[PLATFORM];
+  if (
+    incrementalLoading?.id !== 'com-design:incremental-loading:v2'
+    || !incrementalMapping
+  ) {
+    throw new Error('mini-program.wechat requires canonical T022 incremental loading mapping.');
+  }
 
   return {
     schemaVersion: 2,
@@ -229,6 +237,14 @@ function createAdapterEvidence(model, platformEnvironment) {
         exampleOnly: true,
         snapshot,
       },
+    },
+    incrementalLoading: {
+      semanticSource: incrementalLoading.id,
+      stateModel: incrementalLoading.contract.stateModel,
+      triggerPolicy: incrementalLoading.contract.triggerPolicy,
+      boundaries: incrementalLoading.contract.boundaries,
+      platform: incrementalMapping,
+      provenance: incrementalLoading.provenance,
     },
     motion: {
       semanticSource: model.motion.id,
