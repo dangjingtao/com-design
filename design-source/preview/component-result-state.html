@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Result State · com-design</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin:0; padding:var(--space-12); background:var(--color-background); font-family:var(--font-family-base); color:var(--color-text-primary); }
+.specimen { display:grid; gap:var(--space-16); grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+.stage { min-height:360px; display:flex; align-items:center; justify-content:center; padding:var(--space-24) var(--space-16); background:var(--color-surface); border-radius:var(--radius-container); }
+
+/* @component-css-start */
+.result-state { width:min(320px,100%); display:flex; flex-direction:column; align-items:center; text-align:center; gap:var(--space-8); }
+.result-state__visual { width:64px; height:64px; border-radius:var(--radius-full); display:flex; align-items:center; justify-content:center; }
+.result-state__visual svg { width:32px; height:32px; }
+.result-state--success .result-state__visual { background:var(--color-success-bg); color:var(--color-success-text); }
+.result-state--error .result-state__visual { background:var(--color-danger-bg); color:var(--color-danger-text); }
+.result-state--pending .result-state__visual { background:var(--color-info-bg); color:var(--color-info-text); }
+.result-state__title { margin:0; font:var(--type-heading); color:var(--color-text-primary); }
+.result-state__supporting { margin:0; font:var(--type-body); color:var(--color-text-secondary); }
+.result-state__detail { margin:0; font:var(--type-body-small); color:var(--color-text-tertiary); }
+.result-state__actions { display:flex; align-items:center; justify-content:center; gap:var(--space-8); margin-top:var(--space-8); flex-wrap:wrap; }
+.result-state__primary, .result-state__secondary { min-height:40px; padding:0 var(--space-16); border-radius:var(--radius-control); font:var(--type-label); cursor:pointer; }
+.result-state__primary { border:0; background:var(--color-primary); color:var(--color-on-primary); }
+.result-state__secondary { border:var(--com-border-control) solid var(--color-border-default); background:var(--color-surface); color:var(--color-text-primary); }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <section class="stage" data-evidence-sample="success">
+    <div class="result-state result-state--success">
+      <div class="result-state__visual" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg>
+      </div>
+      <h3 class="result-state__title">提交成功</h3>
+      <p class="result-state__supporting">资料已提交审核。</p>
+      <p class="result-state__detail">预计 1–2 个工作日完成。</p>
+      <div class="result-state__actions"><button class="result-state__primary" type="button">查看进度</button></div>
+    </div>
+  </section>
+
+  <section class="stage" data-evidence-sample="error">
+    <div class="result-state result-state--error">
+      <div class="result-state__visual" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+      </div>
+      <h3 class="result-state__title">提交失败</h3>
+      <p class="result-state__supporting">网络异常，内容尚未提交。</p>
+      <div class="result-state__actions">
+        <button class="result-state__primary" type="button">重新提交</button>
+        <button class="result-state__secondary" type="button">返回修改</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="stage" data-evidence-sample="pending">
+    <div class="result-state result-state--pending">
+      <div class="result-state__visual" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      </div>
+      <h3 class="result-state__title">正在处理</h3>
+      <p class="result-state__supporting">可以离开此页面，处理完成后状态会自动更新。</p>
+      <div class="result-state__actions"><button class="result-state__primary" type="button">返回列表</button></div>
+    </div>
+  </section>
+</div>
+</body>
+</html>
