@@ -125,6 +125,7 @@ jobs:
             dist/smoke/four-platform.json
             dist/human-guide/current.json
             dist/human-guide/index.html
+            dist/human-guide/token-compliance.json
             penpot/build/manifest.json
           if-no-files-found: error
           retention-days: 30
