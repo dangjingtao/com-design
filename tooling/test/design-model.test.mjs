@@ -47,7 +47,7 @@ test('builds Canonical Design Model V2 from accepted canonical sources', () => {
   assert.match(model.sourceHash, /^[a-f0-9]{64}$/);
   assert.equal(model.components.length, 33);
   assert.equal(model.composites.length, 4);
-  assert.equal(model.patterns.length, 6);
+  assert.equal(model.patterns.length, 7);
   assert.equal(model.platform.platforms.length, 4);
   assert.equal(model.layoutInput.id, 'com-design:layout-input-foundation:v2');
   assert.equal(model.layoutInput.schemaVersion, 2);
@@ -65,6 +65,12 @@ test('builds Canonical Design Model V2 from accepted canonical sources', () => {
   assert.equal(
     model.workflows.mobileSearchFilter.provenance.sourcePath,
     'design-source/specs/mobile-search-filter-v2.json',
+  );
+  assert.equal(model.workflows.incrementalLoading.id, 'com-design:incremental-loading:v2');
+  assert.equal(model.workflows.incrementalLoading.schemaVersion, 2);
+  assert.equal(
+    model.workflows.incrementalLoading.provenance.sourcePath,
+    'design-source/specs/incremental-loading-v2.json',
   );
   assert.equal(
     model.motion.provenance.sourcePath,
@@ -278,5 +284,18 @@ test('rejects invalid canonical mobile search/filter workflow before model emiss
   assert.throws(
     () => buildCanonicalDesignModel(fixture),
     /mobile search\/filter workflow:.*quick filter/s,
+  );
+});
+
+
+test('rejects invalid canonical incremental loading workflow before model emission', () => {
+  const fixture = copyDesignSourceFixture();
+  const workflow = readFixtureJson(fixture, 'specs/incremental-loading-v2.json');
+  workflow.appendPolicy.retainExistingDataOnError = false;
+  writeFixtureJson(fixture, 'specs/incremental-loading-v2.json', workflow);
+
+  assert.throws(
+    () => buildCanonicalDesignModel(fixture),
+    /incremental loading workflow:.*append policy/s,
   );
 });

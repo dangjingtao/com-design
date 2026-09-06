@@ -9,6 +9,7 @@ import { validateLayoutInputFoundationContract } from './layout-input-foundation
 import { validateNavigationFoundationContract } from './navigation-foundation.mjs';
 import { validateMotionFoundationContract } from './motion-foundation.mjs';
 import { validateMobileSearchFilterWorkflowContract } from './mobile-search-filter.mjs';
+import { validateIncrementalLoadingContract } from './incremental-loading.mjs';
 import { validatePlatformEnvironmentContract } from './platform-environment.mjs';
 import { validatePlatformModel } from './platform-context.mjs';
 import { validateSourceIntegrity } from './source-integrity.mjs';
@@ -362,6 +363,40 @@ export function runRepositoryValidation(repoRoot) {
         exampleCount: contract.examples?.length ?? 0,
         restoreFields: contract.restoration?.fields ?? [],
         quickFilterPeerViewNavigation: contract.filter?.quickFilter?.peerViewNavigation ?? null,
+      },
+    };
+  }));
+
+  checks.push(runCheck('incremental-loading', () => {
+    const contract = canonicalSources.incrementalLoadingWorkflow?.value;
+    const schema = canonicalSources.incrementalLoadingSchema?.value;
+    const errors = [];
+    if (!contract) errors.push('canonical incrementalLoadingWorkflow source is unavailable.');
+    if (!schema) errors.push('canonical incrementalLoadingSchema source is unavailable.');
+    if (!canonicalSources.corePatterns?.value) errors.push('canonical corePatterns source is unavailable.');
+    if (!canonicalSources.mobileSearchFilterWorkflow?.value) errors.push('canonical mobileSearchFilterWorkflow source is unavailable.');
+    if (!canonicalSources.platformEnvironment?.value) errors.push('canonical platformEnvironment source is unavailable.');
+    if (!canonicalSources.layoutInputFoundation?.value) errors.push('canonical layoutInputFoundation source is unavailable.');
+    if (errors.length) return { errors };
+
+    return {
+      errors: validateIncrementalLoadingContract(
+        contract,
+        schema,
+        {
+          patterns: canonicalSources.corePatterns.value,
+          mobileSearchFilter: canonicalSources.mobileSearchFilterWorkflow.value,
+          platformEnvironment: canonicalSources.platformEnvironment.value,
+          layoutInputFoundation: canonicalSources.layoutInputFoundation.value,
+        },
+      ),
+      evidence: {
+        schemaVersion: contract.schemaVersion ?? null,
+        states: contract.stateModel?.states ?? [],
+        platforms: contract.scope?.platforms ?? [],
+        patternId: contract.references?.patternId ?? null,
+        miniProgramScrollOwnerRequired:
+          contract.platformMappings?.['wechat-mini-program']?.scrollOwnerRequired ?? null,
       },
     };
   }));

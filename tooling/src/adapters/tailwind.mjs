@@ -82,6 +82,13 @@ function createWebAdapterEvidence(model, platformEnvironment) {
   const snapshot = requireWebEnvironment(platformEnvironment);
   const layoutInput = requireLayoutInputFoundation(model);
   const layoutContract = layoutInput.contract;
+  const incrementalLoading = model.workflows?.incrementalLoading;
+  if (
+    incrementalLoading?.id !== 'com-design:incremental-loading:v2'
+    || !incrementalLoading?.contract?.platformMappings?.web
+  ) {
+    throw new Error('web.tailwind requires canonical T022 incremental loading mapping.');
+  }
   const hoverInputs =
     layoutContract.interactionStatePolicy?.hover?.appliesToInput ?? [];
   const focusVisibleInputs =
@@ -147,6 +154,14 @@ function createWebAdapterEvidence(model, platformEnvironment) {
         focusVisibleRequiredFor: [...focusVisibleInputs],
         coreSemanticFork: false,
       },
+    },
+    incrementalLoading: {
+      semanticSource: incrementalLoading.id,
+      stateModel: incrementalLoading.contract.stateModel,
+      triggerPolicy: incrementalLoading.contract.triggerPolicy,
+      boundaries: incrementalLoading.contract.boundaries,
+      platform: incrementalLoading.contract.platformMappings.web,
+      provenance: incrementalLoading.provenance,
     },
     responsiveInput: {
       id: layoutInput.id,

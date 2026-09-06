@@ -34,7 +34,7 @@ test('T016 repository consumption entrypoints match V2 canonical catalogs and fo
   assert.deepEqual(result.evidence.catalogCounts, {
     coreComponents: 33,
     coreCompositeComponents: 4,
-    corePatterns: 6,
+    corePatterns: 7,
   });
   assert.deepEqual(result.evidence.consumerPriority, ['ai-agent', 'engineering', 'design']);
   assert.deepEqual(result.evidence.platforms, [

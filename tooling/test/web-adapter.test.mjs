@@ -92,6 +92,9 @@ test('Web Adapter V2 emits explicit platform, context and input capability evide
     ].appliesToInput,
   );
   assert.equal(evidence.capabilities.focus.coreSemanticFork, false);
+  assert.equal(evidence.incrementalLoading.semanticSource, 'com-design:incremental-loading:v2');
+  assert.equal(evidence.incrementalLoading.platform.keyboardAndScreenReaderReachabilityRequired, true);
+  assert.equal(evidence.incrementalLoading.triggerPolicy.nearEnd.adapterOwned, true);
   assert.equal(evidence.contract.coreSemanticFork, false);
   assert.equal(evidence.contract.domCssStructureRequired, false);
 });
@@ -167,5 +170,12 @@ test('Web Adapter V2 rejects missing canonical or environment evidence instead o
       platformEnvironment: null,
     }),
     /requires canonical Web platform environment evidence/,
+  );
+  assert.throws(
+    () => tailwindAdapter.build(null, {
+      ...context,
+      canonicalModel: { ...context.canonicalModel, workflows: {} },
+    }),
+    /requires canonical T022 incremental loading mapping/,
   );
 });

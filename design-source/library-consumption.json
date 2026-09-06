@@ -36,6 +36,7 @@
       "specs/core-composites.json",
       "specs/core-patterns.json",
       "specs/mobile-search-filter-v2.json",
+      "specs/incremental-loading-v2.json",
       "specs/platform-model-v2.json",
       "specs/platform-environment-v1.json",
       "specs/layout-input-foundation-v2.json",

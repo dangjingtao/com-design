@@ -13,6 +13,7 @@ import { validateLayoutInputFoundationContract } from './layout-input-foundation
 import { validateNavigationFoundationContract } from './navigation-foundation.mjs';
 import { validateMotionFoundationContract } from './motion-foundation.mjs';
 import { validateMobileSearchFilterWorkflowContract } from './mobile-search-filter.mjs';
+import { validateIncrementalLoadingContract } from './incremental-loading.mjs';
 
 const MODEL_SCHEMA_VERSION = 2;
 const MODEL_ID = 'com-design:canonical-model:v2';
@@ -219,6 +220,21 @@ function validateRequiredInputs(repoRoot, sourceIntegrity, manifest) {
         layoutInputFoundation,
       },
     ).map((error) => `mobile search/filter workflow: ${error}`),
+  );
+
+  const incrementalLoading = requireCanonicalSource(sourceIntegrity, 'incrementalLoadingWorkflow').value;
+  const incrementalLoadingSchema = requireCanonicalSource(sourceIntegrity, 'incrementalLoadingSchema').value;
+  errors.push(
+    ...validateIncrementalLoadingContract(
+      incrementalLoading,
+      incrementalLoadingSchema,
+      {
+        patterns: requireCanonicalSource(sourceIntegrity, 'corePatterns').value,
+        mobileSearchFilter,
+        platformEnvironment,
+        layoutInputFoundation,
+      },
+    ).map((error) => `incremental loading workflow: ${error}`),
   );
 
   const foundationPath = requireCanonicalSource(sourceIntegrity, 'foundation').resolvedPath;
@@ -559,6 +575,18 @@ export function validateCanonicalDesignModel(model) {
   ) {
     errors.push('canonical mobile search/filter workflow must carry source provenance.');
   }
+  if (
+    model?.workflows?.incrementalLoading?.id !== 'com-design:incremental-loading:v2'
+    || model?.workflows?.incrementalLoading?.schemaVersion !== 2
+  ) {
+    errors.push('canonical design model must expose the accepted T022 incremental loading workflow.');
+  }
+  if (
+    !model?.workflows?.incrementalLoading?.provenance
+    || typeof model.workflows.incrementalLoading.provenance !== 'object'
+  ) {
+    errors.push('canonical incremental loading workflow must carry source provenance.');
+  }
 
   for (const platform of model?.platform?.platforms ?? []) {
     if (!MATURITY_STATUSES.has(platform.maturity?.status)) {
@@ -597,6 +625,10 @@ export function buildCanonicalDesignModel(repoRoot) {
     sourceIntegrity,
     'mobileSearchFilterWorkflow',
   );
+  const incrementalLoadingEvidence = requireCanonicalSource(
+    sourceIntegrity,
+    'incrementalLoadingWorkflow',
+  );
 
   const manifestSource = sourceDescriptor(repoRoot, 'source:manifest', manifest.__path, 'manifest');
   const foundationSource = sourceDescriptor(repoRoot, 'source:foundation', foundationEvidence.resolvedPath);
@@ -624,6 +656,11 @@ export function buildCanonicalDesignModel(repoRoot) {
     repoRoot,
     'source:mobileSearchFilterWorkflow',
     mobileSearchFilterEvidence.resolvedPath,
+  );
+  const incrementalLoadingSource = sourceDescriptor(
+    repoRoot,
+    'source:incrementalLoadingWorkflow',
+    incrementalLoadingEvidence.resolvedPath,
   );
 
   const tokenModel = buildTokenModel(foundationEvidence.resolvedPath);
@@ -660,6 +697,10 @@ export function buildCanonicalDesignModel(repoRoot) {
       mobileSearchFilter: normalizeWorkflow(
         mobileSearchFilterEvidence.value,
         mobileSearchFilterSource,
+      ),
+      incrementalLoading: normalizeWorkflow(
+        incrementalLoadingEvidence.value,
+        incrementalLoadingSource,
       ),
     },
     platform: normalizePlatforms(

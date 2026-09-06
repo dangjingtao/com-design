@@ -204,6 +204,14 @@ function platformContract(model, platformEnvironment, platform) {
 
 function createNativeMobileEvidence(model, platformEnvironment) {
   const motion = model.motion;
+  const incrementalLoading = model.workflows?.incrementalLoading;
+  if (
+    incrementalLoading?.id !== 'com-design:incremental-loading:v2'
+    || !incrementalLoading?.contract?.platformMappings?.ios
+    || !incrementalLoading?.contract?.platformMappings?.android
+  ) {
+    throw new Error('native-mobile.contract requires canonical T022 incremental loading mappings.');
+  }
   return {
     schemaVersion: 2,
     id: 'com-design:native-mobile-adapter:v2',
@@ -231,6 +239,17 @@ function createNativeMobileEvidence(model, platformEnvironment) {
     },
     typography: normalizeTypography(model),
     shadow: normalizeShadows(model),
+    incrementalLoading: {
+      semanticSource: incrementalLoading.id,
+      stateModel: incrementalLoading.contract.stateModel,
+      triggerPolicy: incrementalLoading.contract.triggerPolicy,
+      boundaries: incrementalLoading.contract.boundaries,
+      platforms: {
+        ios: incrementalLoading.contract.platformMappings.ios,
+        android: incrementalLoading.contract.platformMappings.android,
+      },
+      provenance: incrementalLoading.provenance,
+    },
     motion: {
       tokens: normalizeMotionTokens(model),
       intentContract: {

@@ -1,0 +1,129 @@
+{
+  "$schema": "../schemas/incremental-loading-v2.schema.json",
+  "schemaVersion": 2,
+  "id": "com-design:incremental-loading:v2",
+  "$metadata": {
+    "name": "Com Design Incremental Loading / Infinite List",
+    "owner": "T022",
+    "status": "v2-first-stage",
+    "canonical": true
+  },
+  "scope": {
+    "platforms": ["ios","android","web","wechat-mini-program"],
+    "addsCoreComponent": false,
+    "addsCorePattern": true
+  },
+  "references": {
+    "patternId": "incrementalLoading",
+    "collectionWorkflow": "com-design:mobile-search-filter:v2",
+    "layoutInputFoundation": "sources.layoutInputFoundation",
+    "platformEnvironment": "sources.platformEnvironment"
+  },
+  "stateModel": {
+    "states": ["idle","loading-initial","ready","loading-more","appended","append-error","exhausted"],
+    "authoritativeOwner": "collection-owner",
+    "requestIdentity": "opaque-request-id",
+    "continuation": {
+      "opaqueToUI": true,
+      "backendFieldNameBound": false,
+      "invalidatedBy": ["committedQuery","committedFilters","sort","collectionIdentity"]
+    }
+  },
+  "triggerPolicy": {
+    "modes": ["automatic","manual","hybrid"],
+    "nearEnd": {
+      "semanticThreshold": "viewport-relative-or-semantic-distance",
+      "adapterOwned": true,
+      "rawPixelMagicNumberForbidden": true,
+      "requestInFlightGuard": true
+    },
+    "manualFallback": {
+      "availableAfterAutomaticFailure": true,
+      "retryFocusable": true,
+      "loadMoreFocusable": true
+    },
+    "underfilledViewport": {
+      "mayContinueAutomatically": true,
+      "maxConsecutiveRequestsRequired": true,
+      "stopOn": ["viewport-filled","append-error","exhausted","guard-limit"]
+    }
+  },
+  "appendPolicy": {
+    "retainExistingDataOnError": true,
+    "dedupByStableItemKey": true,
+    "ignoreStaleRequest": true,
+    "preserveBatchOrder": true,
+    "appendDoesNotStealFocus": true,
+    "endReachedStopsRequests": true
+  },
+  "restoration": {
+    "detailReturn": "restore-active-collection-task",
+    "fields": ["loadedItems","continuation","committedQuery","committedFilters","sort","scrollPosition"],
+    "requiresT021CollectionOwnership": true
+  },
+  "boundaries": {
+    "pullToRefreshPartOfPattern": false,
+    "virtualizationPartOfPattern": false,
+    "virtualizationComposable": true,
+    "backendPaginationProtocolBound": false
+  },
+  "platformMappings": {
+    "ios": {
+      "nearEndTrigger": "adapter-mapped-scroll-proximity",
+      "overscrollMayDuplicateTrigger": false,
+      "preserveViewportOnAppend": true,
+      "tailInset": "consume-safe-area",
+      "accessibilityAnnouncements": ["loading-more","append-error","exhausted"]
+    },
+    "android": {
+      "nearEndTrigger": "adapter-mapped-scroll-proximity",
+      "overscrollMayDuplicateTrigger": false,
+      "preserveViewportOnAppend": true,
+      "tailInset": "consume-navigation-or-gesture-inset",
+      "accessibilityAnnouncements": ["loading-more","append-error","exhausted"]
+    },
+    "web": {
+      "nearEndTrigger": "adapter-mapped-viewport-proximity",
+      "keyboardAndScreenReaderReachabilityRequired": true,
+      "criticalFooterPolicy": "prefer-manual-or-hybrid-when-auto-loading-blocks-footer",
+      "preserveViewportOnAppend": true
+    },
+    "wechat-mini-program": {
+      "scrollOwnerRequired": true,
+      "scrollOwnerKinds": ["page","contained"],
+      "nestedScrollOwnersForbidden": true,
+      "nearEndTrigger": "adapter-mapped-host-scroll-proximity",
+      "requestInFlightGuard": true,
+      "highFrequencyNodeMutationAllowed": false,
+      "batchAppendRequired": true,
+      "virtualizationOrRecyclingComposable": true
+    }
+  },
+  "examples": [
+    {
+      "id":"automatic-append-success",
+      "scenario":{"trigger":"near-end","items":["a","b"],"continuation":"opaque:c1"},
+      "expected":{"state":"appended","items":["a","b"],"nextContinuation":"opaque:c2"}
+    },
+    {
+      "id":"automatic-failure-manual-retry",
+      "scenario":{"trigger":"near-end","existingItems":["a","b"],"continuation":"opaque:c2","result":"error"},
+      "expected":{"state":"append-error","existingItemsPreserved":true,"manualRetryAvailable":true}
+    },
+    {
+      "id":"dedup-and-stale-response",
+      "scenario":{"acceptedRequest":"r2","staleRequest":"r1","existingKeys":["a"],"incomingKeys":["a","b"]},
+      "expected":{"ignoreStaleRequest":true,"dedupedAppendKeys":["b"],"orderPreserved":true}
+    },
+    {
+      "id":"detail-return-restoration",
+      "scenario":{"items":["a","b","c"],"continuation":"opaque:c3","query":"设计","filters":["type:doc"],"sort":"relevance","scrollPosition":880},
+      "expected":{"restoreSnapshot":true,"scrollPosition":880}
+    },
+    {
+      "id":"mini-program-scroll-owner",
+      "scenario":{"platform":"wechat-mini-program","scrollOwner":"contained"},
+      "expected":{"singleScrollOwner":true,"highFrequencyNodeMutationAllowed":false}
+    }
+  ]
+}

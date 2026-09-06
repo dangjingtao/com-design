@@ -36,6 +36,10 @@ test('Native Mobile Adapter V2 makes iOS and Android first-class platform contra
   assert.equal(evidence.platforms.android.context.platformDoesNotInferAxes, true);
   assert.equal(evidence.platforms.ios.unit, 'logical-point');
   assert.equal(evidence.platforms.android.unit, 'density-independent-pixel');
+  assert.equal(evidence.incrementalLoading.semanticSource, 'com-design:incremental-loading:v2');
+  assert.equal(evidence.incrementalLoading.platforms.ios.preserveViewportOnAppend, true);
+  assert.equal(evidence.incrementalLoading.platforms.android.preserveViewportOnAppend, true);
+  assert.equal(evidence.incrementalLoading.triggerPolicy.nearEnd.requestInFlightGuard, true);
   assert.equal(evidence.contract.reactNativeIsPlatformDefinition, false);
   assert.equal(evidence.contract.coreSemanticFork, false);
 });
@@ -128,5 +132,12 @@ test('Native Mobile Adapter V2 rejects missing canonical motion or platform envi
       platformEnvironment: null,
     }),
     /requires canonical ios platform environment evidence/,
+  );
+  assert.throws(
+    () => nativeMobileAdapter.build(null, {
+      ...context,
+      canonicalModel: { ...context.canonicalModel, workflows: {} },
+    }),
+    /requires canonical T022 incremental loading mappings/,
   );
 });
