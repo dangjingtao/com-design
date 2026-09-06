@@ -28,7 +28,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
   assert.equal(evidence.result, 'pass');
   assert.equal(evidence.summary.failed, 0);
   assert.equal(evidence.summary.blockingErrors, 0);
-  assert.equal(evidence.summary.checksRun, 16);
+  assert.equal(evidence.summary.checksRun, 17);
   assert.deepEqual(
     evidence.checks.map((check) => check.id),
     [
@@ -48,6 +48,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
       'component-contracts',
       'iconography',
       'canonical-design-model',
+      'release-gate-trace',
     ],
   );
   assert.ok(evidence.checks.every((check) => check.hardGate === true));
@@ -89,6 +90,8 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
   );
   assert.equal(evidence.checks.find((check) => check.id === 'component-contracts').evidence.componentCount, 34);
   assert.equal(evidence.checks.find((check) => check.id === 'canonical-design-model').evidence.platformCount, 4);
+  assert.equal(evidence.checks.find((check) => check.id === 'release-gate-trace').evidence.requirements, 19);
+  assert.equal(evidence.checks.find((check) => check.id === 'release-gate-trace').evidence.traced, 19);
   assert.equal(JSON.stringify(evidence).includes(repoRoot), false);
 });
 
