@@ -45,7 +45,7 @@ test('builds Canonical Design Model V2 from accepted canonical sources', () => {
   assert.equal(model.$metadata.authority, 'derived-build-artifact');
   assert.equal(model.$metadata.editable, false);
   assert.match(model.sourceHash, /^[a-f0-9]{64}$/);
-  assert.equal(model.components.length, 33);
+  assert.equal(model.components.length, 34);
   assert.equal(model.composites.length, 4);
   assert.equal(model.patterns.length, 7);
   assert.equal(model.platform.platforms.length, 4);
@@ -72,6 +72,13 @@ test('builds Canonical Design Model V2 from accepted canonical sources', () => {
     model.workflows.incrementalLoading.provenance.sourcePath,
     'design-source/specs/incremental-loading-v2.json',
   );
+  assert.equal(model.workflows.stateFeedback.id, 'com-design:state-feedback:v2');
+  assert.equal(model.workflows.stateFeedback.schemaVersion, 2);
+  assert.equal(
+    model.workflows.stateFeedback.provenance.sourcePath,
+    'design-source/specs/state-feedback-v2.json',
+  );
+  assert.ok(model.components.some((entry) => entry.id === 'component:result-state'));
   assert.equal(
     model.motion.provenance.sourcePath,
     'design-source/specs/motion-foundation-v2.json',
@@ -297,5 +304,18 @@ test('rejects invalid canonical incremental loading workflow before model emissi
   assert.throws(
     () => buildCanonicalDesignModel(fixture),
     /incremental loading workflow:.*append policy/s,
+  );
+});
+
+
+test('rejects invalid canonical state feedback workflow before model emission', () => {
+  const fixture = copyDesignSourceFixture();
+  const workflow = readFixtureJson(fixture, 'specs/state-feedback-v2.json');
+  workflow.emptyState.genericRecoverableErrorAllowed = true;
+  writeFixtureJson(fixture, 'specs/state-feedback-v2.json', workflow);
+
+  assert.throws(
+    () => buildCanonicalDesignModel(fixture),
+    /state feedback workflow:.*genericRecoverableErrorAllowed/s,
   );
 });
