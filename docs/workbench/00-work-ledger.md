@@ -53,7 +53,7 @@
 | T019 | Release Governance + Conditional AI Review Gate | CI / Review | PASS | V2 first-stage | T017 |
 | T020 | Navigation Foundation | Component / Navigation | PASS | V2 first-stage | T003、T010、T012、T013 |
 | T021 | Mobile Search + Filter Workflow Contract | UX Pattern | PASS | V2 first-stage | T003、T010、T012 |
-| T022 | Incremental Loading / Infinite List Pattern | UX Pattern | TODO | V2 first-stage | T003、T012 |
+| T022 | Incremental Loading / Infinite List Pattern | UX Pattern | DOING | V2 first-stage | T003、T012 |
 | T023 | State Feedback + Alert/Banner Semantics | Component / Pattern | TODO | V2 first-stage | T003 |
 | T024 | Switch + Timeline Visual Defect Repair | QA / Component | TODO | V2 first-stage | T003 |
 | T025 | Button V2: Pill / Destructive / Loading | Component | TODO | V2 first-stage | T003 |
