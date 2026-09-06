@@ -133,3 +133,18 @@ test('T023 prohibition copy may name forbidden error semantics without activatin
 
   assert.deepEqual(validate(contract,{components:candidate}), []);
 });
+
+
+test('T023 transient selection requires explicit actionability instead of guessing Toast', () => {
+  assert.throws(
+    () => resolveFeedbackSurface({kind:'transient'},contract),
+    /requires explicit actionable boolean/,
+  );
+});
+
+test('T023 acceptance examples must execute to their declared feedback surface', () => {
+  const candidate=JSON.parse(JSON.stringify(contract));
+  candidate.examples.find((entry)=>entry.id==='undo-delete').expected.surface='toast';
+  const errors=validate(candidate);
+  assert.ok(errors.some((error)=>error.includes('undo-delete resolves to snackbar')));
+});
