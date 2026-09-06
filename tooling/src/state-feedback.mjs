@@ -32,6 +32,9 @@ export function resolveFeedbackSurface(input, contract) {
     throw new Error('persistent feedback requires local, page, or region scope.');
   }
   if (kind === 'transient') {
+    if (typeof input.actionable !== 'boolean') {
+      throw new Error('transient feedback requires explicit actionable boolean.');
+    }
     return {
       surface: input.actionable
         ? contract.selection.transientActionable
@@ -243,6 +246,31 @@ export function validateStateFeedbackContract(
     'permission-block',
   ]) {
     if (!examples.has(id)) errors.push('T023 feedback contract missing acceptance example: ' + id);
+  }
+
+  for (const example of contract?.examples ?? []) {
+    try {
+      const resolved = resolveFeedbackSurface(example.input, contract);
+      if (resolved.surface !== example.expected?.surface) {
+        errors.push(
+          'T023 feedback example ' + example.id
+            + ' resolves to ' + resolved.surface
+            + ' but declares ' + (example.expected?.surface ?? '<missing>') + '.',
+        );
+      }
+      if (
+        example.input?.kind === 'external-block'
+        && example.expected?.nextActionRequired === true
+        && resolved.nextActions.length === 0
+      ) {
+        errors.push('T023 blocking example ' + example.id + ' requires a non-empty next action.');
+      }
+    } catch (error) {
+      errors.push(
+        'T023 feedback example ' + (example?.id ?? '<unknown>')
+          + ' is not executable: ' + error.message,
+      );
+    }
   }
 
   return errors;
