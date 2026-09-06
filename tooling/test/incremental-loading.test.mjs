@@ -252,3 +252,16 @@ test('T022 rejects hasMore=true without the next opaque continuation', () => {
     /hasMore=true requires nextContinuation/,
   );
 });
+
+
+test('T022 rejects empty Web or native platform trigger mappings', () => {
+  const webCandidate=structuredClone(contract);
+  webCandidate.platformMappings.web={};
+  const webErrors=validate(webCandidate);
+  assert.ok(webErrors.some((error)=>error.includes('Web mapping must preserve')));
+
+  const iosCandidate=structuredClone(contract);
+  iosCandidate.platformMappings.ios={};
+  const iosErrors=validate(iosCandidate);
+  assert.ok(iosErrors.some((error)=>error.includes('ios mapping must define guarded near-end')));
+});
