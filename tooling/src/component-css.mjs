@@ -46,9 +46,9 @@ export function generateComponentsCss(repoRoot){
   }
   return [
     '/* ═══════════════════════════════════════════════════════════════',
-    '   components.css — Design System Component Definitions',
-    '   Auto-extracted from preview/component-*.html',
-    '   DO NOT EDIT MANUALLY — regenerate via npm run build:component-css',
+    '   components.css — Downstream Preview CSS Aggregate',
+    '   Generated downstream from reference preview/component-*.html CSS blocks',
+    '   NOT CANONICAL — regenerate via npm run build:component-css; Core truth remains components/*.json + manifest sources',
     '   ═══════════════════════════════════════════════════════════════ */',
     '',
     sections.join('\n\n'),
