@@ -54,24 +54,22 @@ V2 第一周目标不是“组件越多越好”，而是 Source → Contract �
 
 ## Implementation record
 
-- Commit / PR: PR #47, branch `task/T026-first-week-integration-acceptance` from final predecessor `dev@1e836b63b9c82403a237a92fe648d09144db3133`.
-- Final dev HEAD: predecessor integration baseline `1e836b63b9c82403a237a92fe648d09144db3133`; current RC candidate head `91d809e832e052f51ebd2fe1317a61d56bf77b78`.
+- Commit / PR: PR #47 (`task/T026-first-week-integration-acceptance` → `dev`), predecessor baseline `dev@1e836b63b9c82403a237a92fe648d09144db3133`.
+- Final dev HEAD: predecessor integration baseline `1e836b63b9c82403a237a92fe648d09144db3133`; REVIEW-state implementation head before evidence-only status update: `3246b525e7a72d7b32d33fd8d7c22a953fecc236`.
 - Changed paths:
-  - release requirement → executable evidence trace and tests
-  - semantic contrast audit + Premium Gold light action-text correction
-  - deterministic component CSS extractor / 34-component parity gate / regenerated downstream aggregate
-  - Human Guide current-V2-facts overlay while retaining the accepted V1 report unchanged
-  - explicit `build:all` and four-platform smoke CI hard-gate outcomes
-  - MCP target/source-parity evidence
-  - RC integration evidence/docs/tests
+  - deterministic component CSS extractor + 34/34 parity gate
+  - semantic contrast audit across Default / Premium Gold × Light / Dark
+  - release requirement → validation / CI / governance evidence trace
+  - Human Guide canonical V2 current-facts overlay + Pages deployment integration
+  - explicit `build:all` and T018 smoke CI hard gates
+  - MCP formal evidence target + current cross-platform identity
+  - canonical manifest / component catalog scope alignment
 - Notes:
-  - Predecessor baseline already had T001-T025 PASS, Design System Build #321 success and Human Docs #177 success on the same SHA.
-  - RC audit found and closed real integration blockers instead of waiving them: stale `components.css`, missing executable ownership for manifest release requirements, no explicit contrast gate, Human Guide current/baseline ambiguity, and CI not directly treating `build:all` as a first-class hard gate.
-  - `design-source/components.css` is now explicitly downstream/non-canonical and reproducible from marked Preview CSS blocks; current aggregate independently rechecked 34/34 against the component catalog.
-  - Premium Gold low-fill brand action text was raised from brand-600 to brand-700 so the audited Secondary action pairing meets normal-text contrast.
-  - Manifest release requirements carry explicit validation / CI / governance evidence ownership; all 19 declared requirements resolve to registered, T019-backed evidence IDs.
-  - Human Pages keep `report/design-system-v1/` immutable as the accepted V1 baseline while a generated overlay publishes current V2 RC facts (34 Components / 4 Composites / 7 Patterns) and canonical-source authority.
-  - No new Core Component, Composite, UX Pattern, platform target, or product feature is introduced by T026.
+  - T001-T025 were independently audited: 25/25 are PASS and every card contains non-empty Implementation record, Verification evidence and Review with Result: PASS.
+  - RC audit found and repaired real integration gaps rather than adding features: stale downstream `components.css`, missing contrast evidence, untraced release requirements, stale Human Guide current-fact presentation, no explicit full-build/smoke CI gate, and MCP/current-system naming/evidence drift.
+  - Premium Gold keeps its existing visual palette. Only `color-text-brand` in the light Premium Gold scope moves from brand-600 to brand-700 because brand-600 on the scoped secondary surface is ~4.25:1; brand-700 is ~6.08:1.
+  - `report/design-system-v1/` is not modified. The live Pages assembly labels it as the retained V1 acceptance baseline and injects current V2 catalog/source facts from canonical source.
+  - Full versioned V2 Human Guide generation remains a future documentation-pipeline capability; it is not misrepresented as complete in this RC.
 
 ## Verification evidence
 
