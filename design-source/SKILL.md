@@ -1,6 +1,6 @@
 ---
 name: com-design-design
-description: Use this skill to consume Com Design V2 for Android, iOS, Web and WeChat Mini Program. Start from canonical machine contracts, select the target Platform Adapter, and verify implementation evidence. Contains 33 Core Components, 4 Core Composite Components and 6 Core UX Patterns.
+description: Use this skill to consume Com Design V2 for Android, iOS, Web and WeChat Mini Program. Start from canonical machine contracts, select the target Platform Adapter, and verify implementation evidence. Contains 33 Core Components, 4 Core Composite Components and 7 Core UX Patterns.
 user-invocable: true
 ---
 
@@ -16,7 +16,7 @@ Select the target platform/context before implementation. Consume the correspond
 - `library-consumption.json` — governed consumer priority, read order and four-platform adapter map
 - `components/index.json` — canonical 33 Core Components catalog; read `components/{slug}.json` for a component contract
 - `specs/core-composites.json` — canonical 4 Core Composite Components
-- `specs/core-patterns.json` — canonical 6 Core UX Patterns
+- `specs/core-patterns.json` — canonical 7 Core UX Patterns
 - `specs/platform-model-v2.json` — Android / iOS / Web / WeChat Mini Program platform axes
 - `specs/platform-environment-v1.json` — Safe Area / Host Chrome / Back / Focus / IME / Pointer / Gesture environment facts
 - `specs/layout-input-foundation-v2.json` — responsive / input / content-scale foundation
