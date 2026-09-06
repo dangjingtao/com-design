@@ -1,6 +1,6 @@
 # T028 · Human Guide V2 Open Design Visual Refresh + Token Compliance
 
-- Status: DOING
+- Status: REVIEW
 - Target version: V2 documentation follow-up
 - Impact: Human UI / Visual System / Token Compliance
 - Owner: -
@@ -97,7 +97,7 @@ Human Guide 目前仍保留大量 V1 手写展示层样式。虽然 Core Compone
 
 ## Implementation record
 
-- Commit / PR: branch `task/T028-human-guide-v2-open-design-token-compliance` → `dev`; PR pending.
+- Commit / PR: PR #52 (`task/T028-human-guide-v2-open-design-token-compliance` → `dev`); reviewed implementation head before REVIEW evidence update: `ca0632627300bfdbebcc679a6e62bd0a7287c21c`.
 - Changed paths:
   - `report/design-system-v2/index.html` — productized Human Guide shell with app bar, left navigation, overview/principles/foundations, component workspace + Inspector, composite/pattern lists, consumer map and authority flow.
   - `report/design-system-v2/styles.css` — Human Guide shell rebuilt on Com Design semantic tokens; no raw color, token fallback, ad-hoc radius/type/elevation.
@@ -114,16 +114,17 @@ Human Guide 目前仍保留大量 V1 手写展示层样式。虽然 Core Compone
 
 ## Verification evidence
 
-- CI:
-- Token compliance:
-- Visual evidence:
-- Responsive evidence:
-- Theme / contrast evidence:
-- Accepted V1 guard:
-- Other evidence:
+- CI: Design System Build #361, run `34036982345` — PASS on implementation head `ca0632627300bfdbebcc679a6e62bd0a7287c21c`.
+- Repository tests: 254/254 PASS; deterministic validation 19/19 checks PASS with 0 warnings.
+- Token compliance: `human-guide-token-compliance` PASS; 2 Human Guide style files scanned, 0 violations, 2 narrowly scoped responsive breakpoint exceptions, unknown-token/fallback/raw-color/raw-length/radius/type/elevation/layering/inline-style regressions covered by tests. Machine evidence: `dist/human-guide/token-compliance.json`.
+- Visual evidence: `report/design-system-v2/visual-evidence.html` deterministically renders Default Light / Default Dark / Premium Gold Light / Premium Gold Dark against the same Human shell and existing Core Alert/Button presentation evidence.
+- Responsive evidence: wide layout uses persistent left documentation navigation + Component Inspector; downstream compact breakpoints recompose to one flow, hide the closed drawer from focus/pointer interaction, and support link-close / Escape / outside-click dismissal.
+- Theme / contrast evidence: the Human Guide consumes existing Default/Premium Gold semantic mappings; repository contrast audit remains part of 19-check validation and passes all 4 semantic scopes with no hard failure.
+- Accepted V1 guard: CI `Verify accepted report was not changed` PASS; PR diff contains no `report/design-system-v1/` path.
+- Other evidence: T027 builder still reports `1.0.0-rc.2 · 34 components · 4 composites · 7 patterns`; T018 four-platform smoke 43/43 PASS; T017 deterministic CI hard gate 25 checks / 9 traced targets PASS. Initial CI #356 failed only because the orchestrator regression test still expected 18 checks; the test contract was updated to 19 and explicitly asserts the new Human Guide gate.
 
 ## Review
 
 - Reviewer: Mira
-- Result:
-- Conclusion:
+- Result: REVIEW
+- Conclusion: Implementation review passes for merge-to-dev publication verification. The page now follows the intended quiet, productized technical-documentation direction while retaining Com Design's own hierarchy, flat-first behavior and Brand scarcity. No external Open Design token/value was imported. Human shell styling is canonical-token driven, Premium Gold is opt-in, T027 34/4/7 source consumption is intact, and accepted V1 remains immutable. During self-review two accessibility/quality issues were proactively fixed: off-screen compact navigation focusability and incomplete ARIA table roles; ad-hoc z-index layering was also moved under the hard gate. Codex review is unavailable due quota; CodeRabbit has not produced an actionable review thread, so Mira completed independent review. Final PASS is held until post-merge Pages publication and real rendered visual inspection.
