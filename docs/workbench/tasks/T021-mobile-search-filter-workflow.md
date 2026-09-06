@@ -1,6 +1,6 @@
 # T021 · Mobile Search + Filter Workflow Contract
 
-- Status: DOING
+- Status: REVIEW
 - Target version: V2 first-stage
 - Impact: UX Pattern / Mobile / Collection
 - Owner: -
@@ -38,12 +38,12 @@ V2 已确认移动搜索与筛选是一条完整集合任务流：Search Field �
 
 ## Acceptance
 
-- [ ] IME 组合态不会把拼音中间态当最终 query 提交。
-- [ ] filter dismiss 不提交 draft；Apply 才 commit。
-- [ ] Clear query 与 Cancel/Back 语义分离。
-- [ ] 返回详情后集合状态可恢复。
-- [ ] quick filter 不被错误实现成 Tabs。
-- [ ] contract / example / tests 通过。
+- [x] IME 组合态不会把拼音中间态当最终 query 提交。
+- [x] filter dismiss 不提交 draft；Apply 才 commit。
+- [x] Clear query 与 Cancel/Back 语义分离。
+- [x] 返回详情后集合状态可恢复。
+- [x] quick filter 不被错误实现成 Tabs。
+- [x] contract / example / tests 通过。
 
 ## Risks / Dependencies
 
@@ -51,19 +51,40 @@ V2 已确认移动搜索与筛选是一条完整集合任务流：Search Field �
 
 ## Implementation record
 
-- Commit / PR:
+- Commit / PR: PR #42 (`task/T021-mobile-search-filter-workflow` → `dev`); reviewed implementation head before evidence-only REVIEW update: `0a62b831de12759f026844587b71150c4bfa0eff`.
 - Changed paths:
+  - `design-source/specs/mobile-search-filter-v2.json`
+  - `design-source/schemas/mobile-search-filter-v2.schema.json`
+  - `design-source/components/search-field.json`
+  - `design-source/specs/core-patterns.json`
+  - `design-source/specs/core-composites.json`
+  - Pattern / Composite schemas for optional workflow refs
+  - `design-source/specs/design-system-v1.json`
+  - `design-source/library-consumption.json`
+  - `tooling/src/mobile-search-filter.mjs`
+  - Canonical Model / Agent Contract / validation orchestrator integration
+  - focused + integration tests
 - Notes:
+  - No new Core Component, Composite or Pattern count. Existing 33 / 4 / 6 remain unchanged.
+  - Canonical `CollectionQueryModel` separates pending query, committed query, committed filters, sort, continuation and restoration state under one collection owner.
+  - IME composition never commits intermediate text; instant/debounced search begins debounce after composition end and explicit submit also suppresses commit while composing.
+  - Filter draft is initialized from committed state; dismiss/Back discards draft; Apply commits and resets continuation; Reset is draft-only and does not clear query.
+  - Clear query preserves active filters and search context; Cancel/Back owns exit semantics. When Filter Surface is open, Back closes/discards the draft before exiting the search context.
+  - Query commits while a filter draft is open must explicitly choose `cancel-draft` or `rebase-draft`; silent stale-draft carry-over is rejected.
+  - Quick filters are collection conditions, never peer-view navigation/Tabs.
+  - Detail return restoration captures committed query, filters, sort, loaded data and scroll position. Continuation loading mechanics remain T022 scope.
+  - iOS / Android / WeChat Mini Program mappings consume T010 keyboard/IME, Back, Safe Area, accessibility and host-chrome facts rather than hard-coded platform API names.
+  - Canonical Design Model and T014 Agent Contract expose the workflow; `npm run validate` now includes the `mobile-search-filter` hard gate.
 
 ## Verification evidence
 
-- CI:
-- IME / draft tests:
-- Restore-state evidence:
+- CI: Design System Build #261, run `34000865296` — success on `0a62b831de12759f026844587b71150c4bfa0eff`; 180/180 tests PASS; V2 validation 12 checks / 0 warnings; engineering build, Penpot build, accepted-report guard, governance dry-run and T017 deterministic hard-gate enforcement all PASS.
+- IME / draft tests: focused tests prove intermediate IME input cannot commit, composition-end enables commit, dismiss and Back cannot commit draft, Apply is the commit boundary, Reset stays draft-only, Clear preserves filters, open-draft query changes require explicit cancel/rebase strategy, and empty platform mapping hooks fail validation.
+- Restore-state evidence: reference reducer captures/restores committed query, committed filters, sort, loaded data and scroll position after detail return; query/filter/sort commits invalidate continuation. Canonical Model rejects an invalid T021 workflow before emission, and Agent Contract exposes the accepted workflow with source provenance.
 
 ## Review
 
-- Reviewer:
-- Result: REVIEW / PASS / BLOCKED
-- Conclusion:
-- Follow-up:
+- Reviewer: Mira
+- Result: REVIEW
+- Conclusion: Construction and deterministic verification complete. Independent review already hardened Back-vs-filter dismissal and query-change-vs-open-draft behavior. CodeRabbit is still processing an earlier head and has not produced actionable findings on the hardened implementation yet.
+- Follow-up: Final review must confirm no path commits IME intermediate text or filter draft implicitly, quick-filter semantics cannot drift into Tabs, and restore/platform hooks stay downstream of T010/T012 rather than becoming platform-specific Core logic.
