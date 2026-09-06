@@ -185,7 +185,7 @@ It emits source `px` dimensions as numeric RN layout values and includes light/d
 
 Token/config generation can be automatic.
 
-Component implementation should **not** be blindly generated from the 33 component JSON contracts.
+Component implementation should **not** be blindly generated from the 34 component JSON contracts.
 
 Component contracts may drive:
 
