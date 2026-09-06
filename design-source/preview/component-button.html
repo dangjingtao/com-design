@@ -107,6 +107,10 @@ body { margin:0; padding:var(--space-12); background:var(--color-background); fo
         <button class="btn primary pill is-loading is-spinner-only" aria-busy="true" aria-label="正在提交" data-repeat-activation="suppressed" data-evidence-sample="loading-spinner-only">
           <span class="btn-spinner" aria-hidden="true"></span>
         </button>
+        <button class="btn primary is-destructive is-loading" aria-busy="true" data-repeat-activation="suppressed" data-evidence-sample="loading-destructive">
+          <span class="btn-spinner" aria-hidden="true"></span>
+          <span>删除中</span>
+        </button>
         <button class="btn primary" disabled data-evidence-sample="disabled">不可用</button>
       </div>
     </section>
@@ -121,5 +125,13 @@ body { margin:0; padding:var(--space-12); background:var(--color-background); fo
     </section>
   </div>
 </div>
+<script>
+document.querySelectorAll('.btn.is-loading').forEach((button) => {
+  button.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  });
+});
+</script>
 </body>
 </html>
