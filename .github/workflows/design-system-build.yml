@@ -65,6 +65,11 @@ jobs:
         continue-on-error: true
         run: npm run build:all
 
+      - name: Run four-platform smoke
+        id: four_platform_smoke
+        continue-on-error: true
+        run: npm run smoke:four-platform
+
       - name: Verify accepted report was not changed
         id: accepted_report
         continue-on-error: true
@@ -87,6 +92,7 @@ jobs:
           GATE_ENGINEERING_BUILD: ${{ steps.engineering_build.outcome }}
           GATE_PENPOT_BUILD: ${{ steps.penpot_build.outcome }}
           GATE_BUILD_ALL: ${{ steps.build_all.outcome }}
+          GATE_FOUR_PLATFORM_SMOKE: ${{ steps.four_platform_smoke.outcome }}
           GATE_ACCEPTED_REPORT: ${{ steps.accepted_report.outcome }}
         run: npm run ci:evidence
 
@@ -110,6 +116,10 @@ jobs:
             dist/wechat-mini-program/adapter.json
             dist/wechat-mini-program/tokens.js
             dist/agent/contract.json
+            dist/mcp/data/mcp-manifest.json
+            dist/mcp/data/tokens.json
+            dist/smoke/four-platform.json
+            dist/human-guide/com-design-v2-current.js
             penpot/build/manifest.json
           if-no-files-found: error
           retention-days: 30
