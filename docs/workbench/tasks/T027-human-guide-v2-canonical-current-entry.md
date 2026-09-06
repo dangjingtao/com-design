@@ -84,9 +84,19 @@ T026 已完成 V2 first-stage RC 集成验收，但当前线上 Human Guide 仍�
 
 ## Implementation record
 
-- Commit / PR:
+- Commit / PR: branch `task/T027-human-guide-v2-canonical-current-entry` → `dev`; PR pending.
 - Changed paths:
+  - `report/design-system-v2/` — current V2 Human Guide shell; component / composite / pattern catalogs are loaded from canonical JSON.
+  - `tooling/src/human-guide-v2.mjs` + `tooling/bin/human-guide-v2.mjs` — canonical facts validator, versioned current metadata and root pointer builder.
+  - `tooling/test/human-guide-v2.test.mjs` — 34/4/7, Result State, Incremental Loading, V1 retention and current-pointer coverage.
+  - `.github/workflows/pages.yml` — `/ → /versions/<canonical-version>/`, V2 version page, `/accepted/v1/` retained baseline, same-revision canonical assets.
+  - `design-source/library-consumption.json` + consumption validator/test — distinguish current V2 Human Guide from accepted V1 evidence while keeping both downstream.
+  - `tooling/src/validation-orchestrator.mjs`, `build-all.mjs`, `package.json`, root/report README — current Human Guide validation/build/read-order documentation.
 - Notes:
+  - V2 Human Guide does not hard-code 34/4/7; it reads `components/index.json`, `core-composites.json` and `core-patterns.json` directly.
+  - Result State appears through the canonical component catalog; Incremental Loading appears through the canonical pattern catalog.
+  - `report/design-system-v1/` is untouched. The deployed accepted copy remains under `/accepted/v1/`; the legacy overlay is scoped there only and no longer drives the current root.
+  - T027 intentionally keeps visual treatment minimal/structural; Open Design refresh and Human shell token cleanup remain T028.
 
 ## Verification evidence
 
