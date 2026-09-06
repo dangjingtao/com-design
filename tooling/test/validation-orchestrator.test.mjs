@@ -28,7 +28,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
   assert.equal(evidence.result, 'pass');
   assert.equal(evidence.summary.failed, 0);
   assert.equal(evidence.summary.blockingErrors, 0);
-  assert.equal(evidence.summary.checksRun, 11);
+  assert.equal(evidence.summary.checksRun, 12);
   assert.deepEqual(
     evidence.checks.map((check) => check.id),
     [
@@ -40,6 +40,7 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
       'layout-input-foundation',
       'navigation-foundation',
       'motion-foundation',
+      'mobile-search-filter',
       'component-contracts',
       'iconography',
       'canonical-design-model',
@@ -54,6 +55,14 @@ test('runs the accepted deterministic V2 validation gates as one evidence-produc
     false,
   );
   assert.equal(evidence.checks.find((check) => check.id === 'consumption-consistency').evidence.catalogCounts.coreComponents, 33);
+  assert.deepEqual(
+    evidence.checks.find((check) => check.id === 'mobile-search-filter').evidence.platforms,
+    ['ios', 'android', 'wechat-mini-program'],
+  );
+  assert.equal(
+    evidence.checks.find((check) => check.id === 'mobile-search-filter').evidence.quickFilterPeerViewNavigation,
+    false,
+  );
   assert.equal(evidence.checks.find((check) => check.id === 'component-contracts').evidence.componentCount, 33);
   assert.equal(evidence.checks.find((check) => check.id === 'canonical-design-model').evidence.platformCount, 4);
   assert.equal(JSON.stringify(evidence).includes(repoRoot), false);
