@@ -37,6 +37,9 @@ export function buildHumanGuideV2Facts(repoRoot,{sourceRevision='unknown'}={}){
     sourceRevision,
     downstreamAuthority:false,
     previewReferenceOnly:true,
+    coreComponents:components.length,
+    coreCompositeComponents:composites.length,
+    corePatterns:patterns.length,
     counts:{
       coreComponents:components.length,
       coreCompositeComponents:composites.length,
