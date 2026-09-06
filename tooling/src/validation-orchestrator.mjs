@@ -5,6 +5,7 @@ import { buildCanonicalDesignModel } from './design-model.mjs';
 import { validateComponentCatalog } from './component-contract.mjs';
 import { validateConsumptionConsistency } from './consumption-consistency.mjs';
 import { validateComponentCssParity } from './component-css.mjs';
+import { validateHumanGuideCurrentFacts } from './human-guide-overlay.mjs';
 import { auditContrast } from './contrast-audit.mjs';
 import { validateReleaseGateTrace } from './release-gate-trace.mjs';
 import { validateIconographyContract } from './iconography.mjs';
@@ -180,6 +181,14 @@ export function runRepositoryValidation(repoRoot) {
 
   checks.push(runCheck('component-css-parity', () => {
     const result = validateComponentCssParity(repoRoot);
+    return {
+      errors: result.errors,
+      evidence: result.evidence,
+    };
+  }));
+
+  checks.push(runCheck('human-guide-current-facts', () => {
+    const result = validateHumanGuideCurrentFacts(repoRoot);
     return {
       errors: result.errors,
       evidence: result.evidence,
