@@ -12,7 +12,7 @@ test('repository manifest resolves canonical sources and derives real catalog co
   const result = validateSourceIntegrity(repoRoot);
   assert.deepEqual(result.errors, []);
   assert.deepEqual(result.evidence.catalogCounts, {
-    coreComponents: 33,
+    coreComponents: 34,
     coreCompositeComponents: 4,
     corePatterns: 7,
     coreIcons: 11,
