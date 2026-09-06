@@ -76,6 +76,12 @@ function scanCss(relativePath,text,knownTokens){
       violations.push({file:relativePath,line:lineNumber(text,match.index??0),value,rule:'literal-elevation'});
     }
   }
+  for(const match of text.matchAll(/z-index\s*:\s*([^;\n}]+)/gi)){
+    const value=match[1].trim();
+    if(value!=='0'&&!value.includes('var(')){
+      violations.push({file:relativePath,line:lineNumber(text,match.index??0),value,rule:'literal-layering'});
+    }
+  }
   for(const match of text.matchAll(/border-radius\s*:\s*([^;\n}]+)/gi)){
     const value=match[1].trim();
     if(value!=='0'&&!value.includes('var(')){
