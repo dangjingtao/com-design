@@ -1,6 +1,6 @@
 # T022 · Incremental Loading / Infinite List Pattern
 
-- Status: TODO
+- Status: DOING
 - Target version: V2 first-stage
 - Impact: UX Pattern / Collection / Cross-platform
 - Owner: -
