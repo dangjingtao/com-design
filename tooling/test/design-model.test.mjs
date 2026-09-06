@@ -47,7 +47,7 @@ test('builds Canonical Design Model V2 from accepted canonical sources', () => {
   assert.match(model.sourceHash, /^[a-f0-9]{64}$/);
   assert.equal(model.components.length, 33);
   assert.equal(model.composites.length, 4);
-  assert.equal(model.patterns.length, 6);
+  assert.equal(model.patterns.length, 7);
   assert.equal(model.platform.platforms.length, 4);
   assert.equal(model.layoutInput.id, 'com-design:layout-input-foundation:v2');
   assert.equal(model.layoutInput.schemaVersion, 2);
