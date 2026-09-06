@@ -5,6 +5,7 @@ import { buildCanonicalDesignModel } from './design-model.mjs';
 import { validateComponentCatalog } from './component-contract.mjs';
 import { validateConsumptionConsistency } from './consumption-consistency.mjs';
 import { validateComponentCssParity } from './component-css.mjs';
+import { auditContrast } from './contrast-audit.mjs';
 import { validateIconographyContract } from './iconography.mjs';
 import { validateLayoutInputFoundationContract } from './layout-input-foundation.mjs';
 import { validateNavigationFoundationContract } from './navigation-foundation.mjs';
@@ -197,6 +198,15 @@ export function runRepositoryValidation(repoRoot) {
         tokenSourceSha256: tokenModel.sourceHash,
       },
     };
+  }));
+
+  checks.push(runCheck('contrast-audit', () => {
+    if (!tokenModel) {
+      const foundationPath = canonicalSources.foundation?.resolvedPath;
+      if (!foundationPath) return { errors: ['canonical foundation source is unavailable.'] };
+      tokenModel = buildTokenModel(foundationPath);
+    }
+    return auditContrast(tokenModel);
   }));
 
   checks.push(runCheck('platform-model', () => {
