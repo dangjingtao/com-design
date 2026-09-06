@@ -6,6 +6,15 @@ const EVIDENCE_SCHEMA_VERSION = 1;
 const EVIDENCE_ID = 'com-design:ci-evidence:v1';
 const DEFAULT_OUTPUT_PATH = path.join('dist', 'ci', 'evidence.json');
 
+export const CI_GATE_IDS = Object.freeze([
+  'unit-tests',
+  'v2-validation',
+  'engineering-build',
+  'penpot-build',
+  'build-all',
+  'accepted-report-unchanged',
+]);
+
 function readJsonIfPresent(repoRoot, relativePath) {
   const filePath = path.join(repoRoot, relativePath);
   if (!fs.existsSync(filePath)) return null;
@@ -146,6 +155,7 @@ export function buildCiEvidence(repoRoot, {
     gateCheck('v2-validation', gateResults.validation),
     gateCheck('engineering-build', gateResults.engineeringBuild),
     gateCheck('penpot-build', gateResults.penpotBuild),
+    gateCheck('build-all', gateResults.buildAll),
     gateCheck('accepted-report-unchanged', gateResults.acceptedReport),
   ];
 
