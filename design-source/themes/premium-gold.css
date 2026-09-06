@@ -108,7 +108,7 @@
   --com-text-tertiary: var(--com-ink-500);
   --com-text-placeholder: var(--com-ink-500);
   --com-text-disabled: var(--com-ink-500);
-  --com-text-brand: var(--com-brand-700);
+  --com-text-brand: var(--com-brand-600);
   --com-text-link: var(--com-brand-600);
 
   /* warm surfaces and borders */
