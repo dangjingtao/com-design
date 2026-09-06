@@ -214,3 +214,41 @@ test('T022 Mini Program requires one scroll owner and batched node updates', () 
   const errors=validate(candidate);
   assert.ok(errors.some((error)=>error.includes('Mini Program must choose one scroll owner')));
 });
+
+
+test('T022 rejects empty request identity before issuing a continuation request', () => {
+  const state=createIncrementalLoadingState({
+    items:[{key:'a'}],
+    continuation:'opaque:c1',
+  });
+  assert.throws(
+    () => reduceIncrementalLoadingState(
+      state,
+      {type:'request-more',requestId:''},
+      contract,
+    ),
+    /requestId must be a non-empty string/,
+  );
+});
+
+test('T022 rejects hasMore=true without the next opaque continuation', () => {
+  const state=createIncrementalLoadingState({
+    items:[{key:'a'}],
+    continuation:'opaque:c1',
+  });
+  const requested=requestMore(state,'r1');
+  assert.throws(
+    () => reduceIncrementalLoadingState(
+      requested.state,
+      {
+        type:'append-success',
+        requestId:'r1',
+        generation:requested.request.generation,
+        items:[{key:'b'}],
+        hasMore:true,
+      },
+      contract,
+    ),
+    /hasMore=true requires nextContinuation/,
+  );
+});
