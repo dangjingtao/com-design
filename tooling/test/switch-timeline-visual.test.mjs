@@ -82,7 +82,7 @@ test('T024 Timeline contract assigns connector ownership to the current event', 
 test('T024 Timeline preview keeps the rail continuous through variable event height', () => {
   assert.match(
     timelinePreview,
-    /\.tl-event:not\(:last-child\)\{padding-bottom:var\(--tl-event-gap\)\}/,
+    /\.tl-event:not\(:last-child\) \.tl-content\{padding-bottom:var\(--tl-event-gap\)\}/,
   );
   assert.match(
     timelinePreview,
