@@ -1,6 +1,6 @@
 # T027 · Human Guide V2 Canonical Consumption + Versioned Current Entry
 
-- Status: REVIEW
+- Status: PASS
 - Target version: V2 documentation follow-up
 - Impact: Docs / Human Consumption / Pages
 - Owner: -
@@ -66,15 +66,15 @@ T026 已完成 V2 first-stage RC 集成验收，但当前线上 Human Guide 仍�
 
 ## Acceptance
 
-- [ ] 当前 Human Guide 有独立、版本化的 V2 入口，不再把 accepted V1 页面伪装成当前 V2。
-- [ ] 当前 Human Guide 的 34 Components / 4 Composites / 7 Patterns 均由 canonical source 驱动，并有 deterministic consistency gate。
-- [ ] Result State 可在人类组件目录中被发现、查看 Preview 和 Contract。
-- [ ] Incremental Loading / Infinite List 作为第 7 个 Core UX Pattern 完整出现。
-- [ ] Composite 章节是 V2 当前结构的一部分，不依赖旧 V1 DOM 注入才存在。
-- [ ] Current Pages pointer 指向 V2；accepted V1 仍完整可访问并保持 immutable guard PASS。
-- [ ] 页面明确说明 canonical authority 与 downstream consumer 边界，不产生第二真相源。
-- [ ] `npm test`、`npm run validate`、相关 Human Guide / Pages build 全部通过，并提供 current-entry + catalog evidence。
-- [ ] Mira 完成 final review 后方可 PASS。
+- [x] 当前 Human Guide 有独立、版本化的 V2 入口，不再把 accepted V1 页面伪装成当前 V2。
+- [x] 当前 Human Guide 的 34 Components / 4 Composites / 7 Patterns 均由 canonical source 驱动，并有 deterministic consistency gate。
+- [x] Result State 可在人类组件目录中被发现、查看 Preview 和 Contract。
+- [x] Incremental Loading / Infinite List 作为第 7 个 Core UX Pattern 完整出现。
+- [x] Composite 章节是 V2 当前结构的一部分，不依赖旧 V1 DOM 注入才存在。
+- [x] Current Pages pointer 指向 V2；accepted V1 仍完整可访问并保持 immutable guard PASS。
+- [x] 页面明确说明 canonical authority 与 downstream consumer 边界，不产生第二真相源。
+- [x] `npm test`、`npm run validate`、相关 Human Guide / Pages build 全部通过，并提供 current-entry + catalog evidence。
+- [x] Mira 完成 final review 后方可 PASS。
 
 ## Risks / Dependencies
 
@@ -103,12 +103,12 @@ T026 已完成 V2 first-stage RC 集成验收，但当前线上 Human Guide 仍�
 - CI: Design System Build #351, run `34036032197` — PASS on implementation head `9ed8e8629405adcab62b1686b8cc301d60f7086a`.
 - Repository tests: 246/246 PASS; deterministic validation 18/18 checks PASS with 0 warnings.
 - Canonical catalog evidence: Human Guide builder reports `1.0.0-rc.2 · 34 components · 4 composites · 7 patterns`; Result State and Incremental Loading are asserted from canonical catalogs rather than handwritten Human data.
-- Current-entry / Pages evidence: deterministic Human Guide validation confirms `report/design-system-v2/`, versioned `/versions/<canonical-version>/`, generated root pointer/current.json, and V1-only legacy overlay scope. Actual GitHub Pages deployment is intentionally verified after merge because Pages publishes on `dev` push.
+- Current-entry / Pages evidence: post-merge Pages #179, run `34036142274` — PASS on accepted implementation merge SHA `708b80b67160851ed33c6b96d8c53c871ee75c54`. Deployed artifact `github-pages` (artifact `9990222764`) contains root `index.html` redirecting to `/versions/1.0.0-rc.2/`, traceable `current.json`, the V2 version page, `/accepted/v1/`, and same-revision canonical component/spec sources.
 - Accepted V1 guard: CI `Verify accepted report was not changed` PASS; `report/design-system-v1/` has no PR diff.
-- Other evidence: T018 four-platform smoke 43/43 PASS; T017 deterministic hard gate 25 checks / 9 traced targets PASS. First CI #349 correctly failed because two compatibility tests regressed; both were repaired by preserving existing Human evidence fields and diagnostic wording rather than weakening tests.
+- Other evidence: post-merge Design System Build #353, run `34036142333` — PASS on `708b80b67160851ed33c6b96d8c53c871ee75c54`; pre-merge #351/#352 were also green. T018 four-platform smoke 43/43 PASS; T017 deterministic hard gate 25 checks / 9 traced targets PASS. First CI #349 correctly failed because two compatibility tests regressed; both were repaired by preserving existing Human evidence fields and diagnostic wording rather than weakening tests.
 
 ## Review
 
 - Reviewer: Mira
-- Result: REVIEW
-- Conclusion: Implementation review passes for merge-to-dev verification. V2 Human Guide is a downstream canonical consumer, current/versioned routing is build-derived, accepted V1 remains immutable, and T028 visual scope was not pulled into T027. Codex review is unavailable due quota; CodeRabbit has not produced an actionable review thread on the current implementation, so Mira completed independent review. Final PASS is held until the post-merge Pages deployment proves the current pointer and accepted V1 path in the real publishing workflow.
+- Result: PASS
+- Conclusion: Final acceptance passed after post-merge publication verification. V2 Human Guide is now the independent current human consumer; `/` is a generated pointer to the canonical-versioned V2 page, `current.json` records the accepted source revision and canonical 34/4/7 facts, Result State and Incremental Loading flow from canonical catalogs, and the accepted V1 Human Guide remains separately readable under `/accepted/v1/` without modifying `report/design-system-v1/`. Post-merge Build #353 and Pages #179 both passed on `708b80b67160851ed33c6b96d8c53c871ee75c54`. T028 remains responsible for the Open Design visual refresh and Human shell token-compliance cleanup.
