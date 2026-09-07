@@ -4,196 +4,507 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Com Design · Human Guide V2</title>
-  <meta name="description" content="Com Design V2 当前人类可读入口，由 canonical design source 驱动。">
+  <meta name="description" content="Com Design V2 人类验收与使用指南。">
   <link rel="stylesheet" href="../../design-source/colors_and_type.css">
   <link rel="stylesheet" href="../../design-source/themes/premium-gold.css">
   <link rel="stylesheet" href="./styles.css">
   <script defer src="./app.js"></script>
 </head>
 <body>
-  <header class="appbar">
-    <button class="nav-toggle" id="nav-toggle" type="button" aria-controls="sidebar" aria-expanded="false">目录</button>
-    <a class="brand-lockup" href="#overview" aria-label="Com Design Human Guide V2">
-      <span class="brand-mark" aria-hidden="true"></span>
-      <span class="brand-copy"><strong>Com Design</strong><small>Human Guide V2</small></span>
+  <header class="site-header">
+    <a class="brand" href="#overview" aria-label="Com Design Mobile">
+      <span class="brand-symbol" aria-hidden="true"></span>
+      <span>Com Design Mobile</span>
     </a>
-    <div class="appbar-tools">
+
+    <nav class="top-nav" aria-label="主导航">
+      <a href="#overview">指南</a>
+      <a href="#resources">资源</a>
+      <a href="#philosophy">理念</a>
+      <a href="#component-spec">组件</a>
+      <a href="https://github.com/dangjingtao/com-design">GitHub</a>
+    </nav>
+
+    <div class="header-actions">
       <span class="version-chip" id="version-chip">RC</span>
-      <div class="theme-controls" aria-label="Human Guide theme controls">
-        <button type="button" class="tool-button" id="theme-family" aria-pressed="false">Default</button>
-        <button type="button" class="tool-button" id="theme-scheme" aria-pressed="false">Light</button>
-      </div>
+      <button class="header-button" id="theme-family" type="button" aria-pressed="false">Default</button>
+      <button class="header-button" id="theme-scheme" type="button" aria-pressed="false">Light</button>
+      <button class="header-button mobile-menu-button" id="mobile-menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu">目录</button>
     </div>
+
+    <nav class="mobile-menu" id="mobile-menu" aria-label="移动端导航">
+      <a href="#overview">页面概览</a>
+      <a href="#resources">资源下载</a>
+      <a href="#philosophy">设计理念</a>
+      <a href="#visual-foundation">视觉基础</a>
+      <a href="#interaction">交互原则</a>
+      <a href="#platforms">平台与主题</a>
+      <a href="#component-spec">组件与规范</a>
+    </nav>
   </header>
 
-  <div class="docs-shell">
-    <aside class="sidebar" id="sidebar">
-      <nav class="side-nav" aria-label="Human Guide sections">
-        <p class="nav-kicker">GUIDE</p>
-        <a class="side-link is-active" href="#overview">Overview</a>
-        <a class="side-link" href="#principles">设计原则</a>
-        <a class="side-link" href="#foundations">Foundations</a>
-        <p class="nav-kicker">LIBRARY</p>
-        <a class="side-link" href="#components">Core Components</a>
-        <a class="side-link" href="#composites">Composite Components</a>
-        <a class="side-link" href="#patterns">UX Patterns</a>
-        <p class="nav-kicker">CONSUME</p>
-        <a class="side-link" href="#consumers">消费入口</a>
-        <a class="side-link" href="#authority">系统边界</a>
-      </nav>
-      <div class="sidebar-foot">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span>Canonical source connected</span>
-        <a href="../../accepted/v1/">Accepted V1 ↗</a>
-      </div>
-    </aside>
-
-    <main class="docs-main">
-      <section class="hero section-block" id="overview">
+  <div class="page-shell">
+    <main class="page-main">
+      <section class="hero section" id="overview">
         <div class="hero-copy">
-          <p class="eyebrow">CURRENT · CANONICAL-DRIVEN</p>
-          <h1>把设计意图，稳定地带到四端。</h1>
-          <p class="lead">Com Design V2 是 Android、iOS、Web 与微信小程序共享的设计系统。Human Guide 负责解释、发现与导航；真正的设计事实仍来自 <code>design-source/</code>。</p>
-        </div>
-        <div class="hero-meta">
-          <dl class="facts" aria-live="polite">
-            <div><dt>Core Components</dt><dd id="component-count">—</dd></div>
-            <div><dt>Core Composites</dt><dd id="composite-count">—</dd></div>
-            <div><dt>Core UX Patterns</dt><dd id="pattern-count">—</dd></div>
-            <div><dt>Current Version</dt><dd id="system-version">—</dd></div>
+          <p class="section-kicker">HUMAN GUIDE · CURRENT</p>
+          <div class="hero-title-row">
+            <h1>Com Design</h1>
+            <span class="hero-version" id="hero-version">v—</span>
+          </div>
+          <p class="hero-subtitle">面向移动端的设计系统 · 人类验收与使用指南</p>
+          <p class="hero-description">用统一的语义、克制的层级与可验证的组件规则，让设计从原则、资产到真实交互保持一致，并稳定落到 Android、iOS、Web 与微信小程序。</p>
+
+          <dl class="asset-stats" aria-label="设计系统资产统计">
+            <div><dd id="component-count">—</dd><dt>Components</dt><span>基础组件</span></div>
+            <div><dd id="composite-count">—</dd><dt>Composites</dt><span>组合组件</span></div>
+            <div><dd id="pattern-count">—</dd><dt>UX Patterns</dt><span>交互模式</span></div>
+            <div><dd>4</dd><dt>Platforms</dt><span>支持平台</span></div>
           </dl>
-          <div class="current-record" id="current-record">正在读取 current build record…</div>
-        </div>
-      </section>
 
-      <section class="section-block" id="principles">
-        <header class="section-heading">
-          <div><p class="eyebrow">DESIGN PRINCIPLES</p><h2>先有层级，再有装饰。</h2></div>
-          <p>Open Design 提供的是文档产品化的视觉启发；Com Design 自己的语义、层级和约束不让位。</p>
-        </header>
-        <div class="principle-list">
-          <article><span>01</span><div><h3>Semantic first</h3><p>颜色、状态、动作与组件都先表达语义，再映射到平台表现。</p></div></article>
-          <article><span>02</span><div><h3>Flat first</h3><p>优先使用排版、留白、分隔与中性 surface 建立结构，不用卡片和阴影堆层级。</p></div></article>
-          <article><span>03</span><div><h3>Primary is scarce</h3><p>一个视图或动作组通常只有一个最高优先级动作，Brand 不承担“哪里都要亮”的职责。</p></div></article>
-          <article><span>04</span><div><h3>One source, many consumers</h3><p>Human Guide、Penpot、AI Contract 与平台 Adapter 都是 downstream consumer，不制造第二真相源。</p></div></article>
+          <div class="hero-actions">
+            <a class="action action-primary" href="#component-spec">浏览组件</a>
+            <a class="action action-secondary" href="#resources">获取资源</a>
+          </div>
         </div>
-      </section>
 
-      <section class="section-block" id="foundations">
-        <header class="section-heading">
-          <div><p class="eyebrow">FOUNDATIONS</p><h2>同一套语义，允许不同上下文。</h2></div>
-          <p>当前页面本身也消费这些 semantic tokens；右上角可以切换 Default / Premium Gold 与 Light / Dark。</p>
-        </header>
-        <div class="foundation-grid">
-          <article class="foundation-item">
-            <h3>Color semantics</h3>
-            <div class="swatch-line" aria-label="semantic color samples">
-              <span class="swatch swatch-brand"></span><span class="swatch swatch-surface"></span><span class="swatch swatch-success"></span><span class="swatch swatch-warning"></span><span class="swatch swatch-danger"></span>
+        <div class="hero-stage" aria-label="Com Design 代表性交互展示">
+          <div class="hero-grid-backdrop" aria-hidden="true"></div>
+          <div class="floating-panel floating-panel-left">
+            <span class="micro-label">SYSTEM SIGNAL</span>
+            <strong>Primary 稀缺</strong>
+            <div class="mini-action-row">
+              <span class="mini-button mini-button-primary">确认提交</span>
+              <span class="mini-button">次要操作</span>
             </div>
-            <p>Brand 用于身份、选择、focus 与关键动作；状态色只承载状态语义。</p>
+          </div>
+
+          <div class="hero-phone">
+            <div class="phone-top"><span>9:41</span><span>● ● ●</span></div>
+            <div class="phone-content">
+              <p class="micro-label">COM DESIGN</p>
+              <h2>发现更好的体验</h2>
+              <p>让设计与开发说同一种语言。</p>
+              <button type="button" class="phone-primary">开始使用</button>
+              <div class="phone-list">
+                <span><b>设计规范</b><i>→</i></span>
+                <span><b>组件库</b><i>→</i></span>
+                <span><b>实践模式</b><i>→</i></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="floating-panel floating-panel-right">
+            <span class="mini-button mini-button-primary">主要按钮</span>
+            <span class="mini-button">默认按钮</span>
+            <span class="mini-button mini-button-loading">加载中…</span>
+            <span class="mini-button mini-button-danger">危险操作</span>
+            <span class="mini-switch" aria-hidden="true"><i></i></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="resources">
+        <header class="section-header">
+          <div>
+            <p class="section-kicker">RESOURCES</p>
+            <h2>资源下载</h2>
+          </div>
+          <p>把设计资源、工程适配器与 AI 消费入口放在同一层，不需要先理解仓库结构。</p>
+        </header>
+
+        <div class="resource-group">
+          <div class="resource-group-head">
+            <h3>设计资源</h3>
+            <span>Human / Design</span>
+          </div>
+          <div class="resource-grid">
+            <a class="resource-card" href="./index.html">
+              <span class="resource-icon">HG</span>
+              <span><strong>人类可读规范</strong><small>当前 V2 验收与使用指南</small></span>
+              <em>查看 →</em>
+            </a>
+            <a class="resource-card" href="../../design-source/specs/design-system-v1.json">
+              <span class="resource-icon">DS</span>
+              <span><strong>设计源清单</strong><small>Canonical manifest</small></span>
+              <em>打开 →</em>
+            </a>
+            <a class="resource-card" href="../../design-source/colors_and_type.css">
+              <span class="resource-icon">TK</span>
+              <span><strong>Design Tokens</strong><small>颜色、字体、间距与语义映射</small></span>
+              <em>打开 →</em>
+            </a>
+            <a class="resource-card" href="../../downloads/penpot-manifest.json">
+              <span class="resource-icon">PN</span>
+              <span><strong>Penpot</strong><small>治理后的设计消费清单</small></span>
+              <em>下载 →</em>
+            </a>
+            <a class="resource-card" href="../../design-source/preview/component-button.html">
+              <span class="resource-icon">PV</span>
+              <span><strong>Preview</strong><small>真实组件预览入口</small></span>
+              <em>打开 →</em>
+            </a>
+          </div>
+        </div>
+
+        <div class="resource-group">
+          <div class="resource-group-head">
+            <h3>工程 / AI 资源</h3>
+            <span>Engineering / Agent</span>
+          </div>
+          <div class="resource-grid">
+            <a class="resource-card" href="../../downloads/tailwind/adapter.json">
+              <span class="resource-icon">TW</span>
+              <span><strong>Tailwind Adapter</strong><small>Web 工程消费入口</small></span>
+              <em>打开 →</em>
+            </a>
+            <a class="resource-card" href="../../downloads/native-mobile/adapter.json">
+              <span class="resource-icon">NM</span>
+              <span><strong>Native Mobile</strong><small>iOS / Android 适配入口</small></span>
+              <em>打开 →</em>
+            </a>
+            <a class="resource-card" href="../../downloads/wechat-mini-program/adapter.json">
+              <span class="resource-icon">WX</span>
+              <span><strong>微信小程序</strong><small>小程序平台适配入口</small></span>
+              <em>打开 →</em>
+            </a>
+            <a class="resource-card" href="../../downloads/com-design-engineering.zip">
+              <span class="resource-icon">PK</span>
+              <span><strong>Engineering Kit</strong><small>同 revision 工程包</small></span>
+              <em>下载 →</em>
+            </a>
+            <a class="resource-card" href="../../downloads/com-design-mcp.zip">
+              <span class="resource-icon">AI</span>
+              <span><strong>MCP / Agent</strong><small>机器可读与工具消费包</small></span>
+              <em>下载 →</em>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="philosophy">
+        <header class="section-header">
+          <div>
+            <p class="section-kicker">DESIGN PHILOSOPHY</p>
+            <h2>设计理念</h2>
+          </div>
+          <p>只讲真正影响设计决策的原则。原则必须能在组件和交互里被验证，而不是停留在口号。</p>
+        </header>
+
+        <div class="philosophy-grid">
+          <article class="principle-card">
+            <span class="principle-no">01</span>
+            <h3>Semantic First</h3>
+            <strong>语义优先</strong>
+            <p>先定义动作、状态和信息职责，再决定颜色与视觉表现。同一种语义在不同平台仍然保持一致。</p>
+            <div class="principle-demo semantic-demo">
+              <span class="status-dot status-success"></span>
+              <b>操作成功</b>
+              <small>结果已经保存</small>
+            </div>
           </article>
-          <article class="foundation-item">
-            <h3>Typography</h3>
-            <p class="type-sample">中文优先，信息密度高，但不拥挤。</p>
-            <p>Display → Title → Heading → Body → Caption 保持稳定层级。</p>
+
+          <article class="principle-card">
+            <span class="principle-no">02</span>
+            <h3>Primary is scarce</h3>
+            <strong>主要动作是稀缺资源</strong>
+            <p>一个视图或动作组通常只有一个最高优先级动作。可用不等于都要变成 Primary。</p>
+            <div class="principle-demo action-demo">
+              <span class="mini-button mini-button-primary">主要操作</span>
+              <span class="mini-button">次要操作</span>
+              <span class="text-action">文字操作</span>
+            </div>
           </article>
-          <article class="foundation-item">
-            <h3>Spacing & radius</h3>
-            <div class="measure-line"><span></span><span></span><span></span><span></span></div>
-            <p>页面节奏来自 canonical spacing；圆角用于控件与容器，不把所有区块都卡片化。</p>
+
+          <article class="principle-card">
+            <span class="principle-no">03</span>
+            <h3>Flat First</h3>
+            <strong>扁平优先</strong>
+            <p>先用排版、留白、分隔和中性表面建立层级，只有真正需要悬浮与覆盖时才使用 elevation。</p>
+            <div class="principle-demo flat-demo">
+              <span></span><span></span><span></span>
+            </div>
           </article>
-          <article class="foundation-item">
-            <h3>Platform context</h3>
-            <p>Android / iOS / Web / WeChat Mini Program 共享设计意图；viewport、input、motion、color scheme 独立解析。</p>
+
+          <article class="principle-card">
+            <span class="principle-no">04</span>
+            <h3>One Source, Many Consumers</h3>
+            <strong>一次定义，多处消费</strong>
+            <p>Human Guide、Penpot、AI Contract 和四端 Adapter 都消费同一套 canonical source，不制造第二真相源。</p>
+            <div class="principle-demo consumer-demo">
+              <span>H</span><span>P</span><span>AI</span><span>4P</span>
+            </div>
           </article>
         </div>
       </section>
 
-      <section class="section-block" id="components">
-        <header class="section-heading">
-          <div><p class="eyebrow">COMPONENT CATALOG</p><h2>Core Components</h2></div>
-          <p>目录直接来自 <code>design-source/components/index.json</code>。选择组件后，Inspector 会读取同一 revision 的 contract。</p>
+      <section class="section" id="visual-foundation">
+        <header class="section-header">
+          <div>
+            <p class="section-kicker">VISUAL FOUNDATION</p>
+            <h2>视觉基础</h2>
+          </div>
+          <p>展示“怎么用”，而不是把 token 表整页倒出来。每个基础项都服务于层级、可读性和跨端一致性。</p>
         </header>
-        <div class="component-toolbar">
-          <label class="search-field">
-            <span>筛选组件</span>
-            <input id="component-filter" type="search" placeholder="Button / Result State…" autocomplete="off">
-          </label>
-          <span class="catalog-note" id="catalog-note">Canonical catalog</span>
-        </div>
-        <div class="component-workspace">
-          <div id="component-groups" class="catalog-loading">正在读取 canonical component catalog…</div>
-          <aside class="inspector" id="component-inspector" aria-live="polite">
-            <div class="inspector-empty">
-              <p class="eyebrow">COMPONENT INSPECTOR</p>
-              <h3>选择一个组件</h3>
-              <p>查看 intent、variant、state、使用约束，以及同 revision Preview。</p>
+
+        <div class="foundation-showcase">
+          <article>
+            <div class="showcase-head"><h3>色彩</h3><span>Semantic color</span></div>
+            <div class="color-row">
+              <i class="color-brand"></i><i class="color-info"></i><i class="color-success"></i><i class="color-warning"></i><i class="color-danger"></i><i class="color-neutral"></i>
             </div>
+            <p>品牌色用于身份、选择、focus 与关键动作；状态色只表达真实状态。</p>
+          </article>
+
+          <article>
+            <div class="showcase-head"><h3>字体</h3><span>Type scale</span></div>
+            <div class="type-demo">
+              <b>Aa</b>
+              <span><strong>中文优先</strong><small>Display · Title · Body · Caption</small></span>
+            </div>
+            <p>高信息密度不等于拥挤。字号层级少而稳定，文本本身承担主要结构职责。</p>
+          </article>
+
+          <article>
+            <div class="showcase-head"><h3>间距</h3><span>Spacing</span></div>
+            <div class="spacing-demo"><i></i><i></i><i></i><i></i><i></i></div>
+            <p>使用离散 spacing scale 建立节奏，避免“差不多”的手写间距不断扩散。</p>
+          </article>
+
+          <article>
+            <div class="showcase-head"><h3>圆角</h3><span>Radius</span></div>
+            <div class="radius-demo"><i></i><i></i><i></i><i></i></div>
+            <p>圆角是层级和容器职责的一部分，不是默认装饰。控件、容器、overlay 使用明确语义。</p>
+          </article>
+
+          <article>
+            <div class="showcase-head"><h3>图标</h3><span>Icon language</span></div>
+            <div class="icon-demo" aria-label="线性图标示例">
+              <span>⌂</span><span>⌕</span><span>♡</span><span>⚙</span>
+            </div>
+            <p>简洁、清晰、统一的线性图标。图标帮助识别，不替代文字语义。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="interaction">
+        <header class="section-header">
+          <div>
+            <p class="section-kicker">INTERACTION PRINCIPLES</p>
+            <h2>交互原则</h2>
+          </div>
+          <p>把层级、反馈、状态与恢复路径展示成真实片段。规则应该能在产品界面里被直接看懂。</p>
+        </header>
+
+        <div class="interaction-grid">
+          <article>
+            <span class="interaction-index">01</span>
+            <h3>层级与重点</h3>
+            <p>通过动作层级引导注意力，不让多个 Primary 同时竞争。</p>
+            <div class="interaction-demo">
+              <strong>提交申请</strong><small>确认信息后提交</small>
+              <div><span class="mini-button mini-button-primary">确认提交</span><span class="mini-button">稍后处理</span></div>
+            </div>
+          </article>
+
+          <article>
+            <span class="interaction-index">02</span>
+            <h3>反馈机制</h3>
+            <p>反馈紧贴动作与影响范围，成功、警告和错误不只依赖颜色。</p>
+            <div class="interaction-demo success-strip"><b>✓</b><span><strong>操作成功</strong><small>已完成你的操作</small></span></div>
+          </article>
+
+          <article>
+            <span class="interaction-index">03</span>
+            <h3>状态设计</h3>
+            <p>默认、Pressed、Loading、Disabled 都是明确状态，不用视觉猜测。</p>
+            <div class="interaction-demo state-stack">
+              <span>默认状态</span><span class="is-pressed">按下状态</span><span class="is-disabled">禁用状态</span>
+            </div>
+          </article>
+
+          <article>
+            <span class="interaction-index">04</span>
+            <h3>表单行为</h3>
+            <p>输入、提示和错误靠近字段；局部错误不升级成整页 Result State。</p>
+            <div class="interaction-demo field-demo">
+              <label>手机号</label><span>请输入手机号</span><small>请填写正确的手机号</small>
+            </div>
+          </article>
+
+          <article>
+            <span class="interaction-index">05</span>
+            <h3>结果状态</h3>
+            <p>结果说明发生了什么，并给出真实下一步，而不是只给一个“确定”。</p>
+            <div class="interaction-demo result-demo">
+              <b>✓</b><strong>提交成功</strong><small>资料已进入审核</small><span>查看进度</span>
+            </div>
+          </article>
+
+          <article>
+            <span class="interaction-index">06</span>
+            <h3>加载与危险操作</h3>
+            <p>Loading 保持尺寸稳定；Destructive 是语义，不替代层级。</p>
+            <div class="interaction-demo action-demo">
+              <span class="mini-button mini-button-loading">加载中…</span>
+              <span class="mini-button mini-button-danger">删除记录</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="platforms">
+        <header class="section-header">
+          <div>
+            <p class="section-kicker">PLATFORMS & THEMES</p>
+            <h2>平台与主题</h2>
+          </div>
+          <p>同一套语义，不同上下文表现。平台和主题改变 presentation，不重新定义 Core semantics。</p>
+        </header>
+
+        <div class="platform-layout">
+          <article class="platform-panel">
+            <div class="showcase-head"><h3>多平台支持</h3><span>4 targets</span></div>
+            <div class="platform-grid">
+              <div><span>AN</span><strong>Android</strong><small>Native mobile</small></div>
+              <div><span>iOS</span><strong>iOS</strong><small>Native mobile</small></div>
+              <div><span>WEB</span><strong>Web</strong><small>Modern browser</small></div>
+              <div><span>WX</span><strong>微信小程序</strong><small>Mini Program</small></div>
+            </div>
+          </article>
+
+          <article class="theme-panel">
+            <div class="showcase-head"><h3>主题模式</h3><span>semantic remap</span></div>
+            <div class="theme-preview-row">
+              <button class="theme-preview is-default" type="button" data-set-family="default">
+                <span class="theme-a">Aa</span>
+                <strong>Default</strong>
+                <small>Electric Indigo</small>
+                <i></i>
+              </button>
+              <button class="theme-preview is-premium" type="button" data-set-family="premium">
+                <span class="theme-a">Aa</span>
+                <strong>Premium Gold</strong>
+                <small>Opt-in theme</small>
+                <i></i>
+              </button>
+            </div>
+          </article>
+
+          <article class="scheme-panel">
+            <div class="showcase-head"><h3>亮色 / 暗色</h3><span>color scheme</span></div>
+            <div class="scheme-preview-row">
+              <button class="scheme-card scheme-light" type="button" data-set-scheme="light"><b>Aa</b><span>Light</span></button>
+              <button class="scheme-card scheme-dark" type="button" data-set-scheme="dark"><b>Aa</b><span>Dark</span></button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section component-section" id="component-spec">
+        <header class="section-header component-section-header">
+          <div>
+            <p class="section-kicker">COMPONENTS & PATTERNS</p>
+            <h2>组件与规范</h2>
+          </div>
+          <p>从这里进入真正的验收：左边选资产，中间看真实 Preview，右边读 Human Spec / Contract。</p>
+        </header>
+
+        <div class="lab-mobile-tabs" role="tablist" aria-label="组件验收视图">
+          <button type="button" class="is-active" data-lab-tab="library">组件库</button>
+          <button type="button" data-lab-tab="preview">预览</button>
+          <button type="button" data-lab-tab="spec">规范</button>
+        </div>
+
+        <div class="component-lab">
+          <aside class="lab-pane lab-library is-mobile-active" data-lab-pane="library">
+            <label class="component-search">
+              <span>搜索组件</span>
+              <input id="component-filter" type="search" placeholder="Button / Result State…" autocomplete="off">
+            </label>
+
+            <div class="library-summary">
+              <span>Core Components</span><strong id="library-component-count">—</strong>
+            </div>
+            <div id="component-groups" class="catalog-loading">正在读取组件目录…</div>
+
+            <div class="library-secondary">
+              <details open>
+                <summary>组合组件 <strong id="library-composite-count">—</strong></summary>
+                <div id="composite-library" class="secondary-list"></div>
+              </details>
+              <details>
+                <summary>UX Pattern <strong id="library-pattern-count">—</strong></summary>
+                <div id="pattern-library" class="secondary-list"></div>
+              </details>
+            </div>
+          </aside>
+
+          <section class="lab-pane lab-preview" data-lab-pane="preview">
+            <div class="preview-toolbar">
+              <div>
+                <span class="micro-label">LIVE PREVIEW</span>
+                <strong id="preview-title">Button 按钮</strong>
+              </div>
+              <a id="preview-open" href="../../design-source/preview/component-button.html">打开原始 Preview ↗</a>
+            </div>
+            <div class="preview-canvas">
+              <div class="preview-grid" aria-hidden="true"></div>
+              <div class="device-frame">
+                <div class="device-status"><span>9:41</span><span>● ● ●</span></div>
+                <iframe id="component-preview-frame" title="Component Preview" src="../../design-source/preview/component-button.html" loading="lazy"></iframe>
+                <div class="device-home" aria-hidden="true"></div>
+              </div>
+            </div>
+          </section>
+
+          <aside class="lab-pane lab-spec" data-lab-pane="spec" id="component-inspector" aria-live="polite">
+            <div class="spec-toolbar">
+              <span class="spec-live">HUMAN SPEC · LIVE CONTRACT</span>
+              <div>
+                <a id="spec-preview-link" href="../../design-source/preview/component-button.html">Preview ↗</a>
+                <a id="spec-contract-link" href="../../design-source/components/button.json">Contract ↗</a>
+              </div>
+            </div>
+
+            <div class="spec-head">
+              <h3 id="spec-title">Button 按钮</h3>
+              <p id="spec-intent">正在读取 canonical component contract…</p>
+              <div class="spec-chips" id="spec-chips"></div>
+            </div>
+
+            <div id="spec-content" class="spec-content catalog-loading">正在读取规范…</div>
           </aside>
         </div>
       </section>
 
-      <section class="section-block" id="composites">
-        <header class="section-heading">
-          <div><p class="eyebrow">STABLE ASSEMBLY</p><h2>Core Composite Components</h2></div>
-          <p>稳定、可复用的跨组件结构。它们不是业务页面模板，也不计入 Core Component 数量。</p>
-        </header>
-        <div id="composite-list" class="catalog-list catalog-loading">正在读取 composite catalog…</div>
-        <p class="source-link"><a href="../../design-source/preview/core-composite-components.html">打开 Composite Interactive Preview ↗</a></p>
-      </section>
-
-      <section class="section-block" id="patterns">
-        <header class="section-heading">
-          <div><p class="eyebrow">TASK RULES</p><h2>Core UX Patterns</h2></div>
-          <p>Pattern 解决跨组件、跨状态、跨页面的任务问题。第 7 个 Incremental Loading 与其他 Pattern 使用同一结构呈现。</p>
-        </header>
-        <div id="pattern-list" class="catalog-list catalog-loading">正在读取 pattern catalog…</div>
-        <p class="source-link"><a href="../../design-source/preview/core-ux-patterns.html">打开 Core UX Pattern Preview ↗</a></p>
-      </section>
-
-      <section class="section-block" id="consumers">
-        <header class="section-heading">
-          <div><p class="eyebrow">CONSUMPTION</p><h2>从同一个源头出发。</h2></div>
-          <p>不同消费者拥有不同入口，但都不能反向改写 canonical semantics。</p>
-        </header>
-        <div class="consumer-table" aria-label="Com Design consumers">
-          <div class="consumer-row consumer-head"><span>Consumer</span><span>Entrypoint</span><span>Role</span></div>
-          <div class="consumer-row"><strong>AI / Agent</strong><code>dist/agent/contract.json</code><span>Executable contract</span></div>
-          <div class="consumer-row"><strong>Web</strong><code>dist/tailwind/adapter.json</code><span>Platform adapter</span></div>
-          <div class="consumer-row"><strong>iOS / Android</strong><code>dist/native-mobile/adapter.json</code><span>Platform adapter</span></div>
-          <div class="consumer-row"><strong>WeChat Mini Program</strong><code>dist/wechat-mini-program/adapter.json</code><span>Platform adapter</span></div>
-          <div class="consumer-row"><strong>Penpot</strong><code>penpot/build/manifest.json</code><span>Governed workspace</span></div>
-          <div class="consumer-row"><strong>Human Guide</strong><code>report/design-system-v2/</code><span>Explanation & discovery</span></div>
+      <footer class="site-footer">
+        <div>
+          <strong>Com Design Human Guide V2</strong>
+          <span id="source-revision">source revision: local / unknown</span>
         </div>
-      </section>
-
-      <section class="section-block" id="authority">
-        <header class="section-heading">
-          <div><p class="eyebrow">SOURCE AUTHORITY</p><h2>谁说了算。</h2></div>
-          <p>页面看起来像产品，但它仍然只是设计系统的一个消费者。</p>
-        </header>
-        <div class="authority-flow" aria-label="Com Design source authority flow">
-          <article class="authority-primary"><span>01</span><div><strong>Canonical editable source</strong><code>design-source/</code><p>Token、Component、Composite、Pattern 与 Platform contract 的正式来源。</p></div></article>
-          <div class="flow-rule" aria-hidden="true"></div>
-          <article><span>02</span><div><strong>Normalized contracts</strong><p>Machine contract 与 Adapter 把设计意图变成可执行、可验证的消费接口。</p></div></article>
-          <article><span>03</span><div><strong>Downstream consumers</strong><p>Human Guide、Preview、Penpot、UI Kits 与工程输出只负责消费和证据。</p></div></article>
+        <div>
+          <a href="../../accepted/v1/">Accepted V1</a>
+          <a href="./visual-evidence.html">Theme evidence</a>
+          <a href="https://github.com/dangjingtao/com-design">GitHub</a>
         </div>
-        <div class="history-note">
-          <div><strong>Accepted V1 Human Guide</strong><p>历史验收页面继续独立保留，不承担当前 V2 的事实来源职责。</p></div>
-          <a href="../../accepted/v1/">查看 Accepted V1 baseline ↗</a>
-        </div>
-      </section>
-
-      <footer class="docs-footer">
-        <span>Com Design Human Guide V2</span>
-        <a href="./visual-evidence.html">Theme visual evidence ↗</a>
-        <span id="source-revision">source revision: local / unknown</span>
       </footer>
     </main>
+
+    <aside class="page-toc" aria-label="页面目录">
+      <span class="toc-line" aria-hidden="true"></span>
+      <a class="is-active" href="#overview">页面概览</a>
+      <a href="#resources">资源下载</a>
+      <a href="#philosophy">设计理念</a>
+      <a href="#visual-foundation">视觉基础</a>
+      <a href="#interaction">交互原则</a>
+      <a href="#platforms">平台与主题</a>
+      <a href="#component-spec">组件与规范</a>
+    </aside>
   </div>
 
   <template id="load-error-template">
-    <div class="load-error">无法读取 canonical data。请确认页面通过仓库/Pages 服务器访问，并检查 <code>design-source/</code> 是否完整。</div>
+    <div class="load-error">无法读取 canonical data。请确认通过仓库或 Pages 服务器访问，并检查 <code>design-source/</code> 是否完整。</div>
   </template>
 </body>
 </html>
