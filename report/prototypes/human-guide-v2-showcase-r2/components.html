@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN" data-source-base="../../design-source" data-site-base="../../" data-page="components">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>组件 · Com Design</title>
+  <meta name="description" content="Com Design V2 人类验收与使用指南。">
+  <link rel="stylesheet" href="../../design-source/colors_and_type.css">
+  <link rel="stylesheet" href="../../design-source/themes/premium-gold.css">
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./app.js"></script>
+</head>
+<body><header class="site-header">
+    <a class="brand" href="./index.html" aria-label="Com Design Mobile">
+      <span class="brand-symbol" aria-hidden="true"></span><span>Com Design Mobile</span>
+    </a>
+    <nav class="top-nav" aria-label="主导航">
+      <a class="" href="./index.html">指南</a>
+      <a class="" href="./philosophy.html">理念</a>
+      <a class="is-active" href="./components.html">组件</a>
+      <a class="" href="./resources.html">资源</a>
+      <a class="" href="./patterns.html">Pattern</a>
+      <a href="https://github.com/dangjingtao/com-design">GitHub</a>
+    </nav>
+    <div class="header-actions">
+      <span class="version-chip" id="version-chip">RC</span>
+      <button class="header-button" id="theme-family" type="button" aria-pressed="false">Default</button>
+      <button class="header-button" id="theme-scheme" type="button" aria-pressed="false">Light</button>
+      <button class="header-button mobile-menu-button" id="mobile-menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu">目录</button>
+    </div>
+    <nav class="mobile-menu" id="mobile-menu" aria-label="移动端导航">
+      <a class="" href="./index.html">指南</a>
+      <a class="" href="./philosophy.html">理念</a>
+      <a class="is-active" href="./components.html">组件</a>
+      <a class="" href="./resources.html">资源</a>
+      <a class="" href="./patterns.html">Pattern</a>
+      <a href="https://github.com/dangjingtao/com-design">GitHub</a>
+    </nav>
+  </header><div class="single-page-shell wide-shell"><main><header class="page-intro standalone-intro"><p class="section-kicker">COMPONENT LIBRARY</p><h1>组件</h1><p>沿用 V1 最有效的验收方式：左侧选组件，中间看真实 Preview，右侧读 Human Spec / Contract。</p></header><section class="section component-section" id="component-spec">
+        <header class="section-header component-section-header">
+          <div>
+            <p class="section-kicker">COMPONENTS & PATTERNS</p>
+            <h2>组件与规范</h2>
+          </div>
+          <p>从这里进入真正的验收：左边选资产，中间看真实 Preview，右边读 Human Spec / Contract。</p>
+        </header>
+
+        <div class="lab-mobile-tabs" role="tablist" aria-label="组件验收视图">
+          <button type="button" class="is-active" data-lab-tab="library">组件库</button>
+          <button type="button" data-lab-tab="preview">预览</button>
+          <button type="button" data-lab-tab="spec">规范</button>
+        </div>
+
+        <div class="component-lab">
+          <aside class="lab-pane lab-library is-mobile-active" data-lab-pane="library">
+            <label class="component-search">
+              <span>搜索组件</span>
+              <input id="component-filter" type="search" placeholder="Button / Result State…" autocomplete="off">
+            </label>
+
+            <div class="library-summary">
+              <span>Core Components</span><strong id="library-component-count">—</strong>
+            </div>
+            <div id="component-groups" class="catalog-loading">正在读取组件目录…</div>
+
+            <div class="library-secondary">
+              <details open>
+                <summary>组合组件 <strong id="library-composite-count">—</strong></summary>
+                <div id="composite-library" class="secondary-list"></div>
+              </details>
+              <details>
+                <summary>UX Pattern <strong id="library-pattern-count">—</strong></summary>
+                <div id="pattern-library" class="secondary-list"></div>
+              </details>
+            </div>
+          </aside>
+
+          <section class="lab-pane lab-preview" data-lab-pane="preview">
+            <div class="preview-toolbar">
+              <div>
+                <span class="micro-label">LIVE PREVIEW</span>
+                <strong id="preview-title">Button 按钮</strong>
+              </div>
+              <a id="preview-open" href="../../design-source/preview/component-button.html">打开原始 Preview ↗</a>
+            </div>
+            <div class="preview-canvas">
+              <div class="preview-grid" aria-hidden="true"></div>
+              <div class="device-frame">
+                <div class="device-status"><span>9:41</span><span>● ● ●</span></div>
+                <iframe id="component-preview-frame" title="Component Preview" src="../../design-source/preview/component-button.html" loading="lazy"></iframe>
+                <div class="device-home" aria-hidden="true"></div>
+              </div>
+            </div>
+          </section>
+
+          <aside class="lab-pane lab-spec" data-lab-pane="spec" id="component-inspector" aria-live="polite">
+            <div class="spec-toolbar">
+              <span class="spec-live">HUMAN SPEC · LIVE CONTRACT</span>
+              <div>
+                <a id="spec-preview-link" href="../../design-source/preview/component-button.html">Preview ↗</a>
+                <a id="spec-contract-link" href="../../design-source/components/button.json">Contract ↗</a>
+              </div>
+            </div>
+
+            <div class="spec-head">
+              <h3 id="spec-title">Button 按钮</h3>
+              <p id="spec-intent">正在读取 canonical component contract…</p>
+              <div class="spec-chips" id="spec-chips"></div>
+            </div>
+
+            <div id="spec-content" class="spec-content catalog-loading">正在读取规范…</div>
+          </aside>
+        </div>
+      </section><footer class="site-footer">
+    <div><strong>Com Design Human Guide V2</strong><span id="source-revision">source revision: local / unknown</span></div>
+    <div><a href="../../accepted/v1/">Accepted V1</a><a href="https://github.com/dangjingtao/com-design">GitHub</a></div>
+  </footer></main></div><template id="load-error-template"><div class="load-error">无法读取 canonical data。请确认通过仓库或 Pages 服务器访问，并检查 <code>design-source/</code> 是否完整。</div></template></body></html>
