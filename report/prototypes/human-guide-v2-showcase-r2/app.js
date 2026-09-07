@@ -84,6 +84,7 @@ function setupMobileMenu(){
 }
 function setupToc(){
   const links=[...document.querySelectorAll('.page-toc a[href^="#"]')];
+  if(!links.length) return;
   const map=new Map(links.map(link=>[link.getAttribute('href').slice(1),link]));
   const observer=new IntersectionObserver(entries=>{
     const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];
@@ -98,6 +99,7 @@ function setupToc(){
 function setupLabTabs(){
   const buttons=[...document.querySelectorAll('[data-lab-tab]')];
   const panes=[...document.querySelectorAll('[data-lab-pane]')];
+  if(!buttons.length) return ()=>{};
   function activate(name){
     buttons.forEach(button=>button.classList.toggle('is-active',button.dataset.labTab===name));
     panes.forEach(pane=>pane.classList.toggle('is-mobile-active',pane.dataset.labPane===name));
@@ -107,6 +109,7 @@ function setupLabTabs(){
 }
 function renderComponents(filter=''){
   const target=document.querySelector('#component-groups');
+  if(!target) return;
   const normalized=filter.trim().toLowerCase();
   const filtered=componentCatalog.filter(item=>!normalized||item.name.toLowerCase().includes(normalized)||item.slug.toLowerCase().includes(normalized));
   const groups=[...new Set(componentCatalog.map(item=>item.category))];
@@ -123,6 +126,7 @@ function renderComponents(filter=''){
 function renderSecondaryLists(){
   const compositeTarget=document.querySelector('#composite-library');
   const patternTarget=document.querySelector('#pattern-library');
+  if(!compositeTarget||!patternTarget) return;
   compositeTarget.innerHTML=compositeCatalog.map(item=>'<button type="button" class="'+(selected.type==='composite'&&selected.id===item.id?'is-selected':'')+'" data-library-type="composite" data-library-id="'+escapeHtml(item.id)+'">'+escapeHtml(item.name)+(item.cn?' · '+escapeHtml(item.cn):'')+'</button>').join('');
   patternTarget.innerHTML=patternCatalog.map(item=>'<button type="button" class="'+(selected.type==='pattern'&&selected.id===item.id?'is-selected':'')+'" data-library-type="pattern" data-library-id="'+escapeHtml(item.id)+'">'+escapeHtml(item.name)+(item.cn?' · '+escapeHtml(item.cn):'')+'</button>').join('');
 }
@@ -227,7 +231,9 @@ function selectLibraryItem(type,id,mobileActivate){
   if(matchMedia('(max-width: 840px)').matches) mobileActivate('preview');
 }
 function bindLibraryClicks(mobileActivate){
-  document.querySelector('#component-groups').addEventListener('click',event=>{
+  const componentGroups=document.querySelector('#component-groups');
+  if(!componentGroups) return;
+  componentGroups.addEventListener('click',event=>{
     const button=event.target.closest('[data-library-type]');
     if(button) selectLibraryItem(button.dataset.libraryType,button.dataset.libraryId,mobileActivate);
   });
@@ -260,31 +266,54 @@ async function init(){
     compositeCatalog=Array.isArray(composites.composites)?composites.composites:[];
     patternCatalog=Array.isArray(patterns.patterns)?patterns.patterns:[];
 
-    document.querySelector('#component-count').textContent=String(componentCatalog.length);
-    document.querySelector('#composite-count').textContent=String(compositeCatalog.length);
-    document.querySelector('#pattern-count').textContent=String(patternCatalog.length);
-    document.querySelector('#library-component-count').textContent=String(componentCatalog.length);
-    document.querySelector('#library-composite-count').textContent=String(compositeCatalog.length);
-    document.querySelector('#library-pattern-count').textContent=String(patternCatalog.length);
+    const setText=(selector,value)=>{const element=document.querySelector(selector);if(element) element.textContent=String(value);};
+    setText('#component-count',componentCatalog.length);
+    setText('#composite-count',compositeCatalog.length);
+    setText('#pattern-count',patternCatalog.length);
+    setText('#library-component-count',componentCatalog.length);
+    setText('#library-composite-count',compositeCatalog.length);
+    setText('#library-pattern-count',patternCatalog.length);
+    setText('#pattern-page-composite-count',compositeCatalog.length);
+    setText('#pattern-page-pattern-count',patternCatalog.length);
 
     const version=manifest.$metadata?.version||'unknown';
-    document.querySelector('#version-chip').textContent=version;
-    document.querySelector('#hero-version').textContent='v'+version;
+    setText('#version-chip',version);
+    setText('#hero-version','v'+version);
 
     renderComponents();
     renderSecondaryLists();
     bindLibraryClicks(mobileActivate);
-    document.querySelector('#component-filter').addEventListener('input',event=>renderComponents(event.target.value));
+    const filter=document.querySelector('#component-filter');
+    if(filter) filter.addEventListener('input',event=>renderComponents(event.target.value));
 
-    const button=componentCatalog.find(item=>item.slug==='button')||componentCatalog[0];
-    if(button) await selectComponent(button);
+    const patternComposites=document.querySelector('#pattern-page-composites');
+    if(patternComposites){
+      patternComposites.className='pattern-card-grid';
+      patternComposites.innerHTML=compositeCatalog.map((item,index)=>'<article class="pattern-card"><span>'+String(index+1).padStart(2,'0')+'</span><div><h3>'+escapeHtml(item.name)+(item.cn?'<span>'+escapeHtml(item.cn)+'</span>':'')+'</h3><p>'+escapeHtml(item.intent||'')+'</p><div class="entry-meta">'+chips((item.components||[]).slice(0,5))+'</div></div></article>').join('');
+    }
+    const patternPatterns=document.querySelector('#pattern-page-patterns');
+    if(patternPatterns){
+      patternPatterns.className='pattern-card-grid';
+      patternPatterns.innerHTML=patternCatalog.map((item,index)=>'<article class="pattern-card"><span>'+String(index+1).padStart(2,'0')+'</span><div><h3>'+escapeHtml(item.name)+(item.cn?'<span>'+escapeHtml(item.cn)+'</span>':'')+'</h3><p>'+escapeHtml(item.intent||'')+'</p><div class="entry-meta">'+chips((item.components||[]).slice(0,5))+'</div></div></article>').join('');
+    }
+
+    if(document.querySelector('#component-inspector')){
+      const button=componentCatalog.find(item=>item.slug==='button')||componentCatalog[0];
+      if(button) await selectComponent(button);
+    }
 
     if(current){
       document.querySelector('#source-revision').textContent='source revision: '+current.sourceRevision;
     }
   }catch(error){
-    showError(document.querySelector('#component-groups'),error);
-    showError(document.querySelector('#spec-content'),error);
+    const componentGroups=document.querySelector('#component-groups');
+    const specContent=document.querySelector('#spec-content');
+    const patternComposites=document.querySelector('#pattern-page-composites');
+    const patternPatterns=document.querySelector('#pattern-page-patterns');
+    if(componentGroups) showError(componentGroups,error);
+    if(specContent) showError(specContent,error);
+    if(patternComposites) showError(patternComposites,error);
+    if(patternPatterns) showError(patternPatterns,error);
   }
 }
 init();
