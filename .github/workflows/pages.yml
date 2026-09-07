@@ -7,6 +7,7 @@ on:
     paths:
       - "report/design-system-v1/**"
       - "report/design-system-v2/**"
+      - "report/prototypes/**"
       - "report/README.md"
       - "design.md"
       - "design-source/**"
@@ -62,6 +63,8 @@ jobs:
           mkdir -p _site/downloads
           cp -R report/design-system-v2/. "_site/versions/$VERSION/"
           cp -R report/design-system-v1/. _site/accepted/v1/
+          mkdir -p _site/prototypes/human-guide-v2-showcase-r2
+          cp -R report/prototypes/human-guide-v2-showcase-r2/. _site/prototypes/human-guide-v2-showcase-r2/
           cp design-source/colors_and_type.css _site/design-source/colors_and_type.css
           cp design-source/components.css _site/design-source/components.css
           cp -R design-source/themes/. _site/design-source/themes/
