@@ -7,7 +7,7 @@
   <meta name="description" content="Com Design V2 人类验收与使用指南。">
   <link rel="stylesheet" href="../../design-source/colors_and_type.css">
   <link rel="stylesheet" href="../../design-source/themes/premium-gold.css">
-  <link rel="stylesheet" href="./styles-r3.css">
+  <link rel="stylesheet" href="./styles-r4.css">
   <script defer src="./app-r3.js"></script>
 </head>
 <body><header class="site-header">
@@ -85,9 +85,15 @@
             </div>
             <div class="preview-canvas">
               <div class="preview-grid" aria-hidden="true"></div>
-              <div class="device-frame">
-                <div class="device-status"><span>9:41</span><span>● ● ●</span></div>
-                <iframe id="component-preview-frame" title="Component Preview" src="../../design-source/preview/component-button.html" loading="lazy"></iframe>
+              <div class="device-frame" aria-label="393 × 852 mobile preview shell">
+                <div class="device-island" aria-hidden="true"></div>
+                <div class="device-status">
+                  <span>9:41</span>
+                  <span class="device-status-icons" aria-hidden="true"><i></i><i></i><i></i></span>
+                </div>
+                <div class="device-screen">
+                  <iframe id="component-preview-frame" title="Component Preview" src="../../design-source/preview/component-button.html" loading="lazy"></iframe>
+                </div>
                 <div class="device-home" aria-hidden="true"></div>
               </div>
             </div>
