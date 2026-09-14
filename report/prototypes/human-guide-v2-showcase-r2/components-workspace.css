@@ -75,7 +75,7 @@
   }
 
   html[data-page="components"] .preview-toolbar {
-    flex: 0 0 auto;
+    display: none;
   }
 
   html[data-page="components"] .preview-canvas {
