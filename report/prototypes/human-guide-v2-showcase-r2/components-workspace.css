@@ -82,12 +82,42 @@
     flex: 1 1 auto;
     min-block-size: 0;
     overflow: hidden;
+    padding: var(--space-16);
   }
 
+  /* Neutral reference device: the shell only communicates viewport bounds.
+     Do not imitate a specific phone model or add decorative hardware chrome. */
   html[data-page="components"] .device-frame {
+    display: block;
     inline-size: min(393px, 38dvh);
     max-inline-size: calc(100% - var(--space-32));
     aspect-ratio: 393 / 852;
+    padding: var(--space-4);
+    overflow: hidden;
+    border: var(--com-border-focus) solid var(--color-text-primary);
+    border-radius: calc(var(--radius-lg) + var(--space-12));
+    background: var(--color-text-primary);
+    box-shadow: var(--shadow-1);
+  }
+
+  html[data-page="components"] .device-island,
+  html[data-page="components"] .device-status,
+  html[data-page="components"] .device-home {
+    display: none;
+  }
+
+  html[data-page="components"] .device-screen {
+    inline-size: 100%;
+    block-size: 100%;
+    margin: 0;
+    overflow: hidden;
+    border-radius: calc(var(--radius-lg) + var(--space-4));
+    background: var(--color-background);
+  }
+
+  html[data-page="components"] .device-screen iframe {
+    inline-size: 100%;
+    block-size: 100%;
   }
 
   html[data-page="components"] .spec-toolbar {
