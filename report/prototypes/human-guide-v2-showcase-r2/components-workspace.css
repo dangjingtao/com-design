@@ -1,0 +1,99 @@
+/* Desktop-only workspace contract for the Human Guide component page.
+   Other Human Guide pages keep their document layout. */
+@media (min-width: 841px) {
+  html[data-page="components"],
+  html[data-page="components"] body {
+    block-size: 100%;
+    overflow: hidden;
+  }
+
+  html[data-page="components"] {
+    --components-header-height: calc(var(--space-32) + var(--space-24));
+  }
+
+  html[data-page="components"] .site-header {
+    position: relative;
+    z-index: 10;
+    block-size: var(--components-header-height);
+    min-block-size: var(--components-header-height);
+  }
+
+  html[data-page="components"] .single-page-shell.wide-shell {
+    inline-size: 100%;
+    max-inline-size: none;
+    block-size: calc(100vh - var(--components-header-height));
+    block-size: calc(100dvh - var(--components-header-height));
+    margin: 0;
+    padding: 0;
+  }
+
+  html[data-page="components"] main,
+  html[data-page="components"] .component-section {
+    block-size: 100%;
+    min-block-size: 0;
+  }
+
+  html[data-page="components"] .standalone-intro,
+  html[data-page="components"] .component-section-header,
+  html[data-page="components"] .site-footer {
+    display: none;
+  }
+
+  html[data-page="components"] .component-section {
+    padding: 0;
+  }
+
+  html[data-page="components"] .component-lab {
+    display: grid;
+    grid-template-columns:
+      clamp(15rem, 18vw, 20rem)
+      minmax(30rem, 1fr)
+      clamp(22rem, 25vw, 28rem);
+    block-size: 100%;
+    min-block-size: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+  }
+
+  html[data-page="components"] .lab-pane {
+    min-inline-size: 0;
+    min-block-size: 0;
+    block-size: 100%;
+  }
+
+  html[data-page="components"] .lab-library,
+  html[data-page="components"] .lab-spec {
+    max-block-size: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+  }
+
+  html[data-page="components"] .lab-preview {
+    overflow: hidden;
+  }
+
+  html[data-page="components"] .preview-toolbar {
+    flex: 0 0 auto;
+  }
+
+  html[data-page="components"] .preview-canvas {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow: hidden;
+  }
+
+  html[data-page="components"] .device-frame {
+    inline-size: min(393px, 38dvh);
+    max-inline-size: calc(100% - var(--space-32));
+    aspect-ratio: 393 / 852;
+  }
+
+  html[data-page="components"] .spec-toolbar {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 2;
+    background: var(--color-surface);
+  }
+}
