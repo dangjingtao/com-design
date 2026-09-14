@@ -85,39 +85,179 @@
     padding: var(--space-16);
   }
 
-  /* Neutral reference device: the shell only communicates viewport bounds.
-     Do not imitate a specific phone model or add decorative hardware chrome. */
+  /* iOS reference shell for a 393 × 852 logical viewport.
+     The chrome is deliberately measured instead of approximated from design-system tokens:
+     59pt status region, 126 × 37 Dynamic Island and 134 × 5 home indicator. */
   html[data-page="components"] .device-frame {
+    position: relative;
     display: block;
-    inline-size: min(393px, 38dvh);
-    max-inline-size: calc(100% - var(--space-32));
-    aspect-ratio: 393 / 852;
-    padding: var(--space-4);
+    inline-size: min(401px, 43dvh, calc(100% - var(--space-32)));
+    aspect-ratio: 401 / 860;
     overflow: hidden;
-    border: var(--com-border-focus) solid var(--color-text-primary);
-    border-radius: calc(var(--radius-lg) + var(--space-12));
+    border: 1px solid var(--color-border);
+    border-radius: 58px;
     background: var(--color-text-primary);
     box-shadow: var(--shadow-1);
   }
 
-  html[data-page="components"] .device-island,
-  html[data-page="components"] .device-status,
-  html[data-page="components"] .device-home {
-    display: none;
-  }
-
   html[data-page="components"] .device-screen {
-    inline-size: 100%;
-    block-size: 100%;
+    position: absolute;
+    z-index: 1;
+    inset: 4px;
+    inline-size: auto;
+    block-size: auto;
     margin: 0;
     overflow: hidden;
-    border-radius: calc(var(--radius-lg) + var(--space-4));
+    border-radius: 54px;
     background: var(--color-background);
   }
 
   html[data-page="components"] .device-screen iframe {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 6.86%;
     inline-size: 100%;
-    block-size: 100%;
+    block-size: 89.19%;
+    border: 0;
+    background: var(--color-background);
+  }
+
+  html[data-page="components"] .device-island {
+    position: absolute;
+    z-index: 4;
+    display: block;
+    inset-block-start: 1.28%;
+    inset-inline-start: 50%;
+    inline-size: 31.42%;
+    block-size: 4.30%;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: var(--color-text-primary);
+  }
+
+  html[data-page="components"] .device-status {
+    position: absolute;
+    z-index: 3;
+    inset-block-start: 4px;
+    inset-inline: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    block-size: 6.86%;
+    padding: 0 7.9%;
+    color: var(--color-text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    font-size: clamp(11px, 1.55dvh, 15px);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    pointer-events: none;
+  }
+
+  html[data-page="components"] .device-status-icons {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    inline-size: auto;
+    block-size: 14px;
+    color: currentColor;
+  }
+
+  html[data-page="components"] .device-status-icons i {
+    position: relative;
+    display: block;
+    flex: 0 0 auto;
+    margin: 0;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  /* Cellular: four ascending rounded bars. */
+  html[data-page="components"] .device-status-icons i:nth-child(1) {
+    inline-size: 3px;
+    block-size: 4px;
+    margin-inline-end: 15px;
+    border-radius: 1px;
+    background: currentColor;
+    box-shadow:
+      5px -2px 0 currentColor,
+      10px -4px 0 currentColor,
+      15px -6px 0 currentColor;
+  }
+
+  /* Wi‑Fi: three concentric arcs, clipped to the lower fan shape. */
+  html[data-page="components"] .device-status-icons i:nth-child(2) {
+    inline-size: 17px;
+    block-size: 12px;
+    overflow: hidden;
+  }
+
+  html[data-page="components"] .device-status-icons i:nth-child(2)::before,
+  html[data-page="components"] .device-status-icons i:nth-child(2)::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: 50%;
+    border: 1.8px solid currentColor;
+    border-block-end-color: transparent;
+    border-inline-start-color: transparent;
+    transform: translateX(-50%) rotate(-45deg);
+    border-radius: 50%;
+  }
+
+  html[data-page="components"] .device-status-icons i:nth-child(2)::before {
+    inset-block-start: 0;
+    inline-size: 14px;
+    block-size: 14px;
+  }
+
+  html[data-page="components"] .device-status-icons i:nth-child(2)::after {
+    inset-block-start: 5px;
+    inline-size: 6px;
+    block-size: 6px;
+    box-shadow: -3px 3px 0 -2px currentColor;
+  }
+
+  /* Battery: outline, terminal and near-full cell. */
+  html[data-page="components"] .device-status-icons i:nth-child(3) {
+    inline-size: 22px;
+    block-size: 10px;
+    border: 1.5px solid currentColor;
+    border-radius: 3px;
+  }
+
+  html[data-page="components"] .device-status-icons i:nth-child(3)::before {
+    content: "";
+    position: absolute;
+    inset: 1.5px;
+    border-radius: 1px;
+    background: currentColor;
+  }
+
+  html[data-page="components"] .device-status-icons i:nth-child(3)::after {
+    content: "";
+    position: absolute;
+    inset-inline-end: -3px;
+    inset-block-start: 2.5px;
+    inline-size: 2px;
+    block-size: 4px;
+    border-radius: 0 1px 1px 0;
+    background: currentColor;
+    opacity: .55;
+  }
+
+  html[data-page="components"] .device-home {
+    position: absolute;
+    z-index: 4;
+    display: block;
+    inset-inline-start: 50%;
+    inset-block-end: 1.05%;
+    inline-size: 33.42%;
+    block-size: max(4px, .58%);
+    margin: 0;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: var(--color-text-primary);
+    pointer-events: none;
   }
 
   html[data-page="components"] .spec-toolbar {
